@@ -42,7 +42,7 @@ inline void set_thread_name(uint _ID, const achar* _name)
 	THREADNAME_INFO l_info;
 	l_info.dwType = 0x1000;
 	l_info.szName = _name;
-	l_info.dwThreadID = _ID;
+	l_info.dwThreadID = (DWORD)_ID;
 	l_info.dwFlags = 0;
 
 	__try

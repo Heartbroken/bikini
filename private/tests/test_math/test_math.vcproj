@@ -18,8 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)..\..\bin\tests\$(ProjectName)\"
+			IntermediateDirectory="$(SolutionDir)..\..\_obj\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="1"
 			CharacterSet="1"
 			>
@@ -64,6 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				OutputFile="$(OutDir)$(ProjectName) ($(PlatformName)!$(ConfigurationName)).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\..\library"
 				GenerateDebugInformation="true"
@@ -96,8 +97,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)..\..\bin\tests\$(ProjectName)\"
+			IntermediateDirectory="$(SolutionDir)..\..\_tmp\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -145,6 +146,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				OutputFile="$(OutDir)$(ProjectName) ($(PlatformName)!$(ConfigurationName)).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\..\library"
 				GenerateDebugInformation="true"
@@ -179,8 +181,8 @@
 		</Configuration>
 		<Configuration
 			Name="Profile|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)..\..\bin\tests\$(ProjectName)\"
+			IntermediateDirectory="$(SolutionDir)..\..\_obj\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="1"
 			CharacterSet="1"
 			>
@@ -226,6 +228,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				OutputFile="$(OutDir)$(ProjectName) ($(PlatformName)!$(ConfigurationName)).exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"

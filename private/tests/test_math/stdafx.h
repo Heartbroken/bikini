@@ -11,7 +11,8 @@
 #include <tchar.h>
 
 // bikini-iii
-#include <bikini.hpp>
+#include <bikini/base.hpp>
+#include <bikini/system.hpp>
 
 // Direct X
 #include <D3dx9math.h>

@@ -8,13 +8,9 @@
 
 #pragma once
 
-#ifdef _DEBUG
-#	pragma comment(lib, "system_d")
-#else
-#	pragma comment(lib, "system")
-#endif
-
 #include "base.hpp"
+
+#pragma comment(lib, "system ("_PLATFORM"!"_CONFIGURATION")")
 
 #if defined(WIN32)
 #	include "system/system_win32.hpp"

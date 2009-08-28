@@ -21,8 +21,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)..\..\library\"
+			IntermediateDirectory="$(SolutionDir)..\..\_obj\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="4"
 			CharacterSet="1"
 			>
@@ -68,7 +68,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\..\library\$(InputName)_d.lib"
+				OutputFile="$(OutDir)$(ProjectName) ($(PlatformName)!$(ConfigurationName)).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -88,8 +88,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)..\..\library\"
+			IntermediateDirectory="$(SolutionDir)..\..\_tmp\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="4"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -113,7 +113,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				AdditionalIncludeDirectories="..\..\..\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="0"
 				EnableEnhancedInstructionSet="0"
 				RuntimeTypeInfo="false"
@@ -134,7 +134,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\..\library\$(InputName).lib"
+				OutputFile="$(OutDir)$(ProjectName) ($(PlatformName)!$(ConfigurationName)).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
