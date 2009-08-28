@@ -37,35 +37,44 @@ int COutputWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CRect rectDummy;
 	rectDummy.SetRectEmpty();
 
-	// Create tabs window:
-	if (!m_wndTabs.Create(CMFCTabCtrl::STYLE_FLAT, rectDummy, this, 1))
-	{
-		TRACE0("Failed to create output tab window\n");
-		return -1;      // fail to create
-	}
+	//// Create tabs window:
+	//if (!m_wndTabs.Create(CMFCTabCtrl::STYLE_FLAT, rectDummy, this, 1))
+	//{
+	//	TRACE0("Failed to create output tab window\n");
+	//	return -1;      // fail to create
+	//}
 
 	// Create output panes:
-	const DWORD dwStyle = LBS_NOINTEGRALHEIGHT | WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL;
+	const DWORD dwStyle = LBS_NOINTEGRALHEIGHT | WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL | /*ES_READONLY |*/ ES_MULTILINE;
 
-	if (!m_wndOutputBuild.Create(dwStyle, rectDummy, &m_wndTabs, 2) ||
-		!m_wndOutputDebug.Create(dwStyle, rectDummy, &m_wndTabs, 3) ||
-		!m_wndOutputFind.Create(dwStyle, rectDummy, &m_wndTabs, 4))
+	//if (!m_wndOutputBuild.Create(dwStyle, rectDummy, &m_wndTabs, 2) ||
+	//	!m_wndOutputDebug.Create(dwStyle, rectDummy, &m_wndTabs, 3) ||
+	//	!m_wndOutputFind.Create(dwStyle, rectDummy, &m_wndTabs, 4))
+	//{
+	//	TRACE0("Failed to create output windows\n");
+	//	return -1;      // fail to create
+	//}
+	if (!m_wndOutput.Create(dwStyle, rectDummy, this, 1))
 	{
 		TRACE0("Failed to create output windows\n");
 		return -1;      // fail to create
 	}
 
-	m_wndOutputBuild.SetFont(&m_Font);
+	m_wndOutput.SetFont(&m_Font);
+	m_wndOutput.SetWindowTextW(L"Output\r\n1");
+	//m_wndOutput.SendMessage(EM_SETREADONLY, TRUE, 0);
+
+	//m_wndOutputBuild.SetFont(&m_Font);
 	//m_wndOutputDebug.SetFont(&m_Font);
 	//m_wndOutputFind.SetFont(&m_Font);
 
-	CString strTabName;
-	BOOL bNameValid;
+	//CString strTabName;
+	//BOOL bNameValid;
 
 	// Attach list windows to tab:
-	bNameValid = strTabName.LoadString(IDS_BUILD_TAB);
-	ASSERT(bNameValid);
-	m_wndTabs.AddTab(&m_wndOutputBuild, strTabName, (UINT)0);
+	//bNameValid = strTabName.LoadString(IDS_BUILD_TAB);
+	//ASSERT(bNameValid);
+	//m_wndTabs.AddTab(&m_wndOutputBuild, strTabName, (UINT)0);
 	//bNameValid = strTabName.LoadString(IDS_DEBUG_TAB);
 	//ASSERT(bNameValid);
 	//m_wndTabs.AddTab(&m_wndOutputDebug, strTabName, (UINT)1);
@@ -74,7 +83,7 @@ int COutputWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	//m_wndTabs.AddTab(&m_wndOutputFind, strTabName, (UINT)2);
 
 	// Fill output tabs with some dummy text (nothing magic here)
-	FillBuildWindow();
+	//FillBuildWindow();
 	//FillDebugWindow();
 	//FillFindWindow();
 
@@ -85,8 +94,10 @@ void COutputWnd::OnSize(UINT nType, int cx, int cy)
 {
 	CDockablePane::OnSize(nType, cx, cy);
 
-	// Tab control should cover the whole client area:
-	m_wndTabs.SetWindowPos (NULL, -1, -1, cx, cy, SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOZORDER);
+	m_wndOutput.SetWindowPos (NULL, -1, -1, cx, cy, SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOZORDER);
+
+	//// Tab control should cover the whole client area:
+	//m_wndTabs.SetWindowPos (NULL, -1, -1, cx, cy, SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOZORDER);
 }
 
 void COutputWnd::AdjustHorzScroll(CListBox& wndListBox)
@@ -108,26 +119,98 @@ void COutputWnd::AdjustHorzScroll(CListBox& wndListBox)
 	dc.SelectObject(pOldFont);
 }
 
-void COutputWnd::FillBuildWindow()
+void COutputWnd::FillOutput()
 {
-	m_wndOutputBuild.AddString(_T("Build output is being displayed here."));
-	m_wndOutputBuild.AddString(_T("The output is being displayed in rows of a list view"));
-	m_wndOutputBuild.AddString(_T("but you can change the way it is displayed as you wish..."));
+	//m_wndOutput.Past(_T("Build output is being displayed here."));
 }
 
-void COutputWnd::FillDebugWindow()
+//void COutputWnd::FillBuildWindow()
+//{
+//	m_wndOutputBuild.AddString(_T("Build output is being displayed here."));
+//	m_wndOutputBuild.AddString(_T("The output is being displayed in rows of a list view"));
+//	m_wndOutputBuild.AddString(_T("but you can change the way it is displayed as you wish..."));
+//}
+//
+//void COutputWnd::FillDebugWindow()
+//{
+//	m_wndOutputDebug.AddString(_T("Debug output is being displayed here."));
+//	m_wndOutputDebug.AddString(_T("The output is being displayed in rows of a list view"));
+//	m_wndOutputDebug.AddString(_T("but you can change the way it is displayed as you wish..."));
+//}
+//
+//void COutputWnd::FillFindWindow()
+//{
+//	m_wndOutputFind.AddString(_T("Find output is being displayed here."));
+//	m_wndOutputFind.AddString(_T("The output is being displayed in rows of a list view"));
+//	m_wndOutputFind.AddString(_T("but you can change the way it is displayed as you wish..."));
+//}
+
+/////////////////////////////////////////////////////////////////////////////
+// COutputEdit
+
+COutputEdit::COutputEdit()
 {
-	m_wndOutputDebug.AddString(_T("Debug output is being displayed here."));
-	m_wndOutputDebug.AddString(_T("The output is being displayed in rows of a list view"));
-	m_wndOutputDebug.AddString(_T("but you can change the way it is displayed as you wish..."));
 }
 
-void COutputWnd::FillFindWindow()
+COutputEdit::~COutputEdit()
 {
-	m_wndOutputFind.AddString(_T("Find output is being displayed here."));
-	m_wndOutputFind.AddString(_T("The output is being displayed in rows of a list view"));
-	m_wndOutputFind.AddString(_T("but you can change the way it is displayed as you wish..."));
 }
+
+BEGIN_MESSAGE_MAP(COutputEdit, CEdit)
+	ON_WM_CONTEXTMENU()
+	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
+	ON_COMMAND(ID_EDIT_CLEAR, OnEditClear)
+	ON_COMMAND(ID_VIEW_OUTPUTWND, OnViewOutput)
+	ON_WM_WINDOWPOSCHANGING()
+END_MESSAGE_MAP()
+/////////////////////////////////////////////////////////////////////////////
+// COutputList message handlers
+
+void COutputEdit::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
+{
+	CMenu menu;
+	menu.LoadMenu(IDR_OUTPUT_POPUP);
+
+	CMenu* pSumMenu = menu.GetSubMenu(0);
+
+	if (AfxGetMainWnd()->IsKindOf(RUNTIME_CLASS(CMDIFrameWndEx)))
+	{
+		CMFCPopupMenu* pPopupMenu = new CMFCPopupMenu;
+
+		if (!pPopupMenu->Create(this, point.x, point.y, (HMENU)pSumMenu->m_hMenu, FALSE, TRUE))
+			return;
+
+		((CMDIFrameWndEx*)AfxGetMainWnd())->OnShowPopupMenu(pPopupMenu);
+		UpdateDialogControls(this, FALSE);
+	}
+
+	SetFocus();
+}
+
+void COutputEdit::OnEditCopy()
+{
+	MessageBox(_T("Copy output"));
+}
+
+void COutputEdit::OnEditClear()
+{
+	MessageBox(_T("Clear output"));
+}
+
+void COutputEdit::OnViewOutput()
+{
+	CDockablePane* pParentBar = DYNAMIC_DOWNCAST(CDockablePane, GetOwner());
+	CMDIFrameWndEx* pMainFrame = DYNAMIC_DOWNCAST(CMDIFrameWndEx, GetTopLevelFrame());
+
+	if (pMainFrame != NULL && pParentBar != NULL)
+	{
+		pMainFrame->SetFocus();
+		pMainFrame->ShowPane(pParentBar, FALSE, FALSE, FALSE);
+		pMainFrame->RecalcLayout();
+
+	}
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // COutputList1

@@ -23,6 +23,27 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 
+// --------------------------------------
+class COutputEdit : public CEdit
+{
+// Construction
+public:
+	COutputEdit();
+
+// Implementation
+public:
+	virtual ~COutputEdit();
+
+protected:
+	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
+	afx_msg void OnEditCopy();
+	afx_msg void OnEditClear();
+	afx_msg void OnViewOutput();
+
+	DECLARE_MESSAGE_MAP()
+};
+
+// --------------------------------------
 class COutputWnd : public CDockablePane
 {
 // Construction
@@ -33,16 +54,20 @@ public:
 protected:
 	CFont m_Font;
 
-	CMFCTabCtrl	m_wndTabs;
+	COutputEdit m_wndOutput;
 
-	COutputList m_wndOutputBuild;
-	COutputList m_wndOutputDebug;
-	COutputList m_wndOutputFind;
+	//CMFCTabCtrl	m_wndTabs;
+
+	//COutputList m_wndOutputBuild;
+	//COutputList m_wndOutputDebug;
+	//COutputList m_wndOutputFind;
 
 protected:
-	void FillBuildWindow();
-	void FillDebugWindow();
-	void FillFindWindow();
+	void FillOutput();
+
+	//void FillBuildWindow();
+	//void FillDebugWindow();
+	//void FillFindWindow();
 
 	void AdjustHorzScroll(CListBox& wndListBox);
 
