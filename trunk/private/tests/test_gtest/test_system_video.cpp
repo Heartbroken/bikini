@@ -3,18 +3,15 @@
 // system/video
 TEST(system_video, video_create) {
 	bk::video l_video;
-	l_video.create();
-	ASSERT_TRUE(l_video.ready());
+	ASSERT_TRUE(l_video.create());
 	l_video.destroy();
-	ASSERT_FALSE(l_video.ready());
 }
 TEST(system_video, window_create) {
 	bk::video l_video;
-	l_video.create();
-	ASSERT_TRUE(l_video.ready());
+	ASSERT_TRUE(l_video.create());
 
 	bk::window l_window(l_video);
-	l_window.create(640, 400);
+	ASSERT_TRUE(l_window.create(640, 400));
 
 	bk::vr::window::info l_window_info;
 	bk::u32 l_window_ID = l_video.spawn(l_window_info, l_window.get_handle());
@@ -23,5 +20,4 @@ TEST(system_video, window_create) {
 	l_video.kill(l_window_ID);
 
 	l_video.destroy();
-	ASSERT_FALSE(l_video.ready());
 }

@@ -8,13 +8,9 @@
 
 #pragma once
 
-#ifdef _DEBUG
-#	pragma comment(lib, "display_d")
-#else
-#	pragma comment(lib, "display")
-#endif
-
 #include "system.hpp"
+
+#pragma comment(lib, "display ("_PLATFORM"!"_CONFIGURATION")")
 
 namespace bk { /*--------------------------------------------------------------------------------*/
 

@@ -13,7 +13,8 @@
 #include <tchar.h>
 
 // bikini-iii
-#include <bikini.hpp>
+#include <bikini/base.hpp>
+#include <bikini/system.hpp>
 
 // gtest
 #include <gtest/gtest.h>

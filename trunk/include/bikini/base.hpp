@@ -8,16 +8,12 @@
 
 #pragma once
 
-#ifdef _DEBUG
-#	pragma comment(lib, "base_d")
-#else
-#	pragma comment(lib, "base")
-#endif
-
 #pragma warning(disable:4355)	// warning C4355: 'this' : used in base member initializer list
 #pragma warning(disable:4503)	// warning C4503: '...' : decorated name length exceeded, name was truncated
 
 #include "../config.hpp"
+
+#pragma comment(lib, "base ("_PLATFORM"!"_CONFIGURATION")")
 
 #if defined(XBOX)
 #	include "base/base_xbox.hpp"
