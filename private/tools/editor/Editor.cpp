@@ -247,6 +247,13 @@ void CEditorApp::update_video()
 	{
 		m_video.update(l_time - m_time);
 		m_time = l_time;
+		//theApp.console_output(L"Update\n");
 	}
+}
+
+void CEditorApp::console_output(const bk::wstring &_string)
+{
+	CMainFrame &l_mainframe = *(CMainFrame*)GetMainWnd();
+	l_mainframe.console_output(_string);
 }
 

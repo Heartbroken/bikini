@@ -52,11 +52,54 @@ void video::rendering::swap_cbuffer(commands &_cbuffer)
 }
 void video::rendering::process_cbuffer(const commands &_cbuffer)
 {
+	typedef std::map<command_key, uint> order;
+	order l_order;
 	for (uint i = 0, s = _cbuffer.size(); i < s; ++i)
 	{
-		execute(_cbuffer[i]);
+		l_order[key(_cbuffer[i])] = i;
+	}
+	for (order::iterator i = l_order.begin(); i != l_order.end(); ++i)
+	{
+		execute(_cbuffer[i->second]);
 		if (!m_run) break;
 	}
+}
+video::rendering::command_key video::rendering::key(const command &_command)
+{
+	switch (_command.type())
+	{
+		case command_types::type_<create_schain>::index : return key(_command.get_<create_schain>());
+		case command_types::type_<destroy_resource>::index : return key(_command.get_<destroy_resource>());
+		case command_types::type_<begin_scene>::index : return key(_command.get_<begin_scene>());
+		case command_types::type_<clear_viewport>::index : return key(_command.get_<clear_viewport>());
+		case command_types::type_<end_scene>::index : return key(_command.get_<end_scene>());
+		case command_types::type_<present_schain>::index : return key(_command.get_<present_schain>());
+	}
+	return bad_key;
+}
+video::rendering::command_key video::rendering::key(const create_schain &_command)
+{
+	return 0;
+}
+video::rendering::command_key video::rendering::key(const destroy_resource &_command)
+{
+	return 0;
+}
+video::rendering::command_key video::rendering::key(const begin_scene &_command)
+{
+	return 1;
+}
+video::rendering::command_key video::rendering::key(const clear_viewport &_command)
+{
+	return 2;
+}
+video::rendering::command_key video::rendering::key(const end_scene &_command)
+{
+	return 3;
+}
+video::rendering::command_key video::rendering::key(const present_schain &_command)
+{
+	return 4;
 }
 void video::rendering::m_proc()
 {
@@ -106,26 +149,32 @@ void video::destroy() {
 }
 uint video::obtain_resource_ID()
 {
+	thread::locker l_locker(m_resource_lock);
 	return m_resources.add(false);
 }
 void video::release_resource_ID(uint _ID)
 {
+	thread::locker l_locker(m_resource_lock);
 	m_resources.remove(_ID);
 }
 bool video::resource_exists(uint _ID)
 {
+	thread::locker l_locker(m_resource_lock);
 	return m_resources.exists(_ID);
 }
 bool video::resource_valid(uint _ID)
 {
+	thread::locker l_locker(m_resource_lock);
 	return m_resources.get(_ID);
 }
 void video::set_resource_valid(uint _ID)
 {
+	thread::locker l_locker(m_resource_lock);
 	m_resources.get(_ID) = true;
 }
 void video::set_resource_invalid(uint _ID)
 {
+	thread::locker l_locker(m_resource_lock);
 	m_resources.get(_ID) = false;
 }
 
@@ -141,7 +190,7 @@ video::object::object(const info &_info, video &_video) :
 	device::object(_info, _video)
 {}
 
-namespace vr { /* video objects -----------------------------------------------------------------*/
+namespace vo { /* video objects -----------------------------------------------------------------*/
 
 // window::info
 

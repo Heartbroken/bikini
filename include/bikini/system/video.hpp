@@ -61,6 +61,15 @@ struct video : device {
 		void process_cbuffer(const commands &_cbuffer);
 		thread::flag m_cbuffer_ready;
 		thread::section m_cbuffer_lock;
+		typedef u64 command_key;
+		static const command_key bad_key = command_key(-1);
+		command_key key(const command &_command);
+		command_key key(const create_schain &_command);
+		command_key key(const destroy_resource &_command);
+		command_key key(const begin_scene &_command);
+		command_key key(const clear_viewport &_command);
+		command_key key(const end_scene &_command);
+		command_key key(const present_schain &_command);
 	};
 	
 	/* video object -----------------------------------------------------------------------------*/
@@ -107,6 +116,7 @@ private:
 	inline void add_command(const rendering::command &_command) { m_cbuffer.push_back(_command); }
 	//
 	pool_<bool> m_resources;
+	thread::section m_resource_lock;
 	uint obtain_resource_ID();
 	void release_resource_ID(uint _ID);
 	bool resource_exists(uint _ID);
@@ -122,7 +132,7 @@ namespace cf { enum clear_flags {
 	all = color|depth|stencil,
 };}
 
-namespace vr { /* video objects -----------------------------------------------------------------*/
+namespace vo { /* video objects -----------------------------------------------------------------*/
 
 /// window
 struct window : video::object {
@@ -300,4 +310,4 @@ private:
 	IDirect3DPixelShader9 *m_shader_p;
 };
 */
-} /* video resources ----------------------------------------------------------------------------*/
+} /* video objects ------------------------------------------------------------------------------*/

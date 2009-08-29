@@ -35,7 +35,7 @@ public:
 
 // bikini
 private:
-	bk::vr::window::info m_window_info;
+	bk::vo::window::info m_window_info;
 	bk::uint m_window_ID;
 
 protected:
