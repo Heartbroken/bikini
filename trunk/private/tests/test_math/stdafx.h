@@ -15,6 +15,4 @@
 #include <bikini/system.hpp>
 
 // Direct X
-#include <D3dx9math.h>
-
-// TODO: reference additional headers your program requires here
+#include <d3dx9math.h>
