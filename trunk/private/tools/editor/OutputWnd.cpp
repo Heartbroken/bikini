@@ -32,7 +32,7 @@ int COutputWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CDockablePane::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	m_Font.CreateStockObject(DEFAULT_GUI_FONT);
+	m_Font.CreateStockObject(/*SYSTEM_FIXED_FONT*/DEFAULT_GUI_FONT);
 
 	CRect rectDummy;
 	rectDummy.SetRectEmpty();
@@ -45,7 +45,7 @@ int COutputWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	//}
 
 	// Create output panes:
-	const DWORD dwStyle = LBS_NOINTEGRALHEIGHT | WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL | /*ES_READONLY |*/ ES_MULTILINE;
+	const DWORD dwStyle = LBS_NOINTEGRALHEIGHT | WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL /*| ES_READONLY | ES_MULTILINE | ES_WANTRETURN*/;
 
 	//if (!m_wndOutputBuild.Create(dwStyle, rectDummy, &m_wndTabs, 2) ||
 	//	!m_wndOutputDebug.Create(dwStyle, rectDummy, &m_wndTabs, 3) ||
@@ -61,7 +61,6 @@ int COutputWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 
 	m_wndOutput.SetFont(&m_Font);
-	m_wndOutput.SetWindowTextW(L"Output\r\n1");
 	//m_wndOutput.SendMessage(EM_SETREADONLY, TRUE, 0);
 
 	//m_wndOutputBuild.SetFont(&m_Font);
@@ -122,6 +121,37 @@ void COutputWnd::AdjustHorzScroll(CListBox& wndListBox)
 void COutputWnd::FillOutput()
 {
 	//m_wndOutput.Past(_T("Build output is being displayed here."));
+}
+
+void COutputWnd::output_string(const bk::wstring &_string)
+{
+	::LockWindowUpdate(m_hWnd);
+	m_wndOutput.InsertString(0, _string.c_str());
+	//m_wndOutput.AddString(_string.c_str());
+	if (m_wndOutput.GetCount() > 300) m_wndOutput.DeleteString(m_wndOutput.GetCount() - 1);
+	//m_wndOutput.SetTopIndex(m_wndOutput.GetCount() - 1);
+	::LockWindowUpdate(0);
+	//::LockWindowUpdate(m_hWnd);
+	//bk::wstring l_string = _string;
+	//bk::uint l_offset = l_string.find(L'\n');
+	//while (l_offset != bk::wstring::npos)
+	//{
+	//	l_string = l_string.replace(l_offset, 1, L"\r\n");
+	//	l_offset = l_string.find(L'\n', l_offset + 2);
+	//}
+	//int l_start, l_end; m_wndOutput.GetSel(l_start, l_end);
+	//int l_length = m_wndOutput.GetWindowTextLengthW();
+	//if (l_end == l_length)
+	//{
+	//	m_wndOutput.ReplaceSel(l_string.c_str());
+	//}
+	//else
+	//{
+	//	m_wndOutput.SetSel(l_length, l_length);
+	//	m_wndOutput.ReplaceSel(l_string.c_str());
+	//	m_wndOutput.SetSel(l_start, l_end);
+	//}
+	//::LockWindowUpdate(0);
 }
 
 //void COutputWnd::FillBuildWindow()
@@ -277,5 +307,3 @@ void COutputList::OnViewOutput()
 
 	}
 }
-
-

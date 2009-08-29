@@ -121,6 +121,7 @@ BOOL CGameView::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pR
 	} break;
 	case WM_PAINT : {
 		theApp.update_video();
+		//theApp.console_output(L"PAINT\n");
 	} break;
 	}
 

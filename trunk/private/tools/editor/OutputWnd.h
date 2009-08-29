@@ -54,7 +54,8 @@ public:
 protected:
 	CFont m_Font;
 
-	COutputEdit m_wndOutput;
+	//COutputEdit m_wndOutput;
+	COutputList m_wndOutput;
 
 	//CMFCTabCtrl	m_wndTabs;
 
@@ -74,6 +75,8 @@ protected:
 // Implementation
 public:
 	virtual ~COutputWnd();
+
+	void output_string(const bk::wstring &_string);
 
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);

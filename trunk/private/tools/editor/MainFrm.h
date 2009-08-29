@@ -32,6 +32,9 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
+	// bikini
+	void console_output(const bk::wstring &_string);
+
 protected:  // control bar embedded members
 	CMFCMenuBar       m_wndMenuBar;
 	CMFCToolBar       m_wndToolBar;

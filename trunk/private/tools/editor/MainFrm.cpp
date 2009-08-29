@@ -248,6 +248,11 @@ void CMainFrame::Dump(CDumpContext& dc) const
 }
 #endif //_DEBUG
 
+void CMainFrame::console_output(const bk::wstring &_string)
+{
+	m_wndOutput.output_string(_string);
+}
+
 
 // CMainFrame message handlers
 

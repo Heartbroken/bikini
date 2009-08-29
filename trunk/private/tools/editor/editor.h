@@ -41,6 +41,7 @@ public:
 public:
 	bk::video& get_video();
 	void update_video();
+	void console_output(const bk::wstring &_string);
 
 private:
 	bk::video m_video;
