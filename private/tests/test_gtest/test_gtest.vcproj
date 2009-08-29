@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)..\..\bin\tests\$(ProjectName)\"
+			OutputDirectory="$(SolutionDir)..\..\tests\$(ProjectName)\"
 			IntermediateDirectory="$(SolutionDir)..\..\_obj\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="1"
 			CharacterSet="1"
@@ -96,7 +96,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)..\..\bin\tests\$(ProjectName)\"
+			OutputDirectory="$(SolutionDir)..\..\tests\$(ProjectName)\"
 			IntermediateDirectory="$(SolutionDir)..\..\_tmp\$(ConfigurationName)\$(ProjectName)\"
 			ConfigurationType="1"
 			CharacterSet="1"
