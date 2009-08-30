@@ -11,6 +11,7 @@
 #include <tchar.h>
 
 // bikini-iii
-#include <bikini.hpp>
+#include <bikini/base.hpp>
+#include <bikini/system.hpp>
 
 // TODO: reference additional headers your program requires here
