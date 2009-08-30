@@ -12,7 +12,8 @@ namespace bk { /*---------------------------------------------------------------
 
 // application
 
-application::application() {
+application::application()
+{
 #if defined(WIN32)
 	//
 	typedef HWND (WINAPI *GetConsoleWindow_fn)(void);
@@ -23,10 +24,11 @@ application::application() {
 	SetConsoleTitleA(" bikini-iii");
 #endif
 }
-application::~application() {
-}
+application::~application()
+{}
 
-bool application::run() {
+bool application::run()
+{
 	ticker l_ticker(0.1f);
 	bk::rbig l_time = bk::sys_time();
 	bool l_done = false;
@@ -47,18 +49,23 @@ bool application::run() {
 
 // application::task
 
-application::task::task(const info &_info, application &_application) :
-	manager::object(_info, _application), m_task(*this, &application::task::main)
+application::task::task(const info &_info, application &_application)
+:
+	manager::object(_info, _application), m_task(*this, &application::task::main, _info.name.c_str())
 {
 	m_task.run();
 }
 
-application::task::~task() {
+application::task::~task()
+{
 	if(!m_task.done()) m_task.terminate();
 }
 
 // application::task::info
 
-application::task::info::info(uint _type) : manager::object::info(_type) {}
+application::task::info::info(uint _type, const achar* _name)
+:
+	manager::object::info(_type), name(_name ? _name : "")
+{}
 
 } /* namespace bk -------------------------------------------------------------------------------*/
