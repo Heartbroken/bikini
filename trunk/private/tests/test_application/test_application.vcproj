@@ -66,6 +66,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				OutputFile="$(OutDir)$(ProjectName) ($(PlatformName)!$(ConfigurationName)).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\..\library; ..\..\..\library\external"
 				GenerateDebugInformation="true"
@@ -142,6 +143,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				OutputFile="$(OutDir)$(ProjectName) ($(PlatformName)!$(ConfigurationName)).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\..\library\xbox"
 				GenerateDebugInformation="true"

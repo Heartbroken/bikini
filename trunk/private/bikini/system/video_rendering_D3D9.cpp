@@ -252,7 +252,7 @@ bool rendering_D3D9::execute(const begin_scene &_command)
 bool rendering_D3D9::execute(const clear_viewport &_command)
 {
 	if (!m_set_render_target(_command.ID)) return false;
-	if (FAILED(m_D3DDevice9_p->Clear(0, 0, D3DCLEAR_TARGET, 0, 1.f, 0))) return false;
+	if (FAILED(m_D3DDevice9_p->Clear(0, 0, D3DCLEAR_TARGET, black, 1.f, 0))) return false;
 	return true;
 }
 bool rendering_D3D9::execute(const end_scene &_command)
