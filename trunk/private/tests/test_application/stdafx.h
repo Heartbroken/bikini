@@ -13,5 +13,6 @@
 // bikini-iii
 #include <bikini/base.hpp>
 #include <bikini/system.hpp>
+#include <bikini/flash.hpp>
 
 // TODO: reference additional headers your program requires here

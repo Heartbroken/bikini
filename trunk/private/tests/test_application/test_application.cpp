@@ -28,9 +28,9 @@ struct task0 : bk::application::task
 		bk::vo::window::info l_vo_window_info;
 		bk::uint l_vo_window_ID = l_video.spawn(l_vo_window_info, l_window.get_handle());
 		l_window.show();
-		//bk::flash::player l_player;
-		//l_player.create(l_window);
-		//l_player.play("data/gui/test.swf");
+		bk::flash::player l_player;
+		l_player.create();
+		l_player.play("data/gui/test.swf");
 		bk::ticker l_ticker(bk::real(1.0/60.0));
 		bk::rbig l_time = bk::sys_time();
 		while (true)
@@ -40,12 +40,12 @@ struct task0 : bk::application::task
 			l_dt = bk::min(l_dt, bk::real(0.3));
 			l_time = l_next_time;
 			if (!l_window.update(l_dt)) break;
-			//l_player.update(l_dt);
-			//l_player.render();
+			l_player.update(l_dt);
+			l_player.render();
 			l_video.update(l_dt);
 			l_ticker.sync();
 		}
-		//l_player.destroy();
+		l_player.destroy();
 		l_video.kill(l_vo_window_ID);
 		l_video.destroy();
 		l_window.destroy();

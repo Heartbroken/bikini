@@ -16,7 +16,8 @@ namespace po { /*---------------------------------------------------------------
 
 // movie
 
-movie::movie(const info &_info, player &_player) :
+movie::movie(const info &_info, player &_player)
+:
 	player::object(_info, _player), m_handle(0)
 {
 	gameswf::movie_definition &l_movie_def = *(gameswf::movie_definition*)_info.get_handle();
@@ -24,15 +25,18 @@ movie::movie(const info &_info, player &_player) :
 	l_movie.add_ref();
 	m_handle = &l_movie;
 }
-movie::~movie() {
+movie::~movie()
+{
 	((gameswf::root*)m_handle)->drop_ref();
 }
-bool movie::update(real _dt) {
+bool movie::update(real _dt)
+{
 	gameswf::root &l_movie = *(gameswf::root*)m_handle;
 	l_movie.advance((float)_dt);
 	return true;
 }
-bool movie::render() const {
+bool movie::render() const
+{
 	gameswf::root &l_movie = *(gameswf::root*)m_handle;
 	l_movie.display();
 	return true;
@@ -40,10 +44,10 @@ bool movie::render() const {
 
 // movie::info
 
-movie::info::info(handle _handle) : player::object::info(ot::movie), m_handle(_handle) {
-}
-movie::info::~info() {
-}
+movie::info::info(handle _handle) : player::object::info(ot::movie), m_handle(_handle)
+{}
+movie::info::~info()
+{}
 
 } /* namespace po -------------------------------------------------------------------------------*/
 

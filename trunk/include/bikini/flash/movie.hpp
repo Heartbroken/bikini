@@ -8,8 +8,10 @@
 
 #pragma once
 
-struct movie : player::object {
-	struct info : player::object::info {
+struct movie : player::object
+{
+	struct info : player::object::info
+	{
 		typedef movie object;
 		inline handle get_handle() const;
 		info(handle _handle);
@@ -21,6 +23,7 @@ struct movie : player::object {
 	~movie();
 	bool update(real _dt);
 	bool render() const;
+
 private:
 	handle m_handle;
 };

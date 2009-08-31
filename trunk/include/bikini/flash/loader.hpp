@@ -8,7 +8,8 @@
 
 #pragma once
 
-struct loader {
+struct loader
+{
 	virtual ~loader() {}
 	virtual uint open(const wchar* _path) = 0;
 	virtual bool good(uint _ID) const = 0;

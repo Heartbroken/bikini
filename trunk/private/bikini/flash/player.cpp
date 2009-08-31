@@ -18,28 +18,36 @@ namespace _gameswf_helper {
 
 static loader *loader_p = 0;
 
-static inline sint read(handle _buffer, sint _length, handle _ID) {
+static inline sint read(handle _buffer, sint _length, handle _ID)
+{
 	return loader_p->read((uint)_ID, _buffer, _length);
 }
-static inline sint write(pointer _buffer, sint _length, handle _ID) {
+static inline sint write(pointer _buffer, sint _length, handle _ID)
+{
 	assert(0); return 0;
 }
-static inline sint seek(sint _offset, handle _ID) {
+static inline sint seek(sint _offset, handle _ID)
+{
 	return loader_p->seek((uint)_ID, _offset);
 }
-static inline sint seek_to_end(handle _ID) {
+static inline sint seek_to_end(handle _ID)
+{
 	return loader_p->seek((uint)_ID, 0, 2);
 }
-static inline sint tell(pointer _ID) {
+static inline sint tell(pointer _ID)
+{
 	return loader_p->seek((uint)_ID);
 }
-static inline bool get_eof(handle _ID) {
+static inline bool get_eof(handle _ID)
+{
 	return false;
 }
-static inline sint close(handle _ID) {
+static inline sint close(handle _ID)
+{
 	loader_p->close((uint)_ID); return 0;
 }
-static inline tu_file* open(const char* _path) {
+static inline tu_file* open(const char* _path)
+{
 	uint l_alength = strlen(_path) + 1;
 	uint l_wlength = MultiByteToWideChar(CP_UTF8, 0, _path, l_alength, 0, 0);
 	wchar* l_path = (wchar*)_malloca(l_wlength * sizeof(wchar));
@@ -47,13 +55,14 @@ static inline tu_file* open(const char* _path) {
 	uint l_ID = loader_p->open(l_path);
 	return new tu_file((handle)l_ID, &read, &write, &seek, &seek_to_end, &tell, &get_eof, &close);
 }
-static inline void log(bool _error, const char* _message) {
+static inline void log(bool _error, const char* _message)
+{
 	if (_error) std::cerr << _message;
 	else std::cout << _message;
 }
 
-struct render_handler : gameswf::render_handler {
-
+struct render_handler : gameswf::render_handler
+{
 	typedef gameswf::bitmap_info bitmap_info;
 	typedef gameswf::video_handler video_handler;
 	typedef gameswf::rgba rgba;
@@ -61,7 +70,8 @@ struct render_handler : gameswf::render_handler {
 	typedef gameswf::cxform cxform;
 	typedef gameswf::rect rect;
 
-	struct bitmap : bitmap_info {
+	struct bitmap : bitmap_info
+	{
 		inline bitmap() {}
 		inline bitmap(sint _w, sint _h, u8* _data) {}
 		inline bitmap(image::rgb* _data) {}
@@ -78,9 +88,11 @@ struct render_handler : gameswf::render_handler {
 	// Bracket the displaying of a frame from a movie.
 	// Fill the background color, and set up default
 	// transforms, etc.
-	void begin_display(rgba _background_color, sint _viewport_x0, sint _viewport_y0, sint _viewport_width, sint _viewport_height, f32 _x0, f32 _x1, f32 _y0, f32 _y1) {
+	void begin_display(rgba _background_color, sint _viewport_x0, sint _viewport_y0, sint _viewport_width, sint _viewport_height, f32 _x0, f32 _x1, f32 _y0, f32 _y1)
+	{
 	}
-	void end_display() {
+	void end_display()
+	{
 	}
 
 	// Geometric and color transforms for mesh and line_strip rendering.
@@ -137,18 +149,21 @@ private:
 
 // player
 
-player::player() :
+player::player()
+:
 	m_handle(0),
 	m_renderer_p(0), m_delete_renderer(false),
 	m_loader_p(0), m_delete_loader(false)
 {}
-player::~player() {
-}
-bool player::create(renderer &_renderer) {
+player::~player()
+{}
+bool player::create(renderer &_renderer)
+{
 	m_delete_loader = true;
 	return create(_renderer, * new _player_loader_proxy_<bk::loader>(m_def_loader));
 }
-bool player::create(renderer &_renderer, loader &_loader) {
+bool player::create(renderer &_renderer, loader &_loader)
+{
 	m_renderer_p = &_renderer;
 	m_loader_p = &_loader;
 	gameswf::player &l_player = * new gameswf::player();
@@ -156,20 +171,25 @@ bool player::create(renderer &_renderer, loader &_loader) {
 	m_handle = &l_player;
 	return true;
 }
-bool player::update(real _dt) {
+bool player::update(real _dt)
+{
 	m_set_handlers();
-	for(uint i = 0, s = m_levels.size(); i < s; ++i) if(exists(m_levels[i])) {
+	for(uint i = 0, s = m_levels.size(); i < s; ++i) if(exists(m_levels[i]))
+	{
 		get(m_levels[i]).update(_dt);
 	}
 	m_reset_handlers();
 	return true;
 }
-void player::destroy() {
-	while(!m_levels.empty()) {
+void player::destroy()
+{
+	while(!m_levels.empty())
+	{
 		if(exists(m_levels.back())) kill(m_levels.back());
 		m_levels.pop_back();
 	}
-	while(!m_movies.empty()) {
+	while(!m_movies.empty())
+	{
 		delete m_movies.back();
 		m_movies.pop_back();
 		m_movie_names.pop_back();
@@ -180,16 +200,20 @@ void player::destroy() {
 	if(m_delete_loader) delete m_loader_p;
 	m_loader_p = 0;
 }
-uint player::play(const wchar* _path, uint _level) {
+uint player::play(const wchar* _path, uint _level)
+{
 	assert(m_renderer_p != 0 && m_loader_p != 0);
 	if(m_renderer_p == 0 || m_loader_p == 0) return bad_ID;
 	m_set_handlers();
 	uint l_level = _level;
 	po::movie::info &l_movie = static_cast<po::movie::info&>(m_load_movie(_path));
-	if(l_level > m_levels.size()) {
+	if(l_level > m_levels.size())
+	{
 		if(l_level == bad_ID) l_level = m_levels.size();
 		m_levels.resize(l_level + 1, bad_ID);
-	} else if(m_levels[l_level] != bad_ID) {
+	}
+	else if(m_levels[l_level] != bad_ID)
+	{
 		if(exists(m_levels[l_level])) kill(m_levels[l_level]);
 		m_levels[l_level] = bad_ID;
 	}
@@ -197,35 +221,44 @@ uint player::play(const wchar* _path, uint _level) {
 	m_reset_handlers();
 	return l_level;
 }
-uint player::play(const achar* _path, uint _level) {
+uint player::play(const achar* _path, uint _level)
+{
 	uint l_length = strlen(_path) + 1;
 	wchar* l_path  = (wchar*)_malloca(l_length);
 	MultiByteToWideChar(CP_ACP, 0, _path, (int)l_length, l_path, (int)l_length);
 	return play(l_path, _level);
 }
-bool player::pause(uint _level) {
+bool player::pause(uint _level)
+{
 	return true;
 }
-bool player::stop(uint _level) {
+bool player::stop(uint _level)
+{
 	return true;
 }
-bool player::show(uint _level) {
+bool player::show(uint _level)
+{
 	return true;
 }
-bool player::hide(uint _level) {
+bool player::hide(uint _level)
+{
 	return true;
 }
-bool player::render(uint _level) const {
+bool player::render(uint _level) const
+{
 	m_set_handlers();
-	for(uint i = 0, s = m_levels.size(); i < s; ++i) {
-		if((_level == bad_ID || _level == i) && exists(m_levels[i])) {
+	for(uint i = 0, s = m_levels.size(); i < s; ++i)
+	{
+		if((_level == bad_ID || _level == i) && exists(m_levels[i]))
+		{
 			get<po::movie>(m_levels[i]).render();
 		}
 	}
 	m_reset_handlers();
 	return true;
 }
-player::object::info& player::m_load_movie(const wchar* _path) {
+player::object::info& player::m_load_movie(const wchar* _path)
+{
 	array_<wstring>::iterator l_it = std::find(m_movie_names.begin(), m_movie_names.end(), _path);
 	if(l_it != m_movie_names.end()) return *m_movies[l_it - m_movie_names.begin()];
 	m_movie_names.push_back(_path);
@@ -238,13 +271,15 @@ player::object::info& player::m_load_movie(const wchar* _path) {
 	m_movies.push_back(&l_movie);
 	return l_movie;
 }
-void player::m_set_handlers() const {
+void player::m_set_handlers() const
+{
 	_gameswf_helper::loader_p = m_loader_p;
 	gameswf::register_file_opener_callback(_gameswf_helper::open);
 	gameswf::register_log_callback(_gameswf_helper::log);
 	gameswf::set_render_handler(&_gameswf_helper::render_handler);
 }
-void player::m_reset_handlers() const {
+void player::m_reset_handlers() const
+{
 	_gameswf_helper::loader_p = 0;
 	gameswf::register_file_opener_callback(0);
 	gameswf::register_log_callback(0);
@@ -253,13 +288,15 @@ void player::m_reset_handlers() const {
 
 // player::object
 
-player::object::object(const info &_info, player &_player) :
+player::object::object(const info &_info, player &_player)
+:
 	manager::object(_info, _player)
 {}
 
 // player::object::info
 
-player::object::info::info(uint _type) :
+player::object::info::info(uint _type)
+:
 	bk::manager::object::info(_type)
 {}
 

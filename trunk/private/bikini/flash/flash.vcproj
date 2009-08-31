@@ -167,66 +167,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\avm2.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\button.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\clip.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\flash.cpp"
 				>
 				<FileConfiguration
@@ -243,26 +183,6 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\machine.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
 			</File>
@@ -289,46 +209,6 @@
 				RelativePath="..\..\..\include\bikini\flash\player.inl"
 				>
 			</File>
-			<File
-				RelativePath=".\shape.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\swfstream.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
 		</Filter>
 		<Filter
 			Name="header"
@@ -344,31 +224,11 @@
 			Name="interface"
 			>
 			<File
-				RelativePath="..\..\..\include\bikini\flash\actionscript.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\bikini\flash\avm2.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\bikini\flash\button.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\bikini\flash\clip.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\include\bikini\flash.hpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\include\bikini\flash\loader.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\bikini\flash\machine.hpp"
 				>
 			</File>
 			<File
@@ -380,27 +240,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\bikini\flash\opcodes.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\include\bikini\flash\player.hpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\include\bikini\flash\renderer.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\bikini\flash\shape.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\bikini\flash\swfstream.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\bikini\flash\swftagtypes.hpp"
 				>
 			</File>
 		</Filter>

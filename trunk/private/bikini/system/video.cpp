@@ -122,17 +122,21 @@ void video::rendering::m_proc()
 
 // video
 
-video::video() :
+video::video()
+:
 	m_rendering(new_rendering(*this))
 {}
-video::~video() {
+video::~video()
+{
 	delete &m_rendering;
 }
-bool video::create() {
+bool video::create()
+{
 	m_rendering.create();
 	return true;
 }
-bool video::update(real _dt) {
+bool video::update(real _dt)
+{
 	if(!super::update(_dt)) return false;
 	if (!m_cbuffer.empty())
 	{
@@ -143,7 +147,8 @@ bool video::update(real _dt) {
 	m_cbuffer.resize(0);
 	return true;
 }
-void video::destroy() {
+void video::destroy()
+{
 	m_rendering.destroy();
 	super::destroy();
 }
@@ -180,13 +185,15 @@ void video::set_resource_invalid(uint _ID)
 
 // video::resource::info
 
-video::object::info::info(uint _type) :
+video::object::info::info(uint _type)
+:
 	device::object::info(_type)
 {}
 
 // video::object
 
-video::object::object(const info &_info, video &_video) :
+video::object::object(const info &_info, video &_video)
+:
 	device::object(_info, _video)
 {}
 
@@ -194,13 +201,17 @@ namespace vo { /* video objects ------------------------------------------------
 
 // window::info
 
-window::info::info() : video::object::info(video::ot::window) {}
+window::info::info()
+:
+	video::object::info(video::ot::window)
+{}
 
 // window
 
 window *window::first_p = 0;
 
-window::window(const info &_info, video &_video, HWND _window) :
+window::window(const info &_info, video &_video, HWND _window)
+:
 	video::object(_info, _video), m_window(_window), next_p(0)
 {
 	next_p = first_p;
