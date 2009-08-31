@@ -11,9 +11,12 @@
 ///	flash player
 /**	[TODO]
  */
-struct player : manager {
-	struct object : manager::object {
-		struct info : manager::object::info {
+struct player : manager
+{
+	struct object : manager::object
+	{
+		struct info : manager::object::info
+		{
 			typedef player manager;
 			info(uint _type);
 		};
@@ -37,6 +40,7 @@ struct player : manager {
 	bool show(uint _level = bad_ID);
 	bool hide(uint _level = bad_ID);
 	bool render(uint _level = bad_ID) const;
+
 private:
 	handle m_handle;
 	renderer *m_renderer_p; bool m_delete_renderer;

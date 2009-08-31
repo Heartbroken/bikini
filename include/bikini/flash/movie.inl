@@ -12,6 +12,7 @@
 
 // movie::info
 
-inline handle movie::info::get_handle() const {
+inline handle movie::info::get_handle() const
+{
 	return m_handle;
 }
