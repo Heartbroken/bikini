@@ -45,7 +45,7 @@ public:
 
 private:
 	bk::video m_video;
-	bk::real m_time;
+	bk::rbig m_time;
 public:
 };
 

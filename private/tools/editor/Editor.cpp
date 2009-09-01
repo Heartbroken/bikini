@@ -241,11 +241,11 @@ bk::video& CEditorApp::get_video()
 }
 void CEditorApp::update_video()
 {
-	bk::real l_time = bk::sys_time();
-	bk::real l_dt = l_time - m_time;
+	bk::rbig l_time = bk::sys_time();
+	bk::real l_dt = bk::real(l_time - m_time);
 	if (l_dt > (1.0/60.0))
 	{
-		m_video.update(l_time - m_time);
+		m_video.update(l_dt);
 		m_time = l_time;
 		//theApp.console_output(L"Update\n");
 	}
