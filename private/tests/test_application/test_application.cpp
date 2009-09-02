@@ -28,8 +28,9 @@ struct task0 : bk::application::task
 		bk::vo::window::info l_vo_window_info;
 		bk::uint l_vo_window_ID = l_video.spawn(l_vo_window_info, l_window.get_handle());
 		l_window.show();
+		bk::flash::renderer l_renderer;
 		bk::flash::player l_player;
-		l_player.create();
+		l_player.create(l_renderer);
 		l_player.play("data/gui/test.swf");
 		bk::ticker l_ticker(bk::real(1.0/60.0));
 		bk::rbig l_time = bk::sys_time();
