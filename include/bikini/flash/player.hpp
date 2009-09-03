@@ -25,10 +25,8 @@ struct player : manager
 	};
 	player();
 	~player();
-	inline renderer& get_renderer() const;
-	inline loader& get_loader() const;
-	bool create(renderer &_renderer);
-	bool create(renderer &_renderer, loader &_loader);
+	//inline renderer& get_renderer() const;
+	//inline loader& get_loader() const;
 	template<typename _Renderer> inline bool create(_Renderer &_renderer);
 	template<typename _Renderer, typename _Loader> inline bool create(_Renderer &_renderer, _Loader &_loader);
 	bool update(real _dt);
@@ -43,8 +41,11 @@ struct player : manager
 
 private:
 	handle m_handle;
-	renderer *m_renderer_p; bool m_delete_renderer;
-	loader *m_loader_p; bool m_delete_loader;
+	struct _renderer_interface;
+	_renderer_interface *m_renderer_p;
+	struct _loader_interface;
+	_loader_interface *m_loader_p;
+	bool m_create(_renderer_interface &_renderer, _loader_interface &_loader);
 	bk::loader m_def_loader;
 	uint_array m_levels;
 	typedef array_<object::info*> movie_info_array;

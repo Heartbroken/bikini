@@ -16,7 +16,7 @@ namespace flash { /*------------------------------------------------------------
 
 namespace _gameswf_helper {
 
-static loader *loader_p = 0;
+static player::_loader_interface *loader_p = 0;
 
 static inline sint read(handle _buffer, sint _length, handle _ID)
 {
@@ -152,17 +152,12 @@ private:
 player::player()
 :
 	m_handle(0),
-	m_renderer_p(0), m_delete_renderer(false),
-	m_loader_p(0), m_delete_loader(false)
+	m_renderer_p(0),
+	m_loader_p(0)
 {}
 player::~player()
 {}
-bool player::create(renderer &_renderer)
-{
-	m_delete_loader = true;
-	return create(_renderer, * new _player_loader_proxy_<bk::loader>(m_def_loader));
-}
-bool player::create(renderer &_renderer, loader &_loader)
+bool player::m_create(_renderer_interface &_renderer, _loader_interface &_loader)
 {
 	m_renderer_p = &_renderer;
 	m_loader_p = &_loader;
@@ -195,9 +190,9 @@ void player::destroy()
 		m_movie_names.pop_back();
 	}
 	((gameswf::player*)m_handle)->drop_ref();
-	if(m_delete_renderer) delete m_renderer_p;
+	delete m_renderer_p;
 	m_renderer_p = 0;
-	if(m_delete_loader) delete m_loader_p;
+	delete m_loader_p;
 	m_loader_p = 0;
 }
 uint player::play(const wchar* _path, uint _level)
