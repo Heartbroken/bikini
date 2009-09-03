@@ -13,6 +13,21 @@
  */
 struct player : manager
 {
+	struct renderer
+	{
+		virtual ~renderer() {}
+	};
+
+	struct loader
+	{
+		virtual ~loader() {}
+		virtual uint open(const wchar* _path) = 0;
+		virtual bool good(uint _ID) const = 0;
+		virtual uint seek(uint _ID, sint _offset = 0, uint _from = 1) = 0;
+		virtual uint read(uint _ID, handle _buffer, uint _length) = 0;
+		virtual void close(uint _ID) = 0;
+	};
+
 	struct object : manager::object
 	{
 		struct info : manager::object::info
@@ -25,8 +40,8 @@ struct player : manager
 	};
 	player();
 	~player();
-	//inline renderer& get_renderer() const;
-	//inline loader& get_loader() const;
+	inline renderer& get_renderer() const;
+	inline loader& get_loader() const;
 	template<typename _Renderer> inline bool create(_Renderer &_renderer);
 	template<typename _Renderer, typename _Loader> inline bool create(_Renderer &_renderer, _Loader &_loader);
 	bool update(real _dt);
@@ -41,11 +56,9 @@ struct player : manager
 
 private:
 	handle m_handle;
-	struct _renderer_interface;
-	_renderer_interface *m_renderer_p;
-	struct _loader_interface;
-	_loader_interface *m_loader_p;
-	bool m_create(_renderer_interface &_renderer, _loader_interface &_loader);
+	renderer *m_renderer_p;
+	loader *m_loader_p;
+	bool m_create(renderer &_renderer, loader &_loader);
 	bk::loader m_def_loader;
 	uint_array m_levels;
 	typedef array_<object::info*> movie_info_array;

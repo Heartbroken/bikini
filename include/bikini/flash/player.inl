@@ -8,16 +8,9 @@
 
 #pragma once
 
-// player::_renderer_interface
-
-struct player::_renderer_interface
-{
-	virtual ~_renderer_interface() {}
-};
-
 // _player_renderer_helper_
 
-template<typename _Renderer, typename _Interface> struct _player_renderer_proxy_ : _Interface
+template<typename _Renderer> struct _player_renderer_proxy_ : player::renderer
 {
 	inline _player_renderer_proxy_(_Renderer &_renderer)
 	:
@@ -36,21 +29,9 @@ private:
 	_Renderer &m_renderer;
 };
 
-//
-
-struct player::_loader_interface
-{
-	virtual ~_loader_interface() {}
-	virtual uint open(const wchar* _path) = 0;
-	virtual bool good(uint _ID) const = 0;
-	virtual uint seek(uint _ID, sint _offset = 0, uint _from = 1) = 0;
-	virtual uint read(uint _ID, handle _buffer, uint _length) = 0;
-	virtual void close(uint _ID) = 0;
-};
-
 // _player_loader_helper_
 
-template<typename _Loader, typename _Interface> struct _player_loader_proxy_ : _Interface
+template<typename _Loader, typename _Interface> struct _player_loader_proxy_ : player::loader
 {
 	inline _player_loader_proxy_(_Loader &_loader)
 	:
@@ -83,23 +64,23 @@ private:
 
 // player
 
-//inline renderer& player::get_renderer() const
-//{
-//	return *m_renderer_p;
-//}
-//inline loader& player::get_loader() const
-//{
-//	return *m_loader_p;
-//}
+inline player::renderer& player::get_renderer() const
+{
+	return *m_renderer_p;
+}
+inline player::loader& player::get_loader() const
+{
+	return *m_loader_p;
+}
 template<typename _R>
 inline bool player::create(_R &_renderer)
 {
-	return m_create(* new _player_renderer_proxy_<_R, _renderer_interface>(_renderer), * new _player_loader_proxy_<bk::loader, _loader_interface>(m_def_loader));
+	return m_create(* new _player_renderer_proxy_<_R>(_renderer), * new _player_loader_proxy_<bk::loader>(m_def_loader));
 }
 template<typename _R, typename _L>
 inline bool player::create(_R &_renderer, _L &_loader)
 {
-	return m_create(* new _player_renderer_proxy_<_R, _renderer_interface>(_renderer), * new _player_loader_proxy_<_L, _loader_interface>(_loader));
+	return m_create(* new _player_renderer_proxy_<_R>(_renderer), * new _player_loader_proxy_<_L>(_loader));
 }
 
 // player::object
