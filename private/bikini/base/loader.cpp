@@ -47,7 +47,7 @@ uint loader::seek(uint _ID, sint _offset, uint _from) {
 	uint l_index = _ID & (bad_ID >> (sizeof(uint) * 8 / 2));
 	if(l_index > m_files.size() || m_files[l_index].ID != _ID || m_files[l_index].stream_p == 0) return bad_ID;
 	std::ifstream &l_stream = *m_files[l_index].stream_p;
-	if(_offset != 0 || _from != 1) l_stream.seekg(_offset, _from);
+	if(_offset != 0 || _from != 1) l_stream.seekg(_offset, (std::ifstream::seek_dir)_from);
 	return l_stream.tellg();
 }
 uint loader::read(uint _ID, handle _buffer, uint _length) {

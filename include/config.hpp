@@ -17,6 +17,8 @@
 #endif
 #ifdef _XBOX
 #	define _PLATFORM "xbox 360"
+#elif _WIN64
+#	define _PLATFORM "x64"
 #elif _WIN32
 #	define _PLATFORM "win32"
 #endif

@@ -10,6 +10,7 @@
 
 #define GET_X_LPARAM(lp)	((int)(short)LOWORD(lp))
 #define GET_Y_LPARAM(lp)	((int)(short)HIWORD(lp))
+#define GWL_USERDATA		(-21)
 
 namespace bk { /*--------------------------------------------------------------------------------*/
 
@@ -54,7 +55,7 @@ void window::set_size(uint _width, uint _height) {
 	POINT l_shift = { l_wrect.left, l_wrect.top }; ScreenToClient(m_handle, &l_shift);
 	sint l_left = (l_drect.right - (sint)_width) / 2 + l_shift.x;
 	sint l_top = (l_drect.bottom - (sint)_height) / 2 + l_shift.y;
-	MoveWindow(m_handle, l_left, l_top, l_width, l_height, TRUE);
+	MoveWindow(m_handle, (int)l_left, (int)l_top, (int)l_width, (int)l_height, TRUE);
 }
 LRESULT CALLBACK window::_proc(HWND _handle, UINT _message, WPARAM _wparam, LPARAM _lparam) {
 	window &l_window = *reinterpret_cast<window*>((LONG_PTR)GetWindowLong(_handle, GWL_USERDATA));

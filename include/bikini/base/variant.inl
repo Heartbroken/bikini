@@ -49,7 +49,7 @@ inline pointer variant_<_L, _D>::data() const {
 	return m_data;
 }
 template<typename _L, bool _D>
-inline void variant_<_L, _D>::construct(u32 _type, pointer _data) {
+inline void variant_<_L, _D>::construct(uint _type, pointer _data) {
 	assert(_type < _L::count || _type == bad_ID);
 	destruct();
 	m_type = _type;

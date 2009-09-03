@@ -9,6 +9,7 @@
 #include "header.hpp"
 
 
+#define GWL_WNDPROC			(-4)
 
 namespace bk { /*--------------------------------------------------------------------------------*/
 
@@ -299,7 +300,7 @@ long window::m_wndproc(uint _message, uint _wparam, uint _lparam)
 	} break;
 	}
 
-	return CallWindowProc(m_oldwndproc, m_window, _message, _wparam, _lparam);
+	return (long)CallWindowProc(m_oldwndproc, m_window, (UINT)_message, _wparam, _lparam);
 }
 
 /*
