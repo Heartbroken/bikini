@@ -16,7 +16,7 @@ namespace flash { /*------------------------------------------------------------
 
 namespace _gameswf_helper {
 
-static player::_loader_interface *loader_p = 0;
+static player::loader *loader_p = 0;
 
 static inline sint read(handle _buffer, sint _length, handle _ID)
 {
@@ -157,7 +157,7 @@ player::player()
 {}
 player::~player()
 {}
-bool player::m_create(_renderer_interface &_renderer, _loader_interface &_loader)
+bool player::m_create(renderer &_renderer, loader &_loader)
 {
 	m_renderer_p = &_renderer;
 	m_loader_p = &_loader;
