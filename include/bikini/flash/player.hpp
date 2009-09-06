@@ -15,15 +15,13 @@ struct player : manager
 {
 	struct renderer
 	{
-		virtual ~renderer() {}
 	};
 
 	struct loader
 	{
-		virtual ~loader() {}
 		virtual uint open(const wchar* _path) = 0;
 		virtual bool good(uint _ID) const = 0;
-		virtual uint seek(uint _ID, sint _offset = 0, uint _from = 1) = 0;
+		virtual uint seek(uint _ID, sint _offset = 0, uint _from = 0) = 0;
 		virtual uint read(uint _ID, handle _buffer, uint _length) = 0;
 		virtual void close(uint _ID) = 0;
 	};
@@ -55,9 +53,10 @@ struct player : manager
 	bool render(uint _level = bad_ID) const;
 
 private:
-	handle m_handle;
-	renderer *m_renderer_p;
-	loader *m_loader_p;
+	friend struct _gameswf;
+	_gameswf *m_gameswf_p;
+	//renderer *m_renderer_p;
+	//loader *m_loader_p;
 	bool m_create(renderer &_renderer, loader &_loader);
 	bk::loader m_def_loader;
 	uint_array m_levels;
@@ -65,8 +64,8 @@ private:
 	movie_info_array m_movies;
 	wstring_array m_movie_names;
 	object::info& m_load_movie(const wchar* _path);
-	void m_set_handlers() const;
-	void m_reset_handlers() const;
+	//void m_set_handlers() const;
+	//void m_reset_handlers() const;
 };
 
 #include "player.inl"

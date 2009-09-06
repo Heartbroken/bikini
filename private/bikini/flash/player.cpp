@@ -14,55 +14,34 @@ namespace flash { /*------------------------------------------------------------
 
 // gameswf callbacks
 
-namespace _gameswf_helper {
+struct player::_gameswf : gameswf::render_handler
+{
+	static player::loader *loader_p = 0;
 
-static player::loader *loader_p = 0;
+	static inline sint read(handle _buffer, sint _length, handle _ID) { return loader_p->read((uint)_ID, _buffer, _length); }
+	static inline sint write(pointer _buffer, sint _length, handle _ID) { assert(0); return 0; }
+	static inline sint seek(sint _offset, handle _ID) { return loader_p->seek((uint)_ID, _offset, 0); }
+	static inline sint seek_to_end(handle _ID) { return loader_p->seek((uint)_ID, 0, 2); }
+	static inline sint tell(pointer _ID) { return loader_p->seek((uint)_ID, 0, 1); }
+	static inline bool get_eof(handle _ID) { return false; }
+	static inline sint close(handle _ID) { loader_p->close((uint)_ID); return 0; }
 
-static inline sint read(handle _buffer, sint _length, handle _ID)
-{
-	return loader_p->read((uint)_ID, _buffer, _length);
-}
-static inline sint write(pointer _buffer, sint _length, handle _ID)
-{
-	assert(0); return 0;
-}
-static inline sint seek(sint _offset, handle _ID)
-{
-	return loader_p->seek((uint)_ID, _offset);
-}
-static inline sint seek_to_end(handle _ID)
-{
-	return loader_p->seek((uint)_ID, 0, 2);
-}
-static inline sint tell(pointer _ID)
-{
-	return loader_p->seek((uint)_ID);
-}
-static inline bool get_eof(handle _ID)
-{
-	return false;
-}
-static inline sint close(handle _ID)
-{
-	loader_p->close((uint)_ID); return 0;
-}
-static inline tu_file* open(const char* _path)
-{
-	uint l_alength = strlen(_path) + 1;
-	uint l_wlength = MultiByteToWideChar(CP_UTF8, 0, _path, l_alength, 0, 0);
-	wchar* l_path = (wchar*)_malloca(l_wlength * sizeof(wchar));
-	MultiByteToWideChar(CP_UTF8, 0, _path, (int)l_alength, l_path, (int)l_wlength);
-	uint l_ID = loader_p->open(l_path);
-	return new tu_file((handle)l_ID, &read, &write, &seek, &seek_to_end, &tell, &get_eof, &close);
-}
-static inline void log(bool _error, const char* _message)
-{
-	if (_error) std::cerr << _message;
-	else std::cout << _message;
-}
+	static tu_file* open(const char* _path)
+	{
+		uint l_alength = strlen(_path) + 1;
+		uint l_wlength = MultiByteToWideChar(CP_UTF8, 0, _path, l_alength, 0, 0);
+		wchar* l_path = (wchar*)_malloca(l_wlength * sizeof(wchar));
+		MultiByteToWideChar(CP_UTF8, 0, _path, (int)l_alength, l_path, (int)l_wlength);
+		uint l_ID = loader_p->open(l_path);
+		return new tu_file((handle)l_ID, &read, &write, &seek, &seek_to_end, &tell, &get_eof, &close);
+	}
 
-struct render_handler : gameswf::render_handler
-{
+	static void log(bool _error, const char* _message)
+	{
+		if (_error) std::cerr << _message;
+		else std::cout << _message;
+	}
+
 	typedef gameswf::bitmap_info bitmap_info;
 	typedef gameswf::video_handler video_handler;
 	typedef gameswf::rgba rgba;
@@ -77,6 +56,24 @@ struct render_handler : gameswf::render_handler
 		inline bitmap(image::rgb* _data) {}
 		inline bitmap(image::rgba* _data) {}
 	};
+
+	renderer &m_renderer;
+	loader &m_loader;
+	gameswf::player m_player;
+
+	_gameswf(renderer &_renderer, loader &_loader)
+	:
+		m_renderer(_renderer), m_loader(_loader)
+	{
+		m_player = * new gameswf::player();
+		m_player.add_ref();
+	}
+	~_gameswf()
+	{
+		m_player.drop_ref();
+		delete &m_renderer;
+		delete &m_loader;
+	}
 
 	// Your handler should return these with a ref-count of 0.  (@@ is that the right policy?)
 	bitmap_info* create_bitmap_info_empty() { return new bitmap; }	// used when DO_NOT_LOAD_BITMAPS is set
@@ -96,8 +93,12 @@ struct render_handler : gameswf::render_handler
 	}
 
 	// Geometric and color transforms for mesh and line_strip rendering.
-	void set_matrix(const matrix &_m) {}
-	void set_cxform(const cxform &_cx) {}
+	void set_matrix(const matrix &_m)
+	{
+	}
+	void set_cxform(const cxform &_cx)
+	{
+	}
 
 	// Draw triangles using the current fill-style 0.
 	// Clears the style list after rendering.
@@ -105,73 +106,103 @@ struct render_handler : gameswf::render_handler
 	// coords is a list of (x,y) coordinate pairs, in
 	// triangle-strip order.  The type of the array should
 	// be Sint16[vertex_count*2]
-	void draw_mesh_strip(pointer _coords, sint _vertex_count) {}
+	void draw_mesh_strip(pointer _coords, sint _vertex_count)
+	{
+	}
 	// As above, but coords is in triangle list order.
-	void draw_triangle_list(pointer _coords, sint _vertex_count) {}
+	void draw_triangle_list(pointer _coords, sint _vertex_count)
+	{
+	}
 
 	// Draw a line-strip using the current line style.
 	// Clear the style list after rendering.
 	//
 	// Coords is a list of (x,y) coordinate pairs, in
 	// sequence.  Each coord is a 16-bit signed integer.
-	void draw_line_strip(pointer _coords, sint _vertex_count) {}
+	void draw_line_strip(pointer _coords, sint _vertex_count)
+	{
+	}
 
 	// Set line and fill styles for mesh & line_strip
 	// rendering.
-	void fill_style_disable(sint _fill_side) {}
-	void fill_style_color(sint _fill_side, const rgba &_color) {}
-	void fill_style_bitmap(sint _fill_side, bitmap_info *_bi_p, const matrix &_m, bitmap_wrap_mode _wm) {}
+	void fill_style_disable(sint _fill_side)
+	{
+	}
+	void fill_style_color(sint _fill_side, const rgba &_color)
+	{
+	}
+	void fill_style_bitmap(sint _fill_side, bitmap_info *_bi_p, const matrix &_m, bitmap_wrap_mode _wm)
+	{
+	}
 
-	void line_style_disable() {}
-	void line_style_color(rgba _color) {}
-	void line_style_width(f32 _width) {}
+	void line_style_disable()
+	{
+	}
+	void line_style_color(rgba _color)
+	{
+	}
+	void line_style_width(f32 _width)
+	{
+	}
 
 	// Special function to draw a rectangular bitmap;
 	// intended for textured glyph rendering.  Ignores
 	// current transforms.
-	void draw_bitmap(const matrix &_m, bitmap_info *_bi_p, const rect &_coords, const rect &_uv_coords, rgba _color) {}
-	void set_antialiased(bool _enable) {}
+	void draw_bitmap(const matrix &_m, bitmap_info *_bi_p, const rect &_coords, const rect &_uv_coords, rgba _color)
+	{
+	}
+	void set_antialiased(bool _enable)
+	{
+	}
 
-	void begin_submit_mask() {}
-	void end_submit_mask() {}
-	void disable_mask() {}
+	void begin_submit_mask()
+	{
+	}
+	void end_submit_mask()
+	{
+	}
+	void disable_mask()
+	{
+	}
 
 	// Mouse cursor handling.
-	void set_cursor(cursor_type _cursor) {}
-	bool is_visible(const rect &_bound) { return true; }
-	void open() {}
-
-private:
-	//renderer &m_renderer;
-} render_handler;
-
-} // namespace _gameswf_helper
+	void set_cursor(cursor_type _cursor)
+	{
+	}
+	bool is_visible(const rect &_bound)
+	{
+		return true;
+	}
+	void open()
+	{
+	}
+};
 
 // player
 
 player::player()
 :
-	m_handle(0),
-	m_renderer_p(0),
-	m_loader_p(0)
+	m_gameswf_p(0)
+	//m_handle(0),
+	//m_renderer_p(0),
+	//m_loader_p(0)
 {}
 player::~player()
 {}
 bool player::m_create(renderer &_renderer, loader &_loader)
 {
-	m_renderer_p = &_renderer;
-	m_loader_p = &_loader;
-	gameswf::player &l_player = * new gameswf::player();
-	l_player.add_ref();
-	m_handle = &l_player;
+	m_gameswf_p = new _gameswf(_renderer, _loader);
 	return true;
 }
 bool player::update(real _dt)
 {
 	m_set_handlers();
-	for(uint i = 0, s = m_levels.size(); i < s; ++i) if(exists(m_levels[i]))
+	for(uint i = 0, s = m_levels.size(); i < s; ++i)
 	{
-		get(m_levels[i]).update(_dt);
+		if(exists(m_levels[i]))
+		{
+			get(m_levels[i]).update(_dt);
+		}
 	}
 	m_reset_handlers();
 	return true;
@@ -189,11 +220,14 @@ void player::destroy()
 		m_movies.pop_back();
 		m_movie_names.pop_back();
 	}
-	((gameswf::player*)m_handle)->drop_ref();
-	delete m_renderer_p;
-	m_renderer_p = 0;
-	delete m_loader_p;
-	m_loader_p = 0;
+	delete m_gameswf_p;
+	m_gameswf_p = 0;
+	//m_gameswf_player_p->drop_ref();
+	//m_gameswf_player_p = 0;
+	//delete m_renderer_p;
+	//m_renderer_p = 0;
+	//delete m_loader_p;
+	//m_loader_p = 0;
 }
 uint player::play(const wchar* _path, uint _level)
 {
