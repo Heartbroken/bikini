@@ -2,7 +2,7 @@
 
 	Binary Kinematics 3 - C++ Game Programming Library
 	Copyright (C) 2008-2009 Viktor Reutskyy
-	reutzky@bitchingames.com
+	viktor.reutskyy@gmail.com
 
 *//*---------------------------------------------------------------------------------------------*/
 
@@ -35,14 +35,14 @@ private:
 
 // player
 
-inline player::renderer& player::get_renderer() const
-{
-	return *m_renderer_p;
-}
-inline player::loader& player::get_loader() const
-{
-	return *m_loader_p;
-}
+//inline player::renderer& player::get_renderer() const
+//{
+//	return *m_renderer_p;
+//}
+//inline player::loader& player::get_loader() const
+//{
+//	return *m_loader_p;
+//}
 template<typename _R>
 inline bool player::create(_R &_renderer)
 {

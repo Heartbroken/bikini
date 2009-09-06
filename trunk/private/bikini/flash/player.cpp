@@ -2,7 +2,7 @@
 
 	Binary Kinematics 3 - C++ Game Programming Library
 	Copyright (C) 2008-2009 Viktor Reutskyy
-	reutzky@bitchingames.com
+	viktor.reutskyy@gmail.com
 
 *//*---------------------------------------------------------------------------------------------*/
 
@@ -16,8 +16,6 @@ namespace flash { /*------------------------------------------------------------
 
 struct player::_gameswf : gameswf::render_handler
 {
-	static player::loader *loader_p = 0;
-
 	static inline sint read(handle _buffer, sint _length, handle _ID) { return loader_p->read((uint)_ID, _buffer, _length); }
 	static inline sint write(pointer _buffer, sint _length, handle _ID) { assert(0); return 0; }
 	static inline sint seek(sint _offset, handle _ID) { return loader_p->seek((uint)_ID, _offset, 0); }

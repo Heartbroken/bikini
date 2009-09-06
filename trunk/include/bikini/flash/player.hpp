@@ -2,7 +2,7 @@
 
 	Binary Kinematics 3 - C++ Game Programming Library
 	Copyright (C) 2008-2009 Viktor Reutskyy
-	reutzky@bitchingames.com
+	viktor.reutskyy@gmail.com
 
 *//*---------------------------------------------------------------------------------------------*/
 
@@ -38,8 +38,8 @@ struct player : manager
 	};
 	player();
 	~player();
-	inline renderer& get_renderer() const;
-	inline loader& get_loader() const;
+	//inline renderer& get_renderer() const;
+	//inline loader& get_loader() const;
 	template<typename _Renderer> inline bool create(_Renderer &_renderer);
 	template<typename _Renderer, typename _Loader> inline bool create(_Renderer &_renderer, _Loader &_loader);
 	bool update(real _dt);
@@ -53,7 +53,8 @@ struct player : manager
 	bool render(uint _level = bad_ID) const;
 
 private:
-	friend struct _gameswf;
+	struct _gameswf;
+	friend _gameswf;
 	_gameswf *m_gameswf_p;
 	//renderer *m_renderer_p;
 	//loader *m_loader_p;
