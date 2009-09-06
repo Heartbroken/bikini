@@ -12,6 +12,12 @@
 
 #pragma comment(lib, "flash ("_PLATFORM"!"_CONFIGURATION")")
 
+namespace gameswf {
+
+struct player;
+
+}
+
 namespace bk { /*--------------------------------------------------------------------------------*/
 
 namespace flash { /*-----------------------------------------------------------------------------*/
