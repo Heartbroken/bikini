@@ -2,7 +2,7 @@
 
 	Binary Kinematics 3 - C++ game programming library
 	Copyright (C) 2008-2009 Viktor Reutskyy
-	reutzky@bitchingames.com
+	viktor.reutskyy@gmail.com
 
 *//*---------------------------------------------------------------------------------------------*/
 
