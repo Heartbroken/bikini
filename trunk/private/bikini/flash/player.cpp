@@ -16,6 +16,8 @@ namespace flash { /*------------------------------------------------------------
 
 struct player::_gameswf : gameswf::render_handler
 {
+	static loader *loader_p;
+
 	static inline sint read(handle _buffer, sint _length, handle _ID) { return loader_p->read((uint)_ID, _buffer, _length); }
 	static inline sint write(pointer _buffer, sint _length, handle _ID) { assert(0); return 0; }
 	static inline sint seek(sint _offset, handle _ID) { return loader_p->seek((uint)_ID, _offset, 0); }
@@ -194,7 +196,7 @@ bool player::m_create(renderer &_renderer, loader &_loader)
 }
 bool player::update(real _dt)
 {
-	m_set_handlers();
+	//m_set_handlers();
 	for(uint i = 0, s = m_levels.size(); i < s; ++i)
 	{
 		if(exists(m_levels[i]))
@@ -202,7 +204,7 @@ bool player::update(real _dt)
 			get(m_levels[i]).update(_dt);
 		}
 	}
-	m_reset_handlers();
+	//m_reset_handlers();
 	return true;
 }
 void player::destroy()
@@ -229,9 +231,9 @@ void player::destroy()
 }
 uint player::play(const wchar* _path, uint _level)
 {
-	assert(m_renderer_p != 0 && m_loader_p != 0);
-	if(m_renderer_p == 0 || m_loader_p == 0) return bad_ID;
-	m_set_handlers();
+	//assert(m_renderer_p != 0 && m_loader_p != 0);
+	//if(m_renderer_p == 0 || m_loader_p == 0) return bad_ID;
+	//m_set_handlers();
 	uint l_level = _level;
 	po::movie::info &l_movie = static_cast<po::movie::info&>(m_load_movie(_path));
 	if(l_level > m_levels.size())
@@ -245,7 +247,7 @@ uint player::play(const wchar* _path, uint _level)
 		m_levels[l_level] = bad_ID;
 	}
 	m_levels[l_level] = spawn(l_movie);
-	m_reset_handlers();
+	//m_reset_handlers();
 	return l_level;
 }
 uint player::play(const achar* _path, uint _level)
@@ -273,7 +275,7 @@ bool player::hide(uint _level)
 }
 bool player::render(uint _level) const
 {
-	m_set_handlers();
+	//m_set_handlers();
 	for(uint i = 0, s = m_levels.size(); i < s; ++i)
 	{
 		if((_level == bad_ID || _level == i) && exists(m_levels[i]))
@@ -281,7 +283,7 @@ bool player::render(uint _level) const
 			get<po::movie>(m_levels[i]).render();
 		}
 	}
-	m_reset_handlers();
+	//m_reset_handlers();
 	return true;
 }
 player::object::info& player::m_load_movie(const wchar* _path)
@@ -289,29 +291,30 @@ player::object::info& player::m_load_movie(const wchar* _path)
 	array_<wstring>::iterator l_it = std::find(m_movie_names.begin(), m_movie_names.end(), _path);
 	if(l_it != m_movie_names.end()) return *m_movies[l_it - m_movie_names.begin()];
 	m_movie_names.push_back(_path);
-	gameswf::player &l_player = *(gameswf::player*)m_handle;
+	//gameswf::player &l_player = *(gameswf::player*)m_handle;
 	uint l_wlength = wcslen(_path) + 1;
 	uint l_alength = WideCharToMultiByte(CP_UTF8, 0, _path, l_wlength, 0, 0, 0, 0);
 	achar* l_path = (achar*)_malloca(l_alength);
 	WideCharToMultiByte(CP_UTF8, 0, _path, l_wlength, l_path, l_alength, 0, 0);
-	po::movie::info &l_movie = * new po::movie::info(l_player.create_movie(l_path));
-	m_movies.push_back(&l_movie);
-	return l_movie;
+	//po::movie::info &l_movie = * new po::movie::info(l_player.create_movie(l_path));
+	//m_movies.push_back(&l_movie);
+	//return l_movie;
+	return *(player::object::info*)0;
 }
-void player::m_set_handlers() const
-{
-	_gameswf_helper::loader_p = m_loader_p;
-	gameswf::register_file_opener_callback(_gameswf_helper::open);
-	gameswf::register_log_callback(_gameswf_helper::log);
-	gameswf::set_render_handler(&_gameswf_helper::render_handler);
-}
-void player::m_reset_handlers() const
-{
-	_gameswf_helper::loader_p = 0;
-	gameswf::register_file_opener_callback(0);
-	gameswf::register_log_callback(0);
-	gameswf::set_render_handler(0);
-}
+//void player::m_set_handlers() const
+//{
+//	_gameswf_helper::loader_p = m_loader_p;
+//	gameswf::register_file_opener_callback(_gameswf_helper::open);
+//	gameswf::register_log_callback(_gameswf_helper::log);
+//	gameswf::set_render_handler(&_gameswf_helper::render_handler);
+//}
+//void player::m_reset_handlers() const
+//{
+//	_gameswf_helper::loader_p = 0;
+//	gameswf::register_file_opener_callback(0);
+//	gameswf::register_log_callback(0);
+//	gameswf::set_render_handler(0);
+//}
 
 // player::object
 
