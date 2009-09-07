@@ -13,7 +13,7 @@
 
 #include "../config.hpp"
 
-#pragma comment(lib, "base ("_PLATFORM"!"_CONFIGURATION")")
+#pragma comment(lib, "base ("_PLATFORM_"!"_CONFIGURATION_")")
 
 #if defined(XBOX)
 #	include "base/base_xbox.hpp"
