@@ -10,31 +10,31 @@
 
 #include <assert.h>
 
-//#if defined(XBOX)
-//
-//#include <assert.h>
-//
-//#elif defined(WIN32)
-//
-//#ifdef halt
-//#	undef halt
-//#endif
-//#ifdef assert
-//#	undef assert
-//#endif
-//
-//bool ARI(char* _expression, char* _file, int _line, char* _function, char* _message = 0);
-//bool ARI2(char* _expression, char* _file, int _line, char* _function, char* _message = 0);
-//
-//#define halt { Sleep(1); __asm int 3 }
-//
-//#ifdef _DEBUG
-//#	define assert(E)	while(!(E)) { Sleep(1); if(bk::ARI(#E, __FILE__, __LINE__, __FUNCTION__)) break; halt; }
-//#else
-//#	define assert(E)
-//#endif
-//
-//#endif
+#if defined(XBOX)
+
+#include <assert.h>
+
+#elif defined(WIN32)
+
+#ifdef halt
+#	undef halt
+#endif
+#ifdef assert
+#	undef assert
+#endif
+
+bool ARI(char* _expression, char* _file, int _line, char* _function, char* _message = 0);
+bool ARI2(char* _expression, char* _file, int _line, char* _function, char* _message = 0);
+
+#define halt { Sleep(1); __debugbreak(); /*__asm int 3*/ }
+
+#ifdef _DEBUG
+#	define assert(E)	while(!(E)) { Sleep(1); if(bk::ARI(#E, __FILE__, __LINE__, __FUNCTION__)) break; halt; }
+#else
+#	define assert(E)
+#endif
+
+#endif
 
 template<bool> struct compile_time_assert;
 template<> struct compile_time_assert<true> {};
