@@ -16,9 +16,9 @@
 #include "gameswf/gameswf_movie_def.h"
 
 // GameSWF requires these libs
-#pragma comment(lib, "gameswf ("_PLATFORM"!"_CONFIGURATION")")
-#pragma comment(lib, "zlib ("_PLATFORM"!"_CONFIGURATION")")
-#pragma comment(lib, "jpeg ("_PLATFORM"!"_CONFIGURATION")")
-#pragma comment(lib, "png ("_PLATFORM"!"_CONFIGURATION")")
+#pragma comment(lib, "gameswf ("_PLATFORM_"!"_CONFIGURATION_")")
+#pragma comment(lib, "zlib ("_PLATFORM_"!"_CONFIGURATION_")")
+#pragma comment(lib, "jpeg ("_PLATFORM_"!"_CONFIGURATION_")")
+#pragma comment(lib, "png ("_PLATFORM_"!"_CONFIGURATION_")")
 #pragma comment(lib, "ws2_32")
 #pragma comment(lib, "winmm")

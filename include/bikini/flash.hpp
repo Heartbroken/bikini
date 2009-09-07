@@ -10,7 +10,7 @@
 
 #include "base.hpp"
 
-#pragma comment(lib, "flash ("_PLATFORM"!"_CONFIGURATION")")
+#pragma comment(lib, "flash ("_PLATFORM_"!"_CONFIGURATION_")")
 
 namespace gameswf {
 

@@ -10,7 +10,7 @@
 
 #include "base.hpp"
 
-#pragma comment(lib, "system ("_PLATFORM"!"_CONFIGURATION")")
+#pragma comment(lib, "system ("_PLATFORM_"!"_CONFIGURATION_")")
 
 #if defined(WIN32)
 #	include "system/system_win32.hpp"
