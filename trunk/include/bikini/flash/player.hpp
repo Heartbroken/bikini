@@ -54,7 +54,6 @@ struct player : manager
 
 private:
 	struct _gameswf;
-	friend _gameswf;
 	_gameswf *m_gameswf_p;
 	//renderer *m_renderer_p;
 	//loader *m_loader_p;
