@@ -10,7 +10,7 @@ TEST(system_video, window_create) {
 	bk::video l_video;
 	ASSERT_TRUE(l_video.create());
 
-	bk::window l_window(l_video);
+	bk::window l_window;
 	ASSERT_TRUE(l_window.create(640, 400));
 
 	bk::vo::window::info l_window_info;

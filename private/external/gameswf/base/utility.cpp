@@ -14,7 +14,7 @@
 int	tu_testbed_assert_break(const char* filename, int linenum, const char* expression)
 {
 	// @@ TODO output print error message
-	__asm { int 3 }
+	__debugbreak(); //__asm { int 3 }
 	return 0;
 }
 
