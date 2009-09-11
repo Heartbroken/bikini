@@ -8,11 +8,9 @@
 
 #pragma once
 
-#include <assert.h>
-
 #if defined(XBOX)
 
-#include <assert.h>
+//#include <assert.h>
 
 #elif defined(WIN32)
 
@@ -26,7 +24,7 @@
 bool ARI(char* _expression, char* _file, int _line, char* _function, char* _message = 0);
 bool ARI2(char* _expression, char* _file, int _line, char* _function, char* _message = 0);
 
-#define halt { Sleep(1); __debugbreak(); /*__asm int 3*/ }
+#define halt { Sleep(1); __debugbreak(); }
 
 #ifdef _DEBUG
 #	define assert(E)	while(!(E)) { Sleep(1); if(bk::ARI(#E, __FILE__, __LINE__, __FUNCTION__)) break; halt; }

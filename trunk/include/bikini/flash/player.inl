@@ -8,9 +8,26 @@
 
 #pragma once
 
+// player::renderer
+
+struct player::renderer
+{
+};
+
+// player::loader
+
+struct player::loader
+{
+	virtual uint open(const wchar* _path) = 0;
+	virtual bool good(uint _ID) const = 0;
+	virtual uint seek(uint _ID, sint _offset = 0, uint _from = 0) = 0;
+	virtual uint read(uint _ID, handle _buffer, uint _length) = 0;
+	virtual void close(uint _ID) = 0;
+};
+
 // _player_renderer_helper_
 
-template<typename _Renderer> struct _player_renderer_proxy_ : player::renderer
+template<typename _Renderer, typename _Interface> struct _player_renderer_proxy_ : _Interface
 {
 	_player_renderer_proxy_(_Renderer &_renderer) : m_renderer(_renderer) {}
 
@@ -20,7 +37,7 @@ private:
 
 // _player_loader_helper_
 
-template<typename _Loader> struct _player_loader_proxy_ : player::loader
+template<typename _Loader, typename _Interface> struct _player_loader_proxy_ : _Interface
 {
 	_player_loader_proxy_(_Loader &_loader) : m_loader(_loader) {}
 	uint open(const wchar* _path) { return m_loader.open(_path); }
@@ -35,30 +52,15 @@ private:
 
 // player
 
-//inline player::renderer& player::get_renderer() const
-//{
-//	return *m_renderer_p;
-//}
-//inline player::loader& player::get_loader() const
-//{
-//	return *m_loader_p;
-//}
 template<typename _R>
 inline bool player::create(_R &_renderer)
 {
-	return m_create(* new _player_renderer_proxy_<_R>(_renderer),
-					* new _player_loader_proxy_<bk::loader>(m_def_loader));
+	return create(*(renderer*) new _player_renderer_proxy_<_R, renderer>(_renderer),
+				  *(loader*) new _player_loader_proxy_<bk::loader, loader>(m_def_loader));
 }
 template<typename _R, typename _L>
 inline bool player::create(_R &_renderer, _L &_loader)
 {
-	return m_create(* new _player_renderer_proxy_<_R>(_renderer),
-					* new _player_loader_proxy_<_L>(_loader));
-}
-
-// player::object
-
-inline player& player::object::get_player() const
-{
-	return static_cast<player&>(get_manager());
+	return create(*(renderer*) new _player_renderer_proxy_<_R, renderer>(_renderer),
+				  *(loader*) new _player_loader_proxy_<_L, loader>(_loader));
 }

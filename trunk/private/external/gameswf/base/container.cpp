@@ -11,7 +11,6 @@
 #include "base/tu_random.h"
 #include <stdarg.h>
 
-
 void tu_string::append_wide_char(uint16 c)
 {
 	char buf[8];
