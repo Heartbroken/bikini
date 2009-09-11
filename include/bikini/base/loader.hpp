@@ -46,8 +46,9 @@ struct loader {
 	void close(uint _ID);
 
 private:
-	struct file { std::ifstream* stream_p; uint ID; };
-	array_<file> m_files;
-	array_<uint> m_free_IDs;
-	uint m_counter;
+	pool_<std::ifstream*> m_pool;
+	//struct file { std::ifstream* stream_p; uint ID; };
+	//array_<file> m_files;
+	//array_<uint> m_free_IDs;
+	//uint m_counter;
 };
