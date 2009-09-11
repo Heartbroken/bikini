@@ -22,10 +22,8 @@ namespace bk { /*---------------------------------------------------------------
 
 namespace flash { /*-----------------------------------------------------------------------------*/
 
-#include "flash/loader.hpp"
-#include "flash/renderer.hpp"
 #include "flash/player.hpp"
-#include "flash/objects.hpp"
+#include "flash/renderer.hpp"
 
 } /* namespace flash ----------------------------------------------------------------------------*/
 

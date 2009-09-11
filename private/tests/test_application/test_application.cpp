@@ -20,6 +20,7 @@ struct task0 : bk::application::task
 	{}
 	void main()
 	{
+		assert(1);
 		bk::window l_window;
 		l_window.create(800, 600);
 		l_window.set_caption("test_application ");

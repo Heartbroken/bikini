@@ -23,6 +23,7 @@
 
 #include <math.h>
 #include <process.h>
+#include <assert.h>
 
 #include <bitset>
 #include <vector>

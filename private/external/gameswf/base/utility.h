@@ -44,7 +44,7 @@
 	// debugging experience.
 	//int	tu_testbed_assert_break(const char* filename, int linenum, const char* expression);
 	#undef assert
-	#define assert(x)	__debugbreak(); //if (!(x)) { __asm { int 3 } }	// tu_testbed_assert_break(__FILE__, __LINE__, #x))
+	#define assert(x)	if (!(x)) { __debugbreak(); }	// tu_testbed_assert_break(__FILE__, __LINE__, #x))
 
 	#endif // not NDEBUG
 #endif	// not RELEASE
