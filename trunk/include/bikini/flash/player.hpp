@@ -30,10 +30,10 @@ struct player
 	bool stop();
 
 private:
-	struct _gameswf; _gameswf *m_gameswf_p;
 	struct renderer; struct loader;
 	bool create(renderer &_renderer, loader &_loader);
-	bk::loader m_def_loader;
+	struct _gameswf; _gameswf *m_gameswf_p;
+	bk::loader m_defloader;
 };
 
 #include "player.inl"

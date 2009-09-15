@@ -65,39 +65,9 @@ struct player::_gameswf : gameswf::render_handler
 		inline bitmap(image::rgba* _data) {}
 	};
 
-	// members
+	// rendering
 
-	renderer &m_renderer;
-	loader &m_loader;
-	gameswf::player &m_player;
-
-	_gameswf(renderer &_renderer, loader &_loader)
-	:
-		m_renderer(_renderer), m_loader(_loader),
-		m_player(* new gameswf::player())
-	{
-		m_player.add_ref();
-		gameswf::register_file_opener_callback(&_gameswf::open);
-	}
-	~_gameswf()
-	{
-		m_player.drop_ref();
-		delete &m_renderer;
-		delete &m_loader;
-	}
-	bool play(const achar* _path)
-	{
-		loader_p = &m_loader;
-		smart_ptr<gameswf::root> l_movie = m_player.load_file(_path);
-		loader_p = 0;
-		if (l_movie == 0) return false;
-		l_movie->add_ref();
-		m_player.set_root(l_movie.get_ptr());
-		return true;
-
-	}
-
-	// render_handler overrides
+	static renderer *renderer_p;
 
 	// Your handler should return these with a ref-count of 0.  (@@ is that the right policy?)
 	bitmap_info* create_bitmap_info_empty() { return new bitmap; }	// used when DO_NOT_LOAD_BITMAPS is set
@@ -117,11 +87,15 @@ struct player::_gameswf : gameswf::render_handler
 	}
 
 	// Geometric and color transforms for mesh and line_strip rendering.
+	matrix m_matrix;
 	void set_matrix(const matrix &_m)
 	{
+		m_matrix = _m;
 	}
+	cxform m_cxform;
 	void set_cxform(const cxform &_cx)
 	{
+		m_cxform = _cx;
 	}
 
 	// Draw triangles using the current fill-style 0.
@@ -200,8 +174,78 @@ struct player::_gameswf : gameswf::render_handler
 	void open()
 	{
 	}
+
+	// members
+
+	loader &m_loader;
+	renderer &m_renderer;
+	gameswf::player &m_player;
+
+	_gameswf(renderer &_renderer, loader &_loader)
+	:
+		m_renderer(_renderer), m_loader(_loader),
+		m_player(* new gameswf::player())
+	{
+		m_player.add_ref();
+		gameswf::register_file_opener_callback(&_gameswf::open);
+	}
+	~_gameswf()
+	{
+		m_player.drop_ref();
+		delete &m_renderer;
+		delete &m_loader;
+	}
+	void set_handlers()
+	{
+		loader_p = &m_loader;
+		renderer_p = &m_renderer;
+		gameswf::set_render_handler(this);
+	}
+	void reset_handlers()
+	{
+		loader_p = 0;
+		renderer_p = 0;
+		gameswf::set_render_handler(0);
+	}
+	bool play(const achar* _path)
+	{
+		set_handlers();
+		smart_ptr<gameswf::root> l_movie = m_player.load_file(_path);
+		reset_handlers();
+		if (l_movie == 0) return false;
+		l_movie->add_ref();
+		return true;
+	}
+	bool pause(bool _yes)
+	{
+		if (m_player.get_root() == 0) return false;
+		m_player.get_root()->set_play_state(_yes ? gameswf::character::PLAY : gameswf::character::STOP);
+		return true;
+	}
+	bool stop()
+	{
+		set_handlers();
+		m_player.get_root()->drop_ref();
+		reset_handlers();
+		return true;
+	}
+	bool update(real _dt)
+	{
+		set_handlers();
+		m_player.get_root()->advance(_dt);
+		reset_handlers();
+		return true;
+	}
+	bool render()
+	{
+		set_handlers();
+		m_player.get_root()->display();
+		reset_handlers();
+		return true;
+	}
 };
 player::loader *player::_gameswf::loader_p = 0;
+player::renderer *player::_gameswf::renderer_p = 0;
 
 // player
 
@@ -218,11 +262,11 @@ bool player::create(renderer &_renderer, loader &_loader)
 }
 bool player::update(real _dt)
 {
-	return true;
+	return m_gameswf_p->update(_dt);
 }
 bool player::render() const
 {
-	return true;
+	return m_gameswf_p->render();
 }
 void player::destroy()
 {
@@ -243,11 +287,11 @@ bool player::play(const wstring &_path)
 }
 bool player::pause(bool _yes)
 {
-	return _yes;
+	return m_gameswf_p->pause(_yes);
 }
 bool player::stop()
 {
-	return true;
+	return m_gameswf_p->stop();
 }
 
 } /* namespace flash ----------------------------------------------------------------------------*/

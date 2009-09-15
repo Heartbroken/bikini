@@ -10,5 +10,11 @@
 
 struct renderer
 {
-	virtual ~renderer() {}
+	uint create_vbuffer(functor_<uint, handle> _source)
+	{
+		return bad_ID;
+	}
+	void draw_primitive(uint _vbuffer)
+	{
+	}
 };
