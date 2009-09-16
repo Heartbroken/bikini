@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{75357CBD-D2B7-40B8-900E-D717CE554847}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "games", "games", "{2B51B244-2DF7-40D7-A7EF-3DFE3466D91E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "interface", "interface", "{8D46154F-D87F-45BF-A592-F744CFA52D71}"
 	ProjectSection(SolutionItems) = preProject
 		..\..\include\bikini.hpp = ..\..\include\bikini.hpp
