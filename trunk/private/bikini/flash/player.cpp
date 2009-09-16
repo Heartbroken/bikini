@@ -20,20 +20,20 @@ struct player::_gameswf : gameswf::render_handler
 
 	static loader *loader_p;
 
-	static inline sint read(handle _buffer, sint _length, handle _ID) { return loader_p->read((uint)_ID, _buffer, _length); }
-	static inline sint write(pointer _buffer, sint _length, handle _ID) { assert(0); return 0; }
-	static inline sint seek(sint _offset, handle _ID) { return loader_p->seek((uint)_ID, _offset, 0); }
-	static inline sint seek_to_end(handle _ID) { return loader_p->seek((uint)_ID, 0, 2); }
-	static inline sint tell(pointer _ID) { return loader_p->seek((uint)_ID, 0, 1); }
+	static inline s32 read(handle _buffer, s32 _length, handle _ID) { return (s32)loader_p->read((uint)_ID, _buffer, _length); }
+	static inline s32 write(pointer _buffer, s32 _length, handle _ID) { assert(0); return 0; }
+	static inline s32 seek(s32 _offset, handle _ID) { return (s32)loader_p->seek((uint)_ID, _offset, 0); }
+	static inline s32 seek_to_end(handle _ID) { return (s32)loader_p->seek((uint)_ID, 0, 2); }
+	static inline s32 tell(pointer _ID) { return (s32)loader_p->seek((uint)_ID, 0, 1); }
 	static inline bool get_eof(handle _ID) { return false; }
-	static inline sint close(handle _ID) { loader_p->close((uint)_ID); return 0; }
+	static inline s32 close(handle _ID) { loader_p->close((uint)_ID); return 0; }
 
 	static tu_file* open(const char* _path)
 	{
 		uint l_alength = strlen(_path) + 1;
-		uint l_wlength = MultiByteToWideChar(CP_UTF8, 0, _path, l_alength, 0, 0);
+		uint l_wlength = MultiByteToWideChar(CP_UTF8, 0, _path, (s32)l_alength, 0, 0);
 		wchar* l_path = (wchar*)_malloca(l_wlength * sizeof(wchar));
-		MultiByteToWideChar(CP_UTF8, 0, _path, (int)l_alength, l_path, (int)l_wlength);
+		MultiByteToWideChar(CP_UTF8, 0, _path, (s32)l_alength, l_path, (s32)l_wlength);
 		uint l_ID = loader_p->open(l_path);
 		return new tu_file((handle)l_ID, &read, &write, &seek, &seek_to_end, &tell, &get_eof, &close);
 	}
@@ -71,7 +71,7 @@ struct player::_gameswf : gameswf::render_handler
 
 	// Your handler should return these with a ref-count of 0.  (@@ is that the right policy?)
 	bitmap_info* create_bitmap_info_empty() { return new bitmap; }	// used when DO_NOT_LOAD_BITMAPS is set
-	bitmap_info* create_bitmap_info_alpha(sint _w, sint _h, u8* _data) { return new bitmap(_w, _h, _data); }
+	bitmap_info* create_bitmap_info_alpha(s32 _w, s32 _h, u8* _data) { return new bitmap(_w, _h, _data); }
 	bitmap_info* create_bitmap_info_rgb(image::rgb* _data) { return new bitmap(_data); }
 	bitmap_info* create_bitmap_info_rgba(image::rgba* _data) { return new bitmap(_data); }
 	video_handler* create_video_handler() { return 0; }
@@ -79,7 +79,7 @@ struct player::_gameswf : gameswf::render_handler
 	// Bracket the displaying of a frame from a movie.
 	// Fill the background color, and set up default
 	// transforms, etc.
-	void begin_display(rgba _background_color, sint _viewport_x0, sint _viewport_y0, sint _viewport_width, sint _viewport_height, f32 _x0, f32 _x1, f32 _y0, f32 _y1)
+	void begin_display(rgba _background_color, s32 _viewport_x0, s32 _viewport_y0, s32 _viewport_width, s32 _viewport_height, f32 _x0, f32 _x1, f32 _y0, f32 _y1)
 	{
 	}
 	void end_display()
@@ -104,11 +104,11 @@ struct player::_gameswf : gameswf::render_handler
 	// coords is a list of (x,y) coordinate pairs, in
 	// triangle-strip order.  The type of the array should
 	// be Sint16[vertex_count*2]
-	void draw_mesh_strip(pointer _coords, sint _vertex_count)
+	void draw_mesh_strip(pointer _coords, s32 _vertex_count)
 	{
 	}
 	// As above, but coords is in triangle list order.
-	void draw_triangle_list(pointer _coords, sint _vertex_count)
+	void draw_triangle_list(pointer _coords, s32 _vertex_count)
 	{
 	}
 
@@ -117,19 +117,19 @@ struct player::_gameswf : gameswf::render_handler
 	//
 	// Coords is a list of (x,y) coordinate pairs, in
 	// sequence.  Each coord is a 16-bit signed integer.
-	void draw_line_strip(pointer _coords, sint _vertex_count)
+	void draw_line_strip(pointer _coords, s32 _vertex_count)
 	{
 	}
 
 	// Set line and fill styles for mesh & line_strip
 	// rendering.
-	void fill_style_disable(sint _fill_side)
+	void fill_style_disable(s32 _fill_side)
 	{
 	}
-	void fill_style_color(sint _fill_side, const rgba &_color)
+	void fill_style_color(s32 _fill_side, const rgba &_color)
 	{
 	}
-	void fill_style_bitmap(sint _fill_side, bitmap_info *_bi_p, const matrix &_m, bitmap_wrap_mode _wm)
+	void fill_style_bitmap(s32 _fill_side, bitmap_info *_bi_p, const matrix &_m, bitmap_wrap_mode _wm)
 	{
 	}
 
@@ -280,7 +280,7 @@ bool player::play(const astring &_path)
 bool player::play(const wstring &_path)
 {
 	uint l_wlength = _path.length() + 1;
-	uint l_alength = WideCharToMultiByte(CP_UTF8, 0, _path.c_str(), l_wlength, 0, 0, 0, 0);
+	uint l_alength = WideCharToMultiByte(CP_UTF8, 0, _path.c_str(), (s32)l_wlength, 0, 0, 0, 0);
 	achar* l_path = (achar*)_malloca(l_alength * sizeof(achar));
 	WideCharToMultiByte(CP_UTF8, 0, _path.c_str(), (int)l_wlength, l_path, (int)l_alength, 0, 0);
 	return m_gameswf_p->play(l_path);
