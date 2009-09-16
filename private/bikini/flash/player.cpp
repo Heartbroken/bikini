@@ -16,7 +16,7 @@ namespace flash { /*------------------------------------------------------------
 
 struct player::_gameswf : gameswf::render_handler
 {
-	// loading
+	// loading ------------------------------------------------------------------------------------
 
 	static loader *loader_p;
 
@@ -38,13 +38,15 @@ struct player::_gameswf : gameswf::render_handler
 		return new tu_file((handle)l_ID, &read, &write, &seek, &seek_to_end, &tell, &get_eof, &close);
 	}
 
-	// log
+	// log ----------------------------------------------------------------------------------------
 
 	static void log(bool _error, const char* _message)
 	{
 		if (_error) std::cerr << _message;
 		else std::cout << _message;
 	}
+
+	// rendering ----------------------------------------------------------------------------------
 
 	// gameswf types
 
@@ -65,16 +67,35 @@ struct player::_gameswf : gameswf::render_handler
 		inline bitmap(image::rgba* _data) {}
 	};
 
-	// rendering
+	// state variables
 
 	static renderer *renderer_p;
+	matrix m_matrix;
+	cxform m_cxform;
+
+	// overrides
 
 	// Your handler should return these with a ref-count of 0.  (@@ is that the right policy?)
-	bitmap_info* create_bitmap_info_empty() { return new bitmap; }	// used when DO_NOT_LOAD_BITMAPS is set
-	bitmap_info* create_bitmap_info_alpha(s32 _w, s32 _h, u8* _data) { return new bitmap(_w, _h, _data); }
-	bitmap_info* create_bitmap_info_rgb(image::rgb* _data) { return new bitmap(_data); }
-	bitmap_info* create_bitmap_info_rgba(image::rgba* _data) { return new bitmap(_data); }
-	video_handler* create_video_handler() { return 0; }
+	bitmap_info* create_bitmap_info_empty() // used when DO_NOT_LOAD_BITMAPS is set
+	{
+		return new bitmap;
+	}
+	bitmap_info* create_bitmap_info_alpha(s32 _w, s32 _h, u8* _data)
+	{
+		return new bitmap(_w, _h, _data);
+	}
+	bitmap_info* create_bitmap_info_rgb(image::rgb* _data)
+	{
+		return new bitmap(_data);
+	}
+	bitmap_info* create_bitmap_info_rgba(image::rgba* _data)
+	{
+		return new bitmap(_data);
+	}
+	video_handler* create_video_handler()
+	{
+		return 0;
+	}
 
 	// Bracket the displaying of a frame from a movie.
 	// Fill the background color, and set up default
@@ -87,12 +108,10 @@ struct player::_gameswf : gameswf::render_handler
 	}
 
 	// Geometric and color transforms for mesh and line_strip rendering.
-	matrix m_matrix;
 	void set_matrix(const matrix &_m)
 	{
 		m_matrix = _m;
 	}
-	cxform m_cxform;
 	void set_cxform(const cxform &_cx)
 	{
 		m_cxform = _cx;
@@ -200,12 +219,14 @@ struct player::_gameswf : gameswf::render_handler
 		loader_p = &m_loader;
 		renderer_p = &m_renderer;
 		gameswf::set_render_handler(this);
+		gameswf::register_log_callback(log);
 	}
 	void reset_handlers()
 	{
 		loader_p = 0;
 		renderer_p = 0;
 		gameswf::set_render_handler(0);
+		gameswf::register_log_callback(0);
 	}
 	bool play(const achar* _path)
 	{
