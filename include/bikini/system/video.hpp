@@ -95,7 +95,7 @@ struct video : device {
 	};
 
 	struct ot { enum object_type {
-		window, viewport, screen, vbuffer, vformat, rstates, vshader, pshader, ibuffer, texture
+		window, viewport, drawcall
 	};};
 
 	/* video ------------------------------------------------------------------------------------*/
@@ -134,28 +134,61 @@ namespace cf { enum clear_flags {
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
 
-/// viewport
-struct viewport : video::object {
-	struct info : video::object::info {
-		typedef viewport object;
+/// drawcall
+struct drawcall : video::object
+{
+	struct info : video::object::info
+	{
+		typedef drawcall object;
 		info();
 	};
-	inline const info& get_info() const { return static_cast<const info&>(super::get_info()); }
+
+	inline const info& get_info() const { return get_info_<info>(); }
+
+	drawcall(const info &_info, video &_video);
+	~drawcall();
+	bool update(real _dt);
+
+private:
+};
+
+/// viewport
+struct viewport : video::object
+{
+	struct info : video::object::info
+	{
+		typedef viewport object;
+		uint x, y, w, h; real min_z, max_z;
+		info();
+	};
+
+	inline const info& get_info() const { return get_info_<info>(); }
+
 	viewport(const info &_info, video &_video);
 	~viewport();
 	bool update(real _dt);
+	uint add_drawcall();
+	void remove_drawcall(uint _i);
+	uint drawcall_count() const;
+	drawcall& get_drawcall(uint _i) const;
+
 private:
-	uint m_viewport_resource_ID;
+	drawcall::info m_drawcall_info;
+	uint_array m_drawcalls;
 };
 
 /// window
-struct window : video::object {
-	struct info : video::object::info {
+struct window : video::object
+{
+	struct info : video::object::info
+	{
 		typedef window object;
 		typedef HWND a0;
 		info();
 	};
-	inline const info& get_info() const { return static_cast<const info&>(super::get_info()); }
+
+	inline const info& get_info() const { return get_info_<info>(); }
+
 	window(const info &_info, video &_video, HWND _window);
 	~window();
 	bool update(real _dt);
@@ -163,6 +196,7 @@ struct window : video::object {
 	void remove_viewport(uint _i);
 	uint viewport_count() const;
 	viewport& get_viewport(uint _i) const;
+
 private:
 	HWND m_window;
 	uint m_schain_resource_ID;
@@ -173,6 +207,11 @@ private:
 	viewport::info m_viewport_info;
 	uint_array m_viewports;
 };
+
+
+
+
+
 
 /*
 /// screen

@@ -200,14 +200,38 @@ video::object::object(const info &_info, video &_video)
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
 
+// drawcall::info
+
+drawcall::info::info()
+:
+	video::object::info(video::ot::drawcall)
+{}
+
+// drawcall
+
+drawcall::drawcall(const info &_info, video &_video)
+:
+	video::object(_info, _video)
+{}
+drawcall::~drawcall()
+{
+}
+bool drawcall::update(real _dt)
+{
+	return true;
+}
+
 // viewport::info
 
 viewport::info::info()
 :
-	video::object::info(video::ot::viewport)
+	video::object::info(video::ot::viewport),
+	x(0), y(0), w(0), h(0),
+	min_z(0), max_z(real(1))
 {}
 
 // viewport
+
 viewport::viewport(const info &_info, video &_video)
 :
 	video::object(_info, _video)
@@ -219,6 +243,30 @@ bool viewport::update(real _dt)
 {
 	return true;
 }
+uint viewport::add_drawcall()
+{
+	uint l_drawcall_ID = get_video().spawn(m_drawcall_info);
+	m_drawcalls.push_back(add_dependency(l_drawcall_ID));
+	return m_drawcalls.size() - 1;
+}
+void viewport::remove_drawcall(uint _i)
+{
+	assert(_i < m_drawcalls.size());
+	uint l_drawcall_ID = get_dependency(m_drawcalls[_i]);
+	get_video().kill(l_drawcall_ID);
+	m_drawcalls.erase(m_drawcalls.begin() + _i);
+}
+uint viewport::drawcall_count() const
+{
+	return m_drawcalls.size();
+}
+drawcall& viewport::get_drawcall(uint _i) const
+{
+	assert(_i < m_drawcalls.size());
+	uint l_drawcall_ID = get_dependency(m_drawcalls[_i]);
+	return get_video().get_<drawcall>(l_drawcall_ID);
+}
+
 
 // window::info
 
@@ -241,9 +289,12 @@ window::window(const info &_info, video &_video, HWND _window)
 	m_oldwndproc = (WNDPROC)SetWindowLong(m_window, GWL_WNDPROC, (LONG)_wndproc);
 
 	m_schain_resource_ID = obtain_resource_ID();
-	release_resource_ID(obtain_resource_ID());
-	release_resource_ID(obtain_resource_ID());
-	release_resource_ID(obtain_resource_ID());
+
+	RECT l_crect; GetClientRect(_window, &l_crect);
+	m_viewport_info.w = (uint)l_crect.right;
+	m_viewport_info.h = (uint)l_crect.bottom;
+
+	add_viewport();
 }
 window::~window()
 {
@@ -325,13 +376,14 @@ long window::m_wndproc(uint _message, uint _wparam, uint _lparam)
 uint window::add_viewport()
 {
 	uint l_viewport_ID = get_video().spawn(m_viewport_info);
-	uint l_viewport_index = add_dependency(l_viewport_ID);
-	m_viewports.push_back(l_viewport_index);
+	m_viewports.push_back(add_dependency(l_viewport_ID));
 	return m_viewports.size() - 1;
 }
 void window::remove_viewport(uint _i)
 {
 	assert(_i < m_viewports.size());
+	uint l_viewport_ID = get_dependency(m_viewports[_i]);
+	get_video().kill(l_viewport_ID);
 	m_viewports.erase(m_viewports.begin() + _i);
 }
 uint window::viewport_count() const
@@ -341,7 +393,8 @@ uint window::viewport_count() const
 viewport& window::get_viewport(uint _i) const
 {
 	assert(_i < m_viewports.size());
-	return get_video().get<viewport>(m_viewports[_i]);
+	uint l_viewport_ID = get_dependency(m_viewports[_i]);
+	return get_video().get_<viewport>(l_viewport_ID);
 }
 
 
