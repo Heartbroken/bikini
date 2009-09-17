@@ -38,7 +38,7 @@ bool application::run()
 		l_done = true;
 		uint l_ID = get_first_ID();
 		while(l_ID != bad_ID) {
-			if(get<task>(l_ID).done()) kill(l_ID);
+			if(get_<task>(l_ID).done()) kill(l_ID);
 			else l_done = false;
 			l_ID = get_next_ID(l_ID);
 		}

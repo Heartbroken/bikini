@@ -29,15 +29,17 @@ struct manager : uncopyble {
 		};
 
 		inline const info& get_info() const;
-		template<typename _Info> const _Info& get_info() const;
+		template<typename _Info> const _Info& get_info_() const;
 		inline manager& get_manager() const;
 		inline uint type() const;
 		inline uint ID() const;
-		inline uint add_dependency(uint _ID);
-		inline uint dependency_count() const;
-		inline uint dependency(uint _i) const;
-		inline void set_dependency(uint _i, uint _ID);
-		inline bool has_dependency() const;
+		inline uint add_dependency(uint _dependency);
+		inline void remove_dependency(uint _ID);
+		inline uint first_dependency() const;
+		inline uint next_dependency(uint _ID) const;
+		inline uint get_dependency(uint _ID) const;
+		inline bool has_dependency(uint _ID) const;
+		inline bool no_dependencies() const;
 		object(const info &_info, manager &_manager);
 		virtual ~object();
 		virtual bool update(real _dt);
@@ -47,7 +49,7 @@ struct manager : uncopyble {
 		const info &m_info;
 		manager &m_manager;
 		uint m_ID;
-		array_<uint> m_dependencies;
+		pool_<uint> m_dependencies;
 		uint m_ref_count;
 		inline uint add_ref();
 		inline uint ref_count() const;
@@ -58,7 +60,7 @@ struct manager : uncopyble {
 	virtual ~manager();
 	bool exists(uint _ID) const;
 	object& get(uint _ID) const;
-	template<typename _Type> inline _Type& get(uint _ID) const;
+	template<typename _Type> inline _Type& get_(uint _ID) const;
 	uint get_first_ID(uint _type = bad_ID) const;
 	uint get_next_ID(uint _prev_ID, uint _type = bad_ID) const;
 	template<typename _Info> inline uint spawn(const _Info &_info);

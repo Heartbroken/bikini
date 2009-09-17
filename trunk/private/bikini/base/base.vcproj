@@ -516,6 +516,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\bikini\base\pool.inl"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\bikini\base\quat.inl"
 				>
 			</File>
