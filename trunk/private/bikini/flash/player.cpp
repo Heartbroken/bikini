@@ -210,6 +210,7 @@ struct player::_gameswf : gameswf::render_handler
 	}
 	~_gameswf()
 	{
+		stop();
 		m_player.drop_ref();
 		delete &m_renderer;
 		delete &m_loader;
@@ -240,11 +241,14 @@ struct player::_gameswf : gameswf::render_handler
 	bool pause(bool _yes)
 	{
 		if (m_player.get_root() == 0) return false;
+		set_handlers();
 		m_player.get_root()->set_play_state(_yes ? gameswf::character::PLAY : gameswf::character::STOP);
+		reset_handlers();
 		return true;
 	}
 	bool stop()
 	{
+		if (m_player.get_root() == 0) return false;
 		set_handlers();
 		m_player.get_root()->drop_ref();
 		reset_handlers();

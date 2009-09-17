@@ -1202,7 +1202,7 @@ private:
 			assert(e->is_tombstone()
 				   || (e->m_hash_value & m_table->m_size_mask) == (hash_value & m_table->m_size_mask));
 
-			if (e->m_hash_value == hash_value && e->first == key)
+			if ((e->m_hash_value & 0xffffffff) == hash_value && e->first == key)
 			{
 				// Found it.
 				return index;
