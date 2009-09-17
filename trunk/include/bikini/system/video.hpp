@@ -95,7 +95,7 @@ struct video : device {
 	};
 
 	struct ot { enum object_type {
-		window, screen, vbuffer, vformat, rstates, vshader, pshader, ibuffer, texture
+		window, viewport, screen, vbuffer, vformat, rstates, vshader, pshader, ibuffer, texture
 	};};
 
 	/* video ------------------------------------------------------------------------------------*/
@@ -134,6 +134,20 @@ namespace cf { enum clear_flags {
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
 
+/// viewport
+struct viewport : video::object {
+	struct info : video::object::info {
+		typedef viewport object;
+		info();
+	};
+	inline const info& get_info() const { return static_cast<const info&>(super::get_info()); }
+	viewport(const info &_info, video &_video);
+	~viewport();
+	bool update(real _dt);
+private:
+	uint m_viewport_resource_ID;
+};
+
 /// window
 struct window : video::object {
 	struct info : video::object::info {
@@ -145,6 +159,10 @@ struct window : video::object {
 	window(const info &_info, video &_video, HWND _window);
 	~window();
 	bool update(real _dt);
+	uint add_viewport();
+	void remove_viewport(uint _i);
+	uint viewport_count() const;
+	viewport& get_viewport(uint _i) const;
 private:
 	HWND m_window;
 	uint m_schain_resource_ID;
@@ -152,6 +170,8 @@ private:
 	static window *first_p; window *next_p;
 	long m_wndproc(uint _message, uint _wparam, uint _lparam);
 	WNDPROC m_oldwndproc;
+	viewport::info m_viewport_info;
+	uint_array m_viewports;
 };
 
 /*

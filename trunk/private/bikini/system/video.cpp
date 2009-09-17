@@ -200,6 +200,26 @@ video::object::object(const info &_info, video &_video)
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
 
+// viewport::info
+
+viewport::info::info()
+:
+	video::object::info(video::ot::viewport)
+{}
+
+// viewport
+viewport::viewport(const info &_info, video &_video)
+:
+	video::object(_info, _video)
+{}
+viewport::~viewport()
+{
+}
+bool viewport::update(real _dt)
+{
+	return true;
+}
+
 // window::info
 
 window::info::info()
@@ -302,6 +322,39 @@ long window::m_wndproc(uint _message, uint _wparam, uint _lparam)
 
 	return (long)CallWindowProc(m_oldwndproc, m_window, (UINT)_message, _wparam, _lparam);
 }
+uint window::add_viewport()
+{
+	uint l_viewport_ID = get_video().spawn(m_viewport_info);
+	uint l_viewport_index = add_dependency(l_viewport_ID);
+	m_viewports.push_back(l_viewport_index);
+	return m_viewports.size() - 1;
+}
+void window::remove_viewport(uint _i)
+{
+	assert(_i < m_viewports.size());
+	m_viewports.erase(m_viewports.begin() + _i);
+}
+uint window::viewport_count() const
+{
+	return m_viewports.size();
+}
+viewport& window::get_viewport(uint _i) const
+{
+	assert(_i < m_viewports.size());
+	return get_video().get<viewport>(m_viewports[_i]);
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 
