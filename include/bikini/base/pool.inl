@@ -112,6 +112,17 @@ inline uint_ID pool_<_T>::next_ID(const uint_ID &_prev_ID) const
 	return bad_ID;
 }
 template<typename _T>
+inline void pool_<_T>::clear()
+{
+	m_items.resize(0);
+	m_free.resize(0);
+}
+template<typename _T>
+inline void pool_<_T>::size() const
+{
+	return m_items.size() - m_free.size();
+}
+template<typename _T>
 inline bool pool_<_T>::empty() const
 {
 	return m_items.size() == m_free.size();

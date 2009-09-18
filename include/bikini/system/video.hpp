@@ -82,6 +82,8 @@ struct video : device {
 			info(uint _type);
 		};
 
+		struct context;
+
 		inline video& get_video() const { return static_cast<video&>(get_device()); }
 
 		object(const info &_info, video &_video);
@@ -166,11 +168,16 @@ struct viewport : video::object
 
 	viewport(const info &_info, video &_video);
 	~viewport();
-	bool update(real _dt);
+
 	uint add_drawcall();
 	void remove_drawcall(uint _i);
 	uint drawcall_count() const;
-	drawcall& get_drawcall(uint _i) const;
+	uint drawcall_ID(uint _i) const;
+	void clear();
+
+	bool update(real _dt);
+
+	void add_commands(const context &_context) const;
 
 private:
 	drawcall::info m_drawcall_info;
@@ -191,11 +198,14 @@ struct window : video::object
 
 	window(const info &_info, video &_video, HWND _window);
 	~window();
+
 	bool update(real _dt);
+
 	uint add_viewport();
 	void remove_viewport(uint _i);
 	uint viewport_count() const;
-	viewport& get_viewport(uint _i) const;
+	uint viewport_ID(uint _i) const;
+	void clear();
 
 private:
 	HWND m_window;
