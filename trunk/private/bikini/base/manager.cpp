@@ -105,16 +105,16 @@ void manager::m_build_update_order() {
 				continue;
 			}
 			object &l_object = get(l_queue.back());
-			if(!l_object.no_dependencies()) {
+			if(l_object.has_relations()) {
 				bool l_continue = false;
-				for(uint l_ID = l_object.first_dependency(); l_ID != bad_ID; l_ID = l_object.next_dependency(l_ID))
+				for(uint l_ID = l_object.first_relation(); l_ID != bad_ID; l_ID = l_object.next_relation(l_ID))
 				{
-					uint l_dependency_ID = l_object.get_dependency(i);
-					uint l_index = (l_dependency_ID & index_mask);
-					if(exists(l_dependency_ID) && l_objects[l_index] != bad_ID)
+					uint l_relation_ID = l_object.get_relation(i);
+					uint l_index = (l_relation_ID & index_mask);
+					if(exists(l_relation_ID) && l_objects[l_index] != bad_ID)
 					{
 						l_continue = true;
-						l_queue.push_back(l_dependency_ID);
+						l_queue.push_back(l_relation_ID);
 						l_objects[l_index] = bad_ID;
 						break;
 					}

@@ -134,35 +134,35 @@ inline uint manager::object::type() const
 inline uint manager::object::ID() const {
 	return m_ID;
 }
-inline uint manager::object::add_dependency(uint _dependency)
+inline uint manager::object::add_relation(uint _relation)
 {
 	m_manager.m_update_order.resize(0);
-	return m_dependencies.add(_dependency);
+	return m_relations.add(_relation);
 }
-inline void manager::object::remove_dependency(uint _ID)
+inline void manager::object::remove_relation(uint _ID)
 {
 	m_manager.m_update_order.resize(0);
-	m_dependencies.remove(_ID);
+	m_relations.remove(_ID);
 }
-inline uint manager::object::first_dependency() const
+inline uint manager::object::first_relation() const
 {
-	return m_dependencies.first_ID();
+	return m_relations.first_ID();
 }
-inline uint manager::object::next_dependency(uint _ID) const
+inline uint manager::object::next_relation(uint _ID) const
 {
-	return m_dependencies.next_ID(_ID);
+	return m_relations.next_ID(_ID);
 }
-inline uint manager::object::get_dependency(uint _ID) const
+inline uint manager::object::get_relation(uint _ID) const
 {
-	return m_dependencies.get(_ID);
+	return m_relations.get(_ID);
 }
-inline bool manager::object::has_dependency(uint _ID) const
+inline bool manager::object::has_relation(uint _ID) const
 {
-	return m_dependencies.exists(_ID);
+	return m_relations.exists(_ID);
 }
-inline bool manager::object::no_dependencies() const
+inline bool manager::object::has_relations() const
 {
-	return m_dependencies.empty();
+	return !m_relations.empty();
 }
 inline uint manager::object::add_ref()
 {

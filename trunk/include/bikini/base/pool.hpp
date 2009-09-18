@@ -37,6 +37,8 @@ template<typename _Type> struct pool_
 	inline bool exists(const uint_ID &_ID) const;
 	inline uint_ID first_ID() const;
 	inline uint_ID next_ID(const uint_ID &_prev_ID) const;
+	inline void clear();
+	inline void size() const;
 	inline bool empty() const;
 
 private:
