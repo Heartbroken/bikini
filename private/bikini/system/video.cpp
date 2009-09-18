@@ -254,6 +254,10 @@ bool viewport::update(real _dt)
 }
 void viewport::add_commands(const context &_context) const
 {
+
+	video::rendering::clear_viewport l_clear_viewport;
+	l_clear_viewport.ID = _context.target_ID;
+	add_command(l_clear_viewport);
 }
 uint viewport::add_drawcall()
 {
@@ -358,10 +362,6 @@ bool window::update(real _dt)
 	{
 		get_video().get_<viewport>(viewport_ID(i)).add_commands(l_context);
 	}
-
-	video::rendering::clear_viewport l_clear_viewport;
-	l_clear_viewport.ID = m_schain_resource_ID;
-	add_command(l_clear_viewport);
 
 	video::rendering::present_schain l_present_schain;
 	l_present_schain.ID = m_schain_resource_ID;

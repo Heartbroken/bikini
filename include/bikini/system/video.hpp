@@ -89,7 +89,7 @@ struct video : device {
 		object(const info &_info, video &_video);
 
 	protected:
-		inline void add_command(const rendering::command &_command) { get_video().add_command(_command); }
+		inline void add_command(const rendering::command &_command) const { get_video().add_command(_command); }
 		inline uint obtain_resource_ID() const { return get_video().obtain_resource_ID(); }
 		inline void release_resource_ID(uint _ID) const { get_video().release_resource_ID(_ID); }
 		inline bool resource_exists(uint _ID) const { return get_video().resource_exists(_ID); }
