@@ -16,17 +16,17 @@ struct video : device {
 	{
 		/* rendering commands -------------------------------------------------------------------*/
 
-		struct create_schain { uint_ID ID; handle window; };
-		struct destroy_resource { uint_ID ID; };
+		struct create_schain { uint ID; handle window; };
+		struct destroy_resource { uint ID; };
 		struct begin_scene {};
-		struct clear_viewport { uint_ID ID; };
+		struct set_viewport { uint target_ID; rect area; real2 depth; uint clear; color c; real d; uint s; };
 		struct draw_primitive {};
 		struct end_scene {};
-		struct present_schain { uint_ID ID; };
+		struct present_schain { uint ID; };
 
 		typedef make_typelist_<
 			create_schain, destroy_resource,
-			begin_scene, clear_viewport, draw_primitive, end_scene,
+			begin_scene, set_viewport, draw_primitive, end_scene,
 			present_schain
 		>::type command_types;
 		typedef variant_<command_types, false> command;
@@ -67,7 +67,7 @@ struct video : device {
 		command_key key(const create_schain &_command);
 		command_key key(const destroy_resource &_command);
 		command_key key(const begin_scene &_command);
-		command_key key(const clear_viewport &_command);
+		command_key key(const set_viewport &_command);
 		command_key key(const end_scene &_command);
 		command_key key(const present_schain &_command);
 	};
@@ -160,11 +160,15 @@ struct viewport : video::object
 	struct info : video::object::info
 	{
 		typedef viewport object;
-		uint x, y, w, h; real min_z, max_z;
 		info();
 	};
 
 	inline const info& get_info() const { return get_info_<info>(); }
+
+	inline const rect& area() const { return m_area; }
+	inline void set_area(const rect &_r) { m_area = _r; }
+	inline const real2& depth() const { return m_depth; }
+	inline void set_depth(const real2 &_d) { m_depth = _d; }
 
 	viewport(const info &_info, video &_video);
 	~viewport();
@@ -180,6 +184,8 @@ struct viewport : video::object
 	void add_commands(const context &_context) const;
 
 private:
+	rect m_area; real2 m_depth;
+	color m_color;
 	drawcall::info m_drawcall_info;
 	uint_array m_drawcalls;
 };
@@ -195,6 +201,9 @@ struct window : video::object
 	};
 
 	inline const info& get_info() const { return get_info_<info>(); }
+
+	inline bool active() const { return m_active; }
+	inline void set_active(bool _yes) { m_active = _yes; }
 
 	window(const info &_info, video &_video, HWND _window);
 	~window();
@@ -216,6 +225,7 @@ private:
 	WNDPROC m_oldwndproc;
 	viewport::info m_viewport_info;
 	uint_array m_viewports;
+	bool m_active;
 };
 
 

@@ -72,7 +72,7 @@ video::rendering::command_key video::rendering::key(const command &_command)
 		case command_types::type_<create_schain>::index : return key(_command.get_<create_schain>());
 		case command_types::type_<destroy_resource>::index : return key(_command.get_<destroy_resource>());
 		case command_types::type_<begin_scene>::index : return key(_command.get_<begin_scene>());
-		case command_types::type_<clear_viewport>::index : return key(_command.get_<clear_viewport>());
+		case command_types::type_<set_viewport>::index : return key(_command.get_<set_viewport>());
 		case command_types::type_<end_scene>::index : return key(_command.get_<end_scene>());
 		case command_types::type_<present_schain>::index : return key(_command.get_<present_schain>());
 	}
@@ -90,7 +90,7 @@ video::rendering::command_key video::rendering::key(const begin_scene &_command)
 {
 	return 1;
 }
-video::rendering::command_key video::rendering::key(const clear_viewport &_command)
+video::rendering::command_key video::rendering::key(const set_viewport &_command)
 {
 	return 2;
 }
@@ -203,7 +203,7 @@ video::object::object(const info &_info, video &_video)
 struct video::object::context
 {
 	uint target_ID;
-	struct { uint x, y, w, h; real min_z, max_z; } viewport;
+	struct { rect area; real2 depth; } viewport;
 };
 
 
@@ -234,16 +234,16 @@ bool drawcall::update(real _dt)
 
 viewport::info::info()
 :
-	video::object::info(video::ot::viewport),
-	x(0), y(0), w(uint(-1)), h(uint(-1)),
-	min_z(0), max_z(real(1))
+	video::object::info(video::ot::viewport)
 {}
 
 // viewport
 
 viewport::viewport(const info &_info, video &_video)
 :
-	video::object(_info, _video)
+	video::object(_info, _video),
+	m_area(0, 0, uint(-1) >> 1, uint(-1) >> 1), m_depth(real2_y),
+	m_color(random_0.get(1.f), random_0.get(1.f), random_0.get(1.f))
 {}
 viewport::~viewport()
 {
@@ -254,10 +254,17 @@ bool viewport::update(real _dt)
 }
 void viewport::add_commands(const context &_context) const
 {
+	context l_context = _context;
+	l_context.viewport.area &= m_area;
+	l_context.viewport.depth = m_depth;
 
-	video::rendering::clear_viewport l_clear_viewport;
-	l_clear_viewport.ID = _context.target_ID;
-	add_command(l_clear_viewport);
+	video::rendering::set_viewport l_set_viewport;
+	l_set_viewport.target_ID = l_context.target_ID;
+	l_set_viewport.area = l_context.viewport.area;
+	l_set_viewport.depth = l_context.viewport.depth;
+	l_set_viewport.clear = cf::color;
+	l_set_viewport.c = m_color;
+	add_command(l_set_viewport);
 }
 uint viewport::add_drawcall()
 {
@@ -302,7 +309,7 @@ window *window::first_p = 0;
 
 window::window(const info &_info, video &_video, HWND _window)
 :
-	video::object(_info, _video), m_window(_window), next_p(0)
+	video::object(_info, _video), m_window(_window), next_p(0), m_active(false)
 {
 	next_p = first_p;
 	first_p = this;
@@ -310,10 +317,6 @@ window::window(const info &_info, video &_video, HWND _window)
 	m_oldwndproc = (WNDPROC)SetWindowLong(m_window, GWL_WNDPROC, (LONG)_wndproc);
 
 	m_schain_resource_ID = obtain_resource_ID();
-
-	RECT l_crect; GetClientRect(_window, &l_crect);
-	m_viewport_info.w = (uint)l_crect.right;
-	m_viewport_info.h = (uint)l_crect.bottom;
 
 	add_viewport();
 }
@@ -340,6 +343,8 @@ window::~window()
 }
 bool window::update(real _dt)
 {
+	if (!active()) return true;
+
 	if (!valid())
 	{
 		video::rendering::destroy_resource l_destroy_resource;
@@ -357,6 +362,9 @@ bool window::update(real _dt)
 
 	context l_context;
 	l_context.target_ID = m_schain_resource_ID;
+	RECT l_crect; GetClientRect(m_window, &l_crect);
+	l_context.viewport.area = rect(0, 0, (uint)l_crect.right, (uint)l_crect.bottom);
+	l_context.viewport.depth = real2_y;
 
 	for (uint i = 0, s = viewport_count(); i < s; ++i)
 	{
@@ -376,11 +384,12 @@ long _stdcall window::_wndproc(HWND _window, uint _message, uint _wparam, uint _
 	window *l_window_p = window::first_p;
 	while (l_window_p)
 	{
-		if (l_window_p->m_window == _window)
+		window &l_window = *l_window_p;
+		if (l_window.m_window == _window)
 		{
-			return l_window_p->m_wndproc(_message, _wparam, _lparam);
+			return l_window.m_wndproc(_message, _wparam, _lparam);
 		}
-		l_window_p = l_window_p->next_p;
+		l_window_p = l_window.next_p;
 	}
 
 	return 1;

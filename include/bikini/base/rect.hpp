@@ -21,6 +21,9 @@ struct rect {
 	inline bool operator == (const rect &_r) const;
 	inline const rect operator + (const sint2 &_p) const;
 	inline const rect operator & (const rect &_r) const;
+	inline rect& operator += (const sint2 &_p);
+	inline rect& operator &= (const rect &_r);
+
 private:
 	sint2 m_min, m_max;
 };
