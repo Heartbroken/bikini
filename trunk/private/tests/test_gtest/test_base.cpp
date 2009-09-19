@@ -1,6 +1,3 @@
-// test_gtest.cpp : Defines the entry point for the console application.
-//
-
 #include "stdafx.h"
 
 // base/math
@@ -85,4 +82,3 @@ TEST(base_random, get_range) {
 		EXPECT_LE(l_r1, l_rmax);
 	}
 }
-

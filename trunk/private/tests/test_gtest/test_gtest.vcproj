@@ -384,6 +384,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test_base_pool.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\test_system_video.cpp"
 				>
 			</File>

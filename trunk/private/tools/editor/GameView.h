@@ -51,6 +51,7 @@ public:
 	afx_msg void OnDestroy();
 protected:
 	virtual BOOL OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pResult);
+	virtual void OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView);
 };
 
 #ifndef _DEBUG  // debug version in GameView.cpp

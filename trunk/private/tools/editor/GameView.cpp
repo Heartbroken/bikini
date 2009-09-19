@@ -127,3 +127,11 @@ BOOL CGameView::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pR
 
 	return CView::OnWndMsg(message, wParam, lParam, pResult);
 }
+
+void CGameView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView)
+{
+	// TODO: Add your specialized code here and/or call the base class
+	theApp.get_video().get_<bk::vo::window>(m_window_ID).set_active(bActivate == TRUE);
+
+	CView::OnActivateView(bActivate, pActivateView, pDeactiveView);
+}

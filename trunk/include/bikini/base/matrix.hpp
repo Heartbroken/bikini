@@ -279,39 +279,39 @@ typedef matrix_<4, 3, real> r4x3;
 typedef matrix_<4, 4, real> r4x4;
 
 /// zero 1x1 matrix of real
-const r1x1 r1x1_0(r_0);
+const r1x1 r1x1_0(r_0), real1_0(r_0);
 /// unit 1x1 matrix of real
-const r1x1 r1x1_1(r_1);
+const r1x1 r1x1_1(r_1), real1_1(r_1);
 /// [0 0] vector of real
-const r1x2 r1x2_0(r_0, r_0);
+const r1x2 r1x2_0(r_0, r_0), real2_0(r_0, r_0);
 /// [1 1] vector of real
-const r1x2 r1x2_1(r_1, r_1);
+const r1x2 r1x2_1(r_1, r_1), real2_1(r_1, r_1);
 /// [1 0] vector of real
-const r1x2 r1x2_x(r_1, r_0);
+const r1x2 r1x2_x(r_1, r_0), real2_x(r_1, r_0);
 /// [0 1] vector of real
-const r1x2 r1x2_y(r_0, r_1);
+const r1x2 r1x2_y(r_0, r_1), real2_y(r_0, r_1);
 /// [0 0 0] vector of real
-const r1x3 r1x3_0(r_0, r_0, r_0);
+const r1x3 r1x3_0(r_0, r_0, r_0), real3_0(r_0, r_0, r_0);
 /// [1 1 1] vector of real
-const r1x3 r1x3_1(r_1, r_1, r_1);
+const r1x3 r1x3_1(r_1, r_1, r_1), real3_1(r_1, r_1, r_1);
 /// [1 0 0] vector of real
-const r1x3 r1x3_x(r_1, r_0, r_0);
+const r1x3 r1x3_x(r_1, r_0, r_0), real3_x(r_1, r_0, r_0);
 /// [0 1 0] vector of real
-const r1x3 r1x3_y(r_0, r_1, r_0);
+const r1x3 r1x3_y(r_0, r_1, r_0), real3_y(r_0, r_1, r_0);
 /// [0 0 1] vector of real
-const r1x3 r1x3_z(r_0, r_0, r_1);
+const r1x3 r1x3_z(r_0, r_0, r_1), real3_z(r_0, r_0, r_1);
 /// [0 0 0 0] vector of real
-const r1x4 r1x4_0(r_0, r_0, r_0, r_0);
+const r1x4 r1x4_0(r_0, r_0, r_0, r_0), real4_0(r_0, r_0, r_0, r_0);
 /// [1 1 1 1] vector of real
-const r1x4 r1x4_1(r_1, r_1, r_1, r_1);
+const r1x4 r1x4_1(r_1, r_1, r_1, r_1), real4_1(r_1, r_1, r_1, r_1);
 /// [1 0 0 0] vector of real
-const r1x4 r1x4_x(r_1, r_0, r_0, r_0);
+const r1x4 r1x4_x(r_1, r_0, r_0, r_0), real4_x(r_1, r_0, r_0, r_0);
 /// [0 1 0 0] vector of real
-const r1x4 r1x4_y(r_0, r_1, r_0, r_0);
+const r1x4 r1x4_y(r_0, r_1, r_0, r_0), real4_y(r_0, r_1, r_0, r_0);
 /// [0 0 1 0] vector of real
-const r1x4 r1x4_z(r_0, r_0, r_1, r_0);
+const r1x4 r1x4_z(r_0, r_0, r_1, r_0), real4_z(r_0, r_0, r_1, r_0);
 /// [0 0 0 1] vector of real
-const r1x4 r1x4_w(r_0, r_0, r_0, r_1);
+const r1x4 r1x4_w(r_0, r_0, r_0, r_1), real4_w(r_0, r_0, r_0, r_1);
 /// zero 2x2 matrix of real
 const r2x2 r2x2_0(r1x2_0, r1x2_0);
 /// unit 2x2 matrix of real
