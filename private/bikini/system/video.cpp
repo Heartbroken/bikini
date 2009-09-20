@@ -66,21 +66,8 @@ void video::rendering::process_cbuffer(const commands &_cbuffer)
 		if (!m_run) break;
 	}
 }
-//video::rendering::command_key video::rendering::key(const command &_command)
-//{
-//	switch (_command.type())
-//	{
-//		case command_types::type_<create_schain>::index : return key(_command.get_<create_schain>());
-//		case command_types::type_<create_viewport>::index : return key(_command.get_<create_viewport>());
-//		case command_types::type_<destroy_resource>::index : return key(_command.get_<destroy_resource>());
-//		case command_types::type_<begin_scene>::index : return key(_command.get_<begin_scene>());
-//		case command_types::type_<clear_viewport>::index : return key(_command.get_<clear_viewport>());
-//		case command_types::type_<draw_primitive>::index : return key(_command.get_<draw_primitive>());
-//		case command_types::type_<end_scene>::index : return key(_command.get_<end_scene>());
-//		case command_types::type_<present_schain>::index : return key(_command.get_<present_schain>());
-//	}
-//	return bad_key;
-//}
+
+struct video::rendering::_command::key_field { uint start, size; };
 
 static const uint key_size = sizeof(u64) * 8;
 static const video::rendering::_command::key_field command_type = { key_size - 1, 3 };
@@ -99,60 +86,6 @@ inline void video::rendering::_command::set_key(const key_field &_field, u64 _va
 	key = key | l_field;
 }
 
-//video::rendering::command_key video::rendering::key(const create_schain &_command)
-//{
-//	command_key l_key = 0;
-//	set_key_field(l_key, command_type, 0);
-//	return l_key;
-//}
-//video::rendering::command_key video::rendering::key(const create_viewport &_command)
-//{
-//	command_key l_key = 0;
-//	set_key_field(l_key, command_type, 0);
-//	return l_key;
-//}
-//video::rendering::command_key video::rendering::key(const destroy_resource &_command)
-//{
-//	command_key l_key = 0;
-//	set_key_field(l_key, command_type, 0);
-//	return l_key;
-//}
-//video::rendering::command_key video::rendering::key(const begin_scene &_command)
-//{
-//	command_key l_key = 0;
-//	set_key_field(l_key, command_type, 1);
-//	return l_key;
-//}
-//video::rendering::command_key video::rendering::key(const clear_viewport &_command)
-//{
-//	command_key l_key = 0;
-//	set_key_field(l_key, command_type, 2);
-//	set_key_field(l_key, command_draw_target, _command.target_ID);
-//	set_key_field(l_key, command_draw_viewport, _command.viewport_ID);
-//	set_key_field(l_key, command_draw_sequence, _command.sequence);
-//	return l_key;
-//}
-//video::rendering::command_key video::rendering::key(const draw_primitive &_command)
-//{
-//	command_key l_key = 0;
-//	set_key_field(l_key, command_type, 2);
-//	set_key_field(l_key, command_draw_target, _command.target_ID);
-//	set_key_field(l_key, command_draw_viewport, _command.viewport_ID);
-//	set_key_field(l_key, command_draw_sequence, _command.sequence);
-//	return l_key;
-//}
-//video::rendering::command_key video::rendering::key(const end_scene &_command)
-//{
-//	command_key l_key = 0;
-//	set_key_field(l_key, command_type, 3);
-//	return l_key;
-//}
-//video::rendering::command_key video::rendering::key(const present_schain &_command)
-//{
-//	command_key l_key = 0;
-//	set_key_field(l_key, command_type, 4);
-//	return l_key;
-//}
 void video::rendering::m_proc()
 {
 	if (initialize())
