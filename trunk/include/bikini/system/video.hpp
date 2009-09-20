@@ -19,8 +19,8 @@ struct video : device {
 		struct _command
 		{
 			u64 key;
+			struct key_field;
 			inline _command() : key(0) {}
-			struct key_field { uint start, size; };
 			inline void set_key(const key_field &_field, u64 _value);
 		};
 
@@ -71,17 +71,6 @@ struct video : device {
 		void process_cbuffer(const commands &_cbuffer);
 		thread::flag m_cbuffer_ready;
 		thread::section m_cbuffer_lock;
-		//typedef u64 command_key;
-		//static const command_key bad_key = command_key(-1);
-		//command_key key(const command &_command);
-		//command_key key(const create_schain &_command);
-		//command_key key(const create_viewport &_command);
-		//command_key key(const destroy_resource &_command);
-		//command_key key(const begin_scene &_command);
-		//command_key key(const clear_viewport &_command);
-		//command_key key(const draw_primitive &_command);
-		//command_key key(const end_scene &_command);
-		//command_key key(const present_schain &_command);
 	};
 	
 	/* video object -----------------------------------------------------------------------------*/
