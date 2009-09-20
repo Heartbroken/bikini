@@ -53,11 +53,12 @@ void video::rendering::swap_cbuffer(commands &_cbuffer)
 }
 void video::rendering::process_cbuffer(const commands &_cbuffer)
 {
-	typedef std::map<command_key, uint> order;
+	typedef std::multimap<u64, uint> order;
+	typedef std::pair<u64, uint> order_item;
 	order l_order;
 	for (uint i = 0, s = _cbuffer.size(); i < s; ++i)
 	{
-		l_order[key(_cbuffer[i])] = i;
+		l_order.insert(order_item(_cbuffer[i].get_<_command>().key, i));
 	}
 	for (order::iterator i = l_order.begin(); i != l_order.end(); ++i)
 	{
@@ -65,43 +66,93 @@ void video::rendering::process_cbuffer(const commands &_cbuffer)
 		if (!m_run) break;
 	}
 }
-video::rendering::command_key video::rendering::key(const command &_command)
+//video::rendering::command_key video::rendering::key(const command &_command)
+//{
+//	switch (_command.type())
+//	{
+//		case command_types::type_<create_schain>::index : return key(_command.get_<create_schain>());
+//		case command_types::type_<create_viewport>::index : return key(_command.get_<create_viewport>());
+//		case command_types::type_<destroy_resource>::index : return key(_command.get_<destroy_resource>());
+//		case command_types::type_<begin_scene>::index : return key(_command.get_<begin_scene>());
+//		case command_types::type_<clear_viewport>::index : return key(_command.get_<clear_viewport>());
+//		case command_types::type_<draw_primitive>::index : return key(_command.get_<draw_primitive>());
+//		case command_types::type_<end_scene>::index : return key(_command.get_<end_scene>());
+//		case command_types::type_<present_schain>::index : return key(_command.get_<present_schain>());
+//	}
+//	return bad_key;
+//}
+
+static const uint key_size = sizeof(u64) * 8;
+static const video::rendering::_command::key_field command_type = { key_size - 1, 3 };
+static const video::rendering::_command::key_field command_draw_stage = { command_type.start - command_type.size, 3 };
+static const video::rendering::_command::key_field command_draw_target = { command_draw_stage.start - command_draw_stage.size, 6 };
+static const video::rendering::_command::key_field command_draw_viewport = { command_draw_target.start - command_draw_target.size, 6 };
+static const video::rendering::_command::key_field command_draw_sequence = { command_draw_viewport.start - command_draw_viewport.size, 6 };
+
+struct ct { enum command_types {
+	init, begin, draw, end, present
+};};
+
+inline void video::rendering::_command::set_key(const key_field &_field, u64 _value)
 {
-	switch (_command.type())
-	{
-		case command_types::type_<create_schain>::index : return key(_command.get_<create_schain>());
-		case command_types::type_<destroy_resource>::index : return key(_command.get_<destroy_resource>());
-		case command_types::type_<begin_scene>::index : return key(_command.get_<begin_scene>());
-		case command_types::type_<set_viewport>::index : return key(_command.get_<set_viewport>());
-		case command_types::type_<end_scene>::index : return key(_command.get_<end_scene>());
-		case command_types::type_<present_schain>::index : return key(_command.get_<present_schain>());
-	}
-	return bad_key;
+	ubig l_field = _value << (key_size - _field.size) >> (key_size - _field.start - 1);
+	key = key | l_field;
 }
-video::rendering::command_key video::rendering::key(const create_schain &_command)
-{
-	return 0;
-}
-video::rendering::command_key video::rendering::key(const destroy_resource &_command)
-{
-	return 0;
-}
-video::rendering::command_key video::rendering::key(const begin_scene &_command)
-{
-	return 1;
-}
-video::rendering::command_key video::rendering::key(const set_viewport &_command)
-{
-	return 2;
-}
-video::rendering::command_key video::rendering::key(const end_scene &_command)
-{
-	return 3;
-}
-video::rendering::command_key video::rendering::key(const present_schain &_command)
-{
-	return 4;
-}
+
+//video::rendering::command_key video::rendering::key(const create_schain &_command)
+//{
+//	command_key l_key = 0;
+//	set_key_field(l_key, command_type, 0);
+//	return l_key;
+//}
+//video::rendering::command_key video::rendering::key(const create_viewport &_command)
+//{
+//	command_key l_key = 0;
+//	set_key_field(l_key, command_type, 0);
+//	return l_key;
+//}
+//video::rendering::command_key video::rendering::key(const destroy_resource &_command)
+//{
+//	command_key l_key = 0;
+//	set_key_field(l_key, command_type, 0);
+//	return l_key;
+//}
+//video::rendering::command_key video::rendering::key(const begin_scene &_command)
+//{
+//	command_key l_key = 0;
+//	set_key_field(l_key, command_type, 1);
+//	return l_key;
+//}
+//video::rendering::command_key video::rendering::key(const clear_viewport &_command)
+//{
+//	command_key l_key = 0;
+//	set_key_field(l_key, command_type, 2);
+//	set_key_field(l_key, command_draw_target, _command.target_ID);
+//	set_key_field(l_key, command_draw_viewport, _command.viewport_ID);
+//	set_key_field(l_key, command_draw_sequence, _command.sequence);
+//	return l_key;
+//}
+//video::rendering::command_key video::rendering::key(const draw_primitive &_command)
+//{
+//	command_key l_key = 0;
+//	set_key_field(l_key, command_type, 2);
+//	set_key_field(l_key, command_draw_target, _command.target_ID);
+//	set_key_field(l_key, command_draw_viewport, _command.viewport_ID);
+//	set_key_field(l_key, command_draw_sequence, _command.sequence);
+//	return l_key;
+//}
+//video::rendering::command_key video::rendering::key(const end_scene &_command)
+//{
+//	command_key l_key = 0;
+//	set_key_field(l_key, command_type, 3);
+//	return l_key;
+//}
+//video::rendering::command_key video::rendering::key(const present_schain &_command)
+//{
+//	command_key l_key = 0;
+//	set_key_field(l_key, command_type, 4);
+//	return l_key;
+//}
 void video::rendering::m_proc()
 {
 	if (initialize())
@@ -141,8 +192,14 @@ bool video::update(real _dt)
 	if(!super::update(_dt)) return false;
 	if (!m_cbuffer.empty())
 	{
-		add_command(rendering::begin_scene());
-		add_command(rendering::end_scene());
+		rendering::begin_scene l_begin_scene;
+		l_begin_scene.set_key(command_type, ct::begin);
+		add_command(l_begin_scene);
+
+		rendering::end_scene l_end_scene;
+		l_end_scene.set_key(command_type, ct::end);
+		add_command(l_end_scene);
+
 		m_rendering.swap_cbuffer(m_cbuffer);
 	}
 	m_cbuffer.resize(0);
@@ -204,6 +261,8 @@ struct video::object::context
 {
 	uint target_ID;
 	struct { rect area; real2 depth; } viewport;
+	uint viewport_ID;
+	uint sequence;
 };
 
 
@@ -229,6 +288,17 @@ bool drawcall::update(real _dt)
 {
 	return true;
 }
+void drawcall::add_commands(const context &_context) const
+{
+	video::rendering::draw_primitive l_draw_primitive;
+	l_draw_primitive.set_key(command_type, ct::draw);
+	l_draw_primitive.set_key(command_draw_target, _context.target_ID); // @@@
+	l_draw_primitive.set_key(command_draw_viewport, _context.viewport_ID); // @@@
+	l_draw_primitive.set_key(command_draw_sequence, _context.sequence);
+	l_draw_primitive.target_ID = _context.target_ID;
+	l_draw_primitive.viewport_ID = _context.viewport_ID;
+	add_command(l_draw_primitive);
+}
 
 // viewport::info
 
@@ -244,9 +314,12 @@ viewport::viewport(const info &_info, video &_video)
 	video::object(_info, _video),
 	m_area(0, 0, uint(-1) >> 1, uint(-1) >> 1), m_depth(real2_y),
 	m_color(random_0.get(1.f), random_0.get(1.f), random_0.get(1.f))
-{}
+{
+	m_viewport_resource_ID = obtain_resource_ID();
+}
 viewport::~viewport()
 {
+	release_resource_ID(m_viewport_resource_ID);
 }
 bool viewport::update(real _dt)
 {
@@ -257,14 +330,33 @@ void viewport::add_commands(const context &_context) const
 	context l_context = _context;
 	l_context.viewport.area &= m_area;
 	l_context.viewport.depth = m_depth;
+	l_context.viewport_ID = m_viewport_resource_ID;
+	l_context.sequence++;
 
-	video::rendering::set_viewport l_set_viewport;
-	l_set_viewport.target_ID = l_context.target_ID;
-	l_set_viewport.area = l_context.viewport.area;
-	l_set_viewport.depth = l_context.viewport.depth;
-	l_set_viewport.clear = cf::color;
-	l_set_viewport.c = m_color;
-	add_command(l_set_viewport);
+	video::rendering::create_viewport l_create_viewport;
+	l_create_viewport.set_key(command_type, ct::init);
+	l_create_viewport.ID = m_viewport_resource_ID;
+	l_create_viewport.area = l_context.viewport.area;
+	l_create_viewport.depth = l_context.viewport.depth;
+	add_command(l_create_viewport);
+
+	video::rendering::clear_viewport l_clear_viewport;
+	l_clear_viewport.set_key(command_type, ct::draw);
+	l_clear_viewport.set_key(command_draw_target, l_context.target_ID); // @@@
+	l_clear_viewport.set_key(command_draw_viewport, l_context.viewport_ID); // @@@
+	l_clear_viewport.set_key(command_draw_sequence, l_context.sequence);
+	l_clear_viewport.target_ID = l_context.target_ID;
+	l_clear_viewport.viewport_ID = l_context.viewport_ID;
+	l_clear_viewport.clear.f = cf::color;
+	l_clear_viewport.clear.c = m_color;
+	add_command(l_clear_viewport);
+
+	l_context.sequence++;
+
+	for (uint i = 0, s = drawcall_count(); i < s; ++i)
+	{
+		get_video().get_<drawcall>(drawcall_ID(i)).add_commands(l_context);
+	}
 }
 uint viewport::add_drawcall()
 {
@@ -309,7 +401,7 @@ window *window::first_p = 0;
 
 window::window(const info &_info, video &_video, HWND _window)
 :
-	video::object(_info, _video), m_window(_window), next_p(0), m_active(false)
+	video::object(_info, _video), m_window(_window), next_p(0), m_active(false), m_redraw(false)
 {
 	next_p = first_p;
 	first_p = this;
@@ -343,11 +435,14 @@ window::~window()
 }
 bool window::update(real _dt)
 {
-	if (!active()) return true;
+	if (!m_redraw) return true;
+	//if (!active()) return true;
+	//if (IsWindowVisible(m_window) == FALSE) return true;
 
 	if (!valid())
 	{
 		video::rendering::destroy_resource l_destroy_resource;
+		l_destroy_resource.set_key(command_type, ct::init);
 		l_destroy_resource.ID = m_schain_resource_ID;
 		add_command(l_destroy_resource);
 	}
@@ -355,16 +450,22 @@ bool window::update(real _dt)
 	if (!resource_valid(m_schain_resource_ID))
 	{
 		video::rendering::create_schain l_create_schain;
+		l_create_schain.set_key(command_type, ct::init);
 		l_create_schain.ID = m_schain_resource_ID;
 		l_create_schain.window = m_window;
 		add_command(l_create_schain);
 	}
+	//else
+	//{
+	//	m_redraw = false;
+	//}
 
 	context l_context;
 	l_context.target_ID = m_schain_resource_ID;
 	RECT l_crect; GetClientRect(m_window, &l_crect);
 	l_context.viewport.area = rect(0, 0, (uint)l_crect.right, (uint)l_crect.bottom);
 	l_context.viewport.depth = real2_y;
+	l_context.sequence = 0;
 
 	for (uint i = 0, s = viewport_count(); i < s; ++i)
 	{
@@ -372,6 +473,7 @@ bool window::update(real _dt)
 	}
 
 	video::rendering::present_schain l_present_schain;
+	l_present_schain.set_key(command_type, ct::present);
 	l_present_schain.ID = m_schain_resource_ID;
 	add_command(l_present_schain);
 
@@ -398,11 +500,27 @@ long window::m_wndproc(uint _message, uint _wparam, uint _lparam)
 {
 	switch (_message)
 	{
-	case WM_ERASEBKGND : {
-	} return 1;
-	case WM_SIZE : {
-		set_invalid();
-	} break;
+		case WM_ERASEBKGND :
+		{
+			m_redraw = true;
+			return 1;
+		}
+		case WM_SIZE :
+		{
+			m_redraw = true;
+			set_invalid();
+			break;
+		}
+		case WM_PAINT :
+		{
+			m_redraw = true;
+			break;
+		}
+		//case WM_SHOWWINDOW :
+		//{
+		//	set_active(_wparam != 0);
+		//	break;
+		//}
 	}
 
 	return (long)CallWindowProc(m_oldwndproc, m_window, (UINT)_message, _wparam, _lparam);

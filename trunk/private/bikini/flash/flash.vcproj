@@ -353,6 +353,10 @@
 				RelativePath="..\..\..\include\bikini\flash\player.inl"
 				>
 			</File>
+			<File
+				RelativePath=".\renderer.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="header"

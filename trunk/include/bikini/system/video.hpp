@@ -16,17 +16,27 @@ struct video : device {
 	{
 		/* rendering commands -------------------------------------------------------------------*/
 
-		struct create_schain { uint ID; handle window; };
-		struct destroy_resource { uint ID; };
-		struct begin_scene {};
-		struct set_viewport { uint target_ID; rect area; real2 depth; uint clear; color c; real d; uint s; };
-		struct draw_primitive {};
-		struct end_scene {};
-		struct present_schain { uint ID; };
+		struct _command
+		{
+			u64 key;
+			inline _command() : key(0) {}
+			struct key_field { uint start, size; };
+			inline void set_key(const key_field &_field, u64 _value);
+		};
+
+		struct create_schain : _command { uint ID; handle window; };
+		struct create_viewport : _command { uint ID; rect area; real2 depth; };
+		struct destroy_resource : _command { uint ID; };
+		struct begin_scene : _command {};
+		struct clear_viewport : _command { uint target_ID, viewport_ID; struct { uint f; color c; real z; uint s; } clear; };
+		struct draw_primitive : _command { uint target_ID, viewport_ID; };
+		struct end_scene : _command {};
+		struct present_schain : _command { uint ID; };
 
 		typedef make_typelist_<
-			create_schain, destroy_resource,
-			begin_scene, set_viewport, draw_primitive, end_scene,
+			create_schain, create_viewport,
+			destroy_resource,
+			begin_scene, clear_viewport, draw_primitive, end_scene,
 			present_schain
 		>::type command_types;
 		typedef variant_<command_types, false> command;
@@ -61,15 +71,17 @@ struct video : device {
 		void process_cbuffer(const commands &_cbuffer);
 		thread::flag m_cbuffer_ready;
 		thread::section m_cbuffer_lock;
-		typedef u64 command_key;
-		static const command_key bad_key = command_key(-1);
-		command_key key(const command &_command);
-		command_key key(const create_schain &_command);
-		command_key key(const destroy_resource &_command);
-		command_key key(const begin_scene &_command);
-		command_key key(const set_viewport &_command);
-		command_key key(const end_scene &_command);
-		command_key key(const present_schain &_command);
+		//typedef u64 command_key;
+		//static const command_key bad_key = command_key(-1);
+		//command_key key(const command &_command);
+		//command_key key(const create_schain &_command);
+		//command_key key(const create_viewport &_command);
+		//command_key key(const destroy_resource &_command);
+		//command_key key(const begin_scene &_command);
+		//command_key key(const clear_viewport &_command);
+		//command_key key(const draw_primitive &_command);
+		//command_key key(const end_scene &_command);
+		//command_key key(const present_schain &_command);
 	};
 	
 	/* video object -----------------------------------------------------------------------------*/
@@ -113,10 +125,10 @@ private:
 	rendering &m_rendering;
 	rendering& new_rendering(video &_video);
 	inline rendering& get_rendering() const { return m_rendering; }
-	//
+
 	rendering::commands m_cbuffer;
 	inline void add_command(const rendering::command &_command) { m_cbuffer.push_back(_command); }
-	//
+
 	pool_<bool> m_resources;
 	thread::section m_resource_lock;
 	uint obtain_resource_ID();
@@ -151,6 +163,8 @@ struct drawcall : video::object
 	~drawcall();
 	bool update(real _dt);
 
+	void add_commands(const context &_context) const;
+
 private:
 };
 
@@ -184,6 +198,7 @@ struct viewport : video::object
 	void add_commands(const context &_context) const;
 
 private:
+	uint m_viewport_resource_ID;
 	rect m_area; real2 m_depth;
 	color m_color;
 	drawcall::info m_drawcall_info;
@@ -226,6 +241,7 @@ private:
 	viewport::info m_viewport_info;
 	uint_array m_viewports;
 	bool m_active;
+	bool m_redraw;
 };
 
 

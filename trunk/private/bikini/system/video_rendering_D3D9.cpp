@@ -50,9 +50,10 @@ private:
 	D3DPRESENT_PARAMETERS m_D3DPP;
 	//
 	bool execute(const create_schain &_command);
+	bool execute(const create_viewport &_command);
 	bool execute(const destroy_resource &_command);
 	bool execute(const begin_scene &_command);
-	bool execute(const set_viewport &_command);
+	bool execute(const clear_viewport &_command);
 	bool execute(const end_scene &_command);
 	bool execute(const present_schain &_command);
 	//
@@ -66,14 +67,14 @@ private:
 	struct vshader : _resource {};
 	struct pshader : _resource {};
 	struct consts : _resource {};
-	struct ststes : _resource {};
-	struct viewport : _resource {};
+	struct states : _resource {};
+	struct viewport : _resource { D3DVIEWPORT9 D3DViewport9; };
 	struct rtarget : _resource {};
 	struct material : _resource {};
 	struct primitive : _resource {};
 
 	typedef make_typelist_<
-		schain
+		schain, viewport
 	>::type resource_types;
 	typedef variant_<resource_types, false> resource;
 	typedef array_<resource> resources;
@@ -81,7 +82,8 @@ private:
 	resources m_resources;
 
 	void m_destroy_resource(uint _ID);
-	bool m_set_render_target(uint _ID);
+	bool m_set_target(uint _ID);
+	bool m_set_viewport(uint _ID);
 };
 
 IDirect3D9 *rendering_D3D9::sm_D3D9_p = 0;
@@ -161,17 +163,23 @@ void rendering_D3D9::m_destroy_resource(uint _ID)
 		{
 			switch (l_resource.type())
 			{
-				case resource_types::type_<schain>::index : {
+				case resource_types::type_<schain>::index :
+				{
 					schain l_schain = l_resource.get_<schain>();
 					l_schain.D3DSChain9_p->Release();
-				} break;
+					break;
+				}
+				case resource_types::type_<viewport>::index :
+				{
+					break;
+				}
 			}
 			l_resource.destruct();
 			set_invalid(_ID);
 		}
 	}
 }
-bool rendering_D3D9::m_set_render_target(uint _ID)
+bool rendering_D3D9::m_set_target(uint _ID)
 {
 	uint_ID l_ID(_ID);
 	if (l_ID.index < m_resources.size())
@@ -181,7 +189,8 @@ bool rendering_D3D9::m_set_render_target(uint _ID)
 		{
 			switch (l_resource.type())
 			{
-				case resource_types::type_<schain>::index : {
+				case resource_types::type_<schain>::index :
+				{
 					schain l_schain = l_resource.get_<schain>();
 					IDirect3DSurface9 *l_D3DSurface9_p;
 					if (SUCCEEDED(l_schain.D3DSChain9_p->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &l_D3DSurface9_p)))
@@ -190,7 +199,32 @@ bool rendering_D3D9::m_set_render_target(uint _ID)
 						l_D3DSurface9_p->Release();
 						return true;
 					}
-				} break;
+					break;
+				}
+			}
+		}
+	}
+	return false;
+}
+bool rendering_D3D9::m_set_viewport(uint _ID)
+{
+	uint_ID l_ID(_ID);
+	if (l_ID.index < m_resources.size())
+	{
+		resource &l_resource = m_resources[l_ID.index];
+		if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _ID)
+		{
+			switch (l_resource.type())
+			{
+				case resource_types::type_<viewport>::index :
+				{
+					viewport l_viewport = l_resource.get_<viewport>();
+					if (SUCCEEDED(m_D3DDevice9_p->SetViewport(&l_viewport.D3DViewport9)))
+					{
+						return true;
+					}
+					break;
+				}
 			}
 		}
 	}
@@ -201,9 +235,10 @@ bool rendering_D3D9::execute(const command &_command)
 	switch (_command.type())
 	{
 		case command_types::type_<create_schain>::index : return execute(_command.get_<create_schain>());
+		case command_types::type_<create_viewport>::index : return execute(_command.get_<create_viewport>());
 		case command_types::type_<destroy_resource>::index : return execute(_command.get_<destroy_resource>());
 		case command_types::type_<begin_scene>::index : return execute(_command.get_<begin_scene>());
-		case command_types::type_<set_viewport>::index : return execute(_command.get_<set_viewport>());
+		case command_types::type_<clear_viewport>::index : return execute(_command.get_<clear_viewport>());
 		case command_types::type_<end_scene>::index : return execute(_command.get_<end_scene>());
 		case command_types::type_<present_schain>::index : return execute(_command.get_<present_schain>());
 	}
@@ -242,6 +277,31 @@ bool rendering_D3D9::execute(const create_schain &_command)
 
 	return true;
 }
+bool rendering_D3D9::execute(const create_viewport &_command)
+{
+	m_destroy_resource(_command.ID);
+
+	viewport l_viewport;
+	l_viewport.ID = _command.ID;
+
+	D3DVIEWPORT9 l_D3DViewport9 =
+	{
+		(DWORD)_command.area.min().x(), (DWORD)_command.area.min().y(),
+		(DWORD)_command.area.size().x(), (DWORD)_command.area.size().y(),
+		(float)_command.depth.x(), (float)_command.depth.y()
+	};
+	l_viewport.D3DViewport9 = l_D3DViewport9;
+
+	uint_ID l_command_ID(_command.ID);
+
+	if (l_command_ID.index >= m_resources.size()) m_resources.resize(l_command_ID.index + 1);
+
+	m_resources[l_command_ID.index] = l_viewport;
+
+	set_valid(_command.ID);
+
+	return true;
+}
 bool rendering_D3D9::execute(const destroy_resource &_command)
 {
 	m_destroy_resource(_command.ID);
@@ -253,28 +313,21 @@ bool rendering_D3D9::execute(const begin_scene &_command)
 	if (FAILED(m_D3DDevice9_p->BeginScene())) return false;
 	return true;
 }
-bool rendering_D3D9::execute(const set_viewport &_command)
+bool rendering_D3D9::execute(const clear_viewport &_command)
 {
-	if (!m_set_render_target(_command.target_ID)) return false;
-
-	D3DVIEWPORT9 l_viewport =
-	{
-		(DWORD)_command.area.min().x(), (DWORD)_command.area.min().y(),
-		(DWORD)_command.area.size().x(), (DWORD)_command.area.size().y(),
-		(float)_command.depth.x(), (float)_command.depth.y()
-	};
-	if (FAILED(m_D3DDevice9_p->SetViewport(&l_viewport))) return false;
+	if (!m_set_target(_command.target_ID)) return false;
+	if (!m_set_viewport(_command.viewport_ID)) return false;
 
 	DWORD l_flags = 0;
-	if (_command.clear & cf::color) l_flags |= D3DCLEAR_TARGET;
-	if (_command.clear & cf::depth) l_flags |= D3DCLEAR_ZBUFFER;
-	if (_command.clear & cf::stencil) l_flags |= D3DCLEAR_STENCIL;
+	if (_command.clear.f & cf::color) l_flags |= D3DCLEAR_TARGET;
+	if (_command.clear.f & cf::depth) l_flags |= D3DCLEAR_ZBUFFER;
+	if (_command.clear.f & cf::stencil) l_flags |= D3DCLEAR_STENCIL;
 
 	if (l_flags != 0)
 	{
-		D3DCOLOR l_color = (D3DCOLOR)_command.c;
-		float l_z = (float)_command.d;
-		DWORD l_stencil = (DWORD)_command.s;
+		D3DCOLOR l_color = (D3DCOLOR)_command.clear.c;
+		float l_z = (float)_command.clear.z;
+		DWORD l_stencil = (DWORD)_command.clear.s;
 
 		if (FAILED(m_D3DDevice9_p->Clear(0, 0, l_flags, l_color, l_z, l_stencil))) return false;
 	}
