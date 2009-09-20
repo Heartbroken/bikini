@@ -12,7 +12,7 @@ struct task0 : bk::application::task
 	struct info : bk::application::task::info
 	{
 		typedef task0 object;
-		inline info() : bk::application::task::info(at::task0, "main task") {}
+		inline info() : bk::application::task::info(at::task0, "test_application main task") {}
 	};
 	inline task0(const info &_info, bk::application &_application)
 	:
@@ -20,7 +20,6 @@ struct task0 : bk::application::task
 	{}
 	void main()
 	{
-		assert(1);
 		bk::window l_window;
 		l_window.create(800, 600);
 		l_window.set_caption("test_application ");
@@ -29,7 +28,11 @@ struct task0 : bk::application::task
 		bk::vo::window::info l_vo_window_info;
 		bk::uint l_vo_window_ID = l_video.spawn(l_vo_window_info, l_window.get_handle());
 
-		bk::flash::renderer l_renderer;
+		bk::flash::renderer l_renderer(l_video);
+		l_renderer.create();
+
+		bk::uint l_vo_viewport_ID = l_video.get_<bk::vo::window>(l_vo_window_ID).viewport_ID(0);
+		l_renderer.set_viewport_ID(l_vo_viewport_ID);
 
 		bk::flash::player l_player;
 		l_player.create(l_renderer);
@@ -59,6 +62,7 @@ struct task0 : bk::application::task
 		}
 
 		l_player.destroy();
+		l_renderer.destroy();
 
 		l_video.kill(l_vo_window_ID);
 		l_video.destroy();

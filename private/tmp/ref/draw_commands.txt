@@ -1,4 +1,4 @@
-objects:
+resources:
 
 schain		- swap chain
 vbuffer		- vertex buffer, start vertex index
@@ -33,7 +33,8 @@ init
 begin
 	begin_scene		( key = { begin } )
 draw
-	draw_primitive		( key = { draw, stage, rtarget, viewport, sequence, translucency, depth, material }, value = { rtarget, viewport, material, primitive } )
+	clear_viewport		( key = { draw, rtarget, viewport, sequence }, value = { rtarget, viewport, flags, color, depth, stencil } )
+	draw_primitive		( key = { draw, rtarget, viewport, sequence, translucency, depth, material }, value = { rtarget, viewport, material, primitive } )
 end
 	end_scene		( key = { end } )
 present
@@ -44,13 +45,12 @@ present
 
 
 draw		8	3   3
-stage		8	3   6
-rtarget		16	4   10
-viewport	8	3   13
-sequence	32	5   18
-translucency	4	2   20
-depth		4096	12  32
-material	1024	10  42
+rtarget		16	4   7
+viewport	8	3   10
+sequence	32	5   15
+translucency	4	2   17
+depth		4096	12  29
+material	1024	10  39
 -------------------------
-total			42
+total			39
 

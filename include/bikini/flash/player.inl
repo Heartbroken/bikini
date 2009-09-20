@@ -12,8 +12,8 @@
 
 struct player::renderer
 {
-	virtual uint create_vbuffer(functor_<uint, handle> _source) = 0;
-	virtual void draw_primitive(uint _vbuffer) = 0;
+	//virtual uint create_vbuffer(functor_<uint, handle> _source) = 0;
+	//virtual void draw_primitive(uint _vbuffer) = 0;
 };
 
 // player::loader
@@ -32,8 +32,8 @@ struct player::loader
 template<typename _Renderer, typename _Interface> struct _player_renderer_proxy_ : _Interface
 {
 	inline _player_renderer_proxy_(_Renderer &_renderer) : m_renderer(_renderer) {}
-	uint create_vbuffer(functor_<uint, handle> _source) { return m_renderer.create_vbuffer(_source); }
-	void draw_primitive(uint _vbuffer) { m_renderer.draw_primitive(_vbuffer); }
+	//uint create_vbuffer(functor_<uint, handle> _source) { return m_renderer.create_vbuffer(_source); }
+	//void draw_primitive(uint _vbuffer) { m_renderer.draw_primitive(_vbuffer); }
 
 private:
 	_Renderer &m_renderer;

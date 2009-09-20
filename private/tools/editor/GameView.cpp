@@ -46,6 +46,8 @@ BOOL CGameView::PreCreateWindow(CREATESTRUCT& cs)
 
 void CGameView::OnDraw(CDC* /*pDC*/)
 {
+//	theApp.get_video().get_<bk::vo::window>(m_window_ID).set_invalid();
+
 	CGameDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
 	if (!pDoc)

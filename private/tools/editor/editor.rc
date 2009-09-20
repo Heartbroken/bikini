@@ -365,13 +365,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "TODO: <Company name>"
-            VALUE "FileDescription", "TODO: <File description>"
+            VALUE "CompanyName", "Viktor Reutskyy"
+            VALUE "FileDescription", "bikini-iii editor"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "editor.exe"
-            VALUE "LegalCopyright", "TODO: (c) <Company name>.  All rights reserved."
+            VALUE "LegalCopyright", "(c) Viktor Reutskyy.  All rights reserved."
             VALUE "OriginalFilename", "editor.exe"
-            VALUE "ProductName", "TODO: <Product name>"
+            VALUE "ProductName", "bikini-iii editor"
             VALUE "ProductVersion", "1.0.0.1"
         END
     END

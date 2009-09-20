@@ -6,24 +6,27 @@
 
 *//*---------------------------------------------------------------------------------------------*/
 
-#pragma once
-
-#include "system.hpp"
-
-#pragma comment(lib, "flash ("_PLATFORM_"!"_CONFIGURATION_")")
-
-namespace gameswf {
-
-struct player;
-
-}
+#include "header.hpp"
 
 namespace bk { /*--------------------------------------------------------------------------------*/
 
 namespace flash { /*-----------------------------------------------------------------------------*/
 
-#include "flash/player.hpp"
-#include "flash/renderer.hpp"
+renderer::renderer(video &_video)
+:
+	m_video(_video), m_viewport_ID(bad_ID)
+{
+}
+renderer::~renderer()
+{
+}
+bool renderer::create()
+{
+	return true;
+}
+void renderer::destroy()
+{
+}
 
 } /* namespace flash ----------------------------------------------------------------------------*/
 

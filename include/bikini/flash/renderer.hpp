@@ -10,11 +10,15 @@
 
 struct renderer
 {
-	uint create_vbuffer(functor_<uint, handle> _source)
-	{
-		return bad_ID;
-	}
-	void draw_primitive(uint _vbuffer)
-	{
-	}
+	inline uint viewport_ID() const { m_viewport_ID; }
+	inline void set_viewport_ID(uint _viewport_ID) { m_viewport_ID = _viewport_ID; }
+
+	renderer(video &_video);
+	~renderer();
+	bool create();
+	void destroy();
+
+private:
+	video &m_video;
+	uint m_viewport_ID;
 };
