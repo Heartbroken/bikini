@@ -32,16 +32,20 @@ bool application::run()
 	ticker l_ticker(0.1f);
 	bk::rbig l_time = bk::sys_time();
 	bool l_done = false;
-	while(!l_done) {
-		bk::real l_dt = bk::real(bk::sys_time() - l_time); l_time = bk::sys_time();
+	while (!l_done)
+	{
+		bk::real l_dt = bk::real(bk::sys_time() - l_time);
+		l_time = bk::sys_time();
+
 		update(l_dt);
+
 		l_done = true;
-		uint l_ID = get_first_ID();
-		while(l_ID != bad_ID) {
+		for (uint l_ID = get_first_ID(); l_ID != bad_ID; l_ID = get_next_ID(l_ID))
+		{
 			if(get_<task>(l_ID).done()) kill(l_ID);
 			else l_done = false;
-			l_ID = get_next_ID(l_ID);
 		}
+
 		l_ticker.sync();
 	}
 	return false;
