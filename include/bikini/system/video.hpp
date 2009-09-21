@@ -98,7 +98,7 @@ struct video : device {
 	};
 
 	struct ot { enum object_type {
-		window, viewport, drawcall
+		window, viewport, drawcall, vformat
 	};};
 
 	/* video ------------------------------------------------------------------------------------*/
@@ -136,6 +136,25 @@ namespace cf { enum clear_flags {
 };}
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
+
+/// vformat
+struct vformat : video::object
+{
+	struct info : video::object::info
+	{
+		typedef vformat object;
+		info();
+	};
+
+	inline const info& get_info() const { return get_info_<info>(); }
+
+	vformat(const info &_info, video &_video);
+	~vformat();
+	bool update(real _dt);
+
+private:
+	uint m_vformat_resource_ID;
+};
 
 /// drawcall
 struct drawcall : video::object
