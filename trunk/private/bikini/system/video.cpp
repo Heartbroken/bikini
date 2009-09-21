@@ -201,6 +201,30 @@ struct video::object::context
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
 
+// vformat::info
+
+vformat::info::info()
+:
+	video::object::info(video::ot::vformat)
+{}
+
+// vformat
+
+vformat::vformat(const info &_info, video &_video)
+:
+	video::object(_info, _video)
+{
+	m_vformat_resource_ID = obtain_resource_ID();
+}
+vformat::~vformat()
+{
+	release_resource_ID(m_vformat_resource_ID);
+}
+bool vformat::update(real _dt)
+{
+	return true;
+}
+
 // drawcall::info
 
 drawcall::info::info()
@@ -226,7 +250,7 @@ void drawcall::add_commands(const context &_context) const
 	video::rendering::draw_primitive l_draw_primitive;
 	l_draw_primitive.set_key(command_type, ct::draw);
 	l_draw_primitive.set_key(command_draw_target, _context.target_ID); // @@@
-	l_draw_primitive.set_key(command_draw_viewport, _context.viewport_ID); // @@@
+	l_draw_primitive.set_key(command_draw_viewport, _context.viewport_ID);
 	l_draw_primitive.set_key(command_draw_sequence, _context.sequence);
 	l_draw_primitive.target_ID = _context.target_ID;
 	l_draw_primitive.viewport_ID = _context.viewport_ID;
@@ -276,7 +300,7 @@ void viewport::add_commands(const context &_context) const
 	video::rendering::clear_viewport l_clear_viewport;
 	l_clear_viewport.set_key(command_type, ct::draw);
 	l_clear_viewport.set_key(command_draw_target, l_context.target_ID); // @@@
-	l_clear_viewport.set_key(command_draw_viewport, l_context.viewport_ID); // @@@
+	l_clear_viewport.set_key(command_draw_viewport, l_context.viewport_ID);
 	l_clear_viewport.set_key(command_draw_sequence, l_context.sequence);
 	l_clear_viewport.target_ID = l_context.target_ID;
 	l_clear_viewport.viewport_ID = l_context.viewport_ID;
