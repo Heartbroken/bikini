@@ -21,4 +21,6 @@ struct renderer
 private:
 	video &m_video;
 	uint m_viewport_ID;
+	bk::vo::vformat::info m_vo_vformat_info;
+	uint m_vo_vformat_ID;
 };

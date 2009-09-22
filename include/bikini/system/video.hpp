@@ -26,6 +26,7 @@ struct video : device {
 
 		struct create_schain : _command { uint ID; handle window; };
 		struct create_viewport : _command { uint ID; rect area; real2 depth; };
+		struct create_vformat : _command { uint ID; pointer data; };
 		struct destroy_resource : _command { uint ID; };
 		struct begin_scene : _command {};
 		struct clear_viewport : _command { uint target_ID, viewport_ID; struct { uint f; color c; real z; uint s; } clear; };
@@ -34,7 +35,7 @@ struct video : device {
 		struct present_schain : _command { uint ID; };
 
 		typedef make_typelist_<
-			create_schain, create_viewport,
+			create_schain, create_viewport, create_vformat,
 			destroy_resource,
 			begin_scene, clear_viewport, draw_primitive, end_scene,
 			present_schain
@@ -143,6 +144,7 @@ struct vformat : video::object
 	struct info : video::object::info
 	{
 		typedef vformat object;
+		pointer data;
 		info();
 	};
 

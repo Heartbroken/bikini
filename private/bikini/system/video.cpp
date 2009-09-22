@@ -205,7 +205,8 @@ namespace vo { /* video objects ------------------------------------------------
 
 vformat::info::info()
 :
-	video::object::info(video::ot::vformat)
+	video::object::info(video::ot::vformat),
+	data(0)
 {}
 
 // vformat
@@ -222,6 +223,15 @@ vformat::~vformat()
 }
 bool vformat::update(real _dt)
 {
+	if (!resource_valid(m_vformat_resource_ID))
+	{
+		video::rendering::create_vformat l_create_vformat;
+		l_create_vformat.set_key(command_type, ct::init);
+		l_create_vformat.ID = m_vformat_resource_ID;
+		l_create_vformat.data = get_info().data;
+		add_command(l_create_vformat);
+	}
+
 	return true;
 }
 
