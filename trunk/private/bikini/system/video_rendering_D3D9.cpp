@@ -51,6 +51,7 @@ private:
 	//
 	bool execute(const create_schain &_command);
 	bool execute(const create_viewport &_command);
+	bool execute(const create_vformat &_command);
 	bool execute(const destroy_resource &_command);
 	bool execute(const begin_scene &_command);
 	bool execute(const clear_viewport &_command);
@@ -62,7 +63,7 @@ private:
 	struct schain : _resource { IDirect3DSwapChain9 *D3DSChain9_p; };
 	struct vbuffer : _resource {};
 	struct ibuffer : _resource {};
-	struct vformat : _resource {};
+	struct vformat : _resource { IDirect3DVertexDeclaration9 *D3DVDecl9_p; };
 	struct texture : _resource {};
 	struct vshader : _resource {};
 	struct pshader : _resource {};
@@ -74,13 +75,14 @@ private:
 	struct primitive : _resource {};
 
 	typedef make_typelist_<
-		schain, viewport
+		schain, viewport, vformat
 	>::type resource_types;
 	typedef variant_<resource_types, false> resource;
 	typedef array_<resource> resources;
 
 	resources m_resources;
 
+	void m_create_resource(const resource &_r);
 	void m_destroy_resource(uint _ID);
 	bool m_set_target(uint _ID);
 	bool m_set_viewport(uint _ID);
@@ -153,6 +155,21 @@ void rendering_D3D9::finalize()
 	if (m_D3DDevice9_p->Release() == 0) m_D3DDevice9_p = 0;
 	if (sm_D3D9_p->Release() == 0) sm_D3D9_p = 0;
 }
+void rendering_D3D9::m_create_resource(const resource &_r)
+{
+	if (!_r.is_nothing())
+	{
+		uint_ID l_ID(_r.get_<_resource>().ID);
+
+		m_destroy_resource(l_ID);
+
+		if (l_ID.index >= m_resources.size()) m_resources.resize(l_ID.index + 1);
+
+		m_resources[l_ID.index] = _r;
+
+		set_valid(l_ID);
+	}
+}
 void rendering_D3D9::m_destroy_resource(uint _ID)
 {
 	uint_ID l_ID(_ID);
@@ -171,6 +188,12 @@ void rendering_D3D9::m_destroy_resource(uint _ID)
 				}
 				case resource_types::type_<viewport>::index :
 				{
+					break;
+				}
+				case resource_types::type_<vformat>::index :
+				{
+					vformat l_vformat = l_resource.get_<vformat>();
+					l_vformat.D3DVDecl9_p->Release();
 					break;
 				}
 			}
@@ -236,6 +259,7 @@ bool rendering_D3D9::execute(const command &_command)
 	{
 		case command_types::type_<create_schain>::index : return execute(_command.get_<create_schain>());
 		case command_types::type_<create_viewport>::index : return execute(_command.get_<create_viewport>());
+		case command_types::type_<create_vformat>::index : return execute(_command.get_<create_vformat>());
 		case command_types::type_<destroy_resource>::index : return execute(_command.get_<destroy_resource>());
 		case command_types::type_<begin_scene>::index : return execute(_command.get_<begin_scene>());
 		case command_types::type_<clear_viewport>::index : return execute(_command.get_<clear_viewport>());
@@ -246,8 +270,6 @@ bool rendering_D3D9::execute(const command &_command)
 }
 bool rendering_D3D9::execute(const create_schain &_command)
 {
-	m_destroy_resource(_command.ID);
-
 	schain l_schain;
 	l_schain.ID = _command.ID;
 
@@ -267,20 +289,12 @@ bool rendering_D3D9::execute(const create_schain &_command)
 
 	if (FAILED(get_device().CreateAdditionalSwapChain(&l_D3DPP, &l_schain.D3DSChain9_p))) return false;
 
-	uint_ID l_command_ID(_command.ID);
-
-	if (l_command_ID.index >= m_resources.size()) m_resources.resize(l_command_ID.index + 1);
-
-	m_resources[l_command_ID.index] = l_schain;
-
-	set_valid(_command.ID);
+	m_create_resource(l_schain);
 
 	return true;
 }
 bool rendering_D3D9::execute(const create_viewport &_command)
 {
-	m_destroy_resource(_command.ID);
-
 	viewport l_viewport;
 	l_viewport.ID = _command.ID;
 
@@ -292,13 +306,18 @@ bool rendering_D3D9::execute(const create_viewport &_command)
 	};
 	l_viewport.D3DViewport9 = l_D3DViewport9;
 
-	uint_ID l_command_ID(_command.ID);
+	m_create_resource(l_viewport);
 
-	if (l_command_ID.index >= m_resources.size()) m_resources.resize(l_command_ID.index + 1);
+	return true;
+}
+bool rendering_D3D9::execute(const create_vformat &_command)
+{
+	vformat l_vformat;
+	l_vformat.ID = _command.ID;
 
-	m_resources[l_command_ID.index] = l_viewport;
+	if (FAILED(get_device().CreateVertexDeclaration((CONST D3DVERTEXELEMENT9*)_command.data, &l_vformat.D3DVDecl9_p))) return false;
 
-	set_valid(_command.ID);
+	m_create_resource(l_vformat);
 
 	return true;
 }
@@ -342,12 +361,18 @@ bool rendering_D3D9::execute(const end_scene &_command)
 bool rendering_D3D9::execute(const present_schain &_command)
 {
 	uint_ID l_command_ID(_command.ID);
+
 	if (l_command_ID.index >= m_resources.size()) return false;
+
 	resource &l_resource = m_resources[l_command_ID.index];
+
 	if (l_resource.is_nothing() || l_resource.get_<_resource>().ID != _command.ID) return false;
 	if (l_resource.type() != resource_types::type_<schain>::index) return false;
+
 	schain l_schain = l_resource.get_<schain>();
+
 	if (FAILED(l_schain.D3DSChain9_p->Present(0, 0, 0, 0, 0))) return false;
+
 	return true;
 }
 
