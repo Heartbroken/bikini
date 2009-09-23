@@ -77,7 +77,7 @@ static const video::rendering::_command::key_field command_draw_viewport = { com
 static const video::rendering::_command::key_field command_draw_sequence = { command_draw_viewport.start - command_draw_viewport.size, 6 };
 
 struct ct { enum command_types {
-	init, begin, draw, end, present
+	deinit, init, begin, draw, end, present
 };};
 
 inline void video::rendering::_command::set_key(const key_field &_field, u64 _value)
@@ -400,7 +400,9 @@ window *window::first_p = 0;
 
 window::window(const info &_info, video &_video, HWND _window)
 :
-	video::object(_info, _video), m_window(_window), next_p(0), m_active(false), m_redraw(false)
+	video::object(_info, _video),
+	m_window(_window), next_p(0),
+	m_flags(0)
 {
 	next_p = first_p;
 	first_p = this;
@@ -434,17 +436,7 @@ window::~window()
 }
 bool window::update(real _dt)
 {
-	//if (!active()) return true;
-
-	if (!valid())
-	{
-		video::rendering::destroy_resource l_destroy_resource;
-		l_destroy_resource.set_key(command_type, ct::init);
-		l_destroy_resource.ID = m_schain_resource_ID;
-		add_command(l_destroy_resource);
-	}
-
-	if (!resource_valid(m_schain_resource_ID))
+	if (!valid() || !resource_valid(m_schain_resource_ID))
 	{
 		video::rendering::create_schain l_create_schain;
 		l_create_schain.set_key(command_type, ct::init);
@@ -453,9 +445,7 @@ bool window::update(real _dt)
 		add_command(l_create_schain);
 	}
 
-	update_version();
-
-	if (m_redraw)
+	if (m_flags & 2)
 	{
 		context l_context;
 		l_context.target_ID = m_schain_resource_ID;
@@ -474,7 +464,9 @@ bool window::update(real _dt)
 		l_present_schain.ID = m_schain_resource_ID;
 		add_command(l_present_schain);
 
-		m_redraw = false;
+		update_version();
+
+		m_flags &= ~2;
 	}
 
 	return true;
@@ -500,43 +492,35 @@ long window::m_wndproc(uint _message, uint _wparam, uint _lparam)
 	{
 		case WM_ERASEBKGND :
 		{
-			////
-			//context l_context;
-			//l_context.target_ID = m_schain_resource_ID;
-			//RECT l_crect; GetClientRect(m_window, &l_crect);
-			//l_context.viewport.area = rect(0, 0, (uint)l_crect.right, (uint)l_crect.bottom);
-			//l_context.viewport.depth = real2_y;
-			//l_context.sequence = 0;
-
-			//for (uint i = 0, s = viewport_count(); i < s; ++i)
-			//{
-			//	get_video().get_<viewport>(viewport_ID(i)).add_commands(l_context);
-			//}
-
-			//video::rendering::present_schain l_present_schain;
-			//l_present_schain.set_key(command_type, ct::present);
-			//l_present_schain.ID = m_schain_resource_ID;
-			//add_command(l_present_schain);
-			////
-			m_redraw = true;
+			m_flags |= 1;
 			return 1;
 		}
 		case WM_SIZE :
 		{
-			m_redraw = true;
 			set_invalid();
 			break;
 		}
 		case WM_PAINT :
 		{
-			m_redraw = true;
+			if (m_flags & 1)
+			{
+				HRGN l_rgn = CreateRectRgn(0, 0, 0, 0);
+				if (GetUpdateRgn(m_window, l_rgn, TRUE) != ERROR)
+				{
+					RECT l_rect; GetClientRect(m_window, &l_rect);
+					HRGN l_rgn2 = CreateRectRgn(l_rect.left, l_rect.top, l_rect.right, l_rect.bottom);
+					if (EqualRgn(l_rgn, l_rgn2) == FALSE || !valid())
+					{
+						HDC l_hdc = GetDC(m_window);
+						FillRgn(l_hdc, l_rgn, (HBRUSH)GetStockObject(BLACK_BRUSH));
+						ReleaseDC(m_window, l_hdc);
+					}
+				}
+				m_flags &= ~1;
+			}
+			m_flags |= 2;
 			break;
 		}
-		//case WM_SHOWWINDOW :
-		//{
-		//	set_active(_wparam != 0);
-		//	break;
-		//}
 	}
 
 	return (long)CallWindowProc(m_oldwndproc, m_window, (UINT)_message, _wparam, _lparam);
