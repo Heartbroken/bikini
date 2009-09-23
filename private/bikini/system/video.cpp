@@ -373,7 +373,7 @@ window::window(const info &_info, video &_video, HWND _window)
 	next_p = first_p;
 	first_p = this;
 
-	m_oldwndproc = (WNDPROC)SetWindowLong(m_window, GWL_WNDPROC, (LONG)_wndproc);
+	m_oldwndproc = (WNDPROC)SetWindowLongPtr(m_window, GWL_WNDPROC, (LONG_PTR)_wndproc);
 
 	m_schain_resource_ID = obtain_resource_ID();
 
@@ -398,11 +398,11 @@ window::~window()
 		l_window_pp = &((*l_window_pp)->next_p);
 	}
 
-	SetWindowLong(m_window, GWL_WNDPROC, (LONG)m_oldwndproc);
+	SetWindowLongPtr(m_window, GWL_WNDPROC, (LONG_PTR)m_oldwndproc);
 }
 bool window::update(real _dt)
 {
-	if (!m_redraw) return true;
+	//if (!m_redraw) return true;
 	//if (!active()) return true;
 	//if (IsWindowVisible(m_window) == FALSE) return true;
 

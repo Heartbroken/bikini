@@ -27,7 +27,7 @@ bool window::create(uint _width, uint _height, HICON _icon) {
 	m_handle = CreateWindowExW(WS_EX_TOOLWINDOW|WS_EX_APPWINDOW|WS_EX_RIGHT, L"bikini-iii window", 0, WS_BORDER|WS_CAPTION, CW_USEDEFAULT, CW_USEDEFAULT, (int)_width, (int)_height, 0, 0, l_instance, 0);
 	if(m_handle == 0) return false;
 	set_size(_width, _height);
-	SetWindowLong(m_handle, GWL_USERDATA, (LONG)(LONG_PTR)this);
+	SetWindowLongPtr(m_handle, GWL_USERDATA, (LONG_PTR)this);
 	return true;
 }
 HWND window::get_handle() {
