@@ -38,45 +38,43 @@ struct rendering_D3D9 : video::rendering
 	void finalize();
 	bool execute(const command &_command);
 
-	inline IDirect3DDevice9& get_device()
-	{
-		return *m_D3DDevice9_p;
-	}
+	inline IDirect3DDevice9& get_device() { return *m_D3DDevice9_p; }
 
 private:
-	//
 	static IDirect3D9 *sm_D3D9_p;
 	IDirect3DDevice9 *m_D3DDevice9_p;
 	D3DPRESENT_PARAMETERS m_D3DPP;
-	//
+
 	bool execute(const create_schain &_command);
 	bool execute(const create_viewport &_command);
 	bool execute(const create_vformat &_command);
+	bool execute(const create_vbuffer &_command);
 	bool execute(const destroy_resource &_command);
 	bool execute(const begin_scene &_command);
 	bool execute(const clear_viewport &_command);
 	bool execute(const end_scene &_command);
 	bool execute(const present_schain &_command);
-	//
+
 	struct _resource { uint ID; };
 
 	struct schain : _resource { IDirect3DSwapChain9 *D3DSChain9_p; };
-	struct vbuffer : _resource {};
-	struct ibuffer : _resource {};
+	struct viewport : _resource { D3DVIEWPORT9 D3DViewport9; };
 	struct vformat : _resource { IDirect3DVertexDeclaration9 *D3DVDecl9_p; };
+	struct vbuffer : _resource { IDirect3DVertexBuffer9 *D3DVBuffer9_p; };
+	struct ibuffer : _resource {};
 	struct texture : _resource {};
 	struct vshader : _resource {};
 	struct pshader : _resource {};
 	struct consts : _resource {};
 	struct states : _resource {};
-	struct viewport : _resource { D3DVIEWPORT9 D3DViewport9; };
 	struct rtarget : _resource {};
 	struct material : _resource {};
 	struct primitive : _resource {};
 
 	typedef make_typelist_<
-		schain, viewport, vformat
+		schain, viewport, vformat, vbuffer
 	>::type resource_types;
+
 	typedef variant_<resource_types, false> resource;
 	typedef array_<resource> resources;
 
@@ -102,7 +100,8 @@ bool rendering_D3D9::initialize()
 {
 	if (sm_D3D9_p == 0)
 	{
-		if((sm_D3D9_p = Direct3DCreate9(D3D_SDK_VERSION)) == 0) {
+		if((sm_D3D9_p = Direct3DCreate9(D3D_SDK_VERSION)) == 0)
+		{
 			std::cerr << "ERROR: Can't create Direct3D object.\n";
 			return false;
 		}
@@ -132,7 +131,8 @@ bool rendering_D3D9::initialize()
 		l_flags,
 		&m_D3DPP,
 		&m_D3DDevice9_p
-	))) {
+	)))
+	{
 		std::cerr << "ERROR: Can't create D3D device\n";
 		if (sm_D3D9_p->Release() == 0) sm_D3D9_p = 0;
 		return false;
@@ -216,18 +216,15 @@ bool rendering_D3D9::m_set_target(uint _ID)
 				{
 					schain l_schain = l_resource.get_<schain>();
 					IDirect3DSurface9 *l_D3DSurface9_p;
-					if (SUCCEEDED(l_schain.D3DSChain9_p->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &l_D3DSurface9_p)))
-					{
-						m_D3DDevice9_p->SetRenderTarget(0, l_D3DSurface9_p);
-						l_D3DSurface9_p->Release();
-						return true;
-					}
+					if (FAILED(l_schain.D3DSChain9_p->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &l_D3DSurface9_p))) return false;
+					m_D3DDevice9_p->SetRenderTarget(0, l_D3DSurface9_p);
+					l_D3DSurface9_p->Release();
 					break;
 				}
 			}
 		}
 	}
-	return false;
+	return true;
 }
 bool rendering_D3D9::m_set_viewport(uint _ID)
 {
@@ -242,16 +239,13 @@ bool rendering_D3D9::m_set_viewport(uint _ID)
 				case resource_types::type_<viewport>::index :
 				{
 					viewport l_viewport = l_resource.get_<viewport>();
-					if (SUCCEEDED(m_D3DDevice9_p->SetViewport(&l_viewport.D3DViewport9)))
-					{
-						return true;
-					}
+					if (FAILED(m_D3DDevice9_p->SetViewport(&l_viewport.D3DViewport9))) return false;
 					break;
 				}
 			}
 		}
 	}
-	return false;
+	return true;
 }
 bool rendering_D3D9::execute(const command &_command)
 {
@@ -260,6 +254,7 @@ bool rendering_D3D9::execute(const command &_command)
 		case command_types::type_<create_schain>::index : return execute(_command.get_<create_schain>());
 		case command_types::type_<create_viewport>::index : return execute(_command.get_<create_viewport>());
 		case command_types::type_<create_vformat>::index : return execute(_command.get_<create_vformat>());
+		case command_types::type_<create_vbuffer>::index : return execute(_command.get_<create_vbuffer>());
 		case command_types::type_<destroy_resource>::index : return execute(_command.get_<destroy_resource>());
 		case command_types::type_<begin_scene>::index : return execute(_command.get_<begin_scene>());
 		case command_types::type_<clear_viewport>::index : return execute(_command.get_<clear_viewport>());
@@ -318,6 +313,17 @@ bool rendering_D3D9::execute(const create_vformat &_command)
 	if (FAILED(get_device().CreateVertexDeclaration((CONST D3DVERTEXELEMENT9*)_command.data, &l_vformat.D3DVDecl9_p))) return false;
 
 	m_create_resource(l_vformat);
+
+	return true;
+}
+bool rendering_D3D9::execute(const create_vbuffer &_command)
+{
+	vbuffer l_vbuffer;
+	l_vbuffer.ID = _command.ID;
+
+	if (FAILED(get_device().CreateVertexBuffer(1024, D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &l_vbuffer.D3DVBuffer9_p, 0))) return false;
+
+	m_create_resource(l_vbuffer);
 
 	return true;
 }
