@@ -99,7 +99,7 @@ int CGameView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// TODO:  Add your specialized creation code here
 	m_window_ID = theApp.get_video().spawn(m_window_info, m_hWnd);
 
-	//SetTimer(0, 10, NULL);
+	SetTimer(0, 10, NULL);
 
 	return 0;
 }
@@ -118,13 +118,17 @@ BOOL CGameView::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pR
 	// TODO: Add your specialized code here and/or call the base class
 	switch (message)
 	{
-	case WM_TIMER : {
-		Invalidate(FALSE);
-	} break;
-	case WM_PAINT : {
-		theApp.update_video();
-		//theApp.console_output(L"PAINT\n");
-	} break;
+		case WM_TIMER :
+		{
+			//Invalidate(FALSE);
+			break;
+		}
+		case WM_PAINT :
+		{
+			//theApp.update_video();
+			//theApp.console_output(L"PAINT\n");
+			break;
+		}
 	}
 
 	return CView::OnWndMsg(message, wParam, lParam, pResult);
@@ -133,7 +137,7 @@ BOOL CGameView::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pR
 void CGameView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView)
 {
 	// TODO: Add your specialized code here and/or call the base class
-	theApp.get_video().get_<bk::vo::window>(m_window_ID).set_active(bActivate == TRUE);
+	//theApp.get_video().get_<bk::vo::window>(m_window_ID).set_active(bActivate == TRUE);
 
 	CView::OnActivateView(bActivate, pActivateView, pDeactiveView);
 }

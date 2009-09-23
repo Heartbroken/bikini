@@ -248,9 +248,6 @@ struct window : video::object
 
 	inline const info& get_info() const { return get_info_<info>(); }
 
-	inline bool active() const { return m_active; }
-	inline void set_active(bool _yes) { m_active = _yes; }
-
 	window(const info &_info, video &_video, HWND _window);
 	~window();
 
@@ -271,8 +268,7 @@ private:
 	WNDPROC m_oldwndproc;
 	viewport::info m_viewport_info;
 	uint_array m_viewports;
-	bool m_active;
-	bool m_redraw;
+	uint m_flags;
 };
 
 
