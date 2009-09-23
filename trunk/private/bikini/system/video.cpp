@@ -434,9 +434,7 @@ window::~window()
 }
 bool window::update(real _dt)
 {
-	//if (!m_redraw) return true;
 	//if (!active()) return true;
-	//if (IsWindowVisible(m_window) == FALSE) return true;
 
 	if (!valid())
 	{
@@ -454,29 +452,30 @@ bool window::update(real _dt)
 		l_create_schain.window = m_window;
 		add_command(l_create_schain);
 	}
-	//else
-	//{
-	//	m_redraw = false;
-	//}
-
-	context l_context;
-	l_context.target_ID = m_schain_resource_ID;
-	RECT l_crect; GetClientRect(m_window, &l_crect);
-	l_context.viewport.area = rect(0, 0, (uint)l_crect.right, (uint)l_crect.bottom);
-	l_context.viewport.depth = real2_y;
-	l_context.sequence = 0;
-
-	for (uint i = 0, s = viewport_count(); i < s; ++i)
-	{
-		get_video().get_<viewport>(viewport_ID(i)).add_commands(l_context);
-	}
-
-	video::rendering::present_schain l_present_schain;
-	l_present_schain.set_key(command_type, ct::present);
-	l_present_schain.ID = m_schain_resource_ID;
-	add_command(l_present_schain);
 
 	update_version();
+
+	if (m_redraw)
+	{
+		context l_context;
+		l_context.target_ID = m_schain_resource_ID;
+		RECT l_crect; GetClientRect(m_window, &l_crect);
+		l_context.viewport.area = rect(0, 0, (uint)l_crect.right, (uint)l_crect.bottom);
+		l_context.viewport.depth = real2_y;
+		l_context.sequence = 0;
+
+		for (uint i = 0, s = viewport_count(); i < s; ++i)
+		{
+			get_video().get_<viewport>(viewport_ID(i)).add_commands(l_context);
+		}
+
+		video::rendering::present_schain l_present_schain;
+		l_present_schain.set_key(command_type, ct::present);
+		l_present_schain.ID = m_schain_resource_ID;
+		add_command(l_present_schain);
+
+		m_redraw = false;
+	}
 
 	return true;
 }
@@ -501,6 +500,24 @@ long window::m_wndproc(uint _message, uint _wparam, uint _lparam)
 	{
 		case WM_ERASEBKGND :
 		{
+			////
+			//context l_context;
+			//l_context.target_ID = m_schain_resource_ID;
+			//RECT l_crect; GetClientRect(m_window, &l_crect);
+			//l_context.viewport.area = rect(0, 0, (uint)l_crect.right, (uint)l_crect.bottom);
+			//l_context.viewport.depth = real2_y;
+			//l_context.sequence = 0;
+
+			//for (uint i = 0, s = viewport_count(); i < s; ++i)
+			//{
+			//	get_video().get_<viewport>(viewport_ID(i)).add_commands(l_context);
+			//}
+
+			//video::rendering::present_schain l_present_schain;
+			//l_present_schain.set_key(command_type, ct::present);
+			//l_present_schain.ID = m_schain_resource_ID;
+			//add_command(l_present_schain);
+			////
 			m_redraw = true;
 			return 1;
 		}
