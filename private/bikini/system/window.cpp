@@ -92,6 +92,7 @@ uint window::height() const {
 	return l_crect.bottom;
 }
 bool window::update(real _dt) {
+	InvalidateRect(m_handle, 0, 0);
 	MSG l_message;
 	while(PeekMessage(&l_message, NULL, 0U, 0U, PM_REMOVE)) {
 		TranslateMessage(&l_message);

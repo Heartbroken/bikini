@@ -99,7 +99,7 @@ int CGameView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// TODO:  Add your specialized creation code here
 	m_window_ID = theApp.get_video().spawn(m_window_info, m_hWnd);
 
-	SetTimer(0, 10, NULL);
+	//SetTimer(0, 10, NULL);
 
 	return 0;
 }
