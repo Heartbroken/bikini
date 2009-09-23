@@ -27,6 +27,7 @@ struct video : device {
 		struct create_schain : _command { uint ID; handle window; };
 		struct create_viewport : _command { uint ID; rect area; real2 depth; };
 		struct create_vformat : _command { uint ID; pointer data; };
+		struct create_vbuffer : _command { uint ID; pointer data; };
 		struct destroy_resource : _command { uint ID; };
 		struct begin_scene : _command {};
 		struct clear_viewport : _command { uint target_ID, viewport_ID; struct { uint f; color c; real z; uint s; } clear; };
@@ -35,11 +36,12 @@ struct video : device {
 		struct present_schain : _command { uint ID; };
 
 		typedef make_typelist_<
-			create_schain, create_viewport, create_vformat,
+			create_schain, create_viewport, create_vformat, create_vbuffer,
 			destroy_resource,
 			begin_scene, clear_viewport, draw_primitive, end_scene,
 			present_schain
 		>::type command_types;
+
 		typedef variant_<command_types, false> command;
 		typedef array_<command> commands;
 
@@ -99,7 +101,7 @@ struct video : device {
 	};
 
 	struct ot { enum object_type {
-		window, viewport, drawcall, vformat
+		window, viewport, drawcall, vformat, vbuffer
 	};};
 
 	/* video ------------------------------------------------------------------------------------*/
@@ -137,6 +139,25 @@ namespace cf { enum clear_flags {
 };}
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
+
+/// vbuffer
+struct vbuffer : video::object
+{
+	struct info : video::object::info
+	{
+		typedef vbuffer object;
+		info();
+	};
+
+	inline const info& get_info() const { return get_info_<info>(); }
+
+	vbuffer(const info &_info, video &_video);
+	~vbuffer();
+	bool update(real _dt);
+
+private:
+	uint m_vbuffer_resource_ID;
+};
 
 /// vformat
 struct vformat : video::object

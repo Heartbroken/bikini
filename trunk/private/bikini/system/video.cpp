@@ -201,6 +201,38 @@ struct video::object::context
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
 
+// vbuffer::info
+
+vbuffer::info::info()
+:
+	video::object::info(video::ot::vbuffer)
+{}
+
+// vbuffer
+
+vbuffer::vbuffer(const info &_info, video &_video)
+:
+	video::object(_info, _video)
+{
+	m_vbuffer_resource_ID = obtain_resource_ID();
+}
+vbuffer::~vbuffer()
+{
+	release_resource_ID(m_vbuffer_resource_ID);
+}
+bool vbuffer::update(real _dt)
+{
+	if (!resource_valid(m_vbuffer_resource_ID))
+	{
+		video::rendering::create_vbuffer l_create_vbuffer;
+		l_create_vbuffer.set_key(command_type, ct::init);
+		l_create_vbuffer.ID = m_vbuffer_resource_ID;
+		add_command(l_create_vbuffer);
+	}
+
+	return true;
+}
+
 // vformat::info
 
 vformat::info::info()
