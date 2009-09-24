@@ -315,6 +315,7 @@ viewport::viewport(const info &_info, video &_video)
 	m_color(random_0.get(1.f), random_0.get(1.f), random_0.get(1.f))
 {
 	m_viewport_resource_ID = obtain_resource_ID();
+	update_version();
 }
 viewport::~viewport()
 {
@@ -445,8 +446,23 @@ bool window::update(real _dt)
 		add_command(l_create_schain);
 	}
 
+
+	if (!(m_flags & force_redraw))
+	{
+		for (uint i = 0, s = viewport_count(); i < s; ++i)
+		{
+			if (version() < get_video().get_<viewport>(viewport_ID(i)).version())
+			{
+				m_flags |= force_redraw;
+				break;
+			}
+		}
+	}
+
 	if (m_flags & force_redraw)
 	{
+		m_flags &= ~force_redraw;
+
 		context l_context;
 		l_context.target_ID = m_schain_resource_ID;
 		RECT l_crect; GetClientRect(m_window, &l_crect);
@@ -465,8 +481,6 @@ bool window::update(real _dt)
 		add_command(l_present_schain);
 
 		update_version();
-
-		m_flags &= ~force_redraw;
 	}
 
 	return true;
