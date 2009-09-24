@@ -445,7 +445,7 @@ bool window::update(real _dt)
 		add_command(l_create_schain);
 	}
 
-	if (m_flags & 2)
+	if (m_flags & force_redraw)
 	{
 		context l_context;
 		l_context.target_ID = m_schain_resource_ID;
@@ -466,7 +466,7 @@ bool window::update(real _dt)
 
 		update_version();
 
-		m_flags &= ~2;
+		m_flags &= ~force_redraw;
 	}
 
 	return true;
@@ -492,7 +492,7 @@ long window::m_wndproc(uint _message, uint _wparam, uint _lparam)
 	{
 		case WM_ERASEBKGND :
 		{
-			m_flags |= 1;
+			m_flags |= erase_background;
 			return 1;
 		}
 		case WM_SIZE :
@@ -502,7 +502,7 @@ long window::m_wndproc(uint _message, uint _wparam, uint _lparam)
 		}
 		case WM_PAINT :
 		{
-			if (m_flags & 1)
+			if (m_flags & erase_background)
 			{
 				HRGN l_rgn = CreateRectRgn(0, 0, 0, 0);
 				if (GetUpdateRgn(m_window, l_rgn, TRUE) != ERROR)
@@ -516,9 +516,9 @@ long window::m_wndproc(uint _message, uint _wparam, uint _lparam)
 						ReleaseDC(m_window, l_hdc);
 					}
 				}
-				m_flags &= ~1;
+				m_flags &= ~erase_background;
 			}
-			m_flags |= 2;
+			m_flags |= force_redraw;
 			break;
 		}
 	}

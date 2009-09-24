@@ -268,6 +268,7 @@ private:
 	WNDPROC m_oldwndproc;
 	viewport::info m_viewport_info;
 	uint_array m_viewports;
+	enum { erase_background = (1<<0), force_redraw = (1<<1) };
 	uint m_flags;
 };
 
