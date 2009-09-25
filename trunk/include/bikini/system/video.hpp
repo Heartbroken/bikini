@@ -43,7 +43,7 @@ struct video : device {
 		>::type command_types;
 
 		typedef variant_<command_types, false> command;
-		typedef array_<command> commands;
+		typedef ring_<command, 1000> command_ring;
 
 		/* rendering commands -------------------------------------------------------------------*/
 
@@ -67,13 +67,11 @@ struct video : device {
 		thread::task m_task;
 		bool m_run;
 		void m_proc();
-		static const uint max_cbuffer_count = 2;
-		commands m_cbuffer[max_cbuffer_count];
-		uint m_current_cbuffer;
-		void swap_cbuffer(commands &_cbuffer);
-		void process_cbuffer(const commands &_cbuffer);
-		thread::flag m_cbuffer_ready;
-		thread::section m_cbuffer_lock;
+		command_ring m_cbuffer;
+		bool add_command(command &_command);
+		//void process_cbuffer(const commands &_cbuffer);
+		//thread::flag m_cbuffer_ready;
+		//thread::section m_cbuffer_lock;
 	};
 	
 	/* video object -----------------------------------------------------------------------------*/
@@ -118,8 +116,14 @@ private:
 	rendering& new_rendering(video &_video);
 	inline rendering& get_rendering() const { return m_rendering; }
 
-	rendering::commands m_cbuffer;
-	inline void add_command(const rendering::command &_command) { m_cbuffer.push_back(_command); }
+	typedef rendering::command command;
+	typedef std::multimap<u64, command> command_map;
+	command_map m_cbuffer;
+	inline void add_command(const command &_command)
+	{
+		typedef std::pair<u64, command> pair;
+		m_cbuffer.insert(pair(_command.get_<rendering::_command>().key, _command));
+	}
 
 	pool_<bool> m_resources;
 	thread::section m_resource_lock;

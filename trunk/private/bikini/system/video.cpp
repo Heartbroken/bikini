@@ -18,9 +18,9 @@ namespace bk { /*---------------------------------------------------------------
 video::rendering::rendering(video &_video)
 :
 	m_video(_video),
-	m_task(*this, &rendering::m_proc, "bikini-iii rendering"),
-	m_cbuffer_ready(false, false),
-	m_current_cbuffer(0)
+	m_task(*this, &rendering::m_proc, "bikini-iii rendering")//,
+	//m_cbuffer_ready(false, false),
+	//m_current_cbuffer(0)
 {}
 video::rendering::~rendering()
 {
@@ -40,32 +40,29 @@ void video::rendering::destroy()
 	if (m_run)
 	{
 		m_run = false;
-		m_cbuffer_ready.set();
+		//m_cbuffer_ready.set();
 		m_task.wait();
 	}
 }
-void video::rendering::swap_cbuffer(commands &_cbuffer)
+bool video::rendering::add_command(command &_command)
 {
-	m_cbuffer_lock.enter();
-	m_cbuffer[m_current_cbuffer].swap(_cbuffer);
-	m_cbuffer_ready.set();
-	m_cbuffer_lock.leave();
+	return m_cbuffer.push(_command);
 }
-void video::rendering::process_cbuffer(const commands &_cbuffer)
-{
-	typedef std::multimap<u64, uint> order;
-	typedef std::pair<u64, uint> order_item;
-	order l_order;
-	for (uint i = 0, s = _cbuffer.size(); i < s; ++i)
-	{
-		l_order.insert(order_item(_cbuffer[i].get_<_command>().key, i));
-	}
-	for (order::iterator i = l_order.begin(); i != l_order.end(); ++i)
-	{
-		execute(_cbuffer[i->second]);
-		if (!m_run) break;
-	}
-}
+//void video::rendering::process_cbuffer(const commands &_cbuffer)
+//{
+//	typedef std::multimap<u64, uint> order;
+//	typedef std::pair<u64, uint> order_item;
+//	order l_order;
+//	for (uint i = 0, s = _cbuffer.size(); i < s; ++i)
+//	{
+//		l_order.insert(order_item(_cbuffer[i].get_<_command>().key, i));
+//	}
+//	for (order::iterator i = l_order.begin(); i != l_order.end(); ++i)
+//	{
+//		execute(_cbuffer[i->second]);
+//		if (!m_run) break;
+//	}
+//}
 
 struct video::rendering::_command::key_field { uint start, size; };
 
@@ -92,15 +89,14 @@ void video::rendering::m_proc()
 	{
 		while (m_run)
 		{
-			m_cbuffer_ready.wait();
-
-			m_cbuffer_lock.enter();
-			commands &l_cbuffer = m_cbuffer[m_current_cbuffer];
-			m_current_cbuffer = (m_current_cbuffer + 1) % max_cbuffer_count;
-			m_cbuffer_lock.leave();
-
-			if (!l_cbuffer.empty()) process_cbuffer(l_cbuffer);
+			if (!m_cbuffer.empty())
+			{
+				execute(m_cbuffer.front());
+				m_cbuffer.pop();
+			}
+			else sleep(0.001f);
 		}
+
 		finalize();
 	}
 }
@@ -123,6 +119,7 @@ bool video::create()
 bool video::update(real _dt)
 {
 	if(!super::update(_dt)) return false;
+
 	if (!m_cbuffer.empty())
 	{
 		rendering::begin_scene l_begin_scene;
@@ -132,10 +129,16 @@ bool video::update(real _dt)
 		rendering::end_scene l_end_scene;
 		l_end_scene.set_key(command_type, ct::end);
 		add_command(l_end_scene);
-
-		m_rendering.swap_cbuffer(m_cbuffer);
 	}
-	m_cbuffer.resize(0);
+
+	for (command_map::iterator i = m_cbuffer.begin(), e = m_cbuffer.end(); i != e; ++i)
+	{
+		// If ring buffer is full. Wait and retry
+		while (!m_rendering.add_command(i->second)) sleep(0);
+	}
+
+	m_cbuffer.clear();
+
 	return true;
 }
 void video::destroy()
