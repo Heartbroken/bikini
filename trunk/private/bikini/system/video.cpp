@@ -146,6 +146,11 @@ void video::destroy()
 	m_rendering.destroy();
 	super::destroy();
 }
+inline void video::add_command(const command &_command)
+{
+	typedef std::pair<u64, command> pair;
+	m_cbuffer.insert(pair(_command.get_<rendering::_command>().key, _command));
+}
 uint video::obtain_resource_ID()
 {
 	thread::locker l_locker(m_resource_lock);
