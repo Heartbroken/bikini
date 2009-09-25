@@ -119,11 +119,7 @@ private:
 	typedef rendering::command command;
 	typedef std::multimap<u64, command> command_map;
 	command_map m_cbuffer;
-	inline void add_command(const command &_command)
-	{
-		typedef std::pair<u64, command> pair;
-		m_cbuffer.insert(pair(_command.get_<rendering::_command>().key, _command));
-	}
+	inline void add_command(const command &_command);
 
 	pool_<bool> m_resources;
 	thread::section m_resource_lock;
