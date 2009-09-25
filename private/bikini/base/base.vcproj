@@ -636,6 +636,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\bikini\base\ring.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\bikini\base\traits.hpp"
 				>
 			</File>

@@ -44,13 +44,13 @@ present
 
 
 
-draw		8	3   3
-rtarget		16	4   7
-viewport	8	3   10
-sequence	32	5   15
-translucency	4	2   17
-depth		4096	12  29
-material	1024	10  39
+type		8	3   3
+rtarget		64	6   9
+viewport	64	6   15
+sequence	32	5   20
+translucency	4	2   22
+depth		4096	12  32
+material	1024	10  42
 -------------------------
-total			39
+total			42
 
