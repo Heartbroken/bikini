@@ -43,7 +43,7 @@ struct video : device {
 		>::type command_types;
 
 		typedef variant_<command_types, false> command;
-		typedef ring_<command, 1000> command_ring;
+		typedef ring_<command> command_ring;
 
 		/* rendering commands -------------------------------------------------------------------*/
 
@@ -99,7 +99,7 @@ struct video : device {
 	};
 
 	struct ot { enum object_type {
-		window, viewport, drawcall, vformat, vbuffer
+		window, viewport, drawcall, vformat, vbuffer, memreader
 	};};
 
 	/* video ------------------------------------------------------------------------------------*/
@@ -140,6 +140,30 @@ namespace cf { enum clear_flags {
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
 
+/// memreader
+struct memreader : video::object
+{
+	struct info : video::object::info
+	{
+		typedef memreader object;
+		typedef uint a0;
+		info();
+	};
+
+	inline const info& get_info() const { return get_info_<info>(); }
+
+	memreader(const info &_info, video &_video, uint _size);
+	~memreader();
+
+	bool update(real _dt);
+
+	bool push_data(pointer _data, uint _size);
+
+private:
+	ring_<byte> m_buffer;
+	uint m_size;
+};
+
 /// vbuffer
 struct vbuffer : video::object
 {
@@ -153,10 +177,14 @@ struct vbuffer : video::object
 
 	vbuffer(const info &_info, video &_video);
 	~vbuffer();
+
 	bool update(real _dt);
+
+	void set_source(uint _ID);
 
 private:
 	uint m_vbuffer_resource_ID;
+	uint m_source_ID;
 };
 
 /// vformat
@@ -173,6 +201,7 @@ struct vformat : video::object
 
 	vformat(const info &_info, video &_video);
 	~vformat();
+
 	bool update(real _dt);
 
 private:
@@ -192,6 +221,7 @@ struct drawcall : video::object
 
 	drawcall(const info &_info, video &_video);
 	~drawcall();
+
 	bool update(real _dt);
 
 	void add_commands(const context &_context) const;

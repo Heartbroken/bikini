@@ -102,9 +102,11 @@ struct player::_gameswf : gameswf::render_handler
 	// transforms, etc.
 	void begin_display(rgba _background_color, s32 _viewport_x0, s32 _viewport_y0, s32 _viewport_width, s32 _viewport_height, f32 _x0, f32 _x1, f32 _y0, f32 _y1)
 	{
+		m_renderer.begin_render();
 	}
 	void end_display()
 	{
+		m_renderer.end_render();
 	}
 
 	// Geometric and color transforms for mesh and line_strip rendering.
@@ -125,6 +127,7 @@ struct player::_gameswf : gameswf::render_handler
 	// be Sint16[vertex_count*2]
 	void draw_mesh_strip(pointer _coords, s32 _vertex_count)
 	{
+		m_renderer.draw_tristrip((short2*)_coords, (uint)_vertex_count);
 	}
 	// As above, but coords is in triangle list order.
 	void draw_triangle_list(pointer _coords, s32 _vertex_count)

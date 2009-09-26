@@ -22,19 +22,37 @@ renderer::renderer(video &_video)
 :
 	m_video(_video), m_viewport_ID(bad_ID)
 {
-	m_vo_vformat_info.data = sg_vformat;
+	m_vo_vformat.data = sg_vformat;
 }
 renderer::~renderer()
 {
 }
 bool renderer::create()
 {
-	m_vo_vformat_ID = m_video.spawn(m_vo_vformat_info);
+	m_vo_vformat_ID = m_video.spawn(m_vo_vformat);
+	m_vo_memreader_ID = m_video.spawn(m_vo_memreader, 1024 * 1024 * 1);
 	return true;
 }
 void renderer::destroy()
 {
 	m_video.kill(m_vo_vformat_ID);
+	m_video.kill(m_vo_memreader_ID);
+}
+bool renderer::begin_render()
+{
+	return true;
+}
+void renderer::draw_tristrip(const short2* _points, uint _count)
+{
+	vo::memreader &l_memreader = m_video.get_<vo::memreader>(m_vo_memreader_ID);
+
+	if (!l_memreader.push_data(_points, _count * sizeof(short2)))
+	{
+		std::cerr << "WARNING: Flash renderer memreader buffer is full.\n";
+	}
+}
+void renderer::end_render()
+{
 }
 
 } /* namespace flash ----------------------------------------------------------------------------*/

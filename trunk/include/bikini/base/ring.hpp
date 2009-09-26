@@ -9,19 +9,32 @@
 #pragma once
 
 /// ring buffer
-template<typename _Type, uint _Size> struct ring_
+template<typename _Type> struct ring_
 {
 	typedef _Type type;
-	static const uint size = _Size;
 
-	inline ring_()
+	inline ring_(uint _size)
 	:
-		m_write(0), m_read(0)
+		m_size(_size * sizeof(type)), m_write(0), m_read(0)
 	{
+		m_buffer = new byte[m_size];
 	}
 	inline ~ring_()
 	{
 		while (!empty()) pop();
+		delete [] m_buffer;
+	}
+	inline uint size() const
+	{
+		return m_size / sizeof(type);
+	}
+	inline uint used_space() const
+	{
+		return ((m_read > m_write) ? (m_size - m_read + m_write) : (m_write - m_read)) / sizeof(type);
+	}
+	inline uint free_space() const
+	{
+		return size() - used_space();
 	}
 	inline bool empty() const
 	{
@@ -29,13 +42,13 @@ template<typename _Type, uint _Size> struct ring_
 	}
 	inline bool full() const
 	{
-		return ((m_write + sizeof(type)) % size) == m_read;
+		return (m_write + sizeof(type)) % m_size == m_read;
 	}
 	inline bool push(const type &_v)
 	{
 		if (full()) return false;
 		new(m_buffer + m_write) type(_v);
-		m_write = (m_write + sizeof(type)) % size;
+		m_write = (m_write + sizeof(type)) % m_size;
 		return true;
 	}
 	inline type& front()
@@ -46,11 +59,12 @@ template<typename _Type, uint _Size> struct ring_
 	{
 		if (empty()) return false;
 		((type*)(m_buffer + m_read))->~type();
-		m_read = (m_read + sizeof(type)) % size;
+		m_read = (m_read + sizeof(type)) % m_size;
 		return true;
 	}
 
 private:
-	u8 m_buffer[size * sizeof(type)];
+	byte* m_buffer;
+	const uint m_size;
 	uint m_write, m_read;
 };
