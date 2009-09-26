@@ -18,9 +18,8 @@ namespace bk { /*---------------------------------------------------------------
 video::rendering::rendering(video &_video)
 :
 	m_video(_video),
-	m_task(*this, &rendering::m_proc, "bikini-iii rendering")//,
-	//m_cbuffer_ready(false, false),
-	//m_current_cbuffer(0)
+	m_task(*this, &rendering::m_proc, "bikini-iii rendering"),
+	m_cbuffer(1000)
 {}
 video::rendering::~rendering()
 {
@@ -40,7 +39,6 @@ void video::rendering::destroy()
 	if (m_run)
 	{
 		m_run = false;
-		//m_cbuffer_ready.set();
 		m_task.wait();
 	}
 }
@@ -48,21 +46,6 @@ bool video::rendering::add_command(command &_command)
 {
 	return m_cbuffer.push(_command);
 }
-//void video::rendering::process_cbuffer(const commands &_cbuffer)
-//{
-//	typedef std::multimap<u64, uint> order;
-//	typedef std::pair<u64, uint> order_item;
-//	order l_order;
-//	for (uint i = 0, s = _cbuffer.size(); i < s; ++i)
-//	{
-//		l_order.insert(order_item(_cbuffer[i].get_<_command>().key, i));
-//	}
-//	for (order::iterator i = l_order.begin(); i != l_order.end(); ++i)
-//	{
-//		execute(_cbuffer[i->second]);
-//		if (!m_run) break;
-//	}
-//}
 
 struct video::rendering::_command::key_field { uint start, size; };
 
@@ -133,8 +116,13 @@ bool video::update(real _dt)
 
 	for (command_map::iterator i = m_cbuffer.begin(), e = m_cbuffer.end(); i != e; ++i)
 	{
-		// If ring buffer is full. Wait and retry
-		while (!m_rendering.add_command(i->second)) sleep(0);
+		if (!m_rendering.add_command(i->second))
+		{
+			std::cerr << "WARNING: Rendering command buffer is full.\n";
+
+			// If ring buffer is full. Wait and retry
+			while (!m_rendering.add_command(i->second)) sleep(0);
+		}
 	}
 
 	m_cbuffer.clear();
@@ -209,6 +197,41 @@ struct video::object::context
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
 
+// memreader::info
+
+memreader::info::info()
+:
+	video::object::info(video::ot::memreader)
+{}
+
+// memreader
+
+memreader::memreader(const info &_info, video &_video, uint _size)
+:
+	video::object(_info, _video),
+	m_buffer(_size), m_size(0)
+{
+}
+memreader::~memreader()
+{
+}
+bool memreader::update(real _dt)
+{
+	return true;
+}
+bool memreader::push_data(pointer _data, uint _size)
+{
+	if (_size > m_buffer.free_space()) return false;
+
+	byte* l_data = (byte*)_data;
+	for (uint i = 0; i < _size; ++i) m_buffer.push(l_data[i]);
+
+	m_size += _size;
+	update_version();
+
+	return true;
+}
+
 // vbuffer::info
 
 vbuffer::info::info()
@@ -220,7 +243,8 @@ vbuffer::info::info()
 
 vbuffer::vbuffer(const info &_info, video &_video)
 :
-	video::object(_info, _video)
+	video::object(_info, _video),
+	m_source_ID(bad_ID)
 {
 	m_vbuffer_resource_ID = obtain_resource_ID();
 }
@@ -238,7 +262,33 @@ bool vbuffer::update(real _dt)
 		add_command(l_create_vbuffer);
 	}
 
+	if (has_relation(m_source_ID))
+	{
+		uint l_source_ID = get_relation(m_source_ID);
+		if (get_video().exists(l_source_ID))
+		{
+			object &l_object = get_video().get_<object>(l_source_ID);
+			if (version() < l_object.version())
+			{
+				switch (l_object.type())
+				{
+					case video::ot::memreader :
+					{
+						break;
+					}
+				}
+			}
+		}
+	}
+
 	return true;
+}
+void vbuffer::set_source(uint _ID)
+{
+	if (m_source_ID != bad_ID) remove_relation(m_source_ID);
+
+	if (get_video().exists(_ID)) m_source_ID = add_relation(_ID);
+	else m_source_ID = bad_ID;
 }
 
 // vformat::info

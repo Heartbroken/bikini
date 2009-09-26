@@ -8,32 +8,14 @@
 
 #pragma once
 
-// player::renderer
-
-struct player::renderer
-{
-	//virtual uint create_vbuffer(functor_<uint, handle> _source) = 0;
-	//virtual void draw_primitive(uint _vbuffer) = 0;
-};
-
-// player::loader
-
-struct player::loader
-{
-	virtual uint open(const wchar* _path) = 0;
-	virtual bool good(uint _ID) const = 0;
-	virtual uint seek(uint _ID, sint _offset = 0, uint _from = 0) = 0;
-	virtual uint read(uint _ID, handle _buffer, uint _length) = 0;
-	virtual void close(uint _ID) = 0;
-};
-
 // _player_renderer_helper_
 
 template<typename _Renderer, typename _Interface> struct _player_renderer_proxy_ : _Interface
 {
 	inline _player_renderer_proxy_(_Renderer &_renderer) : m_renderer(_renderer) {}
-	//uint create_vbuffer(functor_<uint, handle> _source) { return m_renderer.create_vbuffer(_source); }
-	//void draw_primitive(uint _vbuffer) { m_renderer.draw_primitive(_vbuffer); }
+	bool begin_render() { return m_renderer.begin_render(); }
+	void draw_tristrip(const short2* _points, uint _count) { m_renderer.draw_tristrip(_points, _count); }
+	void end_render() { m_renderer.end_render(); }
 
 private:
 	_Renderer &m_renderer;

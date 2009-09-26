@@ -18,9 +18,15 @@ struct renderer
 	bool create();
 	void destroy();
 
+	bool begin_render();
+	void draw_tristrip(const short2* _points, uint _count);
+	void end_render();
+
 private:
 	video &m_video;
 	uint m_viewport_ID;
-	bk::vo::vformat::info m_vo_vformat_info;
+	vo::vformat::info m_vo_vformat;
 	uint m_vo_vformat_ID;
+	vo::memreader::info m_vo_memreader;
+	uint m_vo_memreader_ID;
 };
