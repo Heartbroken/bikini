@@ -16,27 +16,23 @@ struct video : device {
 	{
 		/* rendering commands -------------------------------------------------------------------*/
 
-		struct _command
-		{
-			u64 key;
-			struct key_field;
-			inline _command() : key(0) {}
-			inline void set_key(const key_field &_field, u64 _value);
-		};
-
-		struct create_schain : _command { uint ID; handle window; };
-		struct create_viewport : _command { uint ID; rect area; real2 depth; };
-		struct create_vformat : _command { uint ID; pointer data; };
-		struct create_vbuffer : _command { uint ID; pointer data; };
-		struct destroy_resource : _command { uint ID; };
-		struct begin_scene : _command {};
-		struct clear_viewport : _command { uint target_ID, viewport_ID; struct { uint f; color c; real z; uint s; } clear; };
-		struct draw_primitive : _command { uint target_ID, viewport_ID; };
-		struct end_scene : _command {};
-		struct present_schain : _command { uint ID; };
+		struct create_schain { uint ID; handle window; };
+		struct create_viewport { uint ID; rect area; real2 depth; };
+		struct create_vformat { uint ID; pointer data; };
+		struct create_vbuffer { uint ID; uint size; };
+		struct write_vbuffer { uint ID; uint size; bool reset; };
+		struct create_vshader { uint ID; pointer data; };
+		struct create_pshader { uint ID; pointer data; };
+		struct destroy_resource { uint ID; };
+		struct begin_scene {};
+		struct clear_viewport { uint target_ID, viewport_ID; struct { uint f; color c; real z; uint s; } clear; };
+		struct draw_primitive { uint target_ID, viewport_ID; };
+		struct end_scene {};
+		struct present_schain { uint ID; };
 
 		typedef make_typelist_<
-			create_schain, create_viewport, create_vformat, create_vbuffer,
+			create_schain, create_viewport, create_vformat, create_vbuffer, write_vbuffer,
+			create_vshader, create_pshader,
 			destroy_resource,
 			begin_scene, clear_viewport, draw_primitive, end_scene,
 			present_schain
@@ -44,6 +40,8 @@ struct video : device {
 
 		typedef variant_<command_types, false> command;
 		typedef ring_<command> command_ring;
+
+		typedef ring_<byte> data_ring;
 
 		/* rendering commands -------------------------------------------------------------------*/
 
@@ -56,8 +54,10 @@ struct video : device {
 		virtual bool execute(const command &_command) = 0;
 
 	protected:
-		inline void set_valid(uint _ID) { if (m_video.resource_exists(_ID)) m_video.set_resource_valid(_ID); }
-		inline void set_invalid(uint _ID) { if (m_video.resource_exists(_ID)) m_video.set_resource_invalid(_ID); }
+		void set_valid(uint _ID);
+		void set_invalid(uint _ID);
+		void get_data(handle _data, uint _size);
+		void throw_data(uint _size);
 
 	private:
 		friend video;
@@ -68,10 +68,9 @@ struct video : device {
 		bool m_run;
 		void m_proc();
 		command_ring m_cbuffer;
-		bool add_command(command &_command);
-		//void process_cbuffer(const commands &_cbuffer);
-		//thread::flag m_cbuffer_ready;
-		//thread::section m_cbuffer_lock;
+		bool add_command(const command &_command);
+		data_ring m_dbuffer;
+		bool add_data(pointer _data, uint _size, bool _wait = true);
 	};
 	
 	/* video object -----------------------------------------------------------------------------*/
@@ -92,6 +91,8 @@ struct video : device {
 
 	protected:
 		inline void add_command(const rendering::command &_command) const { get_video().add_command(_command); }
+		inline void add_command(u64 _sort_key, const rendering::command &_command) const { get_video().add_command(_sort_key, _command); }
+		inline void add_data(pointer _data, uint _size) const { get_video().add_data(_data, _size); }
 		inline uint obtain_resource_ID() const { return get_video().obtain_resource_ID(); }
 		inline void release_resource_ID(uint _ID) const { get_video().release_resource_ID(_ID); }
 		inline bool resource_exists(uint _ID) const { return get_video().resource_exists(_ID); }
@@ -99,7 +100,7 @@ struct video : device {
 	};
 
 	struct ot { enum object_type {
-		window, viewport, drawcall, vformat, vbuffer, memreader
+		window, viewport, drawcall, vformat, vbuffer, memreader, vshader, pshader
 	};};
 
 	/* video ------------------------------------------------------------------------------------*/
@@ -120,6 +121,8 @@ private:
 	typedef std::multimap<u64, command> command_map;
 	command_map m_cbuffer;
 	inline void add_command(const command &_command);
+	inline void add_command(u64 _sort_key, const command &_command);
+	inline void add_data(pointer _data, uint _size);
 
 	pool_<bool> m_resources;
 	thread::section m_resource_lock;
@@ -140,28 +143,72 @@ namespace cf { enum clear_flags {
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
 
+/// pshader
+struct pshader : video::object
+{
+	struct info : video::object::info
+	{
+		typedef pshader object;
+		pointer data;
+		info();
+	};
+
+	inline const info& get_info() const { return get_info_<info>(); }
+
+	pshader(const info &_info, video &_video);
+	~pshader();
+
+	bool update(real _dt);
+
+private:
+	uint m_pshader_resource_ID;
+};
+
+/// vshader
+struct vshader : video::object
+{
+	struct info : video::object::info
+	{
+		typedef vshader object;
+		pointer data;
+		info();
+	};
+
+	inline const info& get_info() const { return get_info_<info>(); }
+
+	vshader(const info &_info, video &_video);
+	~vshader();
+
+	bool update(real _dt);
+
+private:
+	uint m_vshader_resource_ID;
+};
+
 /// memreader
 struct memreader : video::object
 {
 	struct info : video::object::info
 	{
 		typedef memreader object;
-		typedef uint a0;
 		info();
 	};
 
 	inline const info& get_info() const { return get_info_<info>(); }
+	inline bool empty() const { return m_data.empty(); }
+	inline uint size() const { return m_data.size(); }
+	inline pointer data() const { return m_data.empty() ? 0 : &m_data[0]; }
 
-	memreader(const info &_info, video &_video, uint _size);
+	memreader(const info &_info, video &_video);
 	~memreader();
 
 	bool update(real _dt);
 
-	bool push_data(pointer _data, uint _size);
+	void reset();
+	void add_data(pointer _data, uint _size);
 
 private:
-	ring_<byte> m_buffer;
-	uint m_size;
+	byte_array m_data;
 };
 
 /// vbuffer
@@ -185,6 +232,7 @@ struct vbuffer : video::object
 private:
 	uint m_vbuffer_resource_ID;
 	uint m_source_ID;
+	uint m_size;
 };
 
 /// vformat

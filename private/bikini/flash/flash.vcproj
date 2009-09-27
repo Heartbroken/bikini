@@ -20,6 +20,9 @@
 		<DefaultToolFile
 			FileName="masm.rules"
 		/>
+		<ToolFile
+			RelativePath="..\fxc.rules"
+		/>
 	</ToolFiles>
 	<Configurations>
 		<Configuration
@@ -33,10 +36,18 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
+				Name="Vertex Shader Compiler"
+				Fh="$(InputPath).$(PlatformName).h"
+			/>
+			<Tool
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
 				Name="MASM"
+			/>
+			<Tool
+				Name="Pixel Shader Compiler"
+				Fh="$(InputPath).$(PlatformName).h"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -104,10 +115,16 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
+				Name="Vertex Shader Compiler"
+			/>
+			<Tool
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
 				Name="MASM"
+			/>
+			<Tool
+				Name="Pixel Shader Compiler"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -353,10 +370,22 @@
 				RelativePath="..\..\..\include\bikini\flash\player.inl"
 				>
 			</File>
-			<File
-				RelativePath=".\renderer.cpp"
+			<Filter
+				Name="renderer"
 				>
-			</File>
+				<File
+					RelativePath=".\flash.ps"
+					>
+				</File>
+				<File
+					RelativePath=".\flash.vs"
+					>
+				</File>
+				<File
+					RelativePath=".\renderer.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="header"

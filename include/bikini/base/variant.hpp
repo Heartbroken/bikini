@@ -11,7 +11,8 @@
 ///	A variant type template
 /**	[TODO]
  */
-template<typename _Typelist, bool _Dynamic = true> struct variant_ {
+template<typename _Typelist, bool _Dynamic = true> struct variant_
+{
 	/// A list of types a variant can contain
 	typedef _Typelist types;
 	/// Default constructor
@@ -57,6 +58,7 @@ template<typename _Typelist, bool _Dynamic = true> struct variant_ {
 	/// Chech a type of a variant
 	template<typename _Type> inline bool is_() const;
 	/// Get a variant's value
+	template<typename _Type> inline _Type& get_();
 	template<typename _Type> inline const _Type& get_() const;
 	/// Get a variant value. If there is no value return default value
 	template<typename _Type> inline const _Type& def(const _Type &_def) const;

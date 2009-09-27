@@ -49,6 +49,9 @@ private:
 	bool execute(const create_viewport &_command);
 	bool execute(const create_vformat &_command);
 	bool execute(const create_vbuffer &_command);
+	bool execute(const write_vbuffer &_command);
+	bool execute(const create_vshader &_command);
+	bool execute(const create_pshader &_command);
 	bool execute(const destroy_resource &_command);
 	bool execute(const begin_scene &_command);
 	bool execute(const clear_viewport &_command);
@@ -60,11 +63,11 @@ private:
 	struct schain : _resource { IDirect3DSwapChain9 *D3DSChain9_p; };
 	struct viewport : _resource { D3DVIEWPORT9 D3DViewport9; };
 	struct vformat : _resource { IDirect3DVertexDeclaration9 *D3DVDecl9_p; };
-	struct vbuffer : _resource { IDirect3DVertexBuffer9 *D3DVBuffer9_p; };
+	struct vbuffer : _resource { IDirect3DVertexBuffer9 *D3DVBuffer9_p; uint size, used; };
+	struct vshader : _resource { IDirect3DVertexShader9 *D3DVShader9_p; };
+	struct pshader : _resource { IDirect3DPixelShader9 *D3DPShader9_p; };
 	struct ibuffer : _resource {};
 	struct texture : _resource {};
-	struct vshader : _resource {};
-	struct pshader : _resource {};
 	struct consts : _resource {};
 	struct states : _resource {};
 	struct rtarget : _resource {};
@@ -72,7 +75,7 @@ private:
 	struct primitive : _resource {};
 
 	typedef make_typelist_<
-		schain, viewport, vformat, vbuffer
+		schain, viewport, vformat, vbuffer, vshader, pshader
 	>::type resource_types;
 
 	typedef variant_<resource_types, false> resource;
@@ -196,6 +199,24 @@ void rendering_D3D9::m_destroy_resource(uint _ID)
 					l_vformat.D3DVDecl9_p->Release();
 					break;
 				}
+				case resource_types::type_<vbuffer>::index :
+				{
+					vbuffer l_vbuffer = l_resource.get_<vbuffer>();
+					l_vbuffer.D3DVBuffer9_p->Release();
+					break;
+				}
+				case resource_types::type_<vshader>::index :
+				{
+					vshader l_vshader = l_resource.get_<vshader>();
+					l_vshader.D3DVShader9_p->Release();
+					break;
+				}
+				case resource_types::type_<pshader>::index :
+				{
+					pshader l_pshader = l_resource.get_<pshader>();
+					l_pshader.D3DPShader9_p->Release();
+					break;
+				}
 			}
 			l_resource.destruct();
 			set_invalid(_ID);
@@ -255,6 +276,9 @@ bool rendering_D3D9::execute(const command &_command)
 		case command_types::type_<create_viewport>::index : return execute(_command.get_<create_viewport>());
 		case command_types::type_<create_vformat>::index : return execute(_command.get_<create_vformat>());
 		case command_types::type_<create_vbuffer>::index : return execute(_command.get_<create_vbuffer>());
+		case command_types::type_<write_vbuffer>::index : return execute(_command.get_<write_vbuffer>());
+		case command_types::type_<create_vshader>::index : return execute(_command.get_<create_vshader>());
+		case command_types::type_<create_pshader>::index : return execute(_command.get_<create_pshader>());
 		case command_types::type_<destroy_resource>::index : return execute(_command.get_<destroy_resource>());
 		case command_types::type_<begin_scene>::index : return execute(_command.get_<begin_scene>());
 		case command_types::type_<clear_viewport>::index : return execute(_command.get_<clear_viewport>());
@@ -320,10 +344,67 @@ bool rendering_D3D9::execute(const create_vbuffer &_command)
 {
 	vbuffer l_vbuffer;
 	l_vbuffer.ID = _command.ID;
+	l_vbuffer.size = _command.size;
+	l_vbuffer.used = 0;
 
-	if (FAILED(get_device().CreateVertexBuffer(1024, D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &l_vbuffer.D3DVBuffer9_p, 0))) return false;
+	if (FAILED(get_device().CreateVertexBuffer(_command.size, D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &l_vbuffer.D3DVBuffer9_p, 0))) return false;
 
 	m_create_resource(l_vbuffer);
+
+	return true;
+}
+bool rendering_D3D9::execute(const write_vbuffer &_command)
+{
+	uint_ID l_ID(_command.ID);
+
+	resource &l_resource = m_resources[l_ID.index];
+	if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _command.ID)
+	{
+		if (l_resource.type() == resource_types::type_<vbuffer>::index)
+		{
+			vbuffer &l_vbuffer = l_resource.get_<vbuffer>();
+
+			if (_command.reset) l_vbuffer.used = 0;
+
+			if (_command.size <= l_vbuffer.size - l_vbuffer.used)
+			{
+				handle l_data;
+				l_vbuffer.D3DVBuffer9_p->Lock(l_vbuffer.used, _command.size, &l_data, 0);
+
+				get_data(l_data, _command.size);
+
+				l_vbuffer.D3DVBuffer9_p->Unlock();
+
+				l_vbuffer.used += _command.size;
+
+				return true;
+			}
+		}
+	}
+
+	throw_data(_command.size);
+
+	return true;
+}
+bool rendering_D3D9::execute(const create_vshader &_command)
+{
+	vshader l_vshader;
+	l_vshader.ID = _command.ID;
+
+	if (FAILED(get_device().CreateVertexShader((CONST DWORD*)_command.data, &l_vshader.D3DVShader9_p))) return false;
+
+	m_create_resource(l_vshader);
+
+	return true;
+}
+bool rendering_D3D9::execute(const create_pshader &_command)
+{
+	pshader l_pshader;
+	l_pshader.ID = _command.ID;
+
+	if (FAILED(get_device().CreatePixelShader((CONST DWORD*)_command.data, &l_pshader.D3DPShader9_p))) return false;
+
+	m_create_resource(l_pshader);
 
 	return true;
 }

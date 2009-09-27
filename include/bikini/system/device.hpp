@@ -15,7 +15,7 @@ struct device : manager {
 		};
 		inline device& get_device() const { return static_cast<device&>(get_manager()); }
 		inline bool valid() const { return m_version < infinity; }
-		inline real version() const { return m_version; }
+		inline rbig version() const { return m_version; }
 		object(const info &_info, device &_device);
 		~object();
 		//virtual bool create();
@@ -24,10 +24,10 @@ struct device : manager {
 		typedef thread::locker lock;
 		inline thread::section& section() { return m_section; }
 		inline void set_invalid() { m_version = infinity; }
-		inline void update_version() { m_version = (real)sys_time(); }
+		inline void update_version() { m_version = sys_time(); }
 	private:
 		thread::section m_section;
-		real m_version;
+		rbig m_version;
 	};
 	bool update(real _dt);
 };
