@@ -19,7 +19,7 @@ video::rendering::rendering(video &_video)
 :
 	m_video(_video),
 	m_task(*this, &rendering::m_proc, "bikini-iii rendering"),
-	m_cbuffer(1000)
+	m_cbuffer(1000), m_dbuffer(1024 * 1024 * 5)
 {}
 video::rendering::~rendering()
 {
@@ -42,28 +42,77 @@ void video::rendering::destroy()
 		m_task.wait();
 	}
 }
-bool video::rendering::add_command(command &_command)
+bool video::rendering::add_command(const command &_command)
 {
 	return m_cbuffer.push(_command);
 }
+bool video::rendering::add_data(pointer _data, uint _size, bool _wait)
+{
+	if (_size > m_dbuffer.size()) return false;
+	if (!_wait && _size > m_dbuffer.free_space()) return false;
 
-struct video::rendering::_command::key_field { uint start, size; };
+	byte* l_data = (byte*)_data;
+	for (uint i = 0; i < _size; ++i)
+	{
+		while (!m_dbuffer.push(l_data[i])) sleep(0);
+	}
+
+	return true;
+}
+void video::rendering::get_data(handle _data, uint _size)
+{
+	byte* l_data = (byte*)_data;
+	for (uint i = 0; i < _size; ++i)
+	{
+		if (m_dbuffer.empty())
+		{
+			std::cerr << "ERROR: Renderer data buffer has no data.\n";
+			break;
+		}
+
+		l_data[i] = m_dbuffer.front();
+		m_dbuffer.pop();
+	}
+}
+void video::rendering::throw_data(uint _size)
+{
+	for (uint i = 0; i < _size; ++i)
+	{
+		if (m_dbuffer.empty())
+		{
+			std::cerr << "ERROR: Renderer data buffer has no data.\n";
+			break;
+		}
+
+		m_dbuffer.pop();
+	}
+}
+void video::rendering::set_valid(uint _ID)
+{
+	if (m_video.resource_exists(_ID)) m_video.set_resource_valid(_ID);
+}
+void video::rendering::set_invalid(uint _ID)
+{
+	if (m_video.resource_exists(_ID)) m_video.set_resource_invalid(_ID);
+}
+
+struct _key_field { uint start, size; };
 
 static const uint key_size = sizeof(u64) * 8;
-static const video::rendering::_command::key_field command_type = { key_size - 1, 3 };
-static const video::rendering::_command::key_field command_draw_stage = { command_type.start - command_type.size, 3 };
-static const video::rendering::_command::key_field command_draw_target = { command_draw_stage.start - command_draw_stage.size, 6 };
-static const video::rendering::_command::key_field command_draw_viewport = { command_draw_target.start - command_draw_target.size, 6 };
-static const video::rendering::_command::key_field command_draw_sequence = { command_draw_viewport.start - command_draw_viewport.size, 6 };
+static const _key_field command_type = { key_size - 1, 3 };
+static const _key_field command_draw_stage = { command_type.start - command_type.size, 3 };
+static const _key_field command_draw_target = { command_draw_stage.start - command_draw_stage.size, 6 };
+static const _key_field command_draw_viewport = { command_draw_target.start - command_draw_target.size, 6 };
+static const _key_field command_draw_sequence = { command_draw_viewport.start - command_draw_viewport.size, 6 };
 
 struct ct { enum command_types {
-	deinit, init, begin, draw, end, present
+	begin, draw, end, present
 };};
 
-inline void video::rendering::_command::set_key(const key_field &_field, u64 _value)
+static inline void set_key_field(u64 & _key, const _key_field &_field, u64 _value)
 {
-	ubig l_field = _value << (key_size - _field.size) >> (key_size - _field.start - 1);
-	key = key | l_field;
+	u64 l_field = _value << (key_size - _field.size) >> (key_size - _field.start - 1);
+	_key = _key | l_field;
 }
 
 void video::rendering::m_proc()
@@ -105,27 +154,29 @@ bool video::update(real _dt)
 
 	if (!m_cbuffer.empty())
 	{
-		rendering::begin_scene l_begin_scene;
-		l_begin_scene.set_key(command_type, ct::begin);
-		add_command(l_begin_scene);
+		u64 l_key;
 
-		rendering::end_scene l_end_scene;
-		l_end_scene.set_key(command_type, ct::end);
-		add_command(l_end_scene);
-	}
+		l_key = 0;
+		set_key_field(l_key, command_type, ct::begin);
+		add_command(l_key, rendering::begin_scene());
 
-	for (command_map::iterator i = m_cbuffer.begin(), e = m_cbuffer.end(); i != e; ++i)
-	{
-		if (!m_rendering.add_command(i->second))
+		l_key = 0;
+		set_key_field(l_key, command_type, ct::end);
+		add_command(l_key, rendering::end_scene());
+
+		for (command_map::iterator i = m_cbuffer.begin(), e = m_cbuffer.end(); i != e; ++i)
 		{
-			std::cerr << "WARNING: Rendering command buffer is full.\n";
+			if (!m_rendering.add_command(i->second))
+			{
+				std::cerr << "WARNING: Rendering command buffer is full.\n";
 
-			// If ring buffer is full. Wait and retry
-			while (!m_rendering.add_command(i->second)) sleep(0);
+				// If ring buffer is full. Wait and retry
+				while (!m_rendering.add_command(i->second)) sleep(0);
+			}
 		}
-	}
 
-	m_cbuffer.clear();
+		m_cbuffer.clear();
+	}
 
 	return true;
 }
@@ -136,8 +187,15 @@ void video::destroy()
 }
 inline void video::add_command(const command &_command)
 {
-	typedef std::pair<u64, command> pair;
-	m_cbuffer.insert(pair(_command.get_<rendering::_command>().key, _command));
+	m_rendering.add_command(_command);
+}
+inline void video::add_command(u64 _sort_key, const command &_command)
+{
+	m_cbuffer.insert(std::pair<u64, command>(_sort_key, _command));
+}
+inline void video::add_data(pointer _data, uint _size)
+{
+	m_rendering.add_data(_data, _size);
 }
 uint video::obtain_resource_ID()
 {
@@ -197,6 +255,72 @@ struct video::object::context
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
 
+// pshader::info
+
+pshader::info::info()
+:
+	video::object::info(video::ot::pshader),
+	data(0)
+{}
+
+// pshader
+
+pshader::pshader(const info &_info, video &_video)
+:
+	video::object(_info, _video)
+{
+	m_pshader_resource_ID = obtain_resource_ID();
+}
+pshader::~pshader()
+{
+	release_resource_ID(m_pshader_resource_ID);
+}
+bool pshader::update(real _dt)
+{
+	if (!resource_valid(m_pshader_resource_ID))
+	{
+		video::rendering::create_pshader l_create_pshader;
+		l_create_pshader.ID = m_pshader_resource_ID;
+		l_create_pshader.data = get_info().data;
+		add_command(l_create_pshader);
+	}
+
+	return true;
+}
+
+// vshader::info
+
+vshader::info::info()
+:
+	video::object::info(video::ot::vshader),
+	data(0)
+{}
+
+// vshader
+
+vshader::vshader(const info &_info, video &_video)
+:
+	video::object(_info, _video)
+{
+	m_vshader_resource_ID = obtain_resource_ID();
+}
+vshader::~vshader()
+{
+	release_resource_ID(m_vshader_resource_ID);
+}
+bool vshader::update(real _dt)
+{
+	if (!resource_valid(m_vshader_resource_ID))
+	{
+		video::rendering::create_vshader l_create_vshader;
+		l_create_vshader.ID = m_vshader_resource_ID;
+		l_create_vshader.data = get_info().data;
+		add_command(l_create_vshader);
+	}
+
+	return true;
+}
+
 // memreader::info
 
 memreader::info::info()
@@ -206,10 +330,9 @@ memreader::info::info()
 
 // memreader
 
-memreader::memreader(const info &_info, video &_video, uint _size)
+memreader::memreader(const info &_info, video &_video)
 :
-	video::object(_info, _video),
-	m_buffer(_size), m_size(0)
+	video::object(_info, _video)
 {
 }
 memreader::~memreader()
@@ -219,17 +342,15 @@ bool memreader::update(real _dt)
 {
 	return true;
 }
-bool memreader::push_data(pointer _data, uint _size)
+void memreader::reset()
 {
-	if (_size > m_buffer.free_space()) return false;
-
+	m_data.resize(0);
+}
+void memreader::add_data(pointer _data, uint _size)
+{
 	byte* l_data = (byte*)_data;
-	for (uint i = 0; i < _size; ++i) m_buffer.push(l_data[i]);
-
-	m_size += _size;
+	m_data.insert(m_data.end(), l_data, l_data + _size);
 	update_version();
-
-	return true;
 }
 
 // vbuffer::info
@@ -244,9 +365,10 @@ vbuffer::info::info()
 vbuffer::vbuffer(const info &_info, video &_video)
 :
 	video::object(_info, _video),
-	m_source_ID(bad_ID)
+	m_source_ID(bad_ID), m_size(0)
 {
 	m_vbuffer_resource_ID = obtain_resource_ID();
+	update_version();
 }
 vbuffer::~vbuffer()
 {
@@ -254,29 +376,41 @@ vbuffer::~vbuffer()
 }
 bool vbuffer::update(real _dt)
 {
-	if (!resource_valid(m_vbuffer_resource_ID))
-	{
-		video::rendering::create_vbuffer l_create_vbuffer;
-		l_create_vbuffer.set_key(command_type, ct::init);
-		l_create_vbuffer.ID = m_vbuffer_resource_ID;
-		add_command(l_create_vbuffer);
-	}
-
 	if (has_relation(m_source_ID))
 	{
 		uint l_source_ID = get_relation(m_source_ID);
 		if (get_video().exists(l_source_ID))
 		{
 			object &l_object = get_video().get_<object>(l_source_ID);
-			if (version() < l_object.version())
+			if (!valid() || version() < l_object.version())
 			{
 				switch (l_object.type())
 				{
 					case video::ot::memreader :
 					{
+						memreader &l_reader = get_video().get_<memreader>(l_source_ID);
+
+						if (m_size < l_reader.size())
+						{
+							video::rendering::create_vbuffer l_create_vbuffer;
+							l_create_vbuffer.ID = m_vbuffer_resource_ID;
+							l_create_vbuffer.size = l_reader.size();
+							add_command(l_create_vbuffer);
+						}
+
+						add_data(l_reader.data(), l_reader.size());
+
+						video::rendering::write_vbuffer l_write_vbuffer;
+						l_write_vbuffer.ID = m_vbuffer_resource_ID;
+						l_write_vbuffer.size = l_reader.size();
+						l_write_vbuffer.reset = true;
+						add_command(l_write_vbuffer);
+
 						break;
 					}
 				}
+
+				update_version();
 			}
 		}
 	}
@@ -316,7 +450,6 @@ bool vformat::update(real _dt)
 	if (!resource_valid(m_vformat_resource_ID))
 	{
 		video::rendering::create_vformat l_create_vformat;
-		l_create_vformat.set_key(command_type, ct::init);
 		l_create_vformat.ID = m_vformat_resource_ID;
 		l_create_vformat.data = get_info().data;
 		add_command(l_create_vformat);
@@ -347,14 +480,15 @@ bool drawcall::update(real _dt)
 }
 void drawcall::add_commands(const context &_context) const
 {
+	u64 l_key = 0;
+	set_key_field(l_key, command_type, ct::draw);
+	set_key_field(l_key, command_draw_target, _context.target_ID); // @@@
+	set_key_field(l_key, command_draw_viewport, _context.viewport_ID);
+	set_key_field(l_key, command_draw_sequence, _context.sequence);
 	video::rendering::draw_primitive l_draw_primitive;
-	l_draw_primitive.set_key(command_type, ct::draw);
-	l_draw_primitive.set_key(command_draw_target, _context.target_ID); // @@@
-	l_draw_primitive.set_key(command_draw_viewport, _context.viewport_ID);
-	l_draw_primitive.set_key(command_draw_sequence, _context.sequence);
 	l_draw_primitive.target_ID = _context.target_ID;
 	l_draw_primitive.viewport_ID = _context.viewport_ID;
-	add_command(l_draw_primitive);
+	add_command(l_key, l_draw_primitive);
 }
 
 // viewport::info
@@ -392,22 +526,22 @@ void viewport::add_commands(const context &_context) const
 	l_context.sequence++;
 
 	video::rendering::create_viewport l_create_viewport;
-	l_create_viewport.set_key(command_type, ct::init);
 	l_create_viewport.ID = m_viewport_resource_ID;
 	l_create_viewport.area = l_context.viewport.area;
 	l_create_viewport.depth = l_context.viewport.depth;
 	add_command(l_create_viewport);
 
+	u64 l_key = 0;
+	set_key_field(l_key, command_type, ct::draw);
+	set_key_field(l_key, command_draw_target, l_context.target_ID); // @@@
+	set_key_field(l_key, command_draw_viewport, l_context.viewport_ID);
+	set_key_field(l_key, command_draw_sequence, l_context.sequence);
 	video::rendering::clear_viewport l_clear_viewport;
-	l_clear_viewport.set_key(command_type, ct::draw);
-	l_clear_viewport.set_key(command_draw_target, l_context.target_ID); // @@@
-	l_clear_viewport.set_key(command_draw_viewport, l_context.viewport_ID);
-	l_clear_viewport.set_key(command_draw_sequence, l_context.sequence);
 	l_clear_viewport.target_ID = l_context.target_ID;
 	l_clear_viewport.viewport_ID = l_context.viewport_ID;
 	l_clear_viewport.clear.f = cf::color;
 	l_clear_viewport.clear.c = m_color;
-	add_command(l_clear_viewport);
+	add_command(l_key, l_clear_viewport);
 
 	l_context.sequence++;
 
@@ -498,7 +632,6 @@ bool window::update(real _dt)
 	if (!valid() || !resource_valid(m_schain_resource_ID))
 	{
 		video::rendering::create_schain l_create_schain;
-		l_create_schain.set_key(command_type, ct::init);
 		l_create_schain.ID = m_schain_resource_ID;
 		l_create_schain.window = m_window;
 		add_command(l_create_schain);
@@ -533,10 +666,11 @@ bool window::update(real _dt)
 			get_video().get_<viewport>(viewport_ID(i)).add_commands(l_context);
 		}
 
+		u64 l_key = 0;
+		set_key_field(l_key, command_type, ct::present);
 		video::rendering::present_schain l_present_schain;
-		l_present_schain.set_key(command_type, ct::present);
 		l_present_schain.ID = m_schain_resource_ID;
-		add_command(l_present_schain);
+		add_command(l_key, l_present_schain);
 
 		update_version();
 	}

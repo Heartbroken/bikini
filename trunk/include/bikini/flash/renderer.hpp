@@ -29,4 +29,10 @@ private:
 	uint m_vo_vformat_ID;
 	vo::memreader::info m_vo_memreader;
 	uint m_vo_memreader_ID;
+	vo::vbuffer::info m_vo_vbuffer;
+	uint m_vo_vbuffer_ID;
+	vo::vshader::info m_vo_vshader;
+	uint m_vo_vshader_ID;
+	vo::pshader::info m_vo_pshader;
+	uint m_vo_pshader_ID;
 };

@@ -532,6 +532,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\bikini\base\ring.inl"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\bikini\base\typelist.inl"
 				>
 			</File>
