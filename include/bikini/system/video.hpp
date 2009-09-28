@@ -44,7 +44,19 @@ struct video : device {
 
 		typedef ring_<byte> data_ring;
 
-		/* rendering commands -------------------------------------------------------------------*/
+		/* rendering issues ---------------------------------------------------------------------*/
+
+		struct validate_resource { uint ID; };
+		struct invalidate_resource { uint ID; };
+
+		typedef make_typelist_<
+			validate_resource, invalidate_resource
+		>::type issue_types;
+
+		typedef variant_<issue_types> issue;
+		typedef ring_<issue> issue_ring;
+
+		/* rendering ----------------------------------------------------------------------------*/
 
 		video& get_video() const { return m_video; }
 
@@ -72,6 +84,9 @@ struct video : device {
 		bool add_command(const command &_command);
 		data_ring m_dbuffer;
 		bool add_data(pointer _data, uint _size, bool _wait = true);
+		issue_ring m_ibuffer;
+		bool add_issue(const issue &_issue);
+		issue get_issue();
 	};
 	
 	/* video object -----------------------------------------------------------------------------*/
@@ -126,7 +141,6 @@ private:
 	inline void add_data(pointer _data, uint _size);
 
 	pool_<bool> m_resources;
-	thread::section m_resource_lock;
 	uint obtain_resource_ID();
 	void release_resource_ID(uint _ID);
 	bool resource_exists(uint _ID);

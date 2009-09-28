@@ -19,7 +19,7 @@ video::rendering::rendering(video &_video)
 :
 	m_video(_video),
 	m_task(*this, &rendering::m_proc, "bikini-iii rendering"),
-	m_cbuffer(1000), m_dbuffer(1024 * 1024 * 5)
+	m_cbuffer(1000), m_dbuffer(1024 * 1024 * 5), m_ibuffer(1000)
 {}
 video::rendering::~rendering()
 {
@@ -87,13 +87,39 @@ void video::rendering::throw_data(uint _size)
 		m_dbuffer.pop();
 	}
 }
+bool video::rendering::add_issue(const issue &_issue)
+{
+	while (m_ibuffer.full()) sleep(0.001f);
+
+	m_ibuffer.push(_issue);
+
+	return true;
+}
+video::rendering::issue video::rendering::get_issue()
+{
+	issue l_issue;
+
+	if (!m_ibuffer.empty())
+	{
+		l_issue = m_ibuffer.front();
+		m_ibuffer.pop();
+	}
+
+	return l_issue;
+}
 void video::rendering::set_valid(uint _ID)
 {
-	if (m_video.resource_exists(_ID)) m_video.set_resource_valid(_ID);
+	//if (m_video.resource_exists(_ID)) m_video.set_resource_valid(_ID);
+	validate_resource l_validate_resource;
+	l_validate_resource.ID = _ID;
+	add_issue(l_validate_resource);
 }
 void video::rendering::set_invalid(uint _ID)
 {
-	if (m_video.resource_exists(_ID)) m_video.set_resource_invalid(_ID);
+	//if (m_video.resource_exists(_ID)) m_video.set_resource_invalid(_ID);
+	invalidate_resource l_invalidate_resource;
+	l_invalidate_resource.ID = _ID;
+	add_issue(l_invalidate_resource);
 }
 
 struct _key_field { uint start, size; };
@@ -150,6 +176,26 @@ bool video::create()
 }
 bool video::update(real _dt)
 {
+	rendering::issue l_issue;
+	while (!(l_issue = m_rendering.get_issue()).is_nothing())
+	{
+		switch (l_issue.type())
+		{
+			case rendering::issue_types::type_<rendering::validate_resource>::index :
+			{
+				rendering::validate_resource &l_validate_resource = l_issue.get_<rendering::validate_resource>();
+				set_resource_valid(l_validate_resource.ID);
+				break;
+			}
+			case rendering::issue_types::type_<rendering::invalidate_resource>::index :
+			{
+				rendering::invalidate_resource &l_invalidate_resource = l_issue.get_<rendering::invalidate_resource>();
+				set_resource_invalid(l_invalidate_resource.ID);
+				break;
+			}
+		}
+	}
+
 	if(!super::update(_dt)) return false;
 
 	if (!m_cbuffer.empty())
@@ -199,32 +245,26 @@ inline void video::add_data(pointer _data, uint _size)
 }
 uint video::obtain_resource_ID()
 {
-	thread::locker l_locker(m_resource_lock);
 	return m_resources.add(false);
 }
 void video::release_resource_ID(uint _ID)
 {
-	thread::locker l_locker(m_resource_lock);
 	m_resources.remove(_ID);
 }
 bool video::resource_exists(uint _ID)
 {
-	thread::locker l_locker(m_resource_lock);
 	return m_resources.exists(_ID);
 }
 bool video::resource_valid(uint _ID)
 {
-	thread::locker l_locker(m_resource_lock);
 	return m_resources.get(_ID);
 }
 void video::set_resource_valid(uint _ID)
 {
-	thread::locker l_locker(m_resource_lock);
 	m_resources.get(_ID) = true;
 }
 void video::set_resource_invalid(uint _ID)
 {
-	thread::locker l_locker(m_resource_lock);
 	m_resources.get(_ID) = false;
 }
 
