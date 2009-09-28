@@ -148,6 +148,8 @@ bool rendering_D3D9::initialize()
 		if (sm_D3D9_p->Release() == 0) sm_D3D9_p = 0;
 		return false;
 	}
+
+	m_D3DDevice9_p->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
 	
 	return true;
 }
