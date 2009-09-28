@@ -20,19 +20,20 @@ struct video : device {
 		struct create_viewport { uint ID; rect area; real2 depth; };
 		struct create_vformat { uint ID; pointer data; };
 		struct create_vbuffer { uint ID; uint size; };
-		struct write_vbuffer { uint ID; uint size; bool reset; };
+		struct write_vbuffer { uint ID, size; bool reset; };
 		struct create_vshader { uint ID; pointer data; };
 		struct create_pshader { uint ID; pointer data; };
+		struct create_vbufset { uint ID, vformat_ID, vbuffer_IDs[8], offsets[8], strides[8], vshader_ID, pshader_ID; };
 		struct destroy_resource { uint ID; };
 		struct begin_scene {};
 		struct clear_viewport { uint target_ID, viewport_ID; struct { uint f; color c; real z; uint s; } clear; };
-		struct draw_primitive { uint target_ID, viewport_ID; };
+		struct draw_primitive { uint target_ID, viewport_ID, vbufset_ID, type, start, size; };
 		struct end_scene {};
 		struct present_schain { uint ID; };
 
 		typedef make_typelist_<
 			create_schain, create_viewport, create_vformat, create_vbuffer, write_vbuffer,
-			create_vshader, create_pshader,
+			create_vshader, create_pshader, create_vbufset,
 			destroy_resource,
 			begin_scene, clear_viewport, draw_primitive, end_scene,
 			present_schain
@@ -100,7 +101,7 @@ struct video : device {
 	};
 
 	struct ot { enum object_type {
-		window, viewport, drawcall, vformat, vbuffer, memreader, vshader, pshader
+		window, viewport, drawcall, vformat, vbuffer, memreader, vshader, pshader, vbufset
 	};};
 
 	/* video ------------------------------------------------------------------------------------*/
@@ -143,6 +144,36 @@ namespace cf { enum clear_flags {
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
 
+/// vbufset
+struct vbufset : video::object
+{
+	struct info : video::object::info
+	{
+		typedef vbufset object;
+		info();
+	};
+
+	static const uint vbuffer_count = 8;
+
+	inline const info& get_info() const { return get_info_<info>(); }
+	inline uint resource_ID() const { return m_resource_ID; }
+
+	vbufset(const info &_info, video &_video);
+	~vbufset();
+
+	bool update(real _dt);
+
+	void set_vformat(uint _ID);
+	void set_vbuffer(uint _i, uint _ID, uint _offset, uint _stride);
+	void set_shaders(uint _vshader_ID, uint _pshader_ID);
+
+private:
+	uint m_resource_ID;
+	uint m_vformat_ID;
+	uint m_vbuffer_IDs[vbuffer_count], m_offsets[vbuffer_count], m_strides[vbuffer_count];
+	uint m_vshader_ID, m_pshader_ID;
+};
+
 /// pshader
 struct pshader : video::object
 {
@@ -154,6 +185,7 @@ struct pshader : video::object
 	};
 
 	inline const info& get_info() const { return get_info_<info>(); }
+	inline uint resource_ID() const { return m_resource_ID; }
 
 	pshader(const info &_info, video &_video);
 	~pshader();
@@ -161,7 +193,7 @@ struct pshader : video::object
 	bool update(real _dt);
 
 private:
-	uint m_pshader_resource_ID;
+	uint m_resource_ID;
 };
 
 /// vshader
@@ -175,6 +207,7 @@ struct vshader : video::object
 	};
 
 	inline const info& get_info() const { return get_info_<info>(); }
+	inline uint resource_ID() const { return m_resource_ID; }
 
 	vshader(const info &_info, video &_video);
 	~vshader();
@@ -182,7 +215,7 @@ struct vshader : video::object
 	bool update(real _dt);
 
 private:
-	uint m_vshader_resource_ID;
+	uint m_resource_ID;
 };
 
 /// memreader
@@ -204,7 +237,7 @@ struct memreader : video::object
 
 	bool update(real _dt);
 
-	void reset();
+	void clear();
 	void add_data(pointer _data, uint _size);
 
 private:
@@ -221,6 +254,7 @@ struct vbuffer : video::object
 	};
 
 	inline const info& get_info() const { return get_info_<info>(); }
+	inline uint resource_ID() const { return m_resource_ID; }
 
 	vbuffer(const info &_info, video &_video);
 	~vbuffer();
@@ -230,7 +264,7 @@ struct vbuffer : video::object
 	void set_source(uint _ID);
 
 private:
-	uint m_vbuffer_resource_ID;
+	uint m_resource_ID;
 	uint m_source_ID;
 	uint m_size;
 };
@@ -246,6 +280,7 @@ struct vformat : video::object
 	};
 
 	inline const info& get_info() const { return get_info_<info>(); }
+	inline uint resource_ID() const { return m_resource_ID; }
 
 	vformat(const info &_info, video &_video);
 	~vformat();
@@ -253,7 +288,7 @@ struct vformat : video::object
 	bool update(real _dt);
 
 private:
-	uint m_vformat_resource_ID;
+	uint m_resource_ID;
 };
 
 /// drawcall
@@ -266,15 +301,21 @@ struct drawcall : video::object
 	};
 
 	inline const info& get_info() const { return get_info_<info>(); }
+	inline void set_start(uint _start) { m_start = _start; }
+	inline void set_size(uint _size) { m_size = _size; }
 
 	drawcall(const info &_info, video &_video);
 	~drawcall();
 
 	bool update(real _dt);
 
+	void set_vbufset(uint _ID);
+
 	void add_commands(const context &_context) const;
 
 private:
+	uint m_start, m_size;
+	uint m_vbufset_ID;
 };
 
 /// viewport
@@ -287,6 +328,7 @@ struct viewport : video::object
 	};
 
 	inline const info& get_info() const { return get_info_<info>(); }
+	inline uint resource_ID() const { return m_resource_ID; }
 
 	inline const rect& area() const { return m_area; }
 	inline void set_area(const rect &_r) { m_area = _r; }
@@ -296,7 +338,7 @@ struct viewport : video::object
 	viewport(const info &_info, video &_video);
 	~viewport();
 
-	uint add_drawcall();
+	drawcall& add_drawcall();
 	void remove_drawcall(uint _i);
 	uint drawcall_count() const;
 	uint drawcall_ID(uint _i) const;
@@ -307,7 +349,7 @@ struct viewport : video::object
 	void add_commands(const context &_context) const;
 
 private:
-	uint m_viewport_resource_ID;
+	uint m_resource_ID;
 	rect m_area; real2 m_depth;
 	color m_color;
 	drawcall::info m_drawcall_info;
@@ -325,6 +367,7 @@ struct window : video::object
 	};
 
 	inline const info& get_info() const { return get_info_<info>(); }
+	inline uint resource_ID() const { return m_resource_ID; }
 
 	window(const info &_info, video &_video, HWND _window);
 	~window();
@@ -339,7 +382,7 @@ struct window : video::object
 
 private:
 	HWND m_window;
-	uint m_schain_resource_ID;
+	uint m_resource_ID;
 	static long _stdcall _wndproc(HWND _window, uint _message, uint _wparam, uint _lparam);
 	static window *first_p; window *next_p;
 	long m_wndproc(uint _message, uint _wparam, uint _lparam);

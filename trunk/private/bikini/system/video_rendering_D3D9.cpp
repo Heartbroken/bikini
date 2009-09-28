@@ -52,9 +52,11 @@ private:
 	bool execute(const write_vbuffer &_command);
 	bool execute(const create_vshader &_command);
 	bool execute(const create_pshader &_command);
+	bool execute(const create_vbufset &_command);
 	bool execute(const destroy_resource &_command);
 	bool execute(const begin_scene &_command);
 	bool execute(const clear_viewport &_command);
+	bool execute(const draw_primitive &_command);
 	bool execute(const end_scene &_command);
 	bool execute(const present_schain &_command);
 
@@ -66,6 +68,7 @@ private:
 	struct vbuffer : _resource { IDirect3DVertexBuffer9 *D3DVBuffer9_p; uint size, used; };
 	struct vshader : _resource { IDirect3DVertexShader9 *D3DVShader9_p; };
 	struct pshader : _resource { IDirect3DPixelShader9 *D3DPShader9_p; };
+	struct vbufset : _resource { uint vformat_ID, vbuffer_IDs[8], offsets[8], strides[8], vshader_ID, pshader_ID; };
 	struct ibuffer : _resource {};
 	struct texture : _resource {};
 	struct consts : _resource {};
@@ -75,7 +78,7 @@ private:
 	struct primitive : _resource {};
 
 	typedef make_typelist_<
-		schain, viewport, vformat, vbuffer, vshader, pshader
+		schain, viewport, vformat, vbuffer, vshader, pshader, vbufset
 	>::type resource_types;
 
 	typedef variant_<resource_types, false> resource;
@@ -87,6 +90,11 @@ private:
 	void m_destroy_resource(uint _ID);
 	bool m_set_target(uint _ID);
 	bool m_set_viewport(uint _ID);
+	bool m_set_vformat(uint _ID);
+	bool m_set_vbuffer(uint _i, uint _ID, uint _offset, uint _stride);
+	bool m_set_vbuffers(uint _ID);
+	bool m_set_vshader(uint _ID);
+	bool m_set_pshader(uint _ID);
 };
 
 IDirect3D9 *rendering_D3D9::sm_D3D9_p = 0;
@@ -185,7 +193,7 @@ void rendering_D3D9::m_destroy_resource(uint _ID)
 			{
 				case resource_types::type_<schain>::index :
 				{
-					schain l_schain = l_resource.get_<schain>();
+					schain &l_schain = l_resource.get_<schain>();
 					l_schain.D3DSChain9_p->Release();
 					break;
 				}
@@ -195,26 +203,30 @@ void rendering_D3D9::m_destroy_resource(uint _ID)
 				}
 				case resource_types::type_<vformat>::index :
 				{
-					vformat l_vformat = l_resource.get_<vformat>();
+					vformat &l_vformat = l_resource.get_<vformat>();
 					l_vformat.D3DVDecl9_p->Release();
 					break;
 				}
 				case resource_types::type_<vbuffer>::index :
 				{
-					vbuffer l_vbuffer = l_resource.get_<vbuffer>();
+					vbuffer &l_vbuffer = l_resource.get_<vbuffer>();
 					l_vbuffer.D3DVBuffer9_p->Release();
 					break;
 				}
 				case resource_types::type_<vshader>::index :
 				{
-					vshader l_vshader = l_resource.get_<vshader>();
+					vshader &l_vshader = l_resource.get_<vshader>();
 					l_vshader.D3DVShader9_p->Release();
 					break;
 				}
 				case resource_types::type_<pshader>::index :
 				{
-					pshader l_pshader = l_resource.get_<pshader>();
+					pshader &l_pshader = l_resource.get_<pshader>();
 					l_pshader.D3DPShader9_p->Release();
+					break;
+				}
+				case resource_types::type_<vbufset>::index :
+				{
 					break;
 				}
 			}
@@ -235,7 +247,7 @@ bool rendering_D3D9::m_set_target(uint _ID)
 			{
 				case resource_types::type_<schain>::index :
 				{
-					schain l_schain = l_resource.get_<schain>();
+					schain &l_schain = l_resource.get_<schain>();
 					IDirect3DSurface9 *l_D3DSurface9_p;
 					if (FAILED(l_schain.D3DSChain9_p->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &l_D3DSurface9_p))) return false;
 					m_D3DDevice9_p->SetRenderTarget(0, l_D3DSurface9_p);
@@ -259,11 +271,128 @@ bool rendering_D3D9::m_set_viewport(uint _ID)
 			{
 				case resource_types::type_<viewport>::index :
 				{
-					viewport l_viewport = l_resource.get_<viewport>();
+					viewport &l_viewport = l_resource.get_<viewport>();
 					if (FAILED(m_D3DDevice9_p->SetViewport(&l_viewport.D3DViewport9))) return false;
 					break;
 				}
 			}
+		}
+	}
+	return true;
+}
+bool rendering_D3D9::m_set_vformat(uint _ID)
+{
+	uint_ID l_ID(_ID);
+	if (l_ID.index < m_resources.size())
+	{
+		resource &l_resource = m_resources[l_ID.index];
+		if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _ID)
+		{
+			switch (l_resource.type())
+			{
+				case resource_types::type_<vformat>::index :
+				{
+					vformat &l_vformat = l_resource.get_<vformat>();
+					if (FAILED(m_D3DDevice9_p->SetVertexDeclaration(l_vformat.D3DVDecl9_p))) return false;
+					break;
+				}
+			}
+			return true;
+		}
+	}
+	return true;
+}
+bool rendering_D3D9::m_set_vbuffer(uint _i, uint _ID, uint _offset, uint _stride)
+{
+	uint_ID l_ID(_ID);
+	if (l_ID.index < m_resources.size())
+	{
+		resource &l_resource = m_resources[l_ID.index];
+		if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _ID)
+		{
+			switch (l_resource.type())
+			{
+				case resource_types::type_<vbuffer>::index :
+				{
+					vbuffer &l_vbuffer = l_resource.get_<vbuffer>();
+					if (FAILED(m_D3DDevice9_p->SetStreamSource(_i, l_vbuffer.D3DVBuffer9_p, _offset, _stride))) return false;
+					break;
+				}
+			}
+			return true;
+		}
+
+		m_D3DDevice9_p->SetStreamSource(_i, 0, 0, 0);
+	}
+	return true;
+}
+bool rendering_D3D9::m_set_vbuffers(uint _ID)
+{
+	uint_ID l_ID(_ID);
+	if (l_ID.index < m_resources.size())
+	{
+		resource &l_resource = m_resources[l_ID.index];
+		if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _ID)
+		{
+			switch (l_resource.type())
+			{
+				case resource_types::type_<vbufset>::index :
+				{
+					vbufset &l_vbufset = l_resource.get_<vbufset>();
+					m_set_vformat(l_vbufset.vformat_ID);
+					for (uint i = 0; i < 8; ++i)
+					{
+						m_set_vbuffer(i, l_vbufset.vbuffer_IDs[i], l_vbufset.offsets[i], l_vbufset.strides[i]);
+					}
+					m_set_vshader(l_vbufset.vshader_ID);
+					m_set_pshader(l_vbufset.pshader_ID);
+					break;
+				}
+			}
+		}
+	}
+	return true;
+}
+bool rendering_D3D9::m_set_vshader(uint _ID)
+{
+	uint_ID l_ID(_ID);
+	if (l_ID.index < m_resources.size())
+	{
+		resource &l_resource = m_resources[l_ID.index];
+		if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _ID)
+		{
+			switch (l_resource.type())
+			{
+				case resource_types::type_<vshader>::index :
+				{
+					vshader &l_vshader = l_resource.get_<vshader>();
+					if (FAILED(m_D3DDevice9_p->SetVertexShader(l_vshader.D3DVShader9_p))) return false;
+					break;
+				}
+			}
+			return true;
+		}
+	}
+	return true;
+}
+bool rendering_D3D9::m_set_pshader(uint _ID)
+{
+	uint_ID l_ID(_ID);
+	if (l_ID.index < m_resources.size())
+	{
+		resource &l_resource = m_resources[l_ID.index];
+		if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _ID)
+		{
+			switch (l_resource.type())
+			{
+				case resource_types::type_<pshader>::index :
+				{
+					pshader &l_pshader = l_resource.get_<pshader>();
+					if (FAILED(m_D3DDevice9_p->SetPixelShader(l_pshader.D3DPShader9_p))) return false;
+					break;
+				}
+			}
+			return true;
 		}
 	}
 	return true;
@@ -279,9 +408,11 @@ bool rendering_D3D9::execute(const command &_command)
 		case command_types::type_<write_vbuffer>::index : return execute(_command.get_<write_vbuffer>());
 		case command_types::type_<create_vshader>::index : return execute(_command.get_<create_vshader>());
 		case command_types::type_<create_pshader>::index : return execute(_command.get_<create_pshader>());
+		case command_types::type_<create_vbufset>::index : return execute(_command.get_<create_vbufset>());
 		case command_types::type_<destroy_resource>::index : return execute(_command.get_<destroy_resource>());
 		case command_types::type_<begin_scene>::index : return execute(_command.get_<begin_scene>());
 		case command_types::type_<clear_viewport>::index : return execute(_command.get_<clear_viewport>());
+		case command_types::type_<draw_primitive>::index : return execute(_command.get_<draw_primitive>());
 		case command_types::type_<end_scene>::index : return execute(_command.get_<end_scene>());
 		case command_types::type_<present_schain>::index : return execute(_command.get_<present_schain>());
 	}
@@ -408,6 +539,22 @@ bool rendering_D3D9::execute(const create_pshader &_command)
 
 	return true;
 }
+bool rendering_D3D9::execute(const create_vbufset &_command)
+{
+	vbufset l_vbufset;
+	l_vbufset.ID = _command.ID;
+
+	l_vbufset.vformat_ID = _command.vformat_ID;
+	memcpy(l_vbufset.vbuffer_IDs, _command.vbuffer_IDs, sizeof(l_vbufset.vbuffer_IDs));
+	memcpy(l_vbufset.offsets, _command.offsets, sizeof(l_vbufset.offsets));
+	memcpy(l_vbufset.strides, _command.strides, sizeof(l_vbufset.strides));
+	l_vbufset.vshader_ID = _command.vshader_ID;
+	l_vbufset.pshader_ID = _command.pshader_ID;
+
+	m_create_resource(l_vbufset);
+
+	return true;
+}
 bool rendering_D3D9::execute(const destroy_resource &_command)
 {
 	m_destroy_resource(_command.ID);
@@ -437,6 +584,16 @@ bool rendering_D3D9::execute(const clear_viewport &_command)
 
 		if (FAILED(m_D3DDevice9_p->Clear(0, 0, l_flags, l_color, l_z, l_stencil))) return false;
 	}
+
+	return true;
+}
+bool rendering_D3D9::execute(const draw_primitive &_command)
+{
+	if (!m_set_target(_command.target_ID)) return false;
+	if (!m_set_viewport(_command.viewport_ID)) return false;
+	if (!m_set_vbuffers(_command.vbufset_ID)) return false;
+
+	if (FAILED(m_D3DDevice9_p->DrawPrimitive((D3DPRIMITIVETYPE)_command.type, _command.start, _command.size))) return false;
 
 	return true;
 }

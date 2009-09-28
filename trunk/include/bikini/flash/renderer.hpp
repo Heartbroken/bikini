@@ -25,14 +25,16 @@ struct renderer
 private:
 	video &m_video;
 	uint m_viewport_ID;
-	vo::vformat::info m_vo_vformat;
-	uint m_vo_vformat_ID;
-	vo::memreader::info m_vo_memreader;
-	uint m_vo_memreader_ID;
-	vo::vbuffer::info m_vo_vbuffer;
-	uint m_vo_vbuffer_ID;
-	vo::vshader::info m_vo_vshader;
-	uint m_vo_vshader_ID;
-	vo::pshader::info m_vo_pshader;
-	uint m_vo_pshader_ID;
+	vo::vformat::info m_vformat;
+	uint m_vformat_ID;
+	vo::memreader::info m_memreader;
+	uint m_memreader_ID;
+	vo::vbuffer::info m_vbuffer;
+	uint m_vbuffer_ID;
+	vo::vshader::info m_vshader;
+	uint m_vshader_ID;
+	vo::pshader::info m_pshader;
+	uint m_pshader_ID;
+	vo::vbufset::info m_vbufset;
+	uint m_vbufset_ID;
 };
