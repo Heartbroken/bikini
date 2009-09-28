@@ -19,7 +19,8 @@ video::rendering::rendering(video &_video)
 :
 	m_video(_video),
 	m_task(*this, &rendering::m_proc, "bikini-iii rendering"),
-	m_cbuffer(1000), m_dbuffer(1024 * 1024 * 5), m_ibuffer(1000)
+	m_cbuffer(1000), m_dbuffer(1024 * 1024 * 5), m_ibuffer(1000),
+	m_has_command(false, false)
 {}
 video::rendering::~rendering()
 {
@@ -44,7 +45,12 @@ void video::rendering::destroy()
 }
 bool video::rendering::add_command(const command &_command)
 {
-	return m_cbuffer.push(_command);
+	if (m_cbuffer.push(_command))
+	{
+		m_has_command.set();
+		return true;
+	}
+	return false;
 }
 bool video::rendering::add_data(pointer _data, uint _size, bool _wait)
 {
@@ -109,14 +115,12 @@ video::rendering::issue video::rendering::get_issue()
 }
 void video::rendering::set_valid(uint _ID)
 {
-	//if (m_video.resource_exists(_ID)) m_video.set_resource_valid(_ID);
 	validate_resource l_validate_resource;
 	l_validate_resource.ID = _ID;
 	add_issue(l_validate_resource);
 }
 void video::rendering::set_invalid(uint _ID)
 {
-	//if (m_video.resource_exists(_ID)) m_video.set_resource_invalid(_ID);
 	invalidate_resource l_invalidate_resource;
 	l_invalidate_resource.ID = _ID;
 	add_issue(l_invalidate_resource);
@@ -152,7 +156,10 @@ void video::rendering::m_proc()
 				execute(m_cbuffer.front());
 				m_cbuffer.pop();
 			}
-			else sleep(0.001f);
+			else
+			{
+				m_has_command.wait();
+			}
 		}
 
 		finalize();
@@ -229,6 +236,7 @@ bool video::update(real _dt)
 void video::destroy()
 {
 	m_rendering.destroy();
+	m_rendering.add_command(rendering::end_scene());
 	super::destroy();
 }
 inline void video::add_command(const command &_command)
@@ -307,7 +315,7 @@ vbufset::info::info()
 vbufset::vbufset(const info &_info, video &_video)
 :
 	video::object(_info, _video),
-	m_vformat_ID(bad_ID), m_vshader_ID(bad_ID), m_pshader_ID(bad_ID)
+	m_vformat_ID(bad_ID)
 {
 	memset(m_vbuffer_IDs, 0xff, sizeof(m_vbuffer_IDs));
 	m_resource_ID = obtain_resource_ID();
@@ -347,24 +355,6 @@ bool vbufset::update(real _dt)
 			}
 			l_create_vbufset.vbuffer_IDs[i] = bad_ID;
 		}
-		if (has_relation(m_vshader_ID))
-		{
-			uint l_vshader_ID = get_relation(m_vshader_ID);
-			if (get_video().exists(l_vshader_ID) && get_video().get(l_vshader_ID).type() == video::ot::vshader)
-			{
-				vshader &l_vshader = get_video().get_<vshader>(l_vshader_ID);
-				l_create_vbufset.vshader_ID = l_vshader.resource_ID();
-			}
-		}
-		if (has_relation(m_pshader_ID))
-		{
-			uint l_pshader_ID = get_relation(m_pshader_ID);
-			if (get_video().exists(l_pshader_ID) && get_video().get(l_pshader_ID).type() == video::ot::pshader)
-			{
-				pshader &l_pshader = get_video().get_<pshader>(l_pshader_ID);
-				l_create_vbufset.pshader_ID = l_pshader.resource_ID();
-			}
-		}
 		add_command(l_create_vbufset);
 
 		update_version();
@@ -390,19 +380,6 @@ void vbufset::set_vbuffer(uint _i, uint _ID, uint _offset, uint _stride)
 
 	m_offsets[_i] = _offset;
 	m_strides[_i] = _stride;
-}
-void vbufset::set_shaders(uint _vshader_ID, uint _pshader_ID)
-{
-	if (has_relation(m_vshader_ID)) remove_relation(m_vshader_ID);
-
-	if (has_relation(m_pshader_ID)) remove_relation(m_pshader_ID);
-
-	if (get_video().exists(_vshader_ID)) m_vshader_ID = add_relation(_vshader_ID);
-	else m_vshader_ID = bad_ID;
-
-	if (get_video().exists(_pshader_ID)) m_pshader_ID = add_relation(_pshader_ID);
-	else m_pshader_ID = bad_ID;
-
 }
 
 // pshader::info
@@ -622,7 +599,7 @@ drawcall::info::info()
 drawcall::drawcall(const info &_info, video &_video)
 :
 	video::object(_info, _video),
-	m_start(0), m_size(0), m_vbufset_ID(bad_ID)
+	m_start(0), m_size(0), m_vbufset_ID(bad_ID), m_vshader_ID(bad_ID), m_pshader_ID(bad_ID)
 {}
 drawcall::~drawcall()
 {
@@ -657,10 +634,40 @@ void drawcall::add_commands(const context &_context) const
 			l_draw_primitive.vbufset_ID = l_vbufset.resource_ID();
 		}
 	}
+	if (has_relation(m_vshader_ID))
+	{
+		uint l_vshader_ID = get_relation(m_vshader_ID);
+		if (get_video().exists(l_vshader_ID) && get_video().get(l_vshader_ID).type() == video::ot::vshader)
+		{
+			vshader &l_vshader = get_video().get_<vshader>(l_vshader_ID);
+			l_draw_primitive.vshader_ID = l_vshader.resource_ID();
+		}
+	}
+	if (has_relation(m_pshader_ID))
+	{
+		uint l_pshader_ID = get_relation(m_pshader_ID);
+		if (get_video().exists(l_pshader_ID) && get_video().get(l_pshader_ID).type() == video::ot::pshader)
+		{
+			pshader &l_pshader = get_video().get_<pshader>(l_pshader_ID);
+			l_draw_primitive.pshader_ID = l_pshader.resource_ID();
+		}
+	}
 	l_draw_primitive.type = D3DPT_TRIANGLESTRIP;
 	l_draw_primitive.start = m_start;
 	l_draw_primitive.size = m_size;
 	add_command(l_key, l_draw_primitive);
+}
+void drawcall::set_shaders(uint _vshader_ID, uint _pshader_ID)
+{
+	if (has_relation(m_vshader_ID)) remove_relation(m_vshader_ID);
+
+	if (has_relation(m_pshader_ID)) remove_relation(m_pshader_ID);
+
+	if (get_video().exists(_vshader_ID)) m_vshader_ID = add_relation(_vshader_ID);
+	else m_vshader_ID = bad_ID;
+
+	if (get_video().exists(_pshader_ID)) m_pshader_ID = add_relation(_pshader_ID);
+	else m_pshader_ID = bad_ID;
 }
 
 // viewport::info
@@ -746,9 +753,9 @@ uint viewport::drawcall_ID(uint _i) const
 }
 void viewport::clear()
 {
-	for (uint i = 0, s = drawcall_count(); i < s; ++i)
+	while (drawcall_count())
 	{
-		remove_drawcall(i);
+		remove_drawcall(drawcall_count() - 1);
 	}
 }
 

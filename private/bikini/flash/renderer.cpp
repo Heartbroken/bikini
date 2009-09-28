@@ -43,7 +43,6 @@ bool renderer::create()
 	m_vbufset_ID = m_video.spawn(m_vbufset);
 	m_video.get_<vo::vbufset>(m_vbufset_ID).set_vformat(m_vformat_ID);
 	m_video.get_<vo::vbufset>(m_vbufset_ID).set_vbuffer(0, m_vbuffer_ID, 0, 4);
-	m_video.get_<vo::vbufset>(m_vbufset_ID).set_shaders(m_vshader_ID, m_pshader_ID);
 
 	return true;
 }
@@ -77,6 +76,7 @@ void renderer::draw_tristrip(const short2* _points, uint _count)
 		vo::viewport &l_viewport = m_video.get_<vo::viewport>(m_viewport_ID);
 		vo::drawcall &l_drawcall = l_viewport.add_drawcall();
 		l_drawcall.set_vbufset(m_vbufset_ID);
+		l_drawcall.set_shaders(m_vshader_ID, m_pshader_ID);
 		l_drawcall.set_size(_count - 2);
 
 		vo::memreader &l_memreader = m_video.get_<vo::memreader>(m_memreader_ID);

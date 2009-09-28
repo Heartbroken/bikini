@@ -23,11 +23,11 @@ struct video : device {
 		struct write_vbuffer { uint ID, size; bool reset; };
 		struct create_vshader { uint ID; pointer data; };
 		struct create_pshader { uint ID; pointer data; };
-		struct create_vbufset { uint ID, vformat_ID, vbuffer_IDs[8], offsets[8], strides[8], vshader_ID, pshader_ID; };
+		struct create_vbufset { uint ID, vformat_ID, vbuffer_IDs[8], offsets[8], strides[8]; };
 		struct destroy_resource { uint ID; };
 		struct begin_scene {};
 		struct clear_viewport { uint target_ID, viewport_ID; struct { uint f; color c; real z; uint s; } clear; };
-		struct draw_primitive { uint target_ID, viewport_ID, vbufset_ID, type, start, size; };
+		struct draw_primitive { uint target_ID, viewport_ID, vbufset_ID, vshader_ID, pshader_ID, type, start, size; };
 		struct end_scene {};
 		struct present_schain { uint ID; };
 
@@ -81,6 +81,7 @@ struct video : device {
 		bool m_run;
 		void m_proc();
 		command_ring m_cbuffer;
+		thread::flag m_has_command;
 		bool add_command(const command &_command);
 		data_ring m_dbuffer;
 		bool add_data(pointer _data, uint _size, bool _wait = true);
@@ -179,13 +180,11 @@ struct vbufset : video::object
 
 	void set_vformat(uint _ID);
 	void set_vbuffer(uint _i, uint _ID, uint _offset, uint _stride);
-	void set_shaders(uint _vshader_ID, uint _pshader_ID);
 
 private:
 	uint m_resource_ID;
 	uint m_vformat_ID;
 	uint m_vbuffer_IDs[vbuffer_count], m_offsets[vbuffer_count], m_strides[vbuffer_count];
-	uint m_vshader_ID, m_pshader_ID;
 };
 
 /// pshader
@@ -324,12 +323,14 @@ struct drawcall : video::object
 	bool update(real _dt);
 
 	void set_vbufset(uint _ID);
+	void set_shaders(uint _vshader_ID, uint _pshader_ID);
 
 	void add_commands(const context &_context) const;
 
 private:
 	uint m_start, m_size;
 	uint m_vbufset_ID;
+	uint m_vshader_ID, m_pshader_ID;
 };
 
 /// viewport

@@ -68,7 +68,7 @@ private:
 	struct vbuffer : _resource { IDirect3DVertexBuffer9 *D3DVBuffer9_p; uint size, used; };
 	struct vshader : _resource { IDirect3DVertexShader9 *D3DVShader9_p; };
 	struct pshader : _resource { IDirect3DPixelShader9 *D3DPShader9_p; };
-	struct vbufset : _resource { uint vformat_ID, vbuffer_IDs[8], offsets[8], strides[8], vshader_ID, pshader_ID; };
+	struct vbufset : _resource { uint vformat_ID, vbuffer_IDs[8], offsets[8], strides[8]; };
 	struct ibuffer : _resource {};
 	struct texture : _resource {};
 	struct consts : _resource {};
@@ -344,8 +344,6 @@ bool rendering_D3D9::m_set_vbuffers(uint _ID)
 					{
 						m_set_vbuffer(i, l_vbufset.vbuffer_IDs[i], l_vbufset.offsets[i], l_vbufset.strides[i]);
 					}
-					m_set_vshader(l_vbufset.vshader_ID);
-					m_set_pshader(l_vbufset.pshader_ID);
 					break;
 				}
 			}
@@ -548,8 +546,6 @@ bool rendering_D3D9::execute(const create_vbufset &_command)
 	memcpy(l_vbufset.vbuffer_IDs, _command.vbuffer_IDs, sizeof(l_vbufset.vbuffer_IDs));
 	memcpy(l_vbufset.offsets, _command.offsets, sizeof(l_vbufset.offsets));
 	memcpy(l_vbufset.strides, _command.strides, sizeof(l_vbufset.strides));
-	l_vbufset.vshader_ID = _command.vshader_ID;
-	l_vbufset.pshader_ID = _command.pshader_ID;
 
 	m_create_resource(l_vbufset);
 
@@ -592,6 +588,8 @@ bool rendering_D3D9::execute(const draw_primitive &_command)
 	if (!m_set_target(_command.target_ID)) return false;
 	if (!m_set_viewport(_command.viewport_ID)) return false;
 	if (!m_set_vbuffers(_command.vbufset_ID)) return false;
+	if (!m_set_vshader(_command.vshader_ID)) return false;
+	if (!m_set_pshader(_command.pshader_ID)) return false;
 
 	if (FAILED(m_D3DDevice9_p->DrawPrimitive((D3DPRIMITIVETYPE)_command.type, (UINT)_command.start, (UINT)_command.size))) return false;
 
