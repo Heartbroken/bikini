@@ -376,10 +376,42 @@
 				<File
 					RelativePath=".\flash.ps"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="Pixel Shader Compiler"
+							Fh="$(InputPath).$(PlatformName).h"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="Pixel Shader Compiler"
+							Fh="$(InputPath).$(PlatformName).h"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\flash.vs"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="Vertex Shader Compiler"
+							Fh="$(InputPath).$(PlatformName).h"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="Vertex Shader Compiler"
+							Fh="$(InputPath).$(PlatformName).h"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\renderer.cpp"

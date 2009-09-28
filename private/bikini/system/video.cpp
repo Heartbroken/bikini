@@ -158,7 +158,7 @@ void video::rendering::m_proc()
 			}
 			else
 			{
-				m_has_command.wait();
+				m_has_command.wait(0.1f);
 			}
 		}
 
@@ -236,7 +236,6 @@ bool video::update(real _dt)
 void video::destroy()
 {
 	m_rendering.destroy();
-	m_rendering.add_command(rendering::end_scene());
 	super::destroy();
 }
 inline void video::add_command(const command &_command)
@@ -739,6 +738,7 @@ void viewport::remove_drawcall(uint _i)
 {
 	assert(_i < m_drawcalls.size());
 	uint l_drawcall_ID = get_relation(m_drawcalls[_i]);
+	remove_relation(m_drawcalls[_i]);
 	get_video().kill(l_drawcall_ID);
 	m_drawcalls.erase(m_drawcalls.begin() + _i);
 }
@@ -920,6 +920,7 @@ void window::remove_viewport(uint _i)
 {
 	assert(_i < m_viewports.size());
 	uint l_viewport_ID = get_relation(m_viewports[_i]);
+	remove_relation(m_viewports[_i]);
 	get_video().kill(l_viewport_ID);
 	m_viewports.erase(m_viewports.begin() + _i);
 }
