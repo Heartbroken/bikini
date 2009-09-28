@@ -315,14 +315,14 @@ bool rendering_D3D9::m_set_vbuffer(uint _i, uint _ID, uint _offset, uint _stride
 				case resource_types::type_<vbuffer>::index :
 				{
 					vbuffer &l_vbuffer = l_resource.get_<vbuffer>();
-					if (FAILED(m_D3DDevice9_p->SetStreamSource(_i, l_vbuffer.D3DVBuffer9_p, _offset, _stride))) return false;
+					if (FAILED(m_D3DDevice9_p->SetStreamSource((UINT)_i, l_vbuffer.D3DVBuffer9_p, (UINT)_offset, (UINT)_stride))) return false;
 					break;
 				}
 			}
 			return true;
 		}
 
-		m_D3DDevice9_p->SetStreamSource(_i, 0, 0, 0);
+		m_D3DDevice9_p->SetStreamSource((UINT)_i, 0, 0, 0);
 	}
 	return true;
 }
@@ -478,7 +478,7 @@ bool rendering_D3D9::execute(const create_vbuffer &_command)
 	l_vbuffer.size = _command.size;
 	l_vbuffer.used = 0;
 
-	if (FAILED(get_device().CreateVertexBuffer(_command.size, D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &l_vbuffer.D3DVBuffer9_p, 0))) return false;
+	if (FAILED(get_device().CreateVertexBuffer((UINT)_command.size, D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &l_vbuffer.D3DVBuffer9_p, 0))) return false;
 
 	m_create_resource(l_vbuffer);
 
@@ -500,7 +500,7 @@ bool rendering_D3D9::execute(const write_vbuffer &_command)
 			if (_command.size <= l_vbuffer.size - l_vbuffer.used)
 			{
 				handle l_data;
-				l_vbuffer.D3DVBuffer9_p->Lock(l_vbuffer.used, _command.size, &l_data, 0);
+				l_vbuffer.D3DVBuffer9_p->Lock((UINT)l_vbuffer.used, (UINT)_command.size, &l_data, 0);
 
 				get_data(l_data, _command.size);
 
@@ -593,7 +593,7 @@ bool rendering_D3D9::execute(const draw_primitive &_command)
 	if (!m_set_viewport(_command.viewport_ID)) return false;
 	if (!m_set_vbuffers(_command.vbufset_ID)) return false;
 
-	if (FAILED(m_D3DDevice9_p->DrawPrimitive((D3DPRIMITIVETYPE)_command.type, _command.start, _command.size))) return false;
+	if (FAILED(m_D3DDevice9_p->DrawPrimitive((D3DPRIMITIVETYPE)_command.type, (UINT)_command.start, (UINT)_command.size))) return false;
 
 	return true;
 }
