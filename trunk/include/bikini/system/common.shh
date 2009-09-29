@@ -6,22 +6,45 @@
 
 *//*---------------------------------------------------------------------------------------------*/
 
-// declaration
+static const uint bikini_info_start = 0;
 
-struct viewport_info
-{
-	float4 area;	// x - left, y - top, z - width, w - height
-	float2 depth;	// x - Z min, y - Z max
-};
+/* types ----------------------------------------------------------------------------------------*/
 
 #ifndef __cplusplus
 
-// definition
+typedef float real;
+typedef float1 real1;
+typedef float2 real2;
+typedef float3 real3;
+typedef float4 real4;
 
-viewport_info viewport : register(c10) =
+#endif // __cplusplus
+
+/* viewport -------------------------------------------------------------------------------------*/
+
+static const uint viewport_info_start = bikini_info_start;
+
+struct viewport_info
 {
-	0.0, 0.0, 800.0, 600.0,
-	0.0, 1.0
+	real4 area;		// x - left, y - top, z - width, w - height
+	real2 depth;	// x - Z min, y - Z max
+};
+
+static const uint viewport_info_size = 2;
+static const uint viewport_info_end = viewport_info_start + viewport_info_size;
+
+#ifndef __cplusplus
+
+viewport_info viewport : register(c[viewport_info_start]) =
+{
+	0, 0, 800, 600,
+	0, 1
 };
 
 #endif // __cplusplus
+
+/* ----------------------------------------------------------------------------------------------*/
+
+static const uint bikini_info_end = viewport_info_end;
+
+/* ----------------------------------------------------------------------------------------------*/
