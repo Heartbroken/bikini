@@ -18,8 +18,17 @@ static const D3DVERTEXELEMENT9 sg_vformat[] =
 	{ 0xff, 0, D3DDECLTYPE_UNUSED, 0, 0, 0 }
 };
 
-#include "flash.vs.win32.h"
-#include "flash.ps.win32.h"
+#ifdef _XBOX
+#	include "flash.vs.xbox 360.h"
+#	include "flash.ps.xbox 360.h"
+#elif _WIN64
+#	include "flash.vs.x64.h"
+#	include "flash.ps.x64.h"
+#elif _WIN32
+#	include "flash.vs.win32.h"
+#	include "flash.ps.win32.h"
+#endif
+
 
 renderer::renderer(video &_video)
 :

@@ -7,7 +7,7 @@
 		<CustomBuildRule
 			Name="Vertex Shader Compiler"
 			DisplayName="Vertex Shader"
-			CommandLine="fxc.exe [T] [E] [D] [Fc] [Fh] [Vn] /Fo &quot;$(IntDir)\$(InputFileName).o&quot; &quot;$(InputFileName)&quot;"
+			CommandLine="fxc.exe [T] [E] [D] [I] [Fc] [Fh] [Vn] /Fo &quot;$(IntDir)\$(InputFileName).o&quot; &quot;$(InputFileName)&quot;"
 			Outputs="$(IntDir)\$(InputFileName).o"
 			FileExtensions="*.vs"
 			ExecutionDescription="Compiling vertex shader ..."
@@ -89,7 +89,7 @@
 					DisplayName="Additional include path"
 					Category="Input"
 					Description="Additional include path (/I &lt;include&gt;)"
-					Switch="/I [value]"
+					Switch="/I &quot;[value]&quot;"
 					Delimited="true"
 				/>
 			</Properties>
@@ -97,7 +97,7 @@
 		<CustomBuildRule
 			Name="Pixel Shader Compiler"
 			DisplayName="Pixel Shader"
-			CommandLine="fxc.exe [T] [E] [D] [Fc] [Fh] [Vn] /Fo &quot;$(IntDir)\$(InputFileName).o&quot; &quot;$(InputFileName)&quot;"
+			CommandLine="fxc.exe [T] [E] [D] [I] [Fc] [Fh] [Vn] /Fo &quot;$(IntDir)\$(InputFileName).o&quot; &quot;$(InputFileName)&quot;"
 			Outputs="$(IntDir)\$(InputFileName).o"
 			FileExtensions="*.ps"
 			ExecutionDescription="Compiling pixel shader ..."
@@ -179,7 +179,7 @@
 					DisplayName="Additional include path"
 					Category="Input"
 					Description="Additional include path (/I &lt;include&gt;)"
-					Switch="/I [value]"
+					Switch="/I &quot;[value]&quot;"
 					Delimited="true"
 				/>
 			</Properties>
