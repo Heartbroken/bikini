@@ -8,7 +8,8 @@
 
 #pragma once
 
-struct video : device {
+struct video : device
+{
 
 	/* rendering interface ----------------------------------------------------------------------*/
 
@@ -156,6 +157,13 @@ namespace cf { enum clear_flags {
 	stencil = 1<<2,
 	all = color|depth|stencil,
 };}
+
+
+namespace shader { /*----------------------------------------------------------------------------*/
+
+#include "shader.shh"
+
+} /* namespace shader ---------------------------------------------------------------------------*/
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
 
