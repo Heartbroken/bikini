@@ -36,7 +36,7 @@ static const uint viewport_info_size = 2;
 
 #ifndef __cplusplus
 
-viewport_info viewport : register(c[viewport_info_start]) =
+viewport_info viewport : register(c0/*[viewport_info_start]*/) =
 {
 	0, 0, 800, 600,
 	0, 1
