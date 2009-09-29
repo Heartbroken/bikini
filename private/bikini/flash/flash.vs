@@ -6,7 +6,7 @@
 
 *//*---------------------------------------------------------------------------------------------*/
 
-#include <bikini/system/common.shh>
+#include <bikini/system/shader.shh>
 
 float4x4 xform : register(c2/*[bikini_last_register]*/) =
 {

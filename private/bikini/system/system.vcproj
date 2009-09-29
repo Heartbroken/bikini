@@ -99,11 +99,12 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Debug|x64"
+			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)..\..\library\"
 			IntermediateDirectory="$(SolutionDir)..\..\_tmp\$(ConfigurationName)\$(PlatformName)\$(ProjectName)\"
 			ConfigurationType="4"
 			CharacterSet="1"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -125,17 +126,13 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				TargetEnvironment="3"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="0"
+				Optimization="2"
 				AdditionalIncludeDirectories="..\..\..\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
-				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
-				DisableLanguageExtensions="false"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				RuntimeLibrary="0"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="header.hpp"
@@ -173,12 +170,11 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release|Win32"
+			Name="Debug|x64"
 			OutputDirectory="$(SolutionDir)..\..\library\"
 			IntermediateDirectory="$(SolutionDir)..\..\_tmp\$(ConfigurationName)\$(PlatformName)\$(ProjectName)\"
 			ConfigurationType="4"
 			CharacterSet="1"
-			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -200,13 +196,17 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
+				TargetEnvironment="3"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
+				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
-				RuntimeLibrary="0"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				DisableLanguageExtensions="false"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="header.hpp"
@@ -490,7 +490,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|x64"
+					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -498,7 +498,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Debug|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -583,10 +583,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\bikini\system\common.shh"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\include\bikini\system\device.hpp"
 				>
 			</File>
@@ -615,13 +611,25 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\bikini\system\video.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\include\bikini\system\window.hpp"
 				>
 			</File>
+			<Filter
+				Name="video"
+				>
+				<File
+					RelativePath="..\..\..\include\bikini\system\video.hpp"
+					>
+				</File>
+				<Filter
+					Name="shaders"
+					>
+					<File
+						RelativePath="..\..\..\include\bikini\system\shader.shh"
+						>
+					</File>
+				</Filter>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
