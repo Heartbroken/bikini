@@ -6,6 +6,8 @@
 
 *//*---------------------------------------------------------------------------------------------*/
 
+// declaration
+
 struct viewport_info
 {
 	float4 area;	// x - left, y - top, z - width, w - height
@@ -14,10 +16,12 @@ struct viewport_info
 
 #ifndef __cplusplus
 
-viewport_info viewport : register(c0) =
+// definition
+
+viewport_info viewport : register(c10) =
 {
-	0, 0, 800, 600,
-	0, 1
+	0.0, 0.0, 800.0, 600.0,
+	0.0, 1.0
 };
 
 #endif // __cplusplus
