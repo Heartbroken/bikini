@@ -38,8 +38,6 @@ struct rendering_D3D9 : video::rendering
 	void finalize();
 	bool execute(const command &_command);
 
-	inline IDirect3DDevice9& get_device() { return *m_D3DDevice9_p; }
-
 private:
 	static IDirect3D9 *sm_D3D9_p;
 	IDirect3DDevice9 *m_D3DDevice9_p;
@@ -437,7 +435,7 @@ bool rendering_D3D9::execute(const create_schain &_command)
 	l_D3DPP.SwapEffect = D3DSWAPEFFECT_DISCARD;
 	l_D3DPP.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 
-	if (FAILED(get_device().CreateAdditionalSwapChain(&l_D3DPP, &l_schain.D3DSChain9_p))) return false;
+	if (FAILED(m_D3DDevice9_p->CreateAdditionalSwapChain(&l_D3DPP, &l_schain.D3DSChain9_p))) return false;
 
 	m_create_resource(l_schain);
 
@@ -465,7 +463,7 @@ bool rendering_D3D9::execute(const create_vformat &_command)
 	vformat l_vformat;
 	l_vformat.ID = _command.ID;
 
-	if (FAILED(get_device().CreateVertexDeclaration((CONST D3DVERTEXELEMENT9*)_command.data, &l_vformat.D3DVDecl9_p))) return false;
+	if (FAILED(m_D3DDevice9_p->CreateVertexDeclaration((CONST D3DVERTEXELEMENT9*)_command.data, &l_vformat.D3DVDecl9_p))) return false;
 
 	m_create_resource(l_vformat);
 
@@ -478,7 +476,7 @@ bool rendering_D3D9::execute(const create_vbuffer &_command)
 	l_vbuffer.size = _command.size;
 	l_vbuffer.used = 0;
 
-	if (FAILED(get_device().CreateVertexBuffer((UINT)_command.size, D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &l_vbuffer.D3DVBuffer9_p, 0))) return false;
+	if (FAILED(m_D3DDevice9_p->CreateVertexBuffer((UINT)_command.size, D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &l_vbuffer.D3DVBuffer9_p, 0))) return false;
 
 	m_create_resource(l_vbuffer);
 
@@ -522,7 +520,7 @@ bool rendering_D3D9::execute(const create_vshader &_command)
 	vshader l_vshader;
 	l_vshader.ID = _command.ID;
 
-	if (FAILED(get_device().CreateVertexShader((CONST DWORD*)_command.data, &l_vshader.D3DVShader9_p))) return false;
+	if (FAILED(m_D3DDevice9_p->CreateVertexShader((CONST DWORD*)_command.data, &l_vshader.D3DVShader9_p))) return false;
 
 	m_create_resource(l_vshader);
 
@@ -533,7 +531,7 @@ bool rendering_D3D9::execute(const create_pshader &_command)
 	pshader l_pshader;
 	l_pshader.ID = _command.ID;
 
-	if (FAILED(get_device().CreatePixelShader((CONST DWORD*)_command.data, &l_pshader.D3DPShader9_p))) return false;
+	if (FAILED(m_D3DDevice9_p->CreatePixelShader((CONST DWORD*)_command.data, &l_pshader.D3DPShader9_p))) return false;
 
 	m_create_resource(l_pshader);
 
