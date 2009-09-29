@@ -1,0 +1,23 @@
+/*---------------------------------------------------------------------------------------------*//*
+
+	Binary Kinematics 3 - C++ Game Programming Library
+	Copyright (C) 2008-2009 Viktor Reutskyy
+	viktor.reutskyy@gmail.com
+
+*//*---------------------------------------------------------------------------------------------*/
+
+struct viewport_info
+{
+	float4 area;	// x - left, y - top, z - width, w - height
+	float2 depth;	// x - Z min, y - Z max
+};
+
+#ifndef __cplusplus
+
+viewport_info viewport : register(c0) =
+{
+	0, 0, 800, 600,
+	0, 1
+};
+
+#endif // __cplusplus
