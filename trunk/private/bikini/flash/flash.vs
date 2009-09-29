@@ -8,7 +8,7 @@
 
 #include <bikini/system/common.shh>
 
-float4x4 xform : register(c[bikini_info_end]) =
+float4x4 xform : register(c[bikini_last_register]) =
 {
 	1, 0, 0, 0,
 	0, 1, 0, 0,
@@ -30,10 +30,10 @@ struct output
 output main(input _in)
 {
 	output l_out = (output)0;
-//	float4 l_pos = mul(xform, float4(_in.p / 20, 0, 1));
-	float4 l_pos = float4(_in.p / 20, 0, 1);
-	l_pos.xy = (l_pos.xy - float2(400, 300)) / float2(800, 600);
-//	l_pos.xy = (l_pos.xy - viewport.area.zw / 2) / viewport.area.zw;
+//	float4 l_pos = float4(_in.p / 20, 0, 1);
+	float4 l_pos = mul(xform, float4(_in.p / 20, 0, 1));
+//	l_pos.xy = (l_pos.xy - float2(400, 300)) / float2(800, 600);
+	l_pos.xy = (l_pos.xy - viewport.area.zw / 2) / viewport.area.zw;
 	l_out.hpos = l_pos;
 	l_out.c = float4(1, 1, 1, 1);
 	return l_out;
