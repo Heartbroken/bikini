@@ -32,20 +32,16 @@ static const uint viewport_info_start = bikini_last_register;
 static const uint viewport_info_size = 2;
 
 #undef bikini_last_register
-#define bikini_last_register	(viewport_info_start + viewport_info_size)
+#define bikini_last_register (viewport_info_start + viewport_info_size)
 
 #ifndef __cplusplus
 
 viewport_info viewport : register(c0/*[viewport_info_start]*/) =
 {
-	0, 0, 800, 600,
-	0, 1
+	0, 0, 800.0, 600.0,
+	0, 1.0
 };
 
 #endif // __cplusplus
-
-/* ----------------------------------------------------------------------------------------------*/
-
-//static const uint bikini_info_end = viewport_info_end;
 
 /* ----------------------------------------------------------------------------------------------*/
