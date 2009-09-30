@@ -73,6 +73,19 @@ struct task0 : bk::application::task
 
 void main()
 {
+//	std::ofstream l_tmp("tmp.txt");
+//
+//	for (int i = 0; i < 255; ++i)
+//	{
+//		l_tmp <<
+//"#elif next_register_index ==		" << i << "\n" <<
+//"#	undef next_register_index\n" <<
+//"#	define next_register_index		" << i + 1 << "\n" <<
+//"#	define next_register		   c" << i + 1 << "\n\n";
+//	}
+//
+//	l_tmp.close();
+
 	bk::application l_app;
 	task0::info l_task0_info;
 	l_app.spawn(l_task0_info);

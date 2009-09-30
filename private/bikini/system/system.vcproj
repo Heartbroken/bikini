@@ -625,6 +625,14 @@
 					Name="shaders"
 					>
 					<File
+						RelativePath="..\..\..\include\bikini\system\increment_register.shh"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\include\bikini\system\next_register.shh"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\include\bikini\system\shader.shh"
 						>
 					</File>

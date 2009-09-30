@@ -6,42 +6,31 @@
 
 *//*---------------------------------------------------------------------------------------------*/
 
-#define bikini_last_register 0;
-
-/* types ----------------------------------------------------------------------------------------*/
-
-#ifndef __cplusplus
-
-typedef float real;
-typedef float1 real1;
-typedef float2 real2;
-typedef float3 real3;
-typedef float4 real4;
-
-#endif // __cplusplus
+#define skip_registers 20
+#include "next_register.shh"
 
 /* viewport -------------------------------------------------------------------------------------*/
 
 struct viewport_info
 {
-	real4 area;		// x - left, y - top, z - width, w - height
-	real2 depth;	// x - Z min, y - Z max
+	float4 area;	// x - left, y - top, z - width, w - height
+	float2 depth;	// x - Z min, y - Z max
 };
 
-static const uint viewport_info_start = bikini_last_register;
+static const uint viewport_info_start = next_register_index;
 static const uint viewport_info_size = 2;
-
-#undef bikini_last_register
-#define bikini_last_register (viewport_info_start + viewport_info_size)
 
 #ifndef __cplusplus
 
-viewport_info viewport : register(c0/*[viewport_info_start]*/) =
+viewport_info viewport : register(next_register) =
 {
 	0, 0, 800.0, 600.0,
 	0, 1.0
 };
 
 #endif // __cplusplus
+
+#define skip_registers 1
+#include "next_register.shh"
 
 /* ----------------------------------------------------------------------------------------------*/
