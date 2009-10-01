@@ -8,7 +8,10 @@
 
 #include <bikini/system/shader.shh>
 
-float4x4 xform : register(next_register) =
+#include <bikini/system/next_c_register.shh>
+#define used_c_registers 4
+
+float4x4 xform : register(first_c_register) =
 {
 	1, 0, 0, 0,
 	0, 1, 0, 0,
@@ -33,7 +36,7 @@ output main(input _in)
 //	float4 l_pos = float4(_in.p / 20, 0, 1);
 	float4 l_pos = mul(xform, float4(_in.p / 20, 0, 1));
 //	l_pos.xy = (l_pos.xy - float2(400, 300)) / float2(800, 600);
-	l_pos.xy = (l_pos.xy - viewport.area.zw / 2) / viewport.area.zw;
+	l_pos.xy = (l_pos.xy - current_viewport.area.zw / 2) / current_viewport.area.zw;
 	l_out.hpos = l_pos;
 	l_out.c = float4(1, 1, 1, 1);
 	return l_out;

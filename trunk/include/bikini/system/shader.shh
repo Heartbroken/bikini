@@ -6,31 +6,24 @@
 
 *//*---------------------------------------------------------------------------------------------*/
 
-//#define skip_registers 20
-#include "next_register.shh"
+#define used_c_registers 10
 
 /* viewport -------------------------------------------------------------------------------------*/
 
-struct viewport_info
+#include "next_c_register.shh"
+#define used_c_registers 2
+
+struct viewport
 {
 	float4 area;	// x - left, y - top, z - width, w - height
 	float2 depth;	// x - Z min, y - Z max
 };
 
-static const uint viewport_info_start = next_register_index;
-static const uint viewport_info_size = 2;
-
 #ifndef __cplusplus
-
-viewport_info viewport : register(next_register) =
-{
-	0, 0, 800.0, 600.0,
-	0, 1.0
-};
-
+viewport current_viewport : register(first_c_register);
 #endif // __cplusplus
 
-#define skip_registers 2
-#include "next_register.shh"
+static const uint current_viewport_start = first_c_register_index;
+static const uint current_viewport_size = used_c_registers;
 
 /* ----------------------------------------------------------------------------------------------*/
