@@ -158,14 +158,6 @@ namespace cf { enum clear_flags {
 	all = color|depth|stencil,
 };}
 
-
-namespace shader { /*----------------------------------------------------------------------------*/
-
-typedef matrix_<1, 4, float> float4, float2;
-#include "shader.shh"
-
-} /* namespace shader ---------------------------------------------------------------------------*/
-
 namespace vo { /* video objects -----------------------------------------------------------------*/
 
 /// vbufset

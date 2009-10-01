@@ -23,6 +23,7 @@ namespace bk { /*---------------------------------------------------------------
 #include "system/ticker.hpp"
 #include "system/application.hpp"
 #include "system/device.hpp"
+#include "system/shader.hpp"
 #include "system/video.hpp"
 #include "system/audio.hpp"
 #include "system/input.hpp"
