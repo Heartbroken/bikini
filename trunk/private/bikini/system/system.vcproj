@@ -618,6 +618,10 @@
 				Name="video"
 				>
 				<File
+					RelativePath="..\..\..\include\bikini\system\shader.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\include\bikini\system\video.hpp"
 					>
 				</File>

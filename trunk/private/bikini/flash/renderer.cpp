@@ -18,18 +18,8 @@ static const D3DVERTEXELEMENT9 sg_vformat[] =
 	{ 0xff, 0, D3DDECLTYPE_UNUSED, 0, 0, 0 }
 };
 
-#define TO_STRING(_ARG) #_ARG
-
-#if defined _XBOX
-#	define SHADER(_NAME) TO_STRING(_NAME.xbox 360.h)
-#elif defined _WIN64
-#	define SHADER(_NAME) TO_STRING(_NAME.x64.h)
-#elif defined _WIN32
-#	define SHADER(_NAME) TO_STRING(_NAME.win32.h)
-#endif
-
-#include SHADER(flash.vs)
-#include SHADER(flash.ps)
+#include compiled_shader(flash.vs)
+#include compiled_shader(flash.ps)
 
 
 renderer::renderer(video &_video)
