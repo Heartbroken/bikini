@@ -12,23 +12,33 @@ namespace bk { /*---------------------------------------------------------------
 
 namespace flash { /*-----------------------------------------------------------------------------*/
 
-static const D3DVERTEXELEMENT9 sg_vformat[] = 
+namespace flash_vs
+{
+#	include "flash.vs"
+#	include compiled_shader(flash.vs)
+}
+
+namespace flash_ps
+{
+#	include "flash.ps"
+#	include compiled_shader(flash.ps)
+}
+
+namespace flash_vf { static const D3DVERTEXELEMENT9 data[] = 
 {
 	{ 0, 0, D3DDECLTYPE_SHORT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
 	{ 0xff, 0, D3DDECLTYPE_UNUSED, 0, 0, 0 }
-};
+};}
 
-#include compiled_shader(flash.vs)
-#include compiled_shader(flash.ps)
 
 
 renderer::renderer(video &_video)
 :
 	m_video(_video), m_viewport_ID(bad_ID)
 {
-	m_vformat.data = sg_vformat;
-	m_vshader.data = flash_vs;
-	m_pshader.data = flash_ps;
+	m_vformat.data = flash_vf::data;
+	m_vshader.data = flash_vs::data;
+	m_pshader.data = flash_ps::data;
 }
 renderer::~renderer()
 {
