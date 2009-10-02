@@ -6,7 +6,20 @@
 
 *//*---------------------------------------------------------------------------------------------*/
 
-#define used_c_registers 10
+#if defined(__cplusplus) /*----------------------------------------------------------------------*/
+
+typedef matrix_<1, 4, float> float4, float2;
+typedef matrix_<2, 4, float> float4x2, float3x2;
+typedef matrix_<3, 4, float> float4x3, float3x3;
+typedef matrix_<4, 4, float> float4x4;
+
+#endif /* defined(__cplusplus) ------------------------------------------------------------------*/
+
+#ifdef used_c_registers
+#	undef used_c_registers
+#endif
+
+#define used_c_registers 0
 
 /* viewport -------------------------------------------------------------------------------------*/
 
@@ -18,12 +31,12 @@ struct viewport
 	float4 area;	// x - left, y - top, z - width, w - height
 	float2 depth;	// x - Z min, y - Z max
 };
-
-#ifndef __cplusplus
-viewport current_viewport : register(first_c_register);
-#endif // __cplusplus
-
 static const uint current_viewport_start = first_c_register_index;
-static const uint current_viewport_size = used_c_registers;
+
+#if !defined(__cplusplus) /*---------------------------------------------------------------------*/
+
+viewport current_viewport : register(first_c_register);
+
+#endif /* !defined(__cplusplus) -----------------------------------------------------------------*/
 
 /* ----------------------------------------------------------------------------------------------*/
