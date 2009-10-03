@@ -563,15 +563,8 @@ bool rendering_D3D9::execute(const create_states &_command)
 {
 	states l_states;
 	l_states.ID = _command.ID;
-	l_states.D3DSBlock9_p = 0;
 
-	//if (FAILED(m_D3DDevice9_p->CreateStateBlock(D3DSBT_ALL, &l_states.D3DSBlock9_p))) return false;
-
-	if (FAILED(m_D3DDevice9_p->BeginStateBlock()))
-	{
-		l_states.D3DSBlock9_p->Release();
-		return false;
-	}
+	if (FAILED(m_D3DDevice9_p->BeginStateBlock())) return false;
 
 	DWORD* l_data = (DWORD*)_command.data;
 	while (*l_data != DWORD(-1))
