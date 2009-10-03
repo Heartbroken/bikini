@@ -30,6 +30,10 @@ namespace flash_vf { static const D3DVERTEXELEMENT9 data[] =
 	{ 0xff, 0, D3DDECLTYPE_UNUSED, 0, 0, 0 }
 };}
 
+namespace flash_rs { static const DWORD data[] = {
+	D3DRS_CULLMODE, D3DCULL_CW,
+	DWORD(-1), DWORD(-1),
+};}
 
 
 renderer::renderer(video &_video)
@@ -39,6 +43,7 @@ renderer::renderer(video &_video)
 	m_vformat.data = flash_vf::data;
 	m_vshader.data = flash_vs::data;
 	m_pshader.data = flash_ps::data;
+	m_states.data = flash_rs::data;
 }
 renderer::~renderer()
 {
@@ -54,6 +59,7 @@ bool renderer::create()
 	m_vbufset_ID = m_video.spawn(m_vbufset);
 	m_video.get_<vo::vbufset>(m_vbufset_ID).set_vformat(m_vformat_ID);
 	m_video.get_<vo::vbufset>(m_vbufset_ID).set_vbuffer(0, m_vbuffer_ID, 0, 4);
+	m_states_ID = m_video.spawn(m_states);
 
 	return true;
 }
@@ -65,6 +71,7 @@ void renderer::destroy()
 	m_video.kill(m_vshader_ID);
 	m_video.kill(m_pshader_ID);
 	m_video.kill(m_vbufset_ID);
+	m_video.kill(m_states_ID);
 }
 bool renderer::begin_render()
 {

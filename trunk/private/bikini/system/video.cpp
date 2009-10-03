@@ -302,6 +302,39 @@ struct video::object::context
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
 
+// states::info
+
+states::info::info()
+:
+	video::object::info(video::ot::states),
+	data(0)
+{}
+
+// states
+
+states::states(const info &_info, video &_video)
+:
+	video::object(_info, _video)
+{
+	m_resource_ID = obtain_resource_ID();
+}
+states::~states()
+{
+	release_resource_ID(m_resource_ID);
+}
+bool states::update(real _dt)
+{
+	if (!resource_valid(m_resource_ID))
+	{
+		video::rendering::create_states l_create_states;
+		l_create_states.ID = m_resource_ID;
+		l_create_states.data = get_info().data;
+		add_command(l_create_states);
+	}
+
+	return true;
+}
+
 // vbufset::info
 
 vbufset::info::info()

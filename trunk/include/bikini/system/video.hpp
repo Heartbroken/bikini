@@ -25,6 +25,7 @@ struct video : device
 		struct create_vshader { uint ID; pointer data; };
 		struct create_pshader { uint ID; pointer data; };
 		struct create_vbufset { uint ID, vformat_ID, vbuffer_IDs[8], offsets[8], strides[8]; };
+		struct create_states { uint ID; pointer data; };
 		struct destroy_resource { uint ID; };
 		struct begin_scene {};
 		struct clear_viewport { uint target_ID, viewport_ID; struct { uint f; color c; real z; uint s; } clear; };
@@ -34,7 +35,7 @@ struct video : device
 
 		typedef make_typelist_<
 			create_schain, create_viewport, create_vformat, create_vbuffer, write_vbuffer,
-			create_vshader, create_pshader, create_vbufset,
+			create_vshader, create_pshader, create_vbufset, create_states,
 			destroy_resource,
 			begin_scene, clear_viewport, draw_primitive, end_scene,
 			present_schain
@@ -118,7 +119,7 @@ struct video : device
 	};
 
 	struct ot { enum object_type {
-		window, viewport, drawcall, vformat, vbuffer, memreader, vshader, pshader, vbufset
+		window, viewport, drawcall, vformat, vbuffer, memreader, vshader, pshader, vbufset, states
 	};};
 
 	/* video ------------------------------------------------------------------------------------*/
@@ -159,6 +160,28 @@ namespace cf { enum clear_flags {
 };}
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
+
+/// states
+struct states : video::object
+{
+	struct info : video::object::info
+	{
+		typedef states object;
+		pointer data;
+		info();
+	};
+
+	inline const info& get_info() const { return get_info_<info>(); }
+	inline uint resource_ID() const { return m_resource_ID; }
+
+	states(const info &_info, video &_video);
+	~states();
+
+	bool update(real _dt);
+
+private:
+	uint m_resource_ID;
+};
 
 /// vbufset
 struct vbufset : video::object

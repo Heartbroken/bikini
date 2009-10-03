@@ -18,9 +18,3 @@
 #elif defined _WIN32
 #	define compiled_shader(_NAME) make_a_string(_NAME.win32.h)
 #endif
-
-namespace shader { /*----------------------------------------------------------------------------*/
-
-#include "shader.shh"
-
-} /* namespace shader ---------------------------------------------------------------------------*/
