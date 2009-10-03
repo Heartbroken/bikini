@@ -51,6 +51,7 @@ private:
 	bool execute(const create_vshader &_command);
 	bool execute(const create_pshader &_command);
 	bool execute(const create_vbufset &_command);
+	bool execute(const create_states &_command);
 	bool execute(const destroy_resource &_command);
 	bool execute(const begin_scene &_command);
 	bool execute(const clear_viewport &_command);
@@ -67,16 +68,16 @@ private:
 	struct vshader : _resource { IDirect3DVertexShader9 *D3DVShader9_p; };
 	struct pshader : _resource { IDirect3DPixelShader9 *D3DPShader9_p; };
 	struct vbufset : _resource { uint vformat_ID, vbuffer_IDs[8], offsets[8], strides[8]; };
+	struct states : _resource { IDirect3DStateBlock9 *D3DSBlock9_p; };
 	struct ibuffer : _resource {};
 	struct texture : _resource {};
 	struct consts : _resource {};
-	struct states : _resource {};
 	struct rtarget : _resource {};
 	struct material : _resource {};
 	struct primitive : _resource {};
 
 	typedef make_typelist_<
-		schain, viewport, vformat, vbuffer, vshader, pshader, vbufset
+		schain, viewport, vformat, vbuffer, vshader, pshader, vbufset, states
 	>::type resource_types;
 
 	typedef variant_<resource_types, false> resource;
@@ -147,7 +148,7 @@ bool rendering_D3D9::initialize()
 		return false;
 	}
 
-	m_D3DDevice9_p->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
+	//m_D3DDevice9_p->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
 	
 	return true;
 }
@@ -227,6 +228,12 @@ void rendering_D3D9::m_destroy_resource(uint _ID)
 				}
 				case resource_types::type_<vbufset>::index :
 				{
+					break;
+				}
+				case resource_types::type_<states>::index :
+				{
+					states &l_states = l_resource.get_<states>();
+					l_states.D3DSBlock9_p->Release();
 					break;
 				}
 			}
@@ -407,6 +414,7 @@ bool rendering_D3D9::execute(const command &_command)
 		case command_types::type_<create_vshader>::index : return execute(_command.get_<create_vshader>());
 		case command_types::type_<create_pshader>::index : return execute(_command.get_<create_pshader>());
 		case command_types::type_<create_vbufset>::index : return execute(_command.get_<create_vbufset>());
+		case command_types::type_<create_states>::index : return execute(_command.get_<create_states>());
 		case command_types::type_<destroy_resource>::index : return execute(_command.get_<destroy_resource>());
 		case command_types::type_<begin_scene>::index : return execute(_command.get_<begin_scene>());
 		case command_types::type_<clear_viewport>::index : return execute(_command.get_<clear_viewport>());
@@ -548,6 +556,41 @@ bool rendering_D3D9::execute(const create_vbufset &_command)
 	memcpy(l_vbufset.strides, _command.strides, sizeof(l_vbufset.strides));
 
 	m_create_resource(l_vbufset);
+
+	return true;
+}
+bool rendering_D3D9::execute(const create_states &_command)
+{
+	states l_states;
+	l_states.ID = _command.ID;
+	l_states.D3DSBlock9_p = 0;
+
+	//if (FAILED(m_D3DDevice9_p->CreateStateBlock(D3DSBT_ALL, &l_states.D3DSBlock9_p))) return false;
+
+	if (FAILED(m_D3DDevice9_p->BeginStateBlock()))
+	{
+		l_states.D3DSBlock9_p->Release();
+		return false;
+	}
+
+	DWORD* l_data = (DWORD*)_command.data;
+	while (*l_data != DWORD(-1))
+	{
+		D3DRENDERSTATETYPE l_state = (D3DRENDERSTATETYPE)*l_data;
+		DWORD l_value = *(l_data + 1);
+
+		m_D3DDevice9_p->SetRenderState(l_state, l_value);
+
+		l_data += 2;
+	}
+
+	if (FAILED(m_D3DDevice9_p->EndStateBlock(&l_states.D3DSBlock9_p)))
+	{
+		l_states.D3DSBlock9_p->Release();
+		return false;
+	}
+
+	m_create_resource(l_states);
 
 	return true;
 }

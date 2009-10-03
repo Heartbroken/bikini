@@ -37,4 +37,6 @@ private:
 	uint m_pshader_ID;
 	vo::vbufset::info m_vbufset;
 	uint m_vbufset_ID;
+	vo::states::info m_states;
+	uint m_states_ID;
 };
