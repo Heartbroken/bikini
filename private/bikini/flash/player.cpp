@@ -72,6 +72,7 @@ struct player::_gameswf : gameswf::render_handler
 	static renderer *renderer_p;
 	matrix m_matrix;
 	cxform m_cxform;
+	rgba m_color;
 
 	// overrides
 
@@ -127,7 +128,17 @@ struct player::_gameswf : gameswf::render_handler
 	// be Sint16[vertex_count*2]
 	void draw_mesh_strip(pointer _coords, s32 _vertex_count)
 	{
-		m_renderer.draw_tristrip((short2*)_coords, (uint)_vertex_count);
+		xform l_xform
+		(
+			float3(m_matrix.m_[0][0], m_matrix.m_[0][1], m_matrix.m_[0][2]),
+			float3(m_matrix.m_[1][0], m_matrix.m_[1][1], m_matrix.m_[1][2])
+		);
+		color l_color
+		(
+			m_color.m_r, m_color.m_g, m_color.m_b, m_color.m_a
+		);
+
+		m_renderer.draw_tristrip(l_xform, l_color, (short2*)_coords, (uint)_vertex_count);
 	}
 	// As above, but coords is in triangle list order.
 	void draw_triangle_list(pointer _coords, s32 _vertex_count)
@@ -150,6 +161,7 @@ struct player::_gameswf : gameswf::render_handler
 	}
 	void fill_style_color(s32 _fill_side, const rgba &_color)
 	{
+		m_color = _color;
 	}
 	void fill_style_bitmap(s32 _fill_side, bitmap_info *_bi_p, const matrix &_m, bitmap_wrap_mode _wm)
 	{

@@ -30,8 +30,9 @@ namespace flash_vf { static const D3DVERTEXELEMENT9 data[] =
 	{ 0xff, 0, D3DDECLTYPE_UNUSED, 0, 0, 0 }
 };}
 
-namespace flash_rs { static const DWORD data[] = {
-	D3DRS_CULLMODE, D3DCULL_CW,
+namespace flash_rs { static const DWORD data[] =
+{
+	D3DRS_CULLMODE, D3DCULL_CCW,
 	DWORD(-1), DWORD(-1),
 };}
 
@@ -87,18 +88,35 @@ bool renderer::begin_render()
 
 	return true;
 }
-void renderer::draw_tristrip(const short2* _points, uint _count)
+void renderer::draw_tristrip(const xform &_xform, const color &_color, const short2* _points, uint _count)
 {
 	if (m_video.exists(m_viewport_ID))
 	{
 		vo::viewport &l_viewport = m_video.get_<vo::viewport>(m_viewport_ID);
 		vo::drawcall &l_drawcall = l_viewport.add_drawcall();
+		l_drawcall.set_states(m_states_ID);
 		l_drawcall.set_vbufset(m_vbufset_ID);
 		l_drawcall.set_shaders(m_vshader_ID, m_pshader_ID);
 		l_drawcall.set_size(_count - 2);
 
+		flash_vs::viewport_data l_viewport_consts;
+		l_viewport_consts.area = real4((real)0, (real)0, (real)550, (real)400);
+		l_drawcall.write_consts(1, flash_vs::viewport_offset, l_viewport_consts);
+
+		flash_vs::shape_data l_shape_consts;
+		l_shape_consts.xform = r2x4
+		(
+			real4(_xform[0][0], _xform[0][1], _xform[0][2], 0),
+			real4(_xform[1][0], _xform[1][1], _xform[1][2], 0)
+		);
+		l_shape_consts.color = _color;
+		l_drawcall.write_consts(1, flash_vs::shape_offset, l_shape_consts);
+
 		vo::memreader &l_memreader = m_video.get_<vo::memreader>(m_memreader_ID);
-		l_memreader.add_data(_points, _count * sizeof(short2));
+
+		l_drawcall.set_start(l_memreader.size() / sizeof(short2));
+
+		l_memreader.write(_points, _count * sizeof(short2));
 	}
 }
 void renderer::end_render()

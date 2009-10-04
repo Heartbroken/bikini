@@ -14,7 +14,7 @@ template<typename _Renderer, typename _Interface> struct _player_renderer_proxy_
 {
 	inline _player_renderer_proxy_(_Renderer &_renderer) : m_renderer(_renderer) {}
 	bool begin_render() { return m_renderer.begin_render(); }
-	void draw_tristrip(const short2* _points, uint _count) { m_renderer.draw_tristrip(_points, _count); }
+	void draw_tristrip(const xform &_xform, const color &_color, const short2* _points, uint _count) { m_renderer.draw_tristrip(_xform, _color, _points, _count); }
 	void end_render() { m_renderer.end_render(); }
 
 private:
