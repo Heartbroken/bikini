@@ -99,11 +99,11 @@ void renderer::draw_tristrip(const xform &_xform, const color &_color, const sho
 		l_drawcall.set_shaders(m_vshader_ID, m_pshader_ID);
 		l_drawcall.set_size(_count - 2);
 
-		flash_vs::viewport_data l_viewport_consts;
+		flash_vs::viewport_consts l_viewport_consts;
 		l_viewport_consts.area = real4((real)0, (real)0, (real)550, (real)400);
 		l_drawcall.write_consts(1, flash_vs::viewport_offset, l_viewport_consts);
 
-		flash_vs::shape_data l_shape_consts;
+		flash_vs::shape_consts l_shape_consts;
 		l_shape_consts.xform = r2x4
 		(
 			real4(_xform[0][0], _xform[0][1], _xform[0][2], 0),
