@@ -49,36 +49,27 @@ bool video::rendering::add_command(const command &_command)
 	m_has_command.set();
 	return true;
 }
-bool video::rendering::add_data(pointer _data, uint _size, bool _wait)
+bool video::rendering::add_data(pointer _data, uint _size)
 {
-	if (_size > m_dbuffer.size()) return false;
-	if (!_wait && _size > m_dbuffer.free_space()) return false;
+	if (_size > m_dbuffer.free_space())
+	{
+		std::cerr << "ERROR: Renderer data buffer has no free space.\n";
+		return false;
+	}
 
 	m_dbuffer.write((byte*)_data, _size);
 
-	//byte* l_data = (byte*)_data;
-	//for (uint i = 0; i < _size; ++i)
-	//{
-	//	while (!m_dbuffer.push(l_data[i])) sleep(0);
-	//}
-
 	return true;
 }
-void video::rendering::get_data(handle _data, uint _size)
+bool video::rendering::get_data(handle _data, uint _size)
 {
-	m_dbuffer.read((byte*)_data, _size);
-	//byte* l_data = (byte*)_data;
-	//for (uint i = 0; i < _size; ++i)
-	//{
-	//	if (m_dbuffer.empty())
-	//	{
-	//		std::cerr << "ERROR: Renderer data buffer has no data.\n";
-	//		break;
-	//	}
+	if (_size > m_dbuffer.used_space())
+	{
+		std::cerr << "ERROR: Renderer data buffer has no data.\n";
+		return false;
+	}
 
-	//	l_data[i] = m_dbuffer.front();
-	//	m_dbuffer.pop();
-	//}
+	return m_dbuffer.read((byte*)_data, _size);
 }
 void video::rendering::throw_data(uint _size)
 {

@@ -73,7 +73,7 @@ struct video : device
 	protected:
 		void set_valid(uint _ID);
 		void set_invalid(uint _ID);
-		void get_data(handle _data, uint _size);
+		bool get_data(handle _data, uint _size);
 		void throw_data(uint _size);
 
 	private:
@@ -88,7 +88,7 @@ struct video : device
 		thread::flag m_has_command;
 		bool add_command(const command &_command);
 		data_ring m_dbuffer;
-		bool add_data(pointer _data, uint _size, bool _wait = true);
+		bool add_data(pointer _data, uint _size);
 		issue_ring m_ibuffer;
 		bool add_issue(const issue &_issue);
 		issue get_issue();
