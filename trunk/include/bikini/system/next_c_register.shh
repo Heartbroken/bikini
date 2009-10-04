@@ -6,7 +6,7 @@
 
 *//*---------------------------------------------------------------------------------------------*/
 
-#ifndef first_c_register_index
+#ifndef next_c_register_index
 #	include "increment_c_register.shh"
 #endif
 

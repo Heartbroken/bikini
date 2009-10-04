@@ -45,23 +45,22 @@ void video::rendering::destroy()
 }
 bool video::rendering::add_command(const command &_command)
 {
-	if (m_cbuffer.push(_command))
-	{
-		m_has_command.set();
-		return true;
-	}
-	return false;
+	while (!m_cbuffer.push(_command)) sleep(0.001f);
+	m_has_command.set();
+	return true;
 }
 bool video::rendering::add_data(pointer _data, uint _size, bool _wait)
 {
 	if (_size > m_dbuffer.size()) return false;
 	if (!_wait && _size > m_dbuffer.free_space()) return false;
 
-	byte* l_data = (byte*)_data;
-	for (uint i = 0; i < _size; ++i)
-	{
-		while (!m_dbuffer.push(l_data[i])) sleep(0);
-	}
+	m_dbuffer.write((byte*)_data, _size);
+
+	//byte* l_data = (byte*)_data;
+	//for (uint i = 0; i < _size; ++i)
+	//{
+	//	while (!m_dbuffer.push(l_data[i])) sleep(0);
+	//}
 
 	return true;
 }

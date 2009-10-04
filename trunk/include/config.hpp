@@ -10,16 +10,19 @@
 
 // Configuration and platform
 
-#ifdef _DEBUG
+#ifdef _PROFILE
+#	define _CONFIGURATION_ "profile"
+#elif _DEBUG
 #	define _CONFIGURATION_ "debug"
-#elif NDEBUG
+#else
 #	define _CONFIGURATION_ "release"
 #endif
+
 #ifdef _XBOX
 #	define _PLATFORM_ "xbox 360"
 #elif _WIN64
 #	define _PLATFORM_ "x64"
-#elif _WIN32
+#else
 #	define _PLATFORM_ "win32"
 #endif
 

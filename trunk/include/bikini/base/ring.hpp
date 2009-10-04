@@ -21,9 +21,10 @@ template<typename _Type> struct ring_
 	inline bool empty() const;
 	inline bool full() const;
 	inline bool push(const type &_v);
+	inline bool write(const type* _data, uint _size);
 	inline type& front();
 	inline const type& front() const;
-	inline bool pop();
+	inline void pop();
 
 private:
 	byte* m_buffer;
