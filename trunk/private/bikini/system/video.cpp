@@ -66,18 +66,19 @@ bool video::rendering::add_data(pointer _data, uint _size, bool _wait)
 }
 void video::rendering::get_data(handle _data, uint _size)
 {
-	byte* l_data = (byte*)_data;
-	for (uint i = 0; i < _size; ++i)
-	{
-		if (m_dbuffer.empty())
-		{
-			std::cerr << "ERROR: Renderer data buffer has no data.\n";
-			break;
-		}
+	m_dbuffer.read((byte*)_data, _size);
+	//byte* l_data = (byte*)_data;
+	//for (uint i = 0; i < _size; ++i)
+	//{
+	//	if (m_dbuffer.empty())
+	//	{
+	//		std::cerr << "ERROR: Renderer data buffer has no data.\n";
+	//		break;
+	//	}
 
-		l_data[i] = m_dbuffer.front();
-		m_dbuffer.pop();
-	}
+	//	l_data[i] = m_dbuffer.front();
+	//	m_dbuffer.pop();
+	//}
 }
 void video::rendering::throw_data(uint _size)
 {

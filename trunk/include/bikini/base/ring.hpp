@@ -25,9 +25,10 @@ template<typename _Type> struct ring_
 	inline type& front();
 	inline const type& front() const;
 	inline void pop();
+	inline bool read(type* _data, uint _size);
 
 private:
-	byte* m_buffer;
+	type* m_buffer;
 	const uint m_size;
 	uint m_write, m_read;
 };
