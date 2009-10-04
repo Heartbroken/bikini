@@ -267,6 +267,10 @@ typedef matrix_<1, 3, real> r1x3, real3;
 typedef matrix_<1, 4, real> r1x4, real4;
 /// 2x2 matrix of real
 typedef matrix_<2, 2, real> r2x2;
+/// 2x3 matrix of real
+typedef matrix_<2, 3, real> r2x3;
+/// 2x4 matrix of real
+typedef matrix_<2, 4, real> r2x4;
 /// 3x2 matrix of real
 typedef matrix_<3, 2, real> r3x2;
 /// 3x3 matrix of real

@@ -26,16 +26,18 @@ struct video : device
 		struct create_pshader { uint ID; pointer data; };
 		struct create_vbufset { uint ID, vformat_ID, vbuffer_IDs[8], offsets[8], strides[8]; };
 		struct create_states { uint ID; pointer data; };
+		struct create_consts { uint ID; };
+		struct write_consts { uint ID, size; bool reset; };
 		struct destroy_resource { uint ID; };
 		struct begin_scene {};
 		struct clear_viewport { uint target_ID, viewport_ID; struct { uint f; color c; real z; uint s; } clear; };
-		struct draw_primitive { uint target_ID, viewport_ID, vbufset_ID, vshader_ID, pshader_ID, type, start, size; };
+		struct draw_primitive { uint target_ID, viewport_ID, vbufset_ID, vshader_ID, pshader_ID, states_ID, consts_ID, type, start, size; };
 		struct end_scene {};
 		struct present_schain { uint ID; };
 
 		typedef make_typelist_<
 			create_schain, create_viewport, create_vformat, create_vbuffer, write_vbuffer,
-			create_vshader, create_pshader, create_vbufset, create_states,
+			create_vshader, create_pshader, create_vbufset, create_states, create_consts, write_consts,
 			destroy_resource,
 			begin_scene, clear_viewport, draw_primitive, end_scene,
 			present_schain
@@ -118,8 +120,9 @@ struct video : device
 		inline bool resource_valid(uint _ID) const { return get_video().resource_valid(_ID); }
 	};
 
-	struct ot { enum object_type {
-		window, viewport, drawcall, vformat, vbuffer, memreader, vshader, pshader, vbufset, states
+	struct ot { enum object_type
+	{
+		window, viewport, drawcall, vformat, vbuffer, memreader, vshader, pshader, vbufset, states, consts
 	};};
 
 	/* video ------------------------------------------------------------------------------------*/
@@ -160,6 +163,31 @@ namespace cf { enum clear_flags {
 };}
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
+
+/// consts
+struct consts : video::object
+{
+	struct info : video::object::info
+	{
+		typedef consts object;
+		info();
+	};
+
+	inline const info& get_info() const { return get_info_<info>(); }
+	inline uint resource_ID() const { return m_resource_ID; }
+
+	consts(const info &_info, video &_video);
+	~consts();
+
+	bool update(real _dt);
+
+	void write(uint _type, uint _offset, pointer _data, uint _size);
+	template<typename _Type> inline void write(uint _type, uint _offset, const _Type &_v) { write(_type, _offset, &_v, sizeof(_v)); }
+
+private:
+	uint m_resource_ID;
+	byte_array m_data;
+};
 
 /// states
 struct states : video::object
@@ -275,7 +303,7 @@ struct memreader : video::object
 	bool update(real _dt);
 
 	void clear();
-	void add_data(pointer _data, uint _size);
+	void write(pointer _data, uint _size);
 
 private:
 	byte_array m_data;
@@ -348,6 +376,9 @@ struct drawcall : video::object
 
 	void set_vbufset(uint _ID);
 	void set_shaders(uint _vshader_ID, uint _pshader_ID);
+	void set_states(uint _ID);
+	void write_consts(uint _type, uint _offset, pointer _data, uint _size);
+	template<typename _Type> inline void write_consts(uint _type, uint _offset, const _Type &_v) { write_consts(_type, _offset, &_v, sizeof(_v)); }
 
 	void add_commands(const context &_context) const;
 
@@ -355,6 +386,8 @@ private:
 	uint m_start, m_size;
 	uint m_vbufset_ID;
 	uint m_vshader_ID, m_pshader_ID;
+	uint m_states_ID;
+	consts::info m_consts; uint m_consts_ID;
 };
 
 /// viewport
@@ -391,7 +424,7 @@ private:
 	uint m_resource_ID;
 	rect m_area; real2 m_depth;
 	color m_color;
-	drawcall::info m_drawcall_info;
+	drawcall::info m_drawcall;
 	uint_array m_drawcalls;
 };
 

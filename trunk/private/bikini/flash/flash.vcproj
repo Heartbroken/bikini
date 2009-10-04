@@ -655,6 +655,10 @@
 							/>
 						</FileConfiguration>
 					</File>
+					<File
+						RelativePath=".\shape.shh"
+						>
+					</File>
 				</Filter>
 			</Filter>
 		</Filter>

@@ -191,13 +191,19 @@ bool video::update(real _dt)
 			case rendering::issue_types::type_<rendering::validate_resource>::index :
 			{
 				rendering::validate_resource &l_validate_resource = l_issue.get_<rendering::validate_resource>();
-				set_resource_valid(l_validate_resource.ID);
+				if (resource_exists(l_validate_resource.ID))
+				{
+					set_resource_valid(l_validate_resource.ID);
+				}
 				break;
 			}
 			case rendering::issue_types::type_<rendering::invalidate_resource>::index :
 			{
 				rendering::invalidate_resource &l_invalidate_resource = l_issue.get_<rendering::invalidate_resource>();
-				set_resource_invalid(l_invalidate_resource.ID);
+				if (resource_exists(l_invalidate_resource.ID))
+				{
+					set_resource_invalid(l_invalidate_resource.ID);
+				}
 				break;
 			}
 		}
@@ -301,6 +307,56 @@ struct video::object::context
 
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
+
+// consts::info
+
+consts::info::info()
+:
+	video::object::info(video::ot::consts)
+{}
+
+// consts
+
+consts::consts(const info &_info, video &_video)
+:
+	video::object(_info, _video)
+{
+	m_resource_ID = obtain_resource_ID();
+}
+consts::~consts()
+{
+	release_resource_ID(m_resource_ID);
+}
+bool consts::update(real _dt)
+{
+	if (!m_data.empty() && !resource_valid(m_resource_ID))
+	{
+		video::rendering::create_consts l_create_consts;
+		l_create_consts.ID = m_resource_ID;
+		add_command(l_create_consts);
+
+		video::rendering::write_consts l_write_consts;
+		l_write_consts.ID = m_resource_ID;
+		add_data(&m_data[0], m_data.size());
+		l_write_consts.size = m_data.size();
+		l_write_consts.reset = true;
+		add_command(l_write_consts);
+	}
+
+	return true;
+}
+void consts::write(uint _type, uint _offset, pointer _data, uint _size)
+{
+	struct _l { static inline void push(byte_array &_a, pointer _data, uint _size)
+	{
+		_a.insert(_a.end(), (byte*)_data, (byte*)_data + _size);
+	}};
+
+	_l::push(m_data, &_type, sizeof(_type));
+	_l::push(m_data, &_offset, sizeof(_offset));
+	_l::push(m_data, &_size, sizeof(_size));
+	_l::push(m_data, _data, _size);
+}
 
 // states::info
 
@@ -505,7 +561,7 @@ void memreader::clear()
 {
 	m_data.resize(0);
 }
-void memreader::add_data(pointer _data, uint _size)
+void memreader::write(pointer _data, uint _size)
 {
 	byte* l_data = (byte*)_data;
 	m_data.insert(m_data.end(), l_data, l_data + _size);
@@ -631,10 +687,11 @@ drawcall::info::info()
 drawcall::drawcall(const info &_info, video &_video)
 :
 	video::object(_info, _video),
-	m_start(0), m_size(0), m_vbufset_ID(bad_ID), m_vshader_ID(bad_ID), m_pshader_ID(bad_ID)
+	m_start(0), m_size(0), m_vbufset_ID(bad_ID), m_vshader_ID(bad_ID), m_pshader_ID(bad_ID), m_states_ID(bad_ID), m_consts_ID(bad_ID)
 {}
 drawcall::~drawcall()
 {
+	if (has_relation(m_consts_ID)) get_video().kill(get_relation(m_consts_ID));
 }
 bool drawcall::update(real _dt)
 {
@@ -684,6 +741,24 @@ void drawcall::add_commands(const context &_context) const
 			l_draw_primitive.pshader_ID = l_pshader.resource_ID();
 		}
 	}
+	if (has_relation(m_states_ID))
+	{
+		uint l_states_ID = get_relation(m_states_ID);
+		if (get_video().exists(l_states_ID) && get_video().get(l_states_ID).type() == video::ot::states)
+		{
+			states &l_states = get_video().get_<states>(l_states_ID);
+			l_draw_primitive.states_ID = l_states.resource_ID();
+		}
+	}
+	if (has_relation(m_consts_ID))
+	{
+		uint l_consts_ID = get_relation(m_consts_ID);
+		if (get_video().exists(l_consts_ID) && get_video().get(l_consts_ID).type() == video::ot::consts)
+		{
+			consts &l_consts = get_video().get_<consts>(l_consts_ID);
+			l_draw_primitive.consts_ID = l_consts.resource_ID();
+		}
+	}
 	l_draw_primitive.type = D3DPT_TRIANGLESTRIP;
 	l_draw_primitive.start = m_start;
 	l_draw_primitive.size = m_size;
@@ -700,6 +775,25 @@ void drawcall::set_shaders(uint _vshader_ID, uint _pshader_ID)
 
 	if (get_video().exists(_pshader_ID)) m_pshader_ID = add_relation(_pshader_ID);
 	else m_pshader_ID = bad_ID;
+}
+void drawcall::set_states(uint _ID)
+{
+	if (has_relation(m_states_ID)) remove_relation(m_states_ID);
+
+	if (get_video().exists(_ID)) m_states_ID = add_relation(_ID);
+	else m_states_ID = bad_ID;
+}
+void drawcall::write_consts(uint _type, uint _offset, pointer _data, uint _size)
+{
+	if (!has_relation(m_consts_ID))
+	{
+		m_consts_ID = add_relation(get_video().spawn(m_consts));
+	}
+
+	uint l_consts_ID = get_relation(m_consts_ID);
+
+	consts &l_consts = get_video().get_<consts>(l_consts_ID);
+	l_consts.write(_type, _offset, _data, _size);
 }
 
 // viewport::info
@@ -722,6 +816,8 @@ viewport::viewport(const info &_info, video &_video)
 }
 viewport::~viewport()
 {
+	clear();
+
 	release_resource_ID(m_resource_ID);
 }
 bool viewport::update(real _dt)
@@ -763,7 +859,7 @@ void viewport::add_commands(const context &_context) const
 }
 drawcall& viewport::add_drawcall()
 {
-	uint l_drawcall_ID = get_video().spawn(m_drawcall_info);
+	uint l_drawcall_ID = get_video().spawn(m_drawcall);
 	m_drawcalls.push_back(add_relation(l_drawcall_ID));
 	return get_video().get_<drawcall>(l_drawcall_ID);
 }
@@ -820,6 +916,8 @@ window::window(const info &_info, video &_video, HWND _window)
 }
 window::~window()
 {
+	clear();
+
 	video::rendering::destroy_resource l_destroy_resource;
 	l_destroy_resource.ID = m_resource_ID;
 	add_command(l_destroy_resource);

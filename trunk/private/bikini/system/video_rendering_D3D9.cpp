@@ -52,6 +52,8 @@ private:
 	bool execute(const create_pshader &_command);
 	bool execute(const create_vbufset &_command);
 	bool execute(const create_states &_command);
+	bool execute(const create_consts &_command);
+	bool execute(const write_consts &_command);
 	bool execute(const destroy_resource &_command);
 	bool execute(const begin_scene &_command);
 	bool execute(const clear_viewport &_command);
@@ -69,15 +71,15 @@ private:
 	struct pshader : _resource { IDirect3DPixelShader9 *D3DPShader9_p; };
 	struct vbufset : _resource { uint vformat_ID, vbuffer_IDs[8], offsets[8], strides[8]; };
 	struct states : _resource { IDirect3DStateBlock9 *D3DSBlock9_p; };
+	struct consts : _resource { byte_array data; };
 	struct ibuffer : _resource {};
 	struct texture : _resource {};
-	struct consts : _resource {};
 	struct rtarget : _resource {};
 	struct material : _resource {};
 	struct primitive : _resource {};
 
 	typedef make_typelist_<
-		schain, viewport, vformat, vbuffer, vshader, pshader, vbufset, states
+		schain, viewport, vformat, vbuffer, vshader, pshader, vbufset, states, consts
 	>::type resource_types;
 
 	typedef variant_<resource_types, false> resource;
@@ -94,6 +96,8 @@ private:
 	bool m_set_vbuffers(uint _ID);
 	bool m_set_vshader(uint _ID);
 	bool m_set_pshader(uint _ID);
+	bool m_set_states(uint _ID);
+	bool m_set_consts(uint _ID);
 };
 
 IDirect3D9 *rendering_D3D9::sm_D3D9_p = 0;
@@ -164,7 +168,7 @@ void rendering_D3D9::finalize()
 		m_resources.pop_back();
 	}
 
-	if (m_D3DDevice9_p->Release() == 0) m_D3DDevice9_p = 0;
+	while (m_D3DDevice9_p->Release() != 0); m_D3DDevice9_p = 0;
 	if (sm_D3D9_p->Release() == 0) sm_D3D9_p = 0;
 }
 void rendering_D3D9::m_create_resource(const resource &_r)
@@ -234,6 +238,10 @@ void rendering_D3D9::m_destroy_resource(uint _ID)
 				{
 					states &l_states = l_resource.get_<states>();
 					l_states.D3DSBlock9_p->Release();
+					break;
+				}
+				case resource_types::type_<consts>::index :
+				{
 					break;
 				}
 			}
@@ -402,6 +410,76 @@ bool rendering_D3D9::m_set_pshader(uint _ID)
 	}
 	return true;
 }
+bool rendering_D3D9::m_set_states(uint _ID)
+{
+	uint_ID l_ID(_ID);
+	if (l_ID.index < m_resources.size())
+	{
+		resource &l_resource = m_resources[l_ID.index];
+		if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _ID)
+		{
+			switch (l_resource.type())
+			{
+				case resource_types::type_<states>::index :
+				{
+					states &l_states = l_resource.get_<states>();
+					if (FAILED(l_states.D3DSBlock9_p->Apply())) return false;
+					break;
+				}
+			}
+			return true;
+		}
+	}
+	return true;
+}
+bool rendering_D3D9::m_set_consts(uint _ID)
+{
+	uint_ID l_ID(_ID);
+	if (l_ID.index < m_resources.size())
+	{
+		resource &l_resource = m_resources[l_ID.index];
+		if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _ID)
+		{
+			switch (l_resource.type())
+			{
+				case resource_types::type_<consts>::index :
+				{
+					consts &l_consts = l_resource.get_<consts>();
+
+					if (!l_consts.data.empty())
+					{
+						byte* l_begin = &l_consts.data[0];
+						sint l_length = l_consts.data.size();
+
+						byte* l_current = &l_consts.data[0];
+
+						while (l_current - l_begin < l_length)
+						{
+							uint l_type = *(uint*)l_current; l_current += sizeof(uint);
+							uint l_offset = *(uint*)l_current; l_current += sizeof(uint);
+							uint l_size = *(uint*)l_current; l_current += sizeof(uint);
+
+							if (l_type & 1)
+							{
+								m_D3DDevice9_p->SetVertexShaderConstantF((UINT)l_offset, (const float*)l_current, (UINT)(l_size / 16));
+							}
+							if (l_type & 2)
+							{
+								m_D3DDevice9_p->SetPixelShaderConstantF((UINT)l_offset, (const float*)l_current, (UINT)(l_size / 16));
+							}
+
+							l_current += l_size;
+						}
+					}
+
+					break;
+				}
+			}
+			return true;
+		}
+	}
+	return true;
+}
 bool rendering_D3D9::execute(const command &_command)
 {
 	switch (_command.type())
@@ -415,6 +493,8 @@ bool rendering_D3D9::execute(const command &_command)
 		case command_types::type_<create_pshader>::index : return execute(_command.get_<create_pshader>());
 		case command_types::type_<create_vbufset>::index : return execute(_command.get_<create_vbufset>());
 		case command_types::type_<create_states>::index : return execute(_command.get_<create_states>());
+		case command_types::type_<create_consts>::index : return execute(_command.get_<create_consts>());
+		case command_types::type_<write_consts>::index : return execute(_command.get_<write_consts>());
 		case command_types::type_<destroy_resource>::index : return execute(_command.get_<destroy_resource>());
 		case command_types::type_<begin_scene>::index : return execute(_command.get_<begin_scene>());
 		case command_types::type_<clear_viewport>::index : return execute(_command.get_<clear_viewport>());
@@ -577,13 +657,44 @@ bool rendering_D3D9::execute(const create_states &_command)
 		l_data += 2;
 	}
 
-	if (FAILED(m_D3DDevice9_p->EndStateBlock(&l_states.D3DSBlock9_p)))
-	{
-		l_states.D3DSBlock9_p->Release();
-		return false;
-	}
+	if (FAILED(m_D3DDevice9_p->EndStateBlock(&l_states.D3DSBlock9_p))) return false;
 
 	m_create_resource(l_states);
+
+	return true;
+}
+bool rendering_D3D9::execute(const create_consts &_command)
+{
+	consts l_consts;
+	l_consts.ID = _command.ID;
+
+	m_create_resource(l_consts);
+
+	return true;
+}
+bool rendering_D3D9::execute(const write_consts &_command)
+{
+	uint_ID l_ID(_command.ID);
+
+	resource &l_resource = m_resources[l_ID.index];
+	if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _command.ID)
+	{
+		if (l_resource.type() == resource_types::type_<consts>::index)
+		{
+			consts &l_consts = l_resource.get_<consts>();
+
+			if (_command.reset) l_consts.data.resize(0);
+
+			uint l_oldsize = l_consts.data.size();
+			l_consts.data.resize(l_oldsize + _command.size);
+
+			get_data(&l_consts.data[l_oldsize], _command.size);
+
+			return true;
+		}
+	}
+
+	throw_data(_command.size);
 
 	return true;
 }
@@ -626,6 +737,8 @@ bool rendering_D3D9::execute(const draw_primitive &_command)
 	if (!m_set_vbuffers(_command.vbufset_ID)) return false;
 	if (!m_set_vshader(_command.vshader_ID)) return false;
 	if (!m_set_pshader(_command.pshader_ID)) return false;
+	if (!m_set_states(_command.states_ID)) return false;
+	if (!m_set_consts(_command.consts_ID)) return false;
 
 	if (FAILED(m_D3DDevice9_p->DrawPrimitive((D3DPRIMITIVETYPE)_command.type, (UINT)_command.start, (UINT)_command.size))) return false;
 

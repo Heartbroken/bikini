@@ -19,7 +19,7 @@ struct renderer
 	void destroy();
 
 	bool begin_render();
-	void draw_tristrip(const short2* _points, uint _count);
+	void draw_tristrip(const xform &_xform, const color &_color, const short2* _points, uint _count);
 	void end_render();
 
 private:

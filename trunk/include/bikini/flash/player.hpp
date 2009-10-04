@@ -9,6 +9,8 @@
 #pragma once
 
 typedef matrix_<1, 2, s16> short2;
+typedef matrix_<1, 3, f32> float3;
+typedef matrix_<2, 3, f32> xform;
 
 ///	flash player
 /**	[TODO]
@@ -36,7 +38,7 @@ private:
 	struct renderer
 	{
 		virtual bool begin_render() = 0;
-		virtual void draw_tristrip(const short2* _points, uint _count) = 0;
+		virtual void draw_tristrip(const xform &_xform, const color &_color, const short2* _points, uint _count) = 0;
 		virtual void end_render() = 0;
 	};
 
