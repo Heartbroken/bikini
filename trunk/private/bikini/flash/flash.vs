@@ -30,7 +30,7 @@ output main(input _in)
 	
 //	float4 l_pos = float4(_in.p / 20, 0, 1);
 //	float4 l_pos = mul(shape.xform, float4(_in.p / 20, 0, 1));
-	float4 l_pos = float4(_in.p.xy / 20, 0, 1);
+	float4 l_pos = float4(_in.p.xy, 0, 1);
 	
 	l_pos.xy = mul(shape.xform, l_pos.xy);
 //	l_pos.xy = mul(l_pos.xy, shape.xform);

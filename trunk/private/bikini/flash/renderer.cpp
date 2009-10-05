@@ -16,6 +16,7 @@ namespace flash_vs
 {
 #	include "flash.vs"
 #	include compiled_shader(flash.vs)
+	static flash_vs::viewport_consts viewport;
 }
 
 namespace flash_ps
@@ -74,7 +75,7 @@ void renderer::destroy()
 	m_video.kill(m_vbufset_ID);
 	m_video.kill(m_states_ID);
 }
-bool renderer::begin_render()
+bool renderer::begin_render(const rect &_viewport)
 {
 	if (m_video.exists(m_viewport_ID))
 	{
@@ -83,6 +84,8 @@ bool renderer::begin_render()
 		l_viewport.set_clear_flags(cf::color);
 		l_viewport.set_clear_color(white);
 		l_viewport.clear();
+
+		flash_vs::viewport.area = real4((real)_viewport.min().x(), (real)_viewport.min().y(), (real)_viewport.size().x(), (real)_viewport.size().y());
 
 		vo::memreader &l_memreader = m_video.get_<vo::memreader>(m_memreader_ID);
 		l_memreader.clear();
@@ -102,9 +105,7 @@ void renderer::draw_tristrip(const xform &_xform, const color &_color, const sho
 		l_drawcall.set_shaders(m_vshader_ID, m_pshader_ID);
 		l_drawcall.set_size(_count - 2);
 
-		flash_vs::viewport_consts l_viewport_consts;
-		l_viewport_consts.area = real4((real)0, (real)0, (real)550, (real)400);
-		l_drawcall.write_consts(1, flash_vs::viewport_offset, l_viewport_consts);
+		l_drawcall.write_consts(1, flash_vs::viewport_offset, flash_vs::viewport);
 
 		flash_vs::shape_consts l_shape_consts;
 		l_shape_consts.xform = r2x4

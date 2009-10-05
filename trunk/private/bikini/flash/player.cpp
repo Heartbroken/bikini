@@ -103,7 +103,8 @@ struct player::_gameswf : gameswf::render_handler
 	// transforms, etc.
 	void begin_display(rgba _background_color, s32 _viewport_x0, s32 _viewport_y0, s32 _viewport_width, s32 _viewport_height, f32 _x0, f32 _x1, f32 _y0, f32 _y1)
 	{
-		m_renderer.begin_render();
+		bk::rect l_viewport((sint)_x0, (sint)_y0, (sint)(_x1 - _x0), (sint)(_y1 - _y0));
+		m_renderer.begin_render(l_viewport);
 	}
 	void end_display()
 	{
