@@ -16,7 +16,8 @@ namespace flash_vs
 {
 #	include "flash.vs"
 #	include compiled_shader(flash.vs)
-	static flash_vs::viewport_consts viewport;
+	static viewport_consts viewport;
+	static shape_consts shape;
 }
 
 namespace flash_ps
@@ -75,14 +76,14 @@ void renderer::destroy()
 	m_video.kill(m_vbufset_ID);
 	m_video.kill(m_states_ID);
 }
-bool renderer::begin_render(const rect &_viewport)
+bool renderer::begin_render(const color &_background, const rect &_viewport)
 {
 	if (m_video.exists(m_viewport_ID))
 	{
 		vo::viewport &l_viewport = m_video.get_<vo::viewport>(m_viewport_ID);
 
 		l_viewport.set_clear_flags(cf::color);
-		l_viewport.set_clear_color(white);
+		l_viewport.set_clear_color(_background);
 		l_viewport.clear();
 
 		flash_vs::viewport.area = real4((real)_viewport.min().x(), (real)_viewport.min().y(), (real)_viewport.size().x(), (real)_viewport.size().y());
@@ -93,7 +94,19 @@ bool renderer::begin_render(const rect &_viewport)
 
 	return true;
 }
-void renderer::draw_tristrip(const xform &_xform, const color &_color, const short2* _points, uint _count)
+void renderer::set_xform(const xform &_xform)
+{
+	flash_vs::shape.xform = r2x4
+	(
+		real4(_xform[0][0], _xform[0][1], _xform[0][2], 0),
+		real4(_xform[1][0], _xform[1][1], _xform[1][2], 0)
+	);
+}
+void renderer::set_color(const color &_color)
+{
+	flash_vs::shape.color = _color;
+}
+void renderer::draw_tristrip(const short2* _points, uint _count)
 {
 	if (m_video.exists(m_viewport_ID))
 	{
@@ -106,15 +119,7 @@ void renderer::draw_tristrip(const xform &_xform, const color &_color, const sho
 		l_drawcall.set_size(_count - 2);
 
 		l_drawcall.write_consts(1, flash_vs::viewport_offset, flash_vs::viewport);
-
-		flash_vs::shape_consts l_shape_consts;
-		l_shape_consts.xform = r2x4
-		(
-			real4(_xform[0][0], _xform[0][1], _xform[0][2], 0),
-			real4(_xform[1][0], _xform[1][1], _xform[1][2], 0)
-		);
-		l_shape_consts.color = _color;
-		l_drawcall.write_consts(1, flash_vs::shape_offset, l_shape_consts);
+		l_drawcall.write_consts(1, flash_vs::shape_offset, flash_vs::shape);
 
 		vo::memreader &l_memreader = m_video.get_<vo::memreader>(m_memreader_ID);
 

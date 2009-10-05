@@ -18,8 +18,10 @@ struct renderer
 	bool create();
 	void destroy();
 
-	bool begin_render(const rect &_viewport);
-	void draw_tristrip(const xform &_xform, const color &_color, const short2* _points, uint _count);
+	bool begin_render(const color &_background, const rect &_viewport);
+	void set_xform(const xform &_xform);
+	void set_color(const color &_color);
+	void draw_tristrip(const short2* _points, uint _count);
 	void end_render();
 
 private:
