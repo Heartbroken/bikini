@@ -799,9 +799,9 @@ viewport::info::info()
 viewport::viewport(const info &_info, video &_video)
 :
 	video::object(_info, _video),
-	m_area(0, 0, uint(-1) >> 1, uint(-1) >> 1), m_depth(real2_y),
-	m_color(random_0.get(1.f), random_0.get(1.f), random_0.get(1.f))
+	m_area(0, 0, uint(-1) >> 1, uint(-1) >> 1), m_depth(real2_y)
 {
+	m_clear.f = 0;
 	m_resource_ID = obtain_resource_ID();
 	update_version();
 }
@@ -837,8 +837,8 @@ void viewport::add_commands(const context &_context) const
 	video::rendering::clear_viewport l_clear_viewport;
 	l_clear_viewport.target_ID = l_context.target_ID;
 	l_clear_viewport.viewport_ID = l_context.viewport_ID;
-	l_clear_viewport.clear.f = cf::color;
-	l_clear_viewport.clear.c = m_color;
+	l_clear_viewport.clear.f = m_clear.f;
+	l_clear_viewport.clear.c = m_clear.c;
 	add_command(l_key, l_clear_viewport);
 
 	l_context.sequence++;

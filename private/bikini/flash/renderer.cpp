@@ -79,11 +79,13 @@ bool renderer::begin_render()
 	if (m_video.exists(m_viewport_ID))
 	{
 		vo::viewport &l_viewport = m_video.get_<vo::viewport>(m_viewport_ID);
+
+		l_viewport.set_clear_flags(cf::color);
+		l_viewport.set_clear_color(white);
 		l_viewport.clear();
 
 		vo::memreader &l_memreader = m_video.get_<vo::memreader>(m_memreader_ID);
 		l_memreader.clear();
-
 	}
 
 	return true;
@@ -93,6 +95,7 @@ void renderer::draw_tristrip(const xform &_xform, const color &_color, const sho
 	if (m_video.exists(m_viewport_ID))
 	{
 		vo::viewport &l_viewport = m_video.get_<vo::viewport>(m_viewport_ID);
+
 		vo::drawcall &l_drawcall = l_viewport.add_drawcall();
 		l_drawcall.set_states(m_states_ID);
 		l_drawcall.set_vbufset(m_vbufset_ID);
