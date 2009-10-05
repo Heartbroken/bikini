@@ -29,6 +29,7 @@ typedef color_<real> color;
 
 const color white(r_1, r_1, r_1);
 const color black(r_0, r_0, r_0);
+const color grey(r_05, r_05, r_05);
 const color red(r_1, r_0, r_0);
 const color green(r_0, r_1, r_0);
 const color blue(r_0, r_0, r_1);

@@ -18,3 +18,5 @@ const sint s_1 = sint(1);
 const real r_0 = real(0);
 /// real 1
 const real r_1 = real(1);
+/// real 0.5
+const real r_05 = real(0.5);

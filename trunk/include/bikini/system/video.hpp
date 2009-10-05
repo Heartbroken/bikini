@@ -406,6 +406,8 @@ struct viewport : video::object
 	inline void set_area(const rect &_r) { m_area = _r; }
 	inline const real2& depth() const { return m_depth; }
 	inline void set_depth(const real2 &_d) { m_depth = _d; }
+	inline void set_clear_flags(uint _f) { m_clear.f = _f; }
+	inline void set_clear_color(const color &_c) { m_clear.c = _c; }
 
 	viewport(const info &_info, video &_video);
 	~viewport();
@@ -423,7 +425,7 @@ struct viewport : video::object
 private:
 	uint m_resource_ID;
 	rect m_area; real2 m_depth;
-	color m_color;
+	struct { uint f; color c; } m_clear;
 	drawcall::info m_drawcall;
 	uint_array m_drawcalls;
 };
