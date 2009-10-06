@@ -65,7 +65,7 @@ typedef task_<void> task;
  */
 struct flag : uncopyble {
 	/// constructor
-	inline flag(bool _reset = false, bool _state = false, const astring &_name = "");
+	inline flag(bool _manual = false, bool _state = false, const astring &_name = "");
 	/// destructor
 	inline ~flag();
 	/// set event signaled state

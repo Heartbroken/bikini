@@ -87,11 +87,18 @@ struct video : device
 		bool m_run;
 		void m_proc();
 		command_ring m_cbuffer;
+		static const uint cbuffer_size = 1000;
 		thread::flag m_has_command;
 		bool add_command(const command &_command);
 		data_ring m_dbuffer;
+		static const uint dbuffer_size = 1024 * 1024 * 5;
+		static const uint dbuffer_MTU = 1024;
+		static const uint dbuffer_timeout = 1000;
+		thread::flag m_can_read_data;
+		thread::flag m_can_write_data;
 		bool add_data(pointer _data, uint _size);
 		issue_ring m_ibuffer;
+		static const uint ibuffer_size = 1000;
 		bool add_issue(const issue &_issue);
 		issue get_issue();
 	};

@@ -19,8 +19,9 @@ video::rendering::rendering(video &_video)
 :
 	m_video(_video),
 	m_task(*this, &rendering::m_proc, "bikini-iii rendering"),
-	m_cbuffer(1000), m_dbuffer(1024 * 1024 * 5), m_ibuffer(1000),
-	m_has_command(false, false)
+	m_cbuffer(cbuffer_size), m_dbuffer(dbuffer_size), m_ibuffer(ibuffer_size),
+	m_has_command(false, false),
+	m_can_read_data(false, false), m_can_write_data(false, true)
 {}
 video::rendering::~rendering()
 {
@@ -51,25 +52,77 @@ bool video::rendering::add_command(const command &_command)
 }
 bool video::rendering::add_data(pointer _data, uint _size)
 {
-	if (_size > m_dbuffer.free_space())
+	byte* l_data = (byte*)_data;
+	uint l_size = _size;
+
+	while (l_size > 0)
 	{
-		std::cerr << "ERROR: Renderer data buffer has no free space.\n";
-		return false;
+		uint l_write = min(l_size, dbuffer_MTU);
+
+		if (m_dbuffer.write(l_data, l_write))
+		{
+			l_data += l_write;
+			l_size -= l_write;
+
+			m_can_read_data.set();
+		}
+		else
+		{
+			if (!m_can_write_data.wait(real(dbuffer_timeout) * real(0.001)))
+			{
+				return false;
+			}
+		}
 	}
 
-	m_dbuffer.write((byte*)_data, _size);
-
 	return true;
+
+////////
+//	if (_size > m_dbuffer.free_space())
+//	{
+//		std::cerr << "ERROR: Renderer data buffer has no free space.\n";
+//		return false;
+//	}
+//
+//	m_dbuffer.write((byte*)_data, _size);
+//
+//	return true;
 }
 bool video::rendering::get_data(handle _data, uint _size)
 {
-	if (_size > m_dbuffer.used_space())
+	byte* l_data = (byte*)_data;
+	uint l_size = _size;
+
+	while (l_size > 0)
 	{
-		std::cerr << "ERROR: Renderer data buffer has no data.\n";
-		return false;
+		uint l_read = min(l_size, dbuffer_MTU);
+
+		if (m_dbuffer.read(l_data, l_read))
+		{
+			l_data += l_read;
+			l_size -= l_read;
+
+			m_can_write_data.set();
+		}
+		else
+		{
+			if (!m_can_read_data.wait(real(dbuffer_timeout) * real(0.001)))
+			{
+				return false;
+			}
+		}
 	}
 
-	return m_dbuffer.read((byte*)_data, _size);
+	return true;
+
+///////
+//	if (_size > m_dbuffer.used_space())
+//	{
+//		std::cerr << "ERROR: Renderer data buffer has no data.\n";
+//		return false;
+//	}
+//
+//	return m_dbuffer.read((byte*)_data, _size);
 }
 void video::rendering::throw_data(uint _size)
 {
@@ -144,12 +197,14 @@ void video::rendering::m_proc()
 		{
 			if (!m_cbuffer.empty())
 			{
+				m_has_command.wait(0);
+
 				execute(m_cbuffer.front());
 				m_cbuffer.pop();
 			}
 			else
 			{
-				m_has_command.wait(0.1f);
+				m_has_command.wait(real(0.1));
 			}
 		}
 
