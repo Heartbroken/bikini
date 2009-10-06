@@ -68,6 +68,13 @@ bool renderer::create()
 }
 void renderer::destroy()
 {
+	for (uint l_ID = m_textures.first_ID(); l_ID != bad_ID; l_ID = m_textures.next_ID(l_ID))
+	{
+		texture &l_texture = m_textures.get(l_ID);
+		m_video.kill(l_texture.texture_ID);
+		//m_video.kill(l_texture.memreader_ID);
+	}
+
 	m_video.kill(m_vformat_ID);
 	m_video.kill(m_memreader_ID);
 	m_video.kill(m_vbuffer_ID);
@@ -75,6 +82,14 @@ void renderer::destroy()
 	m_video.kill(m_pshader_ID);
 	m_video.kill(m_vbufset_ID);
 	m_video.kill(m_states_ID);
+}
+uint renderer::create_texture(uint _format, pointer _data, uint _width, uint _height, uint _pitch)
+{
+	texture l_texture;
+	l_texture.texture_ID = m_video.spawn(m_texture, D3DFMT_A8R8G8B8, sint2(_width, _height));
+	//l_texture.memreader_ID = m_video.spawn(m_memreader);
+	//m_video.get_<vo::texture>(l_texture.texture_ID).
+	return m_textures.add(l_texture);
 }
 bool renderer::begin_render(const color &_background, const rect &_viewport)
 {
@@ -98,8 +113,8 @@ void renderer::set_xform(const xform &_xform)
 {
 	flash_vs::shape.xform = r2x4
 	(
-		real4(_xform[0][0], _xform[0][1], _xform[0][2], 0),
-		real4(_xform[1][0], _xform[1][1], _xform[1][2], 0)
+		real4(_xform[0][0], _xform[0][1], _xform[0][2] - 10.f, 0),
+		real4(_xform[1][0], _xform[1][1], _xform[1][2] - 10.f, 0)
 	);
 }
 void renderer::set_color(const color &_color)
@@ -118,14 +133,12 @@ void renderer::draw_tristrip(const short2* _points, uint _count)
 		l_drawcall.set_shaders(m_vshader_ID, m_pshader_ID);
 		l_drawcall.set_size(_count - 2);
 
+		vo::memreader &l_memreader = m_video.get_<vo::memreader>(m_memreader_ID);
+		l_drawcall.set_start(l_memreader.size() / sizeof(short2));
+		l_memreader.write(_points, _count * sizeof(short2));
+
 		l_drawcall.write_consts(1, flash_vs::viewport_offset, flash_vs::viewport);
 		l_drawcall.write_consts(1, flash_vs::shape_offset, flash_vs::shape);
-
-		vo::memreader &l_memreader = m_video.get_<vo::memreader>(m_memreader_ID);
-
-		l_drawcall.set_start(l_memreader.size() / sizeof(short2));
-
-		l_memreader.write(_points, _count * sizeof(short2));
 	}
 }
 void renderer::end_render()

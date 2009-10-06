@@ -54,6 +54,7 @@ private:
 	bool execute(const create_states &_command);
 	bool execute(const create_consts &_command);
 	bool execute(const write_consts &_command);
+	bool execute(const create_texture &_command);
 	bool execute(const destroy_resource &_command);
 	bool execute(const begin_scene &_command);
 	bool execute(const clear_viewport &_command);
@@ -72,14 +73,14 @@ private:
 	struct vbufset : _resource { uint vformat_ID, vbuffer_IDs[8], offsets[8], strides[8]; };
 	struct states : _resource { IDirect3DStateBlock9 *D3DSBlock9_p; };
 	struct consts : _resource { byte_array data; };
+	struct texture : _resource { IDirect3DTexture9 *D3DTexture9_p; };
 	struct ibuffer : _resource {};
-	struct texture : _resource {};
 	struct rtarget : _resource {};
 	struct material : _resource {};
 	struct primitive : _resource {};
 
 	typedef make_typelist_<
-		schain, viewport, vformat, vbuffer, vshader, pshader, vbufset, states, consts
+		schain, viewport, vformat, vbuffer, vshader, pshader, vbufset, states, consts, texture
 	>::type resource_types;
 
 	typedef variant_<resource_types, false> resource;
@@ -242,6 +243,12 @@ void rendering_D3D9::m_destroy_resource(uint _ID)
 				}
 				case resource_types::type_<consts>::index :
 				{
+					break;
+				}
+				case resource_types::type_<texture>::index :
+				{
+					texture &l_texture = l_resource.get_<texture>();
+					l_texture.D3DTexture9_p->Release();
 					break;
 				}
 			}
@@ -495,6 +502,7 @@ bool rendering_D3D9::execute(const command &_command)
 		case command_types::type_<create_states>::index : return execute(_command.get_<create_states>());
 		case command_types::type_<create_consts>::index : return execute(_command.get_<create_consts>());
 		case command_types::type_<write_consts>::index : return execute(_command.get_<write_consts>());
+		case command_types::type_<create_texture>::index : return execute(_command.get_<create_texture>());
 		case command_types::type_<destroy_resource>::index : return execute(_command.get_<destroy_resource>());
 		case command_types::type_<begin_scene>::index : return execute(_command.get_<begin_scene>());
 		case command_types::type_<clear_viewport>::index : return execute(_command.get_<clear_viewport>());
@@ -695,6 +703,17 @@ bool rendering_D3D9::execute(const write_consts &_command)
 	}
 
 	throw_data(_command.size);
+
+	return true;
+}
+bool rendering_D3D9::execute(const create_texture &_command)
+{
+	texture l_texture;
+	l_texture.ID = _command.ID;
+
+	if (FAILED(m_D3DDevice9_p->CreateTexture(_command.size.x(), _command.size.y(), 0, 0, (D3DFORMAT)_command.format, D3DPOOL_DEFAULT, &l_texture.D3DTexture9_p, 0))) return false;
+
+	m_create_resource(l_texture);
 
 	return true;
 }

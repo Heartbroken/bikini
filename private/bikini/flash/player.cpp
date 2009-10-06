@@ -57,19 +57,37 @@ struct player::_gameswf : gameswf::render_handler
 	typedef gameswf::cxform cxform;
 	typedef gameswf::rect rect;
 
+	// state variables
+
+	static renderer *renderer_p;
+
 	// bitmap
 
 	struct bitmap : bitmap_info
 	{
-		inline bitmap() {}
-		inline bitmap(sint _w, sint _h, u8* _data) {}
-		inline bitmap(image::rgb* _data) {}
-		inline bitmap(image::rgba* _data) {}
+		inline bitmap()
+		:
+			m_texture_ID(bad_ID)
+		{}
+		inline bitmap(sint _w, sint _h, u8* _data)
+		{
+			m_texture_ID = renderer_p->create_texture(0, _data, (uint)_w, (uint)_h, (uint)_h);
+		}
+		inline bitmap(image::rgb* _data)
+		{
+			m_texture_ID = renderer_p->create_texture(1, _data->m_data, (uint)_data->m_width, (uint)_data->m_height, (uint)_data->m_pitch);
+		}
+		inline bitmap(image::rgba* _data)
+		{
+			m_texture_ID = renderer_p->create_texture(2, _data->m_data, (uint)_data->m_width, (uint)_data->m_height, (uint)_data->m_pitch);
+		}
+		~bitmap()
+		{
+		}
+
+	private:
+		uint m_texture_ID;
 	};
-
-	// state variables
-
-	static renderer *renderer_p;
 
 	// overrides
 
@@ -112,8 +130,7 @@ struct player::_gameswf : gameswf::render_handler
 	// Geometric and color transforms for mesh and line_strip rendering.
 	void set_matrix(const matrix &_m)
 	{
-		xform l_xform(float3(_m.m_[0][0], _m.m_[0][1], _m.m_[0][2]),
-					  float3(_m.m_[1][0], _m.m_[1][1], _m.m_[1][2]));
+		xform l_xform(float3(_m.m_[0][0], _m.m_[0][1], _m.m_[0][2]), float3(_m.m_[1][0], _m.m_[1][1], _m.m_[1][2]));
 		m_renderer.set_xform(l_xform);
 	}
 	void set_cxform(const cxform &_cx)
@@ -129,7 +146,6 @@ struct player::_gameswf : gameswf::render_handler
 	// be Sint16[vertex_count*2]
 	void draw_mesh_strip(pointer _coords, s32 _vertex_count)
 	{
-
 		m_renderer.draw_tristrip((short2*)_coords, (uint)_vertex_count);
 	}
 	// As above, but coords is in triangle list order.
@@ -241,6 +257,7 @@ struct player::_gameswf : gameswf::render_handler
 	{
 		set_handlers();
 		smart_ptr<gameswf::root> l_movie = m_player.load_file(_path);
+		//l_movie->set_display_viewport(0, 0, 800, 600);
 		reset_handlers();
 		if (l_movie == 0) return false;
 		l_movie->add_ref();

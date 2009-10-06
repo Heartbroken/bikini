@@ -37,6 +37,7 @@ private:
 	// flash renderer interface
 	struct renderer
 	{
+		virtual uint create_texture(uint _format, pointer _data, uint _width, uint _height, uint _pitch) = 0;
 		virtual bool begin_render(const color &_background, const rect &_viewport) = 0;
 		virtual void set_xform(const xform &_xform) = 0;
 		virtual void set_color(const color &_color) = 0;
