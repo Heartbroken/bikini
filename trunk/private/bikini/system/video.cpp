@@ -299,6 +299,81 @@ struct video::object::context
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
 
+// texture::info
+
+texture::info::info()
+:
+	video::object::info(video::ot::texture)
+{}
+
+// texture
+
+texture::texture(const info &_info, video &_video, uint _format, const sint2 &_size)
+:
+	video::object(_info, _video),
+	m_format(_format), m_size(_size)
+{
+	m_resource_ID = obtain_resource_ID();
+}
+texture::~texture()
+{
+	release_resource_ID(m_resource_ID);
+}
+bool texture::update(real _dt)
+{
+	if (!valid() || !resource_valid(m_resource_ID))
+	{
+		video::rendering::create_texture l_create_texture;
+		l_create_texture.ID = m_resource_ID;
+		l_create_texture.format = m_format;
+		l_create_texture.size = m_size;
+		add_command(l_create_texture);
+	}
+
+	//if (has_relation(m_source_ID))
+	//{
+	//	uint l_source_ID = get_relation(m_source_ID);
+	//	if (get_video().exists(l_source_ID))
+	//	{
+	//		object &l_object = get_video().get_<object>(l_source_ID);
+	//		if (!valid() || version() < l_object.version())
+	//		{
+	//			switch (l_object.type())
+	//			{
+	//				case video::ot::memreader :
+	//				{
+	//					memreader &l_reader = get_video().get_<memreader>(l_source_ID);
+
+	//					if (m_size < l_reader.size())
+	//					{
+	//						video::rendering::create_vbuffer l_create_vbuffer;
+	//						l_create_vbuffer.ID = m_resource_ID;
+	//						l_create_vbuffer.size = l_reader.size();
+	//						add_command(l_create_vbuffer);
+
+	//						m_size = l_reader.size();
+	//					}
+
+	//					add_data(l_reader.data(), l_reader.size());
+
+	//					video::rendering::write_vbuffer l_write_vbuffer;
+	//					l_write_vbuffer.ID = m_resource_ID;
+	//					l_write_vbuffer.size = l_reader.size();
+	//					l_write_vbuffer.reset = true;
+	//					add_command(l_write_vbuffer);
+
+	//					break;
+	//				}
+	//			}
+
+	//			update_version();
+	//		}
+	//	}
+	//}
+
+	return true;
+}
+
 // consts::info
 
 consts::info::info()

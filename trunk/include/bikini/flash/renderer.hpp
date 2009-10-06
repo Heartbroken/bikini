@@ -18,6 +18,7 @@ struct renderer
 	bool create();
 	void destroy();
 
+	uint create_texture(uint _format, pointer _data, uint _width, uint _height, uint _pitch);
 	bool begin_render(const color &_background, const rect &_viewport);
 	void set_xform(const xform &_xform);
 	void set_color(const color &_color);
@@ -41,4 +42,7 @@ private:
 	uint m_vbufset_ID;
 	vo::states::info m_states;
 	uint m_states_ID;
+	vo::texture::info m_texture;
+	struct texture { uint texture_ID, memreader_ID; };
+	pool_<texture> m_textures;
 };

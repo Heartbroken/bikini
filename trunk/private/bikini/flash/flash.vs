@@ -28,17 +28,20 @@ output main(input _in)
 {
 	output l_out = (output)0;
 	
-//	float4 l_pos = float4(_in.p / 20, 0, 1);
-//	float4 l_pos = mul(shape.xform, float4(_in.p / 20, 0, 1));
-	float4 l_pos = float4(_in.p.xy, 0, 1);
+	float3x3 l_xform =
+	{
+		shape.xform._11, shape.xform._12, 0,
+		shape.xform._21, shape.xform._22, 0,
+		shape.xform._31, shape.xform._32, 1
+	};
 	
-	l_pos.xy = mul(shape.xform, l_pos.xy);
-//	l_pos.xy = mul(l_pos.xy, shape.xform);
+	float2 l_pos = mul(float3(_in.p, 1), l_xform);
 	
-	l_pos.xy = (l_pos.xy - viewport.area.zw / 2) / viewport.area.zw;
+	l_pos = l_pos + viewport.area.xy;
+	l_pos = 2 * (l_pos - viewport.area.zw / 2) / viewport.area.zw;
 	l_pos.y = -l_pos.y;
-	
-	l_out.hpos = l_pos;
+
+	l_out.hpos = float4(l_pos, 0, 1);
 	
 	l_out.c = shape.color;
 	

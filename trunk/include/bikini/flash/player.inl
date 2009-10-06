@@ -13,6 +13,7 @@
 template<typename _Renderer, typename _Interface> struct _player_renderer_proxy_ : _Interface
 {
 	inline _player_renderer_proxy_(_Renderer &_renderer) : m_renderer(_renderer) {}
+	uint create_texture(uint _format, pointer _data, uint _width, uint _height, uint _pitch) { return m_renderer.create_texture(_format, _data, _width, _height, _pitch); }
 	bool begin_render(const color &_background, const rect &_viewport) { return m_renderer.begin_render(_background, _viewport); }
 	void set_xform(const xform &_xform) { m_renderer.set_xform(_xform); }
 	void set_color(const color &_color) { m_renderer.set_color(_color); }
