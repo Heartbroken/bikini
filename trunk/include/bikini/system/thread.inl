@@ -250,21 +250,28 @@ inline void task_<_R, _A0, _A1, _A2, _A3, _A4, _A5, _A6, _A7, _A8, _A9>::clear()
 
 // flag
 
-inline flag::flag(bool _reset, bool _state, const astring &_name) : m_handle(CreateEventA(0, _reset, _state, _name.c_str())) {
-}
-inline flag::~flag() {
+inline flag::flag(bool _manual, bool _state, const astring &_name)
+:
+	m_handle(CreateEventA(0, _manual, _state, _name.c_str()))
+{}
+inline flag::~flag()
+{
 	if(m_handle != 0) CloseHandle(m_handle);
 }
-inline void flag::set() {
+inline void flag::set()
+{
 	if(m_handle != 0) SetEvent(m_handle);
 }
-inline void flag::reset() {
+inline void flag::reset()
+{
 	if(m_handle != 0) ResetEvent(m_handle);
 }
-inline bool flag::wait(real _timeout) {
-	if(m_handle != 0) {
-		if(WaitForSingleObject(m_handle, _timeout < infinity ? DWORD(_timeout * 1000.f) : INFINITE) == WAIT_TIMEOUT) return false;
-		return true;
+inline bool flag::wait(real _timeout)
+{
+	if(m_handle != 0)
+	{
+		if(WaitForSingleObject(m_handle, _timeout < infinity ? DWORD(_timeout * 1000.f) : INFINITE) == WAIT_OBJECT_0) return true;
+		return false;
 	}
 	return false;
 }
