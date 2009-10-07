@@ -64,15 +64,17 @@ bool renderer::create()
 	m_video.get_<vo::vbufset>(m_vbufset_ID).set_vbuffer(0, m_vbuffer_ID, 0, 4);
 	m_states_ID = m_video.spawn(m_states);
 
+	m_texset_ID = m_deftexset_ID = create_texture(video::tf::a8r8g8b8, &bad_ID, 1, 1, 4);
+
 	return true;
 }
 void renderer::destroy()
 {
+	destroy_texture(m_deftexset_ID);
+
 	for (uint l_ID = m_textures.first_ID(); l_ID != bad_ID; l_ID = m_textures.next_ID(l_ID))
 	{
-		texture &l_texture = m_textures.get(l_ID);
-		m_video.kill(l_texture.texture_ID);
-		m_video.kill(l_texture.memreader_ID);
+		destroy_texture(l_ID);
 	}
 
 	m_video.kill(m_vformat_ID);
@@ -146,7 +148,7 @@ void renderer::set_color(const color &_color)
 void renderer::set_texture(uint _ID)
 {
 	if (m_textures.exists(_ID)) m_texset_ID = m_textures.get(_ID).texset_ID;
-	else m_texset_ID = bad_ID;
+	else m_texset_ID = m_textures.get(m_deftexset_ID).texset_ID;
 }
 void renderer::draw_tristrip(const short2* _points, uint _count)
 {

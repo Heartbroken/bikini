@@ -49,4 +49,5 @@ private:
 	struct texture { uint texture_ID, memreader_ID, texset_ID; };
 	pool_<texture> m_textures;
 	uint m_texset_ID;
+	uint m_deftexset_ID;
 };
