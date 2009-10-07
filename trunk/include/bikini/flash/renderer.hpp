@@ -19,9 +19,11 @@ struct renderer
 	void destroy();
 
 	uint create_texture(uint _format, pointer _data, uint _width, uint _height, uint _pitch);
+	void destroy_texture(uint _ID);
 	bool begin_render(const color &_background, const rect &_viewport);
 	void set_xform(const xform &_xform);
 	void set_color(const color &_color);
+	void set_texture(uint _ID);
 	void draw_tristrip(const short2* _points, uint _count);
 	void end_render();
 
@@ -43,6 +45,8 @@ private:
 	vo::states::info m_states;
 	uint m_states_ID;
 	vo::texture::info m_texture;
-	struct texture { uint texture_ID, memreader_ID; };
+	vo::texset::info m_texset;
+	struct texture { uint texture_ID, memreader_ID, texset_ID; };
 	pool_<texture> m_textures;
+	uint m_texset_ID;
 };

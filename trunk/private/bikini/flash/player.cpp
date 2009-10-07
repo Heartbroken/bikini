@@ -65,28 +65,27 @@ struct player::_gameswf : gameswf::render_handler
 
 	struct bitmap : bitmap_info
 	{
+		uint texture_ID;
+
 		inline bitmap()
 		:
-			m_texture_ID(bad_ID)
+			texture_ID(bad_ID)
 		{}
 		inline bitmap(sint _w, sint _h, u8* _data)
 		{
-			m_texture_ID = renderer_p->create_texture(0, _data, (uint)_w, (uint)_h, (uint)_h);
+			texture_ID = renderer_p->create_texture(video::tf::a8, _data, (uint)_w, (uint)_h, (uint)_h);
 		}
 		inline bitmap(image::rgb* _data)
 		{
-			m_texture_ID = renderer_p->create_texture(1, _data->m_data, (uint)_data->m_width, (uint)_data->m_height, (uint)_data->m_pitch);
+			texture_ID = renderer_p->create_texture(video::tf::r8g8b8, _data->m_data, (uint)_data->m_width, (uint)_data->m_height, (uint)_data->m_pitch);
 		}
 		inline bitmap(image::rgba* _data)
 		{
-			m_texture_ID = renderer_p->create_texture(2, _data->m_data, (uint)_data->m_width, (uint)_data->m_height, (uint)_data->m_pitch);
+			texture_ID = renderer_p->create_texture(video::tf::a8r8g8b8, _data->m_data, (uint)_data->m_width, (uint)_data->m_height, (uint)_data->m_pitch);
 		}
 		~bitmap()
 		{
 		}
-
-	private:
-		uint m_texture_ID;
 	};
 
 	// overrides
@@ -171,9 +170,13 @@ struct player::_gameswf : gameswf::render_handler
 	{
 		color l_color(_color.m_r, _color.m_g, _color.m_b, _color.m_a);
 		m_renderer.set_color(l_color);
+		m_renderer.set_texture(bad_ID);
 	}
 	void fill_style_bitmap(s32 _fill_side, bitmap_info *_bi_p, const matrix &_m, bitmap_wrap_mode _wm)
 	{
+		bitmap &l_bitmap = *(bitmap*)_bi_p;
+		m_renderer.set_texture(l_bitmap.texture_ID);
+		m_renderer.set_color(white);
 	}
 
 	void line_style_disable()

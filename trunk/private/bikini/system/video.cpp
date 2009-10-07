@@ -20,8 +20,7 @@ video::rendering::rendering(video &_video)
 	m_video(_video),
 	m_task(*this, &rendering::m_proc, "bikini-iii rendering"),
 	m_cbuffer(cbuffer_size), m_dbuffer(dbuffer_size), m_ibuffer(ibuffer_size),
-	m_has_command(false, false),
-	m_can_read_data(false, false), m_can_write_data(false, true)
+	m_has_command(false, false), m_can_read_data(false, false), m_can_write_data(false, true)
 {}
 video::rendering::~rendering()
 {
@@ -70,6 +69,7 @@ bool video::rendering::add_data(pointer _data, uint _size)
 		{
 			if (!m_can_write_data.wait(real(dbuffer_timeout) * real(0.001)))
 			{
+				std::cerr << "ERROR: Rendering data write failed.\n";
 				return false;
 			}
 		}
@@ -108,6 +108,7 @@ bool video::rendering::get_data(handle _data, uint _size)
 		{
 			if (!m_can_read_data.wait(real(dbuffer_timeout) * real(0.001)))
 			{
+				std::cerr << "ERROR: Rendering data read failed.\n";
 				return false;
 			}
 		}
@@ -139,9 +140,7 @@ void video::rendering::throw_data(uint _size)
 }
 bool video::rendering::add_issue(const issue &_issue)
 {
-	while (m_ibuffer.full()) sleep(0.001f);
-
-	m_ibuffer.push(_issue);
+	while (!m_ibuffer.push(_issue)) sleep(0.001f);
 
 	return true;
 }
@@ -354,19 +353,77 @@ struct video::object::context
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
 
+// texset::info
+
+texset::info::info()
+:
+	video::object::info(video::ot::texset)
+{}
+
+// texset
+
+texset::texset(const info &_info, video &_video)
+:
+	video::object(_info, _video)
+{
+	memset(m_texture_IDs, 0xff, sizeof(m_texture_IDs));
+	m_resource_ID = obtain_resource_ID();
+}
+texset::~texset()
+{
+	release_resource_ID(m_resource_ID);
+}
+bool texset::update(real _dt)
+{
+	if (!valid() || !resource_valid(m_resource_ID))
+	{
+		video::rendering::create_texset l_create_texset;
+		l_create_texset.ID = m_resource_ID;
+		for (uint i = 0; i < texture_count; ++i)
+		{
+			if (has_relation(m_texture_IDs[i]))
+			{
+				uint l_texture_ID = get_relation(m_texture_IDs[i]);
+				if (get_video().exists(l_texture_ID) && get_video().get(l_texture_ID).type() == video::ot::texture)
+				{
+					texture &l_texture = get_video().get_<texture>(l_texture_ID);
+					l_create_texset.texture_IDs[i] = l_texture.resource_ID();
+					continue;
+				}
+			}
+			l_create_texset.texture_IDs[i] = bad_ID;
+		}
+		add_command(l_create_texset);
+
+		update_version();
+	}
+
+	return true;
+}
+void texset::set_texture(uint _i, uint _ID)
+{
+	if (_i >= texture_count) return;
+
+	if (has_relation(m_texture_IDs[_i])) remove_relation(m_texture_IDs[_i]);
+
+	if (get_video().exists(_ID)) m_texture_IDs[_i] = add_relation(_ID);
+	else m_texture_IDs[_i] = bad_ID;
+}
+
 // texture::info
 
 texture::info::info()
 :
-	video::object::info(video::ot::texture)
+	video::object::info(video::ot::texture),
+	format(video::tf::a8r8g8b8), size(sint2_1), levels(0)
 {}
 
 // texture
 
-texture::texture(const info &_info, video &_video, uint _format, const sint2 &_size)
+texture::texture(const info &_info, video &_video)
 :
 	video::object(_info, _video),
-	m_format(_format), m_size(_size)
+	m_source_ID(bad_ID)
 {
 	m_resource_ID = obtain_resource_ID();
 }
@@ -376,57 +433,63 @@ texture::~texture()
 }
 bool texture::update(real _dt)
 {
-	if (!valid() || !resource_valid(m_resource_ID))
+	if (has_relation(m_source_ID))
 	{
-		video::rendering::create_texture l_create_texture;
-		l_create_texture.ID = m_resource_ID;
-		l_create_texture.format = m_format;
-		l_create_texture.size = m_size;
-		add_command(l_create_texture);
+		uint l_source_ID = get_relation(m_source_ID);
+		if (get_video().exists(l_source_ID))
+		{
+			object &l_object = get_video().get_<object>(l_source_ID);
+			if (!valid() || version() < l_object.version())
+			{
+				switch (l_object.type())
+				{
+					case video::ot::memreader :
+					{
+						video::rendering::create_texture l_create_texture;
+						l_create_texture.ID = m_resource_ID;
+						l_create_texture.format = get_info().format;
+						l_create_texture.size = get_info().size;
+						add_command(l_create_texture);
+
+						memreader &l_reader = get_video().get_<memreader>(l_source_ID);
+
+						video::rendering::write_texture l_write_texture;
+						l_write_texture.ID = m_resource_ID;
+						l_write_texture.size = l_reader.size();
+						add_command(l_write_texture);
+
+						add_data(l_reader.data(), l_reader.size());
+
+						break;
+					}
+				}
+
+				update_version();
+			}
+		}
+	}
+	else
+	{
+		if (!valid() || !resource_valid(m_resource_ID))
+		{
+			video::rendering::create_texture l_create_texture;
+			l_create_texture.ID = m_resource_ID;
+			l_create_texture.format = get_info().format;
+			l_create_texture.size = get_info().size;
+			add_command(l_create_texture);
+
+			update_version();
+		}
 	}
 
-	//if (has_relation(m_source_ID))
-	//{
-	//	uint l_source_ID = get_relation(m_source_ID);
-	//	if (get_video().exists(l_source_ID))
-	//	{
-	//		object &l_object = get_video().get_<object>(l_source_ID);
-	//		if (!valid() || version() < l_object.version())
-	//		{
-	//			switch (l_object.type())
-	//			{
-	//				case video::ot::memreader :
-	//				{
-	//					memreader &l_reader = get_video().get_<memreader>(l_source_ID);
-
-	//					if (m_size < l_reader.size())
-	//					{
-	//						video::rendering::create_vbuffer l_create_vbuffer;
-	//						l_create_vbuffer.ID = m_resource_ID;
-	//						l_create_vbuffer.size = l_reader.size();
-	//						add_command(l_create_vbuffer);
-
-	//						m_size = l_reader.size();
-	//					}
-
-	//					add_data(l_reader.data(), l_reader.size());
-
-	//					video::rendering::write_vbuffer l_write_vbuffer;
-	//					l_write_vbuffer.ID = m_resource_ID;
-	//					l_write_vbuffer.size = l_reader.size();
-	//					l_write_vbuffer.reset = true;
-	//					add_command(l_write_vbuffer);
-
-	//					break;
-	//				}
-	//			}
-
-	//			update_version();
-	//		}
-	//	}
-	//}
-
 	return true;
+}
+void texture::set_source(uint _ID)
+{
+	if (has_relation(m_source_ID)) remove_relation(m_source_ID);
+
+	if (get_video().exists(_ID)) m_source_ID = add_relation(_ID);
+	else m_source_ID = bad_ID;
 }
 
 // consts::info
@@ -757,7 +820,7 @@ bool vbuffer::update(real _dt)
 }
 void vbuffer::set_source(uint _ID)
 {
-	if (m_source_ID != bad_ID) remove_relation(m_source_ID);
+	if (has_relation(m_source_ID)) remove_relation(m_source_ID);
 
 	if (get_video().exists(_ID)) m_source_ID = add_relation(_ID);
 	else m_source_ID = bad_ID;
@@ -808,7 +871,7 @@ drawcall::info::info()
 drawcall::drawcall(const info &_info, video &_video)
 :
 	video::object(_info, _video),
-	m_start(0), m_size(0), m_vbufset_ID(bad_ID), m_vshader_ID(bad_ID), m_pshader_ID(bad_ID), m_states_ID(bad_ID), m_consts_ID(bad_ID)
+	m_start(0), m_size(0), m_vbufset_ID(bad_ID), m_vshader_ID(bad_ID), m_pshader_ID(bad_ID), m_states_ID(bad_ID), m_consts_ID(bad_ID), m_texset_ID(bad_ID)
 {}
 drawcall::~drawcall()
 {
@@ -880,6 +943,15 @@ void drawcall::add_commands(const context &_context) const
 			l_draw_primitive.consts_ID = l_consts.resource_ID();
 		}
 	}
+	if (has_relation(m_texset_ID))
+	{
+		uint l_texset_ID = get_relation(m_texset_ID);
+		if (get_video().exists(l_texset_ID) && get_video().get(l_texset_ID).type() == video::ot::texset)
+		{
+			texset &l_texset = get_video().get_<texset>(l_texset_ID);
+			l_draw_primitive.texset_ID = l_texset.resource_ID();
+		}
+	}
 	l_draw_primitive.type = D3DPT_TRIANGLESTRIP;
 	l_draw_primitive.start = m_start;
 	l_draw_primitive.size = m_size;
@@ -915,6 +987,13 @@ void drawcall::write_consts(uint _type, uint _offset, pointer _data, uint _size)
 
 	consts &l_consts = get_video().get_<consts>(l_consts_ID);
 	l_consts.write(_type, _offset, _data, _size);
+}
+void drawcall::set_texset(uint _ID)
+{
+	if (has_relation(m_texset_ID)) remove_relation(m_texset_ID);
+
+	if (get_video().exists(_ID)) m_texset_ID = add_relation(_ID);
+	else m_texset_ID = bad_ID;
 }
 
 // viewport::info

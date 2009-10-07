@@ -29,17 +29,19 @@ struct video : device
 		struct create_consts { uint ID; };
 		struct write_consts { uint ID, size; bool reset; };
 		struct create_texture { uint ID; sint2 size; uint format; };
+		struct write_texture { uint ID; uint size; };
+		struct create_texset { uint ID, texture_IDs[8]; };
 		struct destroy_resource { uint ID; };
 		struct begin_scene {};
 		struct clear_viewport { uint target_ID, viewport_ID; struct { uint f; color c; real z; uint s; } clear; };
-		struct draw_primitive { uint target_ID, viewport_ID, vbufset_ID, vshader_ID, pshader_ID, states_ID, consts_ID, type, start, size; };
+		struct draw_primitive { uint target_ID, viewport_ID, vbufset_ID, vshader_ID, pshader_ID, states_ID, consts_ID, texset_ID, type, start, size; };
 		struct end_scene {};
 		struct present_schain { uint ID; };
 
 		typedef make_typelist_<
 			create_schain, create_viewport, create_vformat, create_vbuffer, write_vbuffer,
 			create_vshader, create_pshader, create_vbufset, create_states, create_consts, write_consts,
-			create_texture,
+			create_texture, write_texture, create_texset,
 			destroy_resource,
 			begin_scene, clear_viewport, draw_primitive, end_scene,
 			present_schain
@@ -131,10 +133,15 @@ struct video : device
 
 	struct ot { enum object_type
 	{
-		window, viewport, drawcall, vformat, vbuffer, memreader, vshader, pshader, vbufset, states, consts, texture
+		window, viewport, drawcall, vformat, vbuffer, memreader, vshader, pshader, vbufset, states, consts, texture, texset
 	};};
 
 	/* video ------------------------------------------------------------------------------------*/
+
+	struct tf { enum texture_format
+	{
+		a8, r8g8b8, a8r8g8b8
+	};};
 
 	video();
 	~video();
@@ -173,29 +180,55 @@ namespace cf { enum clear_flags {
 
 namespace vo { /* video objects -----------------------------------------------------------------*/
 
+/// texset
+struct texset : video::object
+{
+	struct info : video::object::info
+	{
+		typedef texset object;
+		info();
+	};
+
+	static const uint texture_count = 8;
+
+	inline const info& get_info() const { return get_info_<info>(); }
+	inline uint resource_ID() const { return m_resource_ID; }
+
+	texset(const info &_info, video &_video);
+	~texset();
+
+	bool update(real _dt);
+
+	void set_texture(uint _i, uint _ID);
+
+private:
+	uint m_resource_ID;
+	uint m_texture_IDs[texture_count];
+};
+
 /// texture
 struct texture : video::object
 {
 	struct info : video::object::info
 	{
 		typedef texture object;
-		typedef uint a0;
-		typedef const sint2& a1;
+		uint format; sint2 size; uint levels;
 		info();
 	};
 
 	inline const info& get_info() const { return get_info_<info>(); }
 	inline uint resource_ID() const { return m_resource_ID; }
 
-	texture(const info &_info, video &_video, uint _format, const sint2 &_size);
+	texture(const info &_info, video &_video);
 	~texture();
 
 	bool update(real _dt);
 
+	void set_source(uint _ID);
+
 private:
 	uint m_resource_ID;
-	uint m_format;
-	sint2 m_size;
+	uint m_source_ID;
 };
 
 /// consts
@@ -413,6 +446,7 @@ struct drawcall : video::object
 	void set_states(uint _ID);
 	void write_consts(uint _type, uint _offset, pointer _data, uint _size);
 	template<typename _Type> inline void write_consts(uint _type, uint _offset, const _Type &_v) { write_consts(_type, _offset, &_v, sizeof(_v)); }
+	void set_texset(uint _ID);
 
 	void add_commands(const context &_context) const;
 
@@ -422,6 +456,7 @@ private:
 	uint m_vshader_ID, m_pshader_ID;
 	uint m_states_ID;
 	consts::info m_consts; uint m_consts_ID;
+	uint m_texset_ID;
 };
 
 /// viewport

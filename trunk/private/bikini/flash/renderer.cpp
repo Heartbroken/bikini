@@ -72,7 +72,7 @@ void renderer::destroy()
 	{
 		texture &l_texture = m_textures.get(l_ID);
 		m_video.kill(l_texture.texture_ID);
-		//m_video.kill(l_texture.memreader_ID);
+		m_video.kill(l_texture.memreader_ID);
 	}
 
 	m_video.kill(m_vformat_ID);
@@ -86,10 +86,32 @@ void renderer::destroy()
 uint renderer::create_texture(uint _format, pointer _data, uint _width, uint _height, uint _pitch)
 {
 	texture l_texture;
-	l_texture.texture_ID = m_video.spawn(m_texture, D3DFMT_A8R8G8B8, sint2(_width, _height));
-	//l_texture.memreader_ID = m_video.spawn(m_memreader);
-	//m_video.get_<vo::texture>(l_texture.texture_ID).
+	l_texture.texture_ID = m_video.spawn(m_texture);
+
+	l_texture.texset_ID = m_video.spawn(m_texset);
+	m_video.get_<vo::texset>(l_texture.texset_ID).set_texture(0, l_texture.texture_ID);
+
+	l_texture.memreader_ID = m_video.spawn(m_memreader);
+	m_video.get_<vo::texture>(l_texture.texture_ID).set_source(l_texture.memreader_ID);
+
+	vo::memreader &l_memreader = m_video.get_<vo::memreader>(l_texture.memreader_ID);
+	l_memreader.write(&_format, sizeof(_format));
+	sint2 l_size(_width, _height); l_memreader.write(&l_size, sizeof(l_size));
+	uint l_data_size = _height * _pitch; l_memreader.write(&l_data_size, sizeof(l_data_size));
+	l_memreader.write(_data, l_data_size);
+
 	return m_textures.add(l_texture);
+}
+void renderer::destroy_texture(uint _ID)
+{
+	if (!m_textures.exists(_ID)) return;
+
+	texture &l_texture = m_textures.get(_ID);
+	m_video.kill(l_texture.texset_ID);
+	m_video.kill(l_texture.memreader_ID);
+	m_video.kill(l_texture.texture_ID);
+
+	m_textures.remove(_ID);
 }
 bool renderer::begin_render(const color &_background, const rect &_viewport)
 {
@@ -121,6 +143,11 @@ void renderer::set_color(const color &_color)
 {
 	flash_vs::shape.color = _color;
 }
+void renderer::set_texture(uint _ID)
+{
+	if (m_textures.exists(_ID)) m_texset_ID = m_textures.get(_ID).texset_ID;
+	else m_texset_ID = bad_ID;
+}
 void renderer::draw_tristrip(const short2* _points, uint _count)
 {
 	if (m_video.exists(m_viewport_ID))
@@ -139,6 +166,8 @@ void renderer::draw_tristrip(const short2* _points, uint _count)
 
 		l_drawcall.write_consts(1, flash_vs::viewport_offset, flash_vs::viewport);
 		l_drawcall.write_consts(1, flash_vs::shape_offset, flash_vs::shape);
+
+		l_drawcall.set_texset(m_texset_ID);
 	}
 }
 void renderer::end_render()

@@ -10,9 +10,16 @@
 
 #if !defined(__cplusplus) /*---------------------------------------------------------------------*/
 
+texture color : register(s0);
+
+sampler color_sampler = sampler_state
+{
+	texture = color;
+};
+
 float4 main(float4 _c : COLOR0) : COLOR0
 {
-	return _c;
+	return _c * tex2D(color_sampler, float2(0, 0));
 }
 
 #endif /* !defined(__cplusplus) -----------------------------------------------------------------*/
