@@ -55,6 +55,8 @@ private:
 	bool execute(const create_consts &_command);
 	bool execute(const write_consts &_command);
 	bool execute(const create_texture &_command);
+	bool execute(const write_texture &_command);
+	bool execute(const create_texset &_command);
 	bool execute(const destroy_resource &_command);
 	bool execute(const begin_scene &_command);
 	bool execute(const clear_viewport &_command);
@@ -74,13 +76,14 @@ private:
 	struct states : _resource { IDirect3DStateBlock9 *D3DSBlock9_p; };
 	struct consts : _resource { byte_array data; };
 	struct texture : _resource { IDirect3DTexture9 *D3DTexture9_p; };
+	struct texset : _resource { uint texture_IDs[8]; };
 	struct ibuffer : _resource {};
 	struct rtarget : _resource {};
 	struct material : _resource {};
 	struct primitive : _resource {};
 
 	typedef make_typelist_<
-		schain, viewport, vformat, vbuffer, vshader, pshader, vbufset, states, consts, texture
+		schain, viewport, vformat, vbuffer, vshader, pshader, vbufset, states, consts, texture, texset
 	>::type resource_types;
 
 	typedef variant_<resource_types, false> resource;
@@ -99,6 +102,8 @@ private:
 	bool m_set_pshader(uint _ID);
 	bool m_set_states(uint _ID);
 	bool m_set_consts(uint _ID);
+	bool m_set_texture(uint _i, uint _ID);
+	bool m_set_textures(uint _ID);
 };
 
 IDirect3D9 *rendering_D3D9::sm_D3D9_p = 0;
@@ -487,6 +492,55 @@ bool rendering_D3D9::m_set_consts(uint _ID)
 	}
 	return true;
 }
+bool rendering_D3D9::m_set_texture(uint _i, uint _ID)
+{
+	uint_ID l_ID(_ID);
+	if (l_ID.index < m_resources.size())
+	{
+		resource &l_resource = m_resources[l_ID.index];
+		if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _ID)
+		{
+			switch (l_resource.type())
+			{
+				case resource_types::type_<texture>::index :
+				{
+					texture &l_texture = l_resource.get_<texture>();
+					if (FAILED(m_D3DDevice9_p->SetTexture((UINT)_i, l_texture.D3DTexture9_p))) return false;
+					break;
+				}
+			}
+			return true;
+		}
+
+		m_D3DDevice9_p->SetTexture((UINT)_i, 0);
+	}
+	return true;
+}
+bool rendering_D3D9::m_set_textures(uint _ID)
+{
+	uint_ID l_ID(_ID);
+	if (l_ID.index < m_resources.size())
+	{
+		resource &l_resource = m_resources[l_ID.index];
+		if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _ID)
+		{
+			switch (l_resource.type())
+			{
+				case resource_types::type_<texset>::index :
+				{
+					texset &l_texset = l_resource.get_<texset>();
+					for (uint i = 0; i < 8; ++i)
+					{
+						m_set_texture(i, l_texset.texture_IDs[i]);
+					}
+					break;
+				}
+			}
+			return true;
+		}
+	}
+	return true;
+}
 bool rendering_D3D9::execute(const command &_command)
 {
 	switch (_command.type())
@@ -503,6 +557,8 @@ bool rendering_D3D9::execute(const command &_command)
 		case command_types::type_<create_consts>::index : return execute(_command.get_<create_consts>());
 		case command_types::type_<write_consts>::index : return execute(_command.get_<write_consts>());
 		case command_types::type_<create_texture>::index : return execute(_command.get_<create_texture>());
+		case command_types::type_<write_texture>::index : return execute(_command.get_<write_texture>());
+		case command_types::type_<create_texset>::index : return execute(_command.get_<create_texset>());
 		case command_types::type_<destroy_resource>::index : return execute(_command.get_<destroy_resource>());
 		case command_types::type_<begin_scene>::index : return execute(_command.get_<begin_scene>());
 		case command_types::type_<clear_viewport>::index : return execute(_command.get_<clear_viewport>());
@@ -711,9 +767,76 @@ bool rendering_D3D9::execute(const create_texture &_command)
 	texture l_texture;
 	l_texture.ID = _command.ID;
 
-	if (FAILED(m_D3DDevice9_p->CreateTexture(_command.size.x(), _command.size.y(), 0, 0, (D3DFORMAT)_command.format, D3DPOOL_DEFAULT, &l_texture.D3DTexture9_p, 0))) return false;
+	D3DFORMAT l_format;
+	switch (_command.format)
+	{
+		case video::tf::a8 : l_format = D3DFMT_A8; break;
+		case video::tf::r8g8b8 : l_format = D3DFMT_X8R8G8B8; break;
+		case video::tf::a8r8g8b8 : l_format = D3DFMT_A8R8G8B8; break;
+	}
+
+	if (FAILED(m_D3DDevice9_p->CreateTexture(_command.size.x(), _command.size.y(), 0, 0, l_format, D3DPOOL_DEFAULT, &l_texture.D3DTexture9_p, 0))) return false;
 
 	m_create_resource(l_texture);
+
+	return true;
+}
+bool rendering_D3D9::execute(const write_texture &_command)
+{
+	uint_ID l_ID(_command.ID);
+
+	resource &l_resource = m_resources[l_ID.index];
+	if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _command.ID)
+	{
+		if (l_resource.type() == resource_types::type_<texture>::index)
+		{
+			texture &l_texture = l_resource.get_<texture>();
+
+			uint l_format; get_data(&l_format, sizeof(l_format));
+			sint2 l_size; get_data(&l_size, sizeof(l_size));
+			uint l_data_size; get_data(&l_data_size, sizeof(l_data_size));
+
+			switch (l_format)
+			{
+				case video::tf::a8 : l_format = D3DFMT_A8; break;
+				case video::tf::r8g8b8 : l_format = D3DFMT_X8R8G8B8; break;
+				case video::tf::a8r8g8b8 : l_format = D3DFMT_A8R8G8B8; break;
+			}
+
+			IDirect3DTexture9 *l_D3DTex9_p;
+			if (FAILED(m_D3DDevice9_p->CreateTexture(l_size.x(), l_size.y(), 0, 0, (D3DFORMAT)l_format, D3DPOOL_SYSTEMMEM, &l_D3DTex9_p, 0)))
+			{
+				throw_data(l_data_size);
+				return false;
+			}
+
+			D3DLOCKED_RECT l_rect;
+			l_D3DTex9_p->LockRect(0, &l_rect, 0, 0);
+			get_data(l_rect.pBits, l_data_size);
+			l_D3DTex9_p->UnlockRect(0);
+
+			l_texture.D3DTexture9_p->Release();
+			m_D3DDevice9_p->CreateTexture(l_size.x(), l_size.y(), 0, 0, (D3DFORMAT)l_format, D3DPOOL_DEFAULT, &l_texture.D3DTexture9_p, 0);
+			m_D3DDevice9_p->UpdateTexture(l_D3DTex9_p, l_texture.D3DTexture9_p);
+
+			l_D3DTex9_p->Release();
+
+			return true;
+		}
+	}
+
+	throw_data(_command.size);
+
+	return true;
+}
+bool rendering_D3D9::execute(const create_texset &_command)
+{
+	texset l_texset;
+	l_texset.ID = _command.ID;
+
+	memcpy(l_texset.texture_IDs, _command.texture_IDs, sizeof(l_texset.texture_IDs));
+
+	m_create_resource(l_texset);
 
 	return true;
 }
@@ -758,6 +881,7 @@ bool rendering_D3D9::execute(const draw_primitive &_command)
 	if (!m_set_pshader(_command.pshader_ID)) return false;
 	if (!m_set_states(_command.states_ID)) return false;
 	if (!m_set_consts(_command.consts_ID)) return false;
+	if (!m_set_textures(_command.texset_ID)) return false;
 
 	if (FAILED(m_D3DDevice9_p->DrawPrimitive((D3DPRIMITIVETYPE)_command.type, (UINT)_command.start, (UINT)_command.size))) return false;
 
