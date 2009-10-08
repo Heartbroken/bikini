@@ -77,11 +77,11 @@ struct player::_gameswf : gameswf::render_handler
 		}
 		inline bitmap(image::rgb* _data)
 		{
-			texture_ID = renderer_p->create_texture(video::tf::r8g8b8, _data->m_data, (uint)_data->m_width, (uint)_data->m_height, (uint)_data->m_pitch);
+			texture_ID = renderer_p->create_texture(video::tf::b8g8r8, _data->m_data, (uint)_data->m_width, (uint)_data->m_height, (uint)_data->m_pitch);
 		}
 		inline bitmap(image::rgba* _data)
 		{
-			texture_ID = renderer_p->create_texture(video::tf::a8r8g8b8, _data->m_data, (uint)_data->m_width, (uint)_data->m_height, (uint)_data->m_pitch);
+			texture_ID = renderer_p->create_texture(video::tf::a8b8g8r8, _data->m_data, (uint)_data->m_width, (uint)_data->m_height, (uint)_data->m_pitch);
 		}
 		~bitmap()
 		{
