@@ -140,7 +140,7 @@ struct video : device
 
 	struct tf { enum texture_format
 	{
-		a8, r8g8b8, a8r8g8b8
+		a8, b8g8r8, a8b8g8r8, a8r8g8b8
 	};};
 
 	video();
