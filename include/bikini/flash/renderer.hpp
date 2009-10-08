@@ -23,7 +23,7 @@ struct renderer
 	bool begin_render(const color &_background, const rect &_viewport);
 	void set_xform(const xform &_xform);
 	void set_color(const color &_color);
-	void set_texture(uint _ID);
+	void set_texture(uint _ID, const xform &_txform);
 	void draw_tristrip(const short2* _points, uint _count);
 	void end_render();
 
@@ -46,7 +46,7 @@ private:
 	uint m_states_ID;
 	vo::texture::info m_texture;
 	vo::texset::info m_texset;
-	struct texture { uint texture_ID, memreader_ID, texset_ID; };
+	struct texture { uint texture_ID, width, height, memreader_ID, texset_ID; };
 	pool_<texture> m_textures;
 	uint m_texset_ID;
 	uint m_deftexset_ID;

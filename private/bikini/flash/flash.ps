@@ -17,9 +17,9 @@ sampler color_sampler = sampler_state
 	texture = color;
 };
 
-float4 main(float4 _c : COLOR0) : COLOR0
+float4 main(float4 _c : COLOR0, float2 _t : TEXCOORD0) : COLOR0
 {
-	return _c * tex2D(color_sampler, float2(0, 0));
+	return _c * tex2D(color_sampler, _t);
 }
 
 #endif /* !defined(__cplusplus) -----------------------------------------------------------------*/

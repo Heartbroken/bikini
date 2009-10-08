@@ -77,7 +77,7 @@ struct player::_gameswf : gameswf::render_handler
 		}
 		inline bitmap(image::rgb* _data)
 		{
-			texture_ID = bad_ID;//renderer_p->create_texture(video::tf::r8g8b8, _data->m_data, (uint)_data->m_width, (uint)_data->m_height, (uint)_data->m_pitch);
+			texture_ID = renderer_p->create_texture(video::tf::r8g8b8, _data->m_data, (uint)_data->m_width, (uint)_data->m_height, (uint)_data->m_pitch);
 		}
 		inline bitmap(image::rgba* _data)
 		{
@@ -170,12 +170,13 @@ struct player::_gameswf : gameswf::render_handler
 	{
 		color l_color(_color.m_r, _color.m_g, _color.m_b, _color.m_a);
 		m_renderer.set_color(l_color);
-		m_renderer.set_texture(bad_ID);
+		m_renderer.set_texture(bad_ID, xform());
 	}
 	void fill_style_bitmap(s32 _fill_side, bitmap_info *_bi_p, const matrix &_m, bitmap_wrap_mode _wm)
 	{
 		bitmap &l_bitmap = *(bitmap*)_bi_p;
-		m_renderer.set_texture(l_bitmap.texture_ID);
+		xform l_txform(float3(_m.m_[0][0], _m.m_[0][1], _m.m_[0][2]), float3(_m.m_[1][0], _m.m_[1][1], _m.m_[1][2]));
+		m_renderer.set_texture(l_bitmap.texture_ID, l_txform);
 		m_renderer.set_color(white);
 	}
 

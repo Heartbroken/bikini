@@ -21,28 +21,27 @@ struct input
 struct output
 {
 	float4 hpos : POSITION;
+	float2 tex0 : TEXCOORD0;
 	float4 c : COLOR0;
 };
 
 output main(input _in)
 {
 	output l_out = (output)0;
-	
-	float3x3 l_xform =
-	{
-		shape.xform._11, shape.xform._12, 0,
-		shape.xform._21, shape.xform._22, 0,
-		shape.xform._31, shape.xform._32, 1
-	};
-	
-	float2 l_pos = mul(float3(_in.p, 1), l_xform);
+
+	// position
+	float2 l_pos = mul(float3(_in.p, 1), shape.xform);
 	
 	l_pos = l_pos + viewport.area.xy;
 	l_pos = 2 * (l_pos - viewport.area.zw / 2) / viewport.area.zw;
 	l_pos.y = -l_pos.y;
 
 	l_out.hpos = float4(l_pos, 0, 1);
+
+	// texture coords
+	l_out.tex0 = mul(float3(_in.p, 1), shape.txform) * shape.tex_scale;
 	
+	// color
 	l_out.c = shape.color;
 	
 	return l_out;

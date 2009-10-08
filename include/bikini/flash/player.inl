@@ -18,7 +18,7 @@ template<typename _Renderer, typename _Interface> struct _player_renderer_proxy_
 	bool begin_render(const color &_background, const rect &_viewport) { return m_renderer.begin_render(_background, _viewport); }
 	void set_xform(const xform &_xform) { m_renderer.set_xform(_xform); }
 	void set_color(const color &_color) { m_renderer.set_color(_color); }
-	void set_texture(uint _ID) { m_renderer.set_texture(_ID); }
+	void set_texture(uint _ID, const xform &_txform) { m_renderer.set_texture(_ID, _txform); }
 	void draw_tristrip(const short2* _points, uint _count) { m_renderer.draw_tristrip(_points, _count); }
 	void end_render() { m_renderer.end_render(); }
 
