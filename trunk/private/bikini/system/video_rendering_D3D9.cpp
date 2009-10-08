@@ -794,30 +794,63 @@ bool rendering_D3D9::execute(const write_texture &_command)
 
 			uint l_format; get_data(&l_format, sizeof(l_format));
 			sint2 l_size; get_data(&l_size, sizeof(l_size));
-			uint l_data_size; get_data(&l_data_size, sizeof(l_data_size));
+			uint l_pitch; get_data(&l_pitch, sizeof(l_pitch));
 
+			D3DFORMAT l_D3DFormat;
 			switch (l_format)
 			{
-				case video::tf::a8 : l_format = D3DFMT_A8; break;
-				case video::tf::r8g8b8 : l_format = D3DFMT_X8R8G8B8; break;
-				case video::tf::a8r8g8b8 : l_format = D3DFMT_A8R8G8B8; break;
+				case video::tf::a8 : l_D3DFormat = D3DFMT_A8; break;
+				case video::tf::r8g8b8 : l_D3DFormat = D3DFMT_A8R8G8B8; break;
+				case video::tf::a8r8g8b8 : l_D3DFormat = D3DFMT_A8R8G8B8; break;
 			}
 
 			IDirect3DTexture9 *l_D3DTex9_p;
-			if (FAILED(m_D3DDevice9_p->CreateTexture(l_size.x(), l_size.y(), 0, 0, (D3DFORMAT)l_format, D3DPOOL_SYSTEMMEM, &l_D3DTex9_p, 0)))
+			if (FAILED(m_D3DDevice9_p->CreateTexture(l_size.x(), l_size.y(), 1, 0, l_D3DFormat, D3DPOOL_SYSTEMMEM, &l_D3DTex9_p, 0)))
 			{
-				throw_data(l_data_size);
+				throw_data(l_size.y() * l_pitch);
 				return false;
 			}
 
 			D3DLOCKED_RECT l_rect;
 			l_D3DTex9_p->LockRect(0, &l_rect, 0, 0);
-			get_data(l_rect.pBits, l_data_size);
+			if (l_format == video::tf::r8g8b8)
+			{
+				byte* l_dest = (byte*)l_rect.pBits;
+				byte* l_row = (byte*)_malloca(l_pitch);
+				for (uint y = 0; y < (uint)l_size.y(); ++y)
+				{
+					get_data(l_row, l_pitch);
+
+					for (uint x = 0; x < (uint)l_size.x(); ++x)
+					{
+						byte* l_pixel = l_row + x * 3;
+						l_dest[y * l_rect.Pitch + x * 4 + 0] = l_pixel[2];
+						l_dest[y * l_rect.Pitch + x * 4 + 1] = l_pixel[1];
+						l_dest[y * l_rect.Pitch + x * 4 + 2] = l_pixel[0];
+						l_dest[y * l_rect.Pitch + x * 4 + 3] = 0xff;
+					}
+				}
+			}
+			else
+			{
+				get_data(l_rect.pBits, l_size.y() * l_pitch);
+			}
 			l_D3DTex9_p->UnlockRect(0);
 
 			l_texture.D3DTexture9_p->Release();
-			m_D3DDevice9_p->CreateTexture(l_size.x(), l_size.y(), 0, 0, (D3DFORMAT)l_format, D3DPOOL_DEFAULT, &l_texture.D3DTexture9_p, 0);
-			m_D3DDevice9_p->UpdateTexture(l_D3DTex9_p, l_texture.D3DTexture9_p);
+
+			DWORD l_usage = 0;
+			if (l_size.x() * l_size.y() > 1) l_usage |= D3DUSAGE_AUTOGENMIPMAP;
+
+			m_D3DDevice9_p->CreateTexture(l_size.x(), l_size.y(), 0, l_usage, l_D3DFormat, D3DPOOL_DEFAULT, &l_texture.D3DTexture9_p, 0);
+
+			if (l_usage & D3DUSAGE_AUTOGENMIPMAP) l_texture.D3DTexture9_p->SetAutoGenFilterType(D3DTEXF_ANISOTROPIC);
+			
+			IDirect3DSurface9 *l_D3DSrcSurf9_p; l_D3DTex9_p->GetSurfaceLevel(0, &l_D3DSrcSurf9_p);
+			IDirect3DSurface9 *l_D3DDstSurf9_p; l_texture.D3DTexture9_p->GetSurfaceLevel(0, &l_D3DDstSurf9_p);
+			m_D3DDevice9_p->UpdateSurface(l_D3DSrcSurf9_p, 0, l_D3DDstSurf9_p, 0);
+			l_D3DDstSurf9_p->Release();
+			l_D3DSrcSurf9_p->Release();
 
 			l_D3DTex9_p->Release();
 

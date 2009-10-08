@@ -88,6 +88,10 @@ void renderer::destroy()
 uint renderer::create_texture(uint _format, pointer _data, uint _width, uint _height, uint _pitch)
 {
 	texture l_texture;
+
+	l_texture.width = _width;
+	l_texture.height = _height;
+
 	l_texture.texture_ID = m_video.spawn(m_texture);
 
 	l_texture.texset_ID = m_video.spawn(m_texset);
@@ -99,8 +103,8 @@ uint renderer::create_texture(uint _format, pointer _data, uint _width, uint _he
 	vo::memreader &l_memreader = m_video.get_<vo::memreader>(l_texture.memreader_ID);
 	l_memreader.write(&_format, sizeof(_format));
 	sint2 l_size(_width, _height); l_memreader.write(&l_size, sizeof(l_size));
-	uint l_data_size = _height * _pitch; l_memreader.write(&l_data_size, sizeof(l_data_size));
-	l_memreader.write(_data, l_data_size);
+	l_memreader.write(&_pitch, sizeof(_pitch));
+	l_memreader.write(_data, _height * _pitch);
 
 	return m_textures.add(l_texture);
 }
@@ -145,10 +149,29 @@ void renderer::set_color(const color &_color)
 {
 	flash_vs::shape.color = _color;
 }
-void renderer::set_texture(uint _ID)
+void renderer::set_texture(uint _ID, const xform &_txform)
 {
-	if (m_textures.exists(_ID)) m_texset_ID = m_textures.get(_ID).texset_ID;
-	else m_texset_ID = m_textures.get(m_deftexset_ID).texset_ID;
+	if (m_textures.exists(_ID))
+	{
+		texture &l_texture = m_textures.get(_ID);
+
+		m_texset_ID = l_texture.texset_ID;
+
+		flash_vs::shape.txform = r2x4
+		(
+			real4(_txform[0][0], _txform[0][1], _txform[0][2], 0),
+			real4(_txform[1][0], _txform[1][1], _txform[1][2], 0)
+		);
+
+		flash_vs::shape.tex_scale = real4
+		(
+			 real(1) / real(l_texture.width), real(1) / real(l_texture.height), 0, 0
+		);
+	}
+	else
+	{
+		m_texset_ID = m_textures.get(m_deftexset_ID).texset_ID;
+	}
 }
 void renderer::draw_tristrip(const short2* _points, uint _count)
 {
