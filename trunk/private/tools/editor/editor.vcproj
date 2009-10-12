@@ -48,7 +48,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\include"
+				AdditionalIncludeDirectories="..\..\..\include;..\..\external\"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -74,6 +74,7 @@
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)$(ProjectName) ($(PlatformName)!$(ConfigurationName)).exe"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\..\..\library\"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"

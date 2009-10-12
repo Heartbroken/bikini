@@ -35,6 +35,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 /// bikini-iii main namespace
 namespace bk { /*--------------------------------------------------------------------------------*/
