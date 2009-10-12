@@ -11,10 +11,10 @@
 #include <bikini/flash.hpp>
 
 // GameSWF
-#include "gameswf/gameswf.h"
-#include "base/tu_file.h"
-#include "gameswf/gameswf_player.h"
-#include "gameswf/gameswf_movie_def.h"
+#include <gameswf/gameswf.h>
+#include <base/tu_file.h>
+#include <gameswf/gameswf_player.h>
+#include <gameswf/gameswf_movie_def.h>
 
 // GameSWF requires these libs
 #pragma comment(lib, "gameswf ("_PLATFORM_"!"_CONFIGURATION_")")

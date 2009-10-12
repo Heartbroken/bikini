@@ -42,6 +42,10 @@
 #include <bikini/base.hpp>
 #include <bikini/system.hpp>
 
+// bikini-iii external
+#include <pugixml/pugixml.hpp>
+#pragma comment(lib, "pugixml ("_PLATFORM_"!"_CONFIGURATION_")")
+
 #ifndef _T
 #	define _T _TEXT
 #endif
