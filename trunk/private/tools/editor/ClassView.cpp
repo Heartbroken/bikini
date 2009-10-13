@@ -130,29 +130,44 @@ void CClassView::FillClassView()
 
 	if (theGameDoc != NULL)
 	{
+		pugi::xml_document &l_document = theGameDoc->m_document;
 
-		bk::wstring l_game_name = L"Game '";
-		l_game_name += theGameDoc->GetTitle().GetString();
-		l_game_name += L"'";
+		pugi::xml_node l_game_node = l_document.child("game");
+
+		bk::wstring l_game_name = bk::format(L"Game '%s'", bk::utf8(l_game_node.attribute("name").value()));
 
 		HTREEITEM hGame = m_wndClassView.InsertItem(l_game_name.c_str(), 0, 0);
 		m_wndClassView.SetItemState(hGame, TVIS_BOLD, TVIS_BOLD);
 
 		HTREEITEM hFolder = hGame;
-		bk::wstring l_folder;
+		bk::wstring l_last_folder;
 
-		for (bk::uint i = 0, s = theGameDoc->m_stages.size(); i < s; ++i)
+		for (pugi::xml_node l_stage_node = l_game_node.child("stage"); l_stage_node; l_stage_node = l_stage_node.next_sibling("stage"))
 		{
-			const CGameDoc::stage &l_stage = theGameDoc->m_stages[i];
+			bk::wstring l_name = bk::utf8(l_stage_node.attribute("name").value());
+			bk::wstring l_folder = bk::utf8(l_stage_node.attribute("folder").value());
 
-			if (l_folder != l_stage.folder)
+			if (l_folder != l_last_folder)
 			{
-				hFolder = m_wndClassView.InsertItem(l_stage.folder.c_str(), 2, 2, hGame);
-				l_folder = l_stage.folder;
+				hFolder = m_wndClassView.InsertItem(l_folder.c_str(), 2, 2, hGame);
+				l_last_folder = l_folder;
 			}
 
-			m_wndClassView.InsertItem(l_stage.name.c_str(), 3, 3, hFolder);
+			m_wndClassView.InsertItem(l_name.c_str(), 3, 3, hFolder);
 		}
+
+		//for (bk::uint i = 0, s = theGameDoc->m_stages.size(); i < s; ++i)
+		//{
+		//	const CGameDoc::stage &l_stage = theGameDoc->m_stages[i];
+
+		//	if (l_folder != l_stage.folder)
+		//	{
+		//		hFolder = m_wndClassView.InsertItem(l_stage.folder.c_str(), 2, 2, hGame);
+		//		l_folder = l_stage.folder;
+		//	}
+
+		//	m_wndClassView.InsertItem(l_stage.name.c_str(), 3, 3, hFolder);
+		//}
 
 		m_wndClassView.Expand(hGame, TVE_EXPAND);
 	}
