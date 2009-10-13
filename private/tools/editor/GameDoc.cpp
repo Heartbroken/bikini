@@ -45,15 +45,43 @@ BOOL CGameDoc::OnNewDocument()
 	assert(theGameDoc == NULL);
 	theGameDoc = this;
 
-	stage l_stage;
-	l_stage.name = L"0. Main Menu";
-	l_stage.folder = L"Main Menu";
-	m_stages.push_back(l_stage);
-	l_stage.name = L"1. Level 001";
-	l_stage.folder = L"Levels";
-	m_stages.push_back(l_stage);
-	l_stage.name = L"2. Level 002";
-	m_stages.push_back(l_stage);
+	//stage l_stage;
+	//l_stage.name = L"Main";
+	//l_stage.folder = L"";
+	//m_stages.push_back(l_stage);
+	//l_stage.name = L"1. Level 001";
+	//l_stage.folder = L"Levels";
+	//m_stages.push_back(l_stage);
+	//l_stage.name = L"2. Level 002";
+	//m_stages.push_back(l_stage);
+
+
+	bk::random l_random(GetTickCount());
+
+	pugi::xml_node l_game_node = m_document.append_child();
+	l_game_node.set_name("game");
+	l_game_node.append_attribute("name") = bk::utf8(GetTitle().GetString());
+	l_game_node.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+	{
+		pugi::xml_node l_stage_node = l_game_node.append_child();
+		l_stage_node.set_name("stage");
+		l_stage_node.append_attribute("name") = "Main";
+		l_stage_node.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+	}
+	{
+		pugi::xml_node l_stage_node = l_game_node.append_child();
+		l_stage_node.set_name("stage");
+		l_stage_node.append_attribute("name") = "Level 001";
+		l_stage_node.append_attribute("folder") = "Levels";
+		l_stage_node.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+	}
+	{
+		pugi::xml_node l_stage_node = l_game_node.append_child();
+		l_stage_node.set_name("stage");
+		l_stage_node.append_attribute("name") = "Level 002";
+		l_stage_node.append_attribute("folder") = "Levels";
+		l_stage_node.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+	}
 
 	CMainFrame* l_MainFrame = (CMainFrame*)theApp.GetMainWnd();
 	l_MainFrame->GetClassView().FillClassView();
@@ -100,28 +128,28 @@ void CGameDoc::Serialize(CArchive& ar)
 	if (ar.IsStoring())
 	{
 		// TODO: add storing code here
-		pugi::xml_document l_document;
-		pugi::xml_node l_game_node = l_document.append_child();
-		l_game_node.set_name("game");
-		l_game_node.append_attribute("name") = bk::utf8(GetTitle().GetString());
+		//pugi::xml_node l_game_node = m_document.append_child();
+		//l_game_node.set_name("game");
+		//l_game_node.append_attribute("name") = bk::utf8(GetTitle().GetString());
 
-		for (bk::uint i = 0, s = m_stages.size(); i < s; ++i)
-		{
-			const stage &l_stage = m_stages[i];
+		//for (bk::uint i = 0, s = m_stages.size(); i < s; ++i)
+		//{
+		//	const stage &l_stage = m_stages[i];
 
-			pugi::xml_node l_stage_node = l_game_node.append_child();
-			l_stage_node.set_name("stage");
-			l_stage_node.append_attribute("name") = bk::utf8(l_stage.name);
-			l_stage_node.append_attribute("folder") = bk::utf8(l_stage.folder);
-			l_stage_node.append_child().set_name("GUI");
-			l_stage_node.append_child().set_name("Scene");
-		}
+		//	pugi::xml_node l_stage_node = l_game_node.append_child();
+		//	l_stage_node.set_name("stage");
+		//	l_stage_node.append_attribute("name") = bk::utf8(l_stage.name);
+		//	l_stage_node.append_attribute("folder") = bk::utf8(l_stage.folder);
+		//	l_stage_node.append_child().set_name("GUI");
+		//	l_stage_node.append_child().set_name("Scene");
+		//}
 
 		std::ostringstream l_stream;
 		pugi::xml_writer_stream l_writer(l_stream);
-		l_document.save(l_writer, "    ", pugi::format_default|pugi::format_write_bom_utf8);
+		m_document.save(l_writer, "    ", pugi::format_default|pugi::format_write_bom_utf8);
 
 		std::string l_XML = l_stream.str();
+
 		size_t l_pos = l_XML.find("\n");
 		while (l_pos != std::string::npos)
 		{
@@ -144,18 +172,18 @@ void CGameDoc::Serialize(CArchive& ar)
 			if (l_read < l_buffer_max) break;
 		}
 
-		pugi::xml_document l_document;
-		l_document.load(l_XML.c_str());
+		//pugi::xml_document l_document;
+		m_document.load(l_XML.c_str());
 
-		pugi::xml_node l_game_node = l_document.child("game");
-		SetTitle(bk::utf8(l_game_node.attribute("name").value()));
-		for (pugi::xml_node l_stage_node = l_game_node.child("stage"); l_stage_node; l_stage_node = l_stage_node.next_sibling("stage"))
-		{
-			stage l_stage;
-			l_stage.name = bk::utf8(l_stage_node.attribute("name").value());
-			l_stage.folder = bk::utf8(l_stage_node.attribute("folder").value());
-			m_stages.push_back(l_stage);
-		}
+		//pugi::xml_node l_game_node = l_document.child("game");
+		//SetTitle(bk::utf8(l_game_node.attribute("name").value()));
+		//for (pugi::xml_node l_stage_node = l_game_node.child("stage"); l_stage_node; l_stage_node = l_stage_node.next_sibling("stage"))
+		//{
+		//	stage l_stage;
+		//	l_stage.name = bk::utf8(l_stage_node.attribute("name").value());
+		//	l_stage.folder = bk::utf8(l_stage_node.attribute("folder").value());
+		//	m_stages.push_back(l_stage);
+		//}
 	}
 }
 

@@ -95,6 +95,48 @@ inline const wchar* utf8(const astring &_s)
 	MultiByteToWideChar(CP_UTF8, 0, _s.c_str(), l_alength, &l_data[0], l_wlength);
 	return &l_data[0];
 }
+inline const achar* format(const achar* _format, ...)
+{
+	va_list l_args;
+	va_start(l_args, _format);
+
+	const uint l_buffer_max = 1024;
+	achar l_buffer[l_buffer_max];
+
+	sint l_length = vsprintf_s(l_buffer, _format, l_args);
+	
+	if (l_length <= 0) return 0;
+
+	l_buffer[l_length] = 0;
+
+	static achar_array l_data;
+	l_data.assign(l_buffer, l_buffer + l_length + 1);
+
+	va_end(l_args);
+
+	return &l_data[0];
+}
+inline const wchar* format(const wchar* _format, ...)
+{
+	va_list l_args;
+	va_start(l_args, _format);
+
+	const uint l_buffer_max = 1024;
+	wchar l_buffer[l_buffer_max];
+
+	sint l_length = vswprintf_s(l_buffer, _format, l_args);
+	
+	if (l_length <= 0) return 0;
+
+	l_buffer[l_length] = 0;
+
+	static wchar_array l_data;
+	l_data.assign(l_buffer, l_buffer + l_length + 1);
+
+	va_end(l_args);
+
+	return &l_data[0];
+}
 
 /// type selector template
 template<bool _C, typename _T0, typename _T1>
