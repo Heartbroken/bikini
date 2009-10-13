@@ -8,6 +8,14 @@
 
 class CGameDoc : public CDocument
 {
+public:
+	struct stage
+	{
+		bk::wstring name;
+		bk::wstring folder;
+	};
+	bk::array_<stage> m_stages;
+
 protected: // create from serialization only
 	CGameDoc();
 	DECLARE_DYNCREATE(CGameDoc)
@@ -22,6 +30,7 @@ public:
 public:
 	virtual BOOL OnNewDocument();
 	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
+	virtual void OnCloseDocument();
 	virtual void Serialize(CArchive& ar);
 
 // Implementation

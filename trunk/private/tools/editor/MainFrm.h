@@ -32,6 +32,7 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
+	CClassView& GetClassView() { return m_wndClassView; }
 	// bikini
 	void console_output(const bk::wstring &_string);
 

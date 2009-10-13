@@ -28,7 +28,7 @@ inline void set_thread_name(uint _ID, const achar* _name);
 	Allows to check if enclosed function finished execution and to get execution result.
  */
 template<typename _R, typename _A0 = notype, typename _A1 = notype, typename _A2 = notype, typename _A3 = notype, typename _A4 = notype, typename _A5 = notype, typename _A6 = notype, typename _A7 = notype, typename _A8 = notype, typename _A9 = notype>
-struct task_ : uncopyble {
+struct task_ : noncopyable {
 	/// construct a task from a function or a functor
 	template<typename _F> inline task_(_F &_f, const achar* _name = 0, sint _priority = THREAD_PRIORITY_NORMAL, uint _stacksize = 0, uint _processor = bad_ID);
 	/// construct a task ftom a member function
@@ -63,7 +63,7 @@ typedef task_<void> task;
 	Unfortunately "event" is a reserved keyword in C++.
 	So I'll call my event a flag.
  */
-struct flag : uncopyble {
+struct flag : noncopyable {
 	/// constructor
 	inline flag(bool _manual = false, bool _state = false, const astring &_name = "");
 	/// destructor

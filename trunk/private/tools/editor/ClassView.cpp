@@ -5,6 +5,9 @@
 #include "Resource.h"
 #include "editor.h"
 
+#include "GameDoc.h"
+extern CGameDoc *theGameDoc;
+
 class CClassViewMenuButton : public CMFCToolBarMenuButton
 {
 	friend class CClassView;
@@ -123,18 +126,46 @@ void CClassView::OnSize(UINT nType, int cx, int cy)
 
 void CClassView::FillClassView()
 {
-	HTREEITEM hGame = m_wndClassView.InsertItem(_T("Game 'game1'"), 0, 0);
-	m_wndClassView.SetItemState(hGame, TVIS_BOLD, TVIS_BOLD);
+	m_wndClassView.DeleteAllItems();
 
-	HTREEITEM hFolder;
+	if (theGameDoc != NULL)
+	{
 
-	hFolder = m_wndClassView.InsertItem(_T("Levels"), 2, 2, hGame);
+		bk::wstring l_game_name = L"Game '";
+		l_game_name += theGameDoc->GetTitle().GetString();
+		l_game_name += L"'";
 
-	hFolder = m_wndClassView.InsertItem(_T("Menus"), 2, 2, hGame);
+		HTREEITEM hGame = m_wndClassView.InsertItem(l_game_name.c_str(), 0, 0);
+		m_wndClassView.SetItemState(hGame, TVIS_BOLD, TVIS_BOLD);
 
-	hFolder = m_wndClassView.InsertItem(_T("Resources"), 2, 2, hGame);
+		HTREEITEM hFolder = hGame;
+		bk::wstring l_folder;
 
-	m_wndClassView.Expand(hGame, TVE_EXPAND);
+		for (bk::uint i = 0, s = theGameDoc->m_stages.size(); i < s; ++i)
+		{
+			const CGameDoc::stage &l_stage = theGameDoc->m_stages[i];
+
+			if (l_folder != l_stage.folder)
+			{
+				hFolder = m_wndClassView.InsertItem(l_stage.folder.c_str(), 2, 2, hGame);
+				l_folder = l_stage.folder;
+			}
+
+			m_wndClassView.InsertItem(l_stage.name.c_str(), 3, 3, hFolder);
+		}
+
+		m_wndClassView.Expand(hGame, TVE_EXPAND);
+	}
+
+	//HTREEITEM hFolder;
+
+	//hFolder = m_wndClassView.InsertItem(_T("Levels"), 2, 2, hGame);
+
+	//hFolder = m_wndClassView.InsertItem(_T("Menus"), 2, 2, hGame);
+
+	//hFolder = m_wndClassView.InsertItem(_T("Resources"), 2, 2, hGame);
+
+	//m_wndClassView.Expand(hGame, TVE_EXPAND);
 
 	//HTREEITEM hRoot = m_wndClassView.InsertItem(_T("Game 'game1'"), 0, 0);
 	//m_wndClassView.SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
@@ -332,4 +363,9 @@ void CClassView::OnChangeVisualStyle()
 
 	m_wndToolBar.CleanUpLockedImages();
 	m_wndToolBar.LoadBitmap(theApp.m_bHiColorIcons ? IDB_SORT_24 : IDR_SORT, 0, 0, TRUE /* Locked */);
+}
+
+void CClassView::Clear()
+{
+	m_wndClassView.DeleteAllItems();
 }
