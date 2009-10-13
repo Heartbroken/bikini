@@ -78,6 +78,24 @@ typedef array_<wchar> wchar_array;
 typedef array_<astring> astring_array;
 typedef array_<wstring> wstring_array;
 
+///
+inline const achar* utf8(const wstring &_s)
+{
+	uint l_wlength = _s.length() + 1;
+	uint l_alength = WideCharToMultiByte(CP_UTF8, 0, _s.c_str(), l_wlength, 0, 0, 0, 0);
+	static achar_array l_data; l_data.resize(l_alength);
+	WideCharToMultiByte(CP_UTF8, 0, _s.c_str(), l_wlength, &l_data[0], l_alength, 0, 0);
+	return &l_data[0];
+}
+inline const wchar* utf8(const astring &_s)
+{
+	uint l_alength = _s.length() + 1;
+	uint l_wlength = MultiByteToWideChar(CP_UTF8, 0, _s.c_str(), l_alength, 0, 0);
+	static wchar_array l_data; l_data.resize(l_wlength);
+	MultiByteToWideChar(CP_UTF8, 0, _s.c_str(), l_alength, &l_data[0], l_wlength);
+	return &l_data[0];
+}
+
 /// type selector template
 template<bool _C, typename _T0, typename _T1>
 struct select_ {
@@ -88,12 +106,12 @@ struct select_<false, _T0, _T1> {
 	typedef _T1 type;
 };
 
-/// uncopyble type
-struct uncopyble {
-	inline uncopyble() {}
+/// noncopyable type
+struct noncopyable {
+	inline noncopyable() {}
 private:
-	inline uncopyble(const uncopyble&);
-	inline uncopyble& operator = (const uncopyble&);
+	inline noncopyable(const noncopyable&);
+	inline noncopyable& operator = (const noncopyable&);
 };
 
 /// notype type

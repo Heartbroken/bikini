@@ -22,13 +22,15 @@ public:
 	void AdjustLayout();
 	void OnChangeVisualStyle();
 
+	void Clear();
+
+	void FillClassView();
+
 protected:
 	CClassToolBar m_wndToolBar;
 	CViewTree m_wndClassView;
 	CImageList m_ClassViewImages;
 	UINT m_nCurrSort;
-
-	void FillClassView();
 
 // Overrides
 public:

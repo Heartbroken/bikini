@@ -11,15 +11,15 @@
 /// manager
 /**	[TODO]
  */
-struct manager : uncopyble {
+struct manager : noncopyable {
 	/// manager::object
 	/**	[TODO]
 	 */
-	struct object : uncopyble {
+	struct object : noncopyable {
 		/// manager::object::info
 		/**	[TODO]
 		 */
-		struct info : uncopyble {
+		struct info : noncopyable {
 			info(uint _type);
 			virtual ~info();
 			inline uint type() const;

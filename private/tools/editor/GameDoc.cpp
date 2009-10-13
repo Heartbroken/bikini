@@ -6,12 +6,13 @@
 #include "editor.h"
 
 #include "GameDoc.h"
+#include "MainFrm.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
-static CGameDoc *theGameDoc = NULL;
+CGameDoc *theGameDoc = NULL;
 
 // CGameDoc
 
@@ -41,7 +42,21 @@ BOOL CGameDoc::OnNewDocument()
 	// TODO: add reinitialization code here
 	// (SDI documents will reuse this document)
 	if (theGameDoc) theGameDoc->OnCloseDocument();
+	assert(theGameDoc == NULL);
 	theGameDoc = this;
+
+	stage l_stage;
+	l_stage.name = L"0. Main Menu";
+	l_stage.folder = L"Main Menu";
+	m_stages.push_back(l_stage);
+	l_stage.name = L"1. Level 001";
+	l_stage.folder = L"Levels";
+	m_stages.push_back(l_stage);
+	l_stage.name = L"2. Level 002";
+	m_stages.push_back(l_stage);
+
+	CMainFrame* l_MainFrame = (CMainFrame*)theApp.GetMainWnd();
+	l_MainFrame->GetClassView().FillClassView();
 
 	return TRUE;
 }
@@ -55,9 +70,24 @@ BOOL CGameDoc::OnOpenDocument(LPCTSTR lpszPathName)
 
 	// TODO:  Add your specialized creation code here
 	if (theGameDoc) theGameDoc->OnCloseDocument();
+	assert(theGameDoc == NULL);
 	theGameDoc = this;
 
+	CMainFrame* l_MainFrame = (CMainFrame*)theApp.GetMainWnd();
+	l_MainFrame->GetClassView().FillClassView();
+
 	return TRUE;
+}
+
+void CGameDoc::OnCloseDocument()
+{
+	// TODO: Add your specialized code here and/or call the base class
+	if (theGameDoc == this) theGameDoc = NULL;
+
+	CMainFrame* l_MainFrame = (CMainFrame*)theApp.GetMainWnd();
+	l_MainFrame->GetClassView().FillClassView();
+
+	CDocument::OnCloseDocument();
 }
 
 
@@ -71,18 +101,25 @@ void CGameDoc::Serialize(CArchive& ar)
 	{
 		// TODO: add storing code here
 		pugi::xml_document l_document;
-		pugi::xml_node l_game = l_document.append_child();
-		l_game.set_name("game");
-		l_game.append_attribute("name") = pugi::as_utf8(GetTitle()).c_str();
-		pugi::xml_node l_levels = l_game.append_child();
-		l_levels.set_name("levels");
-		pugi::xml_node l_level_001 = l_levels.append_child();
-		l_level_001.set_name("level_001");
-		l_level_001.append_attribute("description") = pugi::as_utf8(L"Тестовый уровень").c_str();
+		pugi::xml_node l_game_node = l_document.append_child();
+		l_game_node.set_name("game");
+		l_game_node.append_attribute("name") = bk::utf8(GetTitle().GetString());
+
+		for (bk::uint i = 0, s = m_stages.size(); i < s; ++i)
+		{
+			const stage &l_stage = m_stages[i];
+
+			pugi::xml_node l_stage_node = l_game_node.append_child();
+			l_stage_node.set_name("stage");
+			l_stage_node.append_attribute("name") = bk::utf8(l_stage.name);
+			l_stage_node.append_attribute("folder") = bk::utf8(l_stage.folder);
+			l_stage_node.append_child().set_name("GUI");
+			l_stage_node.append_child().set_name("Scene");
+		}
 
 		std::ostringstream l_stream;
 		pugi::xml_writer_stream l_writer(l_stream);
-		l_document.save(l_writer, "\x09", pugi::format_default|pugi::format_write_bom_utf8);
+		l_document.save(l_writer, "    ", pugi::format_default|pugi::format_write_bom_utf8);
 
 		std::string l_XML = l_stream.str();
 		size_t l_pos = l_XML.find("\n");
@@ -110,9 +147,15 @@ void CGameDoc::Serialize(CArchive& ar)
 		pugi::xml_document l_document;
 		l_document.load(l_XML.c_str());
 
-		pugi::xml_node l_game = l_document.child("game");
-		pugi::xml_node l_levels = l_game.child("levels");
-		pugi::xml_node l_level_001 = l_levels.child("level_001");
+		pugi::xml_node l_game_node = l_document.child("game");
+		SetTitle(bk::utf8(l_game_node.attribute("name").value()));
+		for (pugi::xml_node l_stage_node = l_game_node.child("stage"); l_stage_node; l_stage_node = l_stage_node.next_sibling("stage"))
+		{
+			stage l_stage;
+			l_stage.name = bk::utf8(l_stage_node.attribute("name").value());
+			l_stage.folder = bk::utf8(l_stage_node.attribute("folder").value());
+			m_stages.push_back(l_stage);
+		}
 	}
 }
 
