@@ -6,7 +6,6 @@
 #include "editor.h"
 
 #include "GameDoc.h"
-extern CGameDoc *theGameDoc;
 
 class CClassViewMenuButton : public CMFCToolBarMenuButton
 {
@@ -137,24 +136,44 @@ void CClassView::FillClassView()
 		bk::wstring l_game_name = bk::format(L"Game '%s'", bk::utf8(l_game_node.attribute("name").value()));
 
 		HTREEITEM hGame = m_wndClassView.InsertItem(l_game_name.c_str(), 0, 0);
-		m_wndClassView.SetItemState(hGame, TVIS_BOLD, TVIS_BOLD);
+		//m_wndClassView.SetItemState(hGame, TVIS_BOLD, TVIS_BOLD);
 
-		HTREEITEM hFolder = hGame;
-		bk::wstring l_last_folder;
-
-		for (pugi::xml_node l_stage_node = l_game_node.child("stage"); l_stage_node; l_stage_node = l_stage_node.next_sibling("stage"))
+		struct _l { static void AddChildren(CViewTree* pTree, HTREEITEM _hFolder, pugi::xml_node _folder)
 		{
-			bk::wstring l_name = bk::utf8(l_stage_node.attribute("name").value());
-			bk::wstring l_folder = bk::utf8(l_stage_node.attribute("folder").value());
-
-			if (l_folder != l_last_folder)
+			for (pugi::xml_node l_child = _folder.first_child(); l_child; l_child = l_child.next_sibling())
 			{
-				hFolder = m_wndClassView.InsertItem(l_folder.c_str(), 2, 2, hGame);
-				l_last_folder = l_folder;
-			}
+				bk::wstring l_type = bk::utf8(l_child.name());
+				bk::wstring l_name = bk::utf8(l_child.attribute("name").value());
 
-			m_wndClassView.InsertItem(l_name.c_str(), 3, 3, hFolder);
-		}
+				if (l_type == L"folder")
+				{
+					HTREEITEM l_hFolder = pTree->InsertItem(l_name.c_str(), 2, 2, _hFolder);
+					AddChildren(pTree, l_hFolder, l_child);
+				}
+				else if (l_type == L"stage")
+				{
+					pTree->InsertItem(l_name.c_str(), 3, 3, _hFolder);
+				}
+			}
+		}};
+
+		_l::AddChildren(&m_wndClassView, hGame, l_game_node);
+
+		//HTREEITEM hFolder = hGame;
+
+		//for (pugi::xml_node l_stage_node = l_game_node.child(); l_stage_node; l_stage_node = l_stage_node.next_sibling())
+		//{
+		//	bk::wstring l_type = bk::utf8(l_stage_node.name());
+		//	bk::wstring l_name = bk::utf8(l_stage_node.attribute("name").value());
+
+		//	if (l_folder != l_last_folder)
+		//	{
+		//		hFolder = m_wndClassView.InsertItem(l_folder.c_str(), 2, 2, hGame);
+		//		l_last_folder = l_folder;
+		//	}
+
+		//	m_wndClassView.InsertItem(l_name.c_str(), 3, 3, hFolder);
+		//}
 
 		//for (bk::uint i = 0, s = theGameDoc->m_stages.size(); i < s; ++i)
 		//{

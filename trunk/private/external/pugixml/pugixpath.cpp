@@ -511,6 +511,9 @@ namespace
 
 namespace pugi
 {
+	// @@@ reutskyy
+	extern int strcmp(const char *string1, const char *string2);
+
 	xpath_exception::xpath_exception(const char* message): m_message(message)
 	{
 	}

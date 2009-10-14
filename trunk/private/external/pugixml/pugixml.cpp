@@ -20,6 +20,9 @@
 #include <string.h>
 #include <assert.h>
 
+// @@@ reutskyy
+#include <mbstring.h>
+
 // For placement new
 #include <new>
 
@@ -68,6 +71,12 @@ namespace
 
 namespace pugi
 {
+	// @@@ reutskyy
+	int strcmp(const char *string1, const char *string2)
+	{
+		return _mbsicmp((const unsigned char*)string1, (const unsigned char*)string2);
+	}
+
 	struct xml_document_struct;
 
 	class xml_allocator
