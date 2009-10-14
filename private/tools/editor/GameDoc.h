@@ -51,4 +51,5 @@ protected:
 public:
 };
 
+extern CGameDoc *theGameDoc;
 

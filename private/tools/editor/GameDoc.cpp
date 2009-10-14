@@ -65,22 +65,26 @@ BOOL CGameDoc::OnNewDocument()
 	{
 		pugi::xml_node l_stage_node = l_game_node.append_child();
 		l_stage_node.set_name("stage");
-		l_stage_node.append_attribute("name") = "Main";
+		l_stage_node.append_attribute("name") = "Main menu";
 		l_stage_node.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
 	}
 	{
-		pugi::xml_node l_stage_node = l_game_node.append_child();
-		l_stage_node.set_name("stage");
-		l_stage_node.append_attribute("name") = "Level 001";
-		l_stage_node.append_attribute("folder") = "Levels";
-		l_stage_node.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
-	}
-	{
-		pugi::xml_node l_stage_node = l_game_node.append_child();
-		l_stage_node.set_name("stage");
-		l_stage_node.append_attribute("name") = "Level 002";
-		l_stage_node.append_attribute("folder") = "Levels";
-		l_stage_node.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+		pugi::xml_node l_folder_node = l_game_node.append_child();
+		l_folder_node.set_name("folder");
+		l_folder_node.append_attribute("name") = "Levels";
+		l_folder_node.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+		{
+			pugi::xml_node l_stage_node = l_folder_node.append_child();
+			l_stage_node.set_name("stage");
+			l_stage_node.append_attribute("name") = "Level 001";
+			l_stage_node.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+		}
+		{
+			pugi::xml_node l_stage_node = l_folder_node.append_child();
+			l_stage_node.set_name("stage");
+			l_stage_node.append_attribute("name") = "Level 002";
+			l_stage_node.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+		}
 	}
 
 	CMainFrame* l_MainFrame = (CMainFrame*)theApp.GetMainWnd();
