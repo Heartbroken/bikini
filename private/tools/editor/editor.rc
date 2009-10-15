@@ -409,7 +409,7 @@ END
 STRINGTABLE 
 BEGIN
     IDR_MAINFRAME           "bikini"
-    IDR_gameTYPE            "\nUntitled_\ngame\nbikini games (*.game)\n.game\nbikini.game\nbikini.game"
+    IDR_gameTYPE            "\n\nProject\nBikini Projects (*.bkproj)\n.bkproj\nBikini.Project\nBikini Project"
     IDS_WINDOWS_MANAGER     "&Windows..."
 END
 

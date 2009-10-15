@@ -11,9 +11,9 @@
 /// create random GUID
 inline GUID random_GUID(random &_random = random_0);
 
-_astring format(const GUID &_g);
-GUID scan_GUID(const astring &_s);
-GUID scan_GUID(const wstring &_s);
+_string print_GUID(const GUID &_g);
+GUID scan_GUID(const _string &_s);
+//GUID scan_GUID(const wstring &_s);
 
 /// bad GUID
 const GUID bad_GUID = { 0xffffffff, 0xffff, 0xffff, { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff } };

@@ -52,6 +52,7 @@ protected:
 protected:
 	DECLARE_MESSAGE_MAP()
 public:
+	virtual void SetPathName(LPCTSTR lpszPathName, BOOL bAddToMRU = TRUE);
 };
 
 extern CGameDoc *theGameDoc;
