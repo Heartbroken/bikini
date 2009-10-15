@@ -82,7 +82,7 @@ int CPropertiesWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;      // fail to create
 	}
 
-	m_wndObjectCombo.AddString(_T("Game"));
+	//m_wndObjectCombo.AddString(_T("Game"));
 	//m_wndObjectCombo.AddString(_T("Properties Window"));
 	m_wndObjectCombo.SetFont(CFont::FromHandle((HFONT) GetStockObject(DEFAULT_GUI_FONT)));
 	m_wndObjectCombo.SetCurSel(0);
@@ -165,7 +165,26 @@ void CPropertiesWnd::InitPropList()
 	m_wndPropList.SetVSDotNetLook();
 	m_wndPropList.MarkModifiedProperties();
 
-	m_wndPropList.AddProperty(new CMFCPropertyGridProperty(_T("Name"), _T("Untitled_1"), _T("Name of the project")));
+	while (m_wndPropList.GetPropertyCount() > 0)
+	{
+		CMFCPropertyGridProperty* pProp = m_wndPropList.GetProperty(0);
+		m_wndPropList.DeleteProperty(pProp);
+	}
+
+	if (theGameDoc != NULL)
+	{
+		pugi::xml_node l_node = theGameDoc->GetNodeByGUID(theGameDoc->SelectedNode());
+
+		for (pugi::xml_node l_prop = l_node.child("property"); l_prop; l_prop = l_prop.next_sibling("property"))
+		{
+			bk::wstring l_attr_name = bk::utf8(l_prop.attribute("name").value());
+			bk::wstring l_attr_value = bk::utf8(l_prop.attribute("value").value());
+
+			m_wndPropList.AddProperty(new CMFCPropertyGridProperty(l_attr_name.c_str(), l_attr_value.c_str()));
+		}
+	}
+
+	//m_wndPropList.AddProperty(new CMFCPropertyGridProperty(_T("Name"), _T("Untitled_1"), _T("Name of the project")));
 
 	//CMFCPropertyGridProperty* pGroup1 = new CMFCPropertyGridProperty(_T("Game"));
 
@@ -285,14 +304,15 @@ LRESULT CPropertiesWnd::OnPropertyChanged(__in WPARAM wparam, __in LPARAM lparam
 {
 	CMFCPropertyGridProperty * pProperty = ( CMFCPropertyGridProperty * ) lparam;
 
-	bk::wstring l_name = pProperty->GetName();
-	bk::wstring l_value = pProperty->GetValue().bstrVal;
+	bk::astring l_name = bk::utf8(pProperty->GetName());
+	bk::astring l_value = bk::utf8(pProperty->GetValue().bstrVal);
 
 	if (theGameDoc != NULL)
 	{
-		pugi::xml_node l_game = theGameDoc->m_document.child("game");
-		pugi::xml_attribute l_game_name = l_game.attribute(bk::utf8(l_name));
-		l_game_name.set_value(bk::utf8(l_value));
+		pugi::xml_node l_node = theGameDoc->GetNodeByGUID(theGameDoc->SelectedNode());
+		pugi::xml_node l_prop = l_node.find_child_by_attribute("property", "name", l_name.c_str());
+
+		if (l_prop) l_prop.attribute("value") = l_value.c_str();
 	}
 
 	return 0;

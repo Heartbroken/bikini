@@ -57,6 +57,7 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 
+public:
 	void InitPropList();
 	void SetPropListFont();
 };

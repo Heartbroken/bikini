@@ -33,6 +33,8 @@ public:
 #endif
 
 	CClassView& GetClassView() { return m_wndClassView; }
+	CPropertiesWnd& GetPropertiesWnd() { return m_wndProperties; }
+
 	// bikini
 	void console_output(const bk::wstring &_string);
 
