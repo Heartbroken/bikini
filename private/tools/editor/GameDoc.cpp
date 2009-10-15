@@ -70,6 +70,12 @@ BOOL CGameDoc::OnNewDocument()
 		l_prop.append_attribute("value") = "New Game";
 	}
 	{
+		pugi::xml_node l_prop = l_game.append_child();
+		l_prop.set_name("property");
+		l_prop.append_attribute("name") = "Resources";
+		l_prop.append_attribute("value") = "";
+	}
+	{
 		pugi::xml_node l_stage = l_game.append_child();
 		l_stage.set_name("stage");
 		l_stage.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
