@@ -47,22 +47,12 @@ BOOL CGameDoc::OnNewDocument()
 	assert(theGameDoc == NULL);
 	theGameDoc = this;
 
-	//stage l_stage;
-	//l_stage.name = L"Main";
-	//l_stage.folder = L"";
-	//m_stages.push_back(l_stage);
-	//l_stage.name = L"1. Level 001";
-	//l_stage.folder = L"Levels";
-	//m_stages.push_back(l_stage);
-	//l_stage.name = L"2. Level 002";
-	//m_stages.push_back(l_stage);
-
 
 	bk::random l_random(GetTickCount());
 
 	pugi::xml_node l_game = m_document.append_child();
 	l_game.set_name("game");
-	l_game.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+	l_game.append_attribute("GUID") = bk::print_GUID(bk::random_GUID(l_random));
 	{
 		pugi::xml_node l_prop = l_game.append_child();
 		l_prop.set_name("property");
@@ -78,7 +68,7 @@ BOOL CGameDoc::OnNewDocument()
 	{
 		pugi::xml_node l_stage = l_game.append_child();
 		l_stage.set_name("stage");
-		l_stage.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+		l_stage.append_attribute("GUID") = bk::print_GUID(bk::random_GUID(l_random));
 		{
 			pugi::xml_node l_prop = l_stage.append_child();
 			l_prop.set_name("property");
@@ -89,7 +79,7 @@ BOOL CGameDoc::OnNewDocument()
 	{
 		pugi::xml_node l_folder = l_game.append_child();
 		l_folder.set_name("folder");
-		l_folder.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+		l_folder.append_attribute("GUID") = bk::print_GUID(bk::random_GUID(l_random));
 		{
 			pugi::xml_node l_prop = l_folder.append_child();
 			l_prop.set_name("property");
@@ -99,7 +89,7 @@ BOOL CGameDoc::OnNewDocument()
 		{
 			pugi::xml_node l_stage = l_folder.append_child();
 			l_stage.set_name("stage");
-			l_stage.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+			l_stage.append_attribute("GUID") = bk::print_GUID(bk::random_GUID(l_random));
 			{
 				pugi::xml_node l_prop = l_stage.append_child();
 				l_prop.set_name("property");
@@ -110,7 +100,7 @@ BOOL CGameDoc::OnNewDocument()
 		{
 			pugi::xml_node l_stage = l_folder.append_child();
 			l_stage.set_name("stage");
-			l_stage.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+			l_stage.append_attribute("GUID") = bk::print_GUID(bk::random_GUID(l_random));
 			{
 				pugi::xml_node l_prop = l_stage.append_child();
 				l_prop.set_name("property");
@@ -151,6 +141,7 @@ void CGameDoc::OnCloseDocument()
 
 	CMainFrame* l_MainFrame = (CMainFrame*)theApp.GetMainWnd();
 	l_MainFrame->GetClassView().FillClassView();
+	l_MainFrame->GetPropertiesWnd().InitPropList();
 
 	CDocument::OnCloseDocument();
 }
@@ -165,22 +156,6 @@ void CGameDoc::Serialize(CArchive& ar)
 	if (ar.IsStoring())
 	{
 		// TODO: add storing code here
-		//pugi::xml_node l_game_node = m_document.append_child();
-		//l_game_node.set_name("game");
-		//l_game_node.append_attribute("name") = bk::utf8(GetTitle().GetString());
-
-		//for (bk::uint i = 0, s = m_stages.size(); i < s; ++i)
-		//{
-		//	const stage &l_stage = m_stages[i];
-
-		//	pugi::xml_node l_stage_node = l_game_node.append_child();
-		//	l_stage_node.set_name("stage");
-		//	l_stage_node.append_attribute("name") = bk::utf8(l_stage.name);
-		//	l_stage_node.append_attribute("folder") = bk::utf8(l_stage.folder);
-		//	l_stage_node.append_child().set_name("GUI");
-		//	l_stage_node.append_child().set_name("Scene");
-		//}
-
 		std::ostringstream l_stream;
 		pugi::xml_writer_stream l_writer(l_stream);
 		m_document.save(l_writer, "    ", pugi::format_default|pugi::format_write_bom_utf8);
@@ -209,18 +184,7 @@ void CGameDoc::Serialize(CArchive& ar)
 			if (l_read < l_buffer_max) break;
 		}
 
-		//pugi::xml_document l_document;
 		m_document.load(l_XML.c_str());
-
-		//pugi::xml_node l_game_node = l_document.child("game");
-		//SetTitle(bk::utf8(l_game_node.attribute("name").value()));
-		//for (pugi::xml_node l_stage_node = l_game_node.child("stage"); l_stage_node; l_stage_node = l_stage_node.next_sibling("stage"))
-		//{
-		//	stage l_stage;
-		//	l_stage.name = bk::utf8(l_stage_node.attribute("name").value());
-		//	l_stage.folder = bk::utf8(l_stage_node.attribute("folder").value());
-		//	m_stages.push_back(l_stage);
-		//}
 	}
 }
 
@@ -240,7 +204,7 @@ pugi::xml_node CGameDoc::GetNodeByGUID(const GUID &_g)
 	struct _by_GUID
 	{
 		bk::astring s;
-		_by_GUID(const GUID &_g) : s(bk::format(_g)) {}
+		_by_GUID(const GUID &_g) : s(bk::print_GUID(_g)) {}
 		bool operator () (const pugi::xml_node &_n)
 		{
 			return s == _n.attribute("GUID").value();
@@ -265,3 +229,15 @@ void CGameDoc::Dump(CDumpContext& dc) const
 }
 #endif //_DEBUG
 
+
+void CGameDoc::SetPathName(LPCTSTR lpszPathName, BOOL bAddToMRU)
+{
+	// TODO: Add your specialized code here and/or call the base class
+
+	CDocument::SetPathName(lpszPathName, bAddToMRU);
+
+	pugi::xml_node l_game_node = m_document.child("game");
+	bk::_string l_game_name = l_game_node.find_child_by_attribute("property", "name", "Name").attribute("value").value();
+	SetTitle(l_game_name);
+
+}
