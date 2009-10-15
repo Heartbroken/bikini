@@ -536,6 +536,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\string.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\bikini\base\typelist.inl"
 				>
 			</File>
@@ -641,6 +645,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\bikini\base\ring.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\bikini\base\string.hpp"
 				>
 			</File>
 			<File

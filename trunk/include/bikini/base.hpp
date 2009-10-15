@@ -42,6 +42,7 @@ namespace bk { /*---------------------------------------------------------------
 
 #include "base/defines.hpp"
 #include "base/types.hpp"
+#include "base/string.hpp"
 #include "base/constants.hpp"
 #include "base/assert.hpp"
 #include "base/typelist.hpp"
