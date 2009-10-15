@@ -72,10 +72,10 @@ namespace
 namespace pugi
 {
 	// @@@ reutskyy
-	int strcmp(const char *string1, const char *string2)
-	{
-		return _mbsicmp((const unsigned char*)string1, (const unsigned char*)string2);
-	}
+	//int strcmp(const char *string1, const char *string2)
+	//{
+	//	return _mbsicmp((const unsigned char*)string1, (const unsigned char*)string2);
+	//}
 
 	struct xml_document_struct;
 

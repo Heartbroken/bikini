@@ -10,13 +10,6 @@ class CGameDoc : public CDocument
 {
 
 public:
-	//struct stage
-	//{
-	//	bk::wstring name;
-	//	bk::wstring folder;
-	//};
-	//bk::array_<stage> m_stages;
-	pugi::xml_document m_document;
 
 protected: // create from serialization only
 	CGameDoc();
@@ -34,6 +27,16 @@ public:
 	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
 	virtual void OnCloseDocument();
 	virtual void Serialize(CArchive& ar);
+
+// bikini game xml
+public:
+	pugi::xml_document m_document;
+
+	// Selected node
+	GUID m_selected;
+	const GUID& SelectedNode();
+	void SetSelectedNode(const GUID &_g);
+	pugi::xml_node GetNodeByGUID(const GUID &_g);
 
 // Implementation
 public:

@@ -125,39 +125,72 @@ void CClassView::OnSize(UINT nType, int cx, int cy)
 
 void CClassView::FillClassView()
 {
-	m_wndClassView.DeleteAllItems();
 
+	// Delete items and their data
+	HTREEITEM hDeleteItem = m_wndClassView.GetChildItem(TVI_ROOT);
+	while (hDeleteItem)
+	{
+		HTREEITEM hNextItem = m_wndClassView.GetNextItem(hDeleteItem, TVGN_CHILD);
+
+		if (hNextItem == NULL)
+		{
+			hNextItem = m_wndClassView.GetNextItem(hDeleteItem, TVGN_NEXT);
+			if (hNextItem == NULL) hNextItem = m_wndClassView.GetNextItem(hDeleteItem, TVGN_PARENT);
+
+			GUID &l_GUID = *(GUID*)m_wndClassView.GetItemData(hDeleteItem);
+			m_wndClassView.SetItemData(hDeleteItem, NULL);
+			if (&l_GUID) delete &l_GUID;
+
+			m_wndClassView.DeleteItem(hDeleteItem);
+		}
+
+		hDeleteItem = hNextItem;
+	}
+
+	// Fill the tree with new items
 	if (theGameDoc != NULL)
 	{
 		pugi::xml_document &l_document = theGameDoc->m_document;
 
 		pugi::xml_node l_game_node = l_document.child("game");
 
-		bk::wstring l_game_name = bk::format(L"Game '%s'", bk::utf8(l_game_node.attribute("name").value()));
+		GUID l_game_GUID = bk::scan_GUID(l_game_node.attribute("GUID").value());
+		bk::wstring l_game_name = bk::utf8(l_game_node.find_child_by_attribute("property", "name", "Name").attribute("value").value());
+		//l_game_name = bk::format(L"Game '%s'", l_game_name.c_str());
+
+		//bk::wstring l_game_name = bk::format(L"Game '%s'", bk::utf8(l_game_node.attribute("name").value()));
+		//GUID l_game_GUID = bk::scan_GUID(l_game_node.attribute("GUID").value());
 
 		HTREEITEM hGame = m_wndClassView.InsertItem(l_game_name.c_str(), 0, 0);
+		m_wndClassView.SetItemData(hGame, (DWORD_PTR) new GUID(l_game_GUID));
 		//m_wndClassView.SetItemState(hGame, TVIS_BOLD, TVIS_BOLD);
 
-		struct _l { static void AddChildren(CViewTree* pTree, HTREEITEM _hFolder, pugi::xml_node _folder)
+		struct _l { static void AddChildren(CViewTree &_tree, HTREEITEM _hFolder, pugi::xml_node _folder)
 		{
 			for (pugi::xml_node l_child = _folder.first_child(); l_child; l_child = l_child.next_sibling())
 			{
 				bk::wstring l_type = bk::utf8(l_child.name());
-				bk::wstring l_name = bk::utf8(l_child.attribute("name").value());
+
+				if (l_type == L"property") continue;
+
+				GUID l_GUID = bk::scan_GUID(l_child.attribute("GUID").value());
+				bk::wstring l_name = bk::utf8(l_child.find_child_by_attribute("property", "name", "Name").attribute("value").value());
 
 				if (l_type == L"folder")
 				{
-					HTREEITEM l_hFolder = pTree->InsertItem(l_name.c_str(), 2, 2, _hFolder);
-					AddChildren(pTree, l_hFolder, l_child);
+					HTREEITEM hFolder = _tree.InsertItem(l_name.c_str(), 2, 2, _hFolder);
+					_tree.SetItemData(hFolder, (DWORD_PTR) new GUID(l_GUID));
+					AddChildren(_tree, hFolder, l_child);
 				}
 				else if (l_type == L"stage")
 				{
-					pTree->InsertItem(l_name.c_str(), 3, 3, _hFolder);
+					HTREEITEM hStage = _tree.InsertItem(l_name.c_str(), 3, 3, _hFolder);
+					_tree.SetItemData(hStage, (DWORD_PTR) new GUID(l_GUID));
 				}
 			}
 		}};
 
-		_l::AddChildren(&m_wndClassView, hGame, l_game_node);
+		_l::AddChildren(m_wndClassView, hGame, l_game_node);
 
 		//HTREEITEM hFolder = hGame;
 
@@ -189,6 +222,7 @@ void CClassView::FillClassView()
 		//}
 
 		m_wndClassView.Expand(hGame, TVE_EXPAND);
+		m_wndClassView.SelectItem(hGame);
 	}
 
 	//HTREEITEM hFolder;
@@ -402,4 +436,73 @@ void CClassView::OnChangeVisualStyle()
 void CClassView::Clear()
 {
 	m_wndClassView.DeleteAllItems();
+}
+
+//void CClassView::OnLButtonUp(UINT nFlags, CPoint point)
+//{
+//	// TODO: Add your message handler code here and/or call default
+//	CTreeCtrl* pWndTree = (CTreeCtrl*)&m_wndClassView;
+//	ASSERT_VALID(pWndTree);
+//
+//	if (pWnd != pWndTree)
+//	{
+//		CDockablePane::OnContextMenu(pWnd, point);
+//		return;
+//	}
+//
+//	if (point != CPoint(-1, -1))
+//	{
+//		// Select clicked item:
+//		CPoint ptTree = point;
+//		pWndTree->ScreenToClient(&ptTree);
+//
+//		UINT flags = 0;
+//		HTREEITEM hTreeItem = pWndTree->HitTest(ptTree, &flags);
+//		if (hTreeItem != NULL)
+//		{
+//			const GUID &l_GUID = *(GUID*)pWndTree->GetItemData(hTreeItem);
+//			if (&l_GUID != 0)
+//			{
+//			}
+//		}
+//	}
+//
+//	CDockablePane::OnLButtonUp(nFlags, point);
+//}
+
+BOOL CClassView::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
+{
+	// TODO: Add your specialized code here and/or call the base class
+	CPoint point;
+	LPNMTREEVIEW tv = (LPNMTREEVIEW)lParam;
+	switch (tv->hdr.code)
+	{
+		case TVN_SELCHANGED :
+		{
+			if (theGameDoc)
+			{
+				theGameDoc->SetSelectedNode(bk::bad_GUID);
+
+				HTREEITEM hSelectedItem = tv->itemNew.hItem;//m_wndClassView.GetNextItem(TVI_ROOT, TVGN_CARET);
+				if (hSelectedItem == NULL) break;
+
+				const GUID &l_GUID = *(GUID*)m_wndClassView.GetItemData(hSelectedItem);
+				if (&l_GUID == 0) break;
+
+				theGameDoc->SetSelectedNode(l_GUID);
+			}
+			break;
+		}
+		//case TVN_SELCHANGED:
+		//	if ( tv->action == TVC_UNKNOWN )
+		//	OnSelchanged(( NMHDR *)lParam, pResult );
+		//	break;
+
+		//case TVN_BEGINDRAG:
+		//	OnBegindrag(( NMHDR *)lParam, pResult );
+		//	break;
+	}
+
+
+	return CDockablePane::OnNotify(wParam, lParam, pResult);
 }

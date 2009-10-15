@@ -25,6 +25,8 @@ END_MESSAGE_MAP()
 // CGameDoc construction/destruction
 
 CGameDoc::CGameDoc()
+:
+	m_selected(bk::bad_GUID)
 {
 	// TODO: add one-time construction code here
 
@@ -58,32 +60,57 @@ BOOL CGameDoc::OnNewDocument()
 
 	bk::random l_random(GetTickCount());
 
-	pugi::xml_node l_game_node = m_document.append_child();
-	l_game_node.set_name("game");
-	l_game_node.append_attribute("name") = bk::utf8(GetTitle().GetString());
-	l_game_node.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+	pugi::xml_node l_game = m_document.append_child();
+	l_game.set_name("game");
+	l_game.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
 	{
-		pugi::xml_node l_stage_node = l_game_node.append_child();
-		l_stage_node.set_name("stage");
-		l_stage_node.append_attribute("name") = "Main menu";
-		l_stage_node.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+		pugi::xml_node l_prop = l_game.append_child();
+		l_prop.set_name("property");
+		l_prop.append_attribute("name") = "Name";
+		l_prop.append_attribute("value") = "New Game";
 	}
 	{
-		pugi::xml_node l_folder_node = l_game_node.append_child();
-		l_folder_node.set_name("folder");
-		l_folder_node.append_attribute("name") = "Levels";
-		l_folder_node.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+		pugi::xml_node l_stage = l_game.append_child();
+		l_stage.set_name("stage");
+		l_stage.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
 		{
-			pugi::xml_node l_stage_node = l_folder_node.append_child();
-			l_stage_node.set_name("stage");
-			l_stage_node.append_attribute("name") = "Level 001";
-			l_stage_node.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+			pugi::xml_node l_prop = l_stage.append_child();
+			l_prop.set_name("property");
+			l_prop.append_attribute("name") = "Name";
+			l_prop.append_attribute("value") = "Main Stage";
+		}
+	}
+	{
+		pugi::xml_node l_folder = l_game.append_child();
+		l_folder.set_name("folder");
+		l_folder.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+		{
+			pugi::xml_node l_prop = l_folder.append_child();
+			l_prop.set_name("property");
+			l_prop.append_attribute("name") = "Name";
+			l_prop.append_attribute("value") = "Levels";
 		}
 		{
-			pugi::xml_node l_stage_node = l_folder_node.append_child();
-			l_stage_node.set_name("stage");
-			l_stage_node.append_attribute("name") = "Level 002";
-			l_stage_node.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+			pugi::xml_node l_stage = l_folder.append_child();
+			l_stage.set_name("stage");
+			l_stage.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+			{
+				pugi::xml_node l_prop = l_stage.append_child();
+				l_prop.set_name("property");
+				l_prop.append_attribute("name") = "Name";
+				l_prop.append_attribute("value") = "Level 001";
+			}
+		}
+		{
+			pugi::xml_node l_stage = l_folder.append_child();
+			l_stage.set_name("stage");
+			l_stage.append_attribute("GUID") = bk::format(bk::random_GUID(l_random));
+			{
+				pugi::xml_node l_prop = l_stage.append_child();
+				l_prop.set_name("property");
+				l_prop.append_attribute("name") = "Name";
+				l_prop.append_attribute("value") = "Level 002";
+			}
 		}
 	}
 
@@ -189,6 +216,32 @@ void CGameDoc::Serialize(CArchive& ar)
 		//	m_stages.push_back(l_stage);
 		//}
 	}
+}
+
+// bikini game xml
+const GUID& CGameDoc::SelectedNode()
+{
+	return m_selected;
+}
+void CGameDoc::SetSelectedNode(const GUID &_g)
+{
+	m_selected = _g;
+	CMainFrame* l_MainFrame = (CMainFrame*)theApp.GetMainWnd();
+	l_MainFrame->GetPropertiesWnd().InitPropList();
+}
+pugi::xml_node CGameDoc::GetNodeByGUID(const GUID &_g)
+{
+	struct _by_GUID
+	{
+		bk::astring s;
+		_by_GUID(const GUID &_g) : s(bk::format(_g)) {}
+		bool operator () (const pugi::xml_node &_n)
+		{
+			return s == _n.attribute("GUID").value();
+		}
+	};
+
+	return m_document.find_node(_by_GUID(_g));
 }
 
 
