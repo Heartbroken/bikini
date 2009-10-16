@@ -270,6 +270,16 @@ void CClassView::FillClassView()
 	//m_wndClassView.InsertItem(_T("theFakeApp"), 5, 5, hClass);
 	//m_wndClassView.Expand(hClass, TVE_EXPAND);
 }
+void CClassView::SelectedNameChanged()
+{
+	HTREEITEM hSelectedItem = m_wndClassView.GetNextItem(TVI_ROOT, TVGN_CARET);
+	if (hSelectedItem)
+	{
+		pugi::xml_node l_node = theGameDoc->GetNodeByGUID(theGameDoc->SelectedNode());
+		bk::_string l_name = l_node.find_child_by_attribute("property", "name", "Name").attribute("value").value();
+		m_wndClassView.SetItemText(hSelectedItem, l_name);
+	}
+}
 
 void CClassView::OnContextMenu(CWnd* pWnd, CPoint point)
 {

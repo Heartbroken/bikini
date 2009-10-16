@@ -25,6 +25,7 @@ public:
 	void Clear();
 
 	void FillClassView();
+	void SelectedNameChanged();
 
 protected:
 	CClassToolBar m_wndToolBar;
