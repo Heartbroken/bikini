@@ -35,7 +35,7 @@ bk::_matrix_row_<*,*>{
 	preview
 	(
 		#(
-			"[", 3, "](",
+			"[", $T1, "](",
 			#array
 			(
 				expr :	(($T2*)&$e)[$i],
