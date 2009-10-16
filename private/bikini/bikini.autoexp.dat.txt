@@ -1,0 +1,71 @@
+
+; bikini types -------------------------------------------------------------------------------
+
+bk::array_<*>{
+	children
+	(
+		#array
+		(
+			expr :		($e._Myfirst)[$i],
+			size :		$e._Mylast-$e._Myfirst
+		)
+	)
+	preview
+	(
+		#(
+			"[", $e._Mylast - $e._Myfirst , "](",
+			#array
+			(
+				expr :	($e._Myfirst)[$i],
+				size :	$e._Mylast-$e._Myfirst
+			),
+			")"
+		)
+	)
+}
+bk::_matrix_row_<*,*>{
+	children
+	(
+		#array
+		(
+			expr :		(($T2*)&$e)[$i],
+			size :		$T1
+		)
+	)
+	preview
+	(
+		#(
+			"[", 3, "](",
+			#array
+			(
+				expr :	(($T2*)&$e)[$i],
+				size :	$T1
+			),
+			")"
+		)
+	)
+}
+bk::matrix_<*,*,*>{
+	children
+	(
+		#array
+		(
+			expr :		((bk::_matrix_row_<$T2,$T3>*)&$e)[$i],
+			size :		$T1
+		)
+	)
+	preview
+	(
+		#(
+			"[", $T1, "](",
+			#array
+			(
+				expr :	((bk::_matrix_row_<$T2,$T3>*)&$e)[$i],
+				size :	$T1
+			),
+			")"
+		)
+	)
+}
+
+; bikini types -------------------------------------------------------------------------------
