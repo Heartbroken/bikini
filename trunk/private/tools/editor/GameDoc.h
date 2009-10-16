@@ -28,6 +28,8 @@ public:
 	virtual void OnCloseDocument();
 	virtual void Serialize(CArchive& ar);
 
+	BOOL CloseOpenedDocument();
+
 // bikini game xml
 public:
 	pugi::xml_document m_document;
