@@ -213,6 +213,27 @@ pugi::xml_node CGameDoc::GetNodeByGUID(const GUID &_g)
 
 	return m_document.find_node(_by_GUID(_g));
 }
+void CGameDoc::SetSelectedNodeProperty(LPCTSTR _name, LPCTSTR _value)
+{
+	bk::_string l_name = _name;
+	bk::_string l_value = _value;
+
+	pugi::xml_node l_node = GetNodeByGUID(SelectedNode());
+	pugi::xml_node l_prop = l_node.find_child_by_attribute("property", "name", l_name);
+
+	l_prop.attribute("value") = l_value;
+
+	if (l_name.wstr == L"Name")
+	{
+		CMainFrame* l_MainFrame = (CMainFrame*)theApp.GetMainWnd();
+		l_MainFrame->GetClassView().SelectedNameChanged();
+
+		if (bk::astring("game") == l_node.name())
+		{
+			SetTitle(l_value);
+		}
+	}
+}
 
 
 // CGameDoc diagnostics

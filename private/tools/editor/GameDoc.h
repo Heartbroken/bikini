@@ -37,6 +37,7 @@ public:
 	const GUID& SelectedNode();
 	void SetSelectedNode(const GUID &_g);
 	pugi::xml_node GetNodeByGUID(const GUID &_g);
+	void SetSelectedNodeProperty(LPCTSTR _name, LPCTSTR _value);
 
 // Implementation
 public:

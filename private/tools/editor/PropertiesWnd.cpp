@@ -304,15 +304,16 @@ LRESULT CPropertiesWnd::OnPropertyChanged(__in WPARAM wparam, __in LPARAM lparam
 {
 	CMFCPropertyGridProperty * pProperty = ( CMFCPropertyGridProperty * ) lparam;
 
-	bk::astring l_name = bk::utf8(pProperty->GetName());
-	bk::astring l_value = bk::utf8(pProperty->GetValue().bstrVal);
+	//bk::astring l_name = bk::utf8(pProperty->GetName());
+	//bk::astring l_value = bk::utf8(pProperty->GetValue().bstrVal);
 
 	if (theGameDoc != NULL)
 	{
-		pugi::xml_node l_node = theGameDoc->GetNodeByGUID(theGameDoc->SelectedNode());
-		pugi::xml_node l_prop = l_node.find_child_by_attribute("property", "name", l_name.c_str());
+		theGameDoc->SetSelectedNodeProperty(pProperty->GetName(), pProperty->GetValue().bstrVal);
+		//pugi::xml_node l_node = theGameDoc->GetNodeByGUID(theGameDoc->SelectedNode());
+		//pugi::xml_node l_prop = l_node.find_child_by_attribute("property", "name", l_name.c_str());
 
-		if (l_prop) l_prop.attribute("value") = l_value.c_str();
+		//if (l_prop) l_prop.attribute("value") = l_value.c_str();
 	}
 
 	return 0;
