@@ -36,6 +36,28 @@ CGameDoc::~CGameDoc()
 {
 }
 
+BOOL CGameDoc::CloseOpenedDocument()
+{
+	if (theGameDoc)
+	{
+		if (theGameDoc->IsModified())
+		{
+			POSITION pos = theGameDoc->GetFirstViewPosition();
+			while (pos)
+			{
+				CWnd* pWnd = theGameDoc->GetNextView(pos)->GetParent();
+				if (!theGameDoc->CanCloseFrame((CFrameWnd*)pWnd)) return FALSE;
+			}
+		}
+		theGameDoc->OnCloseDocument();
+	}
+
+	assert(theGameDoc == NULL);
+	theGameDoc = this;
+
+	return TRUE;
+}
+
 BOOL CGameDoc::OnNewDocument()
 {
 	if (!CDocument::OnNewDocument())
@@ -43,10 +65,7 @@ BOOL CGameDoc::OnNewDocument()
 
 	// TODO: add reinitialization code here
 	// (SDI documents will reuse this document)
-	if (theGameDoc) theGameDoc->OnCloseDocument();
-	assert(theGameDoc == NULL);
-	theGameDoc = this;
-
+	if (!CloseOpenedDocument()) return FALSE;
 
 	bk::random l_random(GetTickCount());
 
@@ -142,9 +161,7 @@ BOOL CGameDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		return FALSE;
 
 	// TODO:  Add your specialized creation code here
-	if (theGameDoc) theGameDoc->OnCloseDocument();
-	assert(theGameDoc == NULL);
-	theGameDoc = this;
+	if (!CloseOpenedDocument()) return FALSE;
 
 	CMainFrame* pMainFrame = (CMainFrame*)theApp.GetMainWnd();
 	pMainFrame->GetClassView().FillClassView();
