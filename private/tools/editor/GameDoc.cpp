@@ -75,6 +75,12 @@ BOOL CGameDoc::OnNewDocument()
 			l_prop.append_attribute("name") = "Name";
 			l_prop.append_attribute("value") = "Main Stage";
 		}
+		{
+			pugi::xml_node l_prop = l_stage.append_child();
+			l_prop.set_name("property");
+			l_prop.append_attribute("name") = "GUI";
+			l_prop.append_attribute("value") = "";
+		}
 	}
 	{
 		pugi::xml_node l_folder = l_game.append_child();
@@ -96,6 +102,12 @@ BOOL CGameDoc::OnNewDocument()
 				l_prop.append_attribute("name") = "Name";
 				l_prop.append_attribute("value") = "Level 001";
 			}
+			{
+				pugi::xml_node l_prop = l_stage.append_child();
+				l_prop.set_name("property");
+				l_prop.append_attribute("name") = "GUI";
+				l_prop.append_attribute("value") = "";
+			}
 		}
 		{
 			pugi::xml_node l_stage = l_folder.append_child();
@@ -106,6 +118,12 @@ BOOL CGameDoc::OnNewDocument()
 				l_prop.set_name("property");
 				l_prop.append_attribute("name") = "Name";
 				l_prop.append_attribute("value") = "Level 002";
+			}
+			{
+				pugi::xml_node l_prop = l_stage.append_child();
+				l_prop.set_name("property");
+				l_prop.append_attribute("name") = "GUI";
+				l_prop.append_attribute("value") = "";
 			}
 		}
 	}
