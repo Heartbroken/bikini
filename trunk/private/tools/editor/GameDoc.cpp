@@ -128,8 +128,8 @@ BOOL CGameDoc::OnNewDocument()
 		}
 	}
 
-	CMainFrame* l_MainFrame = (CMainFrame*)theApp.GetMainWnd();
-	l_MainFrame->GetClassView().FillClassView();
+	CMainFrame* pMainFrame = (CMainFrame*)theApp.GetMainWnd();
+	pMainFrame->GetClassView().FillClassView();
 
 	return TRUE;
 }
@@ -146,8 +146,8 @@ BOOL CGameDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	assert(theGameDoc == NULL);
 	theGameDoc = this;
 
-	CMainFrame* l_MainFrame = (CMainFrame*)theApp.GetMainWnd();
-	l_MainFrame->GetClassView().FillClassView();
+	CMainFrame* pMainFrame = (CMainFrame*)theApp.GetMainWnd();
+	pMainFrame->GetClassView().FillClassView();
 
 	return TRUE;
 }
@@ -157,9 +157,9 @@ void CGameDoc::OnCloseDocument()
 	// TODO: Add your specialized code here and/or call the base class
 	if (theGameDoc == this) theGameDoc = NULL;
 
-	CMainFrame* l_MainFrame = (CMainFrame*)theApp.GetMainWnd();
-	l_MainFrame->GetClassView().FillClassView();
-	l_MainFrame->GetPropertiesWnd().InitPropList();
+	CMainFrame* pMainFrame = (CMainFrame*)theApp.GetMainWnd();
+	pMainFrame->GetClassView().FillClassView();
+	pMainFrame->GetPropertiesWnd().InitPropList();
 
 	CDocument::OnCloseDocument();
 }
@@ -214,8 +214,8 @@ const GUID& CGameDoc::SelectedNode()
 void CGameDoc::SetSelectedNode(const GUID &_g)
 {
 	m_selected = _g;
-	CMainFrame* l_MainFrame = (CMainFrame*)theApp.GetMainWnd();
-	l_MainFrame->GetPropertiesWnd().InitPropList();
+	CMainFrame* pMainFrame = (CMainFrame*)theApp.GetMainWnd();
+	pMainFrame->GetPropertiesWnd().InitPropList();
 }
 pugi::xml_node CGameDoc::GetNodeByGUID(const GUID &_g)
 {
@@ -241,10 +241,12 @@ void CGameDoc::SetSelectedNodeProperty(LPCTSTR _name, LPCTSTR _value)
 
 	l_prop.attribute("value") = l_value;
 
+	SetModifiedFlag(TRUE);
+
 	if (l_name.wstr == L"Name")
 	{
-		CMainFrame* l_MainFrame = (CMainFrame*)theApp.GetMainWnd();
-		l_MainFrame->GetClassView().SelectedNameChanged();
+		CMainFrame* pMainFrame = (CMainFrame*)theApp.GetMainWnd();
+		pMainFrame->GetClassView().SelectedNameChanged();
 
 		if (bk::astring("game") == l_node.name())
 		{
