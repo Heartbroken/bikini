@@ -40,15 +40,7 @@ BOOL CGameDoc::CloseOpenedDocument()
 {
 	if (theGameDoc)
 	{
-		if (theGameDoc->IsModified())
-		{
-			POSITION pos = theGameDoc->GetFirstViewPosition();
-			while (pos)
-			{
-				CWnd* pWnd = theGameDoc->GetNextView(pos)->GetParent();
-				if (!theGameDoc->CanCloseFrame((CFrameWnd*)pWnd)) return FALSE;
-			}
-		}
+		if (!theGameDoc->SaveModified()) return FALSE;
 		theGameDoc->OnCloseDocument();
 	}
 
