@@ -672,6 +672,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\bikini\base\vector.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\bikini\base\watch.hpp"
 				>
 			</File>

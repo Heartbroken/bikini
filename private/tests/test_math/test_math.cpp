@@ -29,6 +29,10 @@ struct A {};
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+	bk::vector_<bk::real, 3> l_real3;
+	bk::vector_<bk::vector_<bk::real, 3>, 3> l_real3x3;
+
+/////////////
 
 	const bk::uint l_count = 1000000;
 
