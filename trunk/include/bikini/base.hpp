@@ -49,6 +49,7 @@ namespace bk { /*---------------------------------------------------------------
 #include "base/traits.hpp"
 #include "base/math.hpp"
 #include "base/matrix.hpp"
+#include "base/vector.hpp"
 #include "base/quat.hpp"
 #include "base/color.hpp"
 #include "base/rect.hpp"
