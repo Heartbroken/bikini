@@ -29,12 +29,17 @@ struct A {};
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	bk::vector_<bk::real, 3> l_real3(1, 1, 1), l_a(2, 2, 2), l_b(3, 3, 3), l_c;
+	typedef bk::vector_<bk::real, 3> real3;
+	typedef bk::vector_<real3::column, 3> real3x3;
 
-	l_a.add(l_b, l_c);
-	l_c = l_a + l_b;
+	real3 l_real3(1, 1, 1), l_a(2, 2, 2), l_b(3, 3, 3), l_c = l_a + l_b;
 
-	bk::vector_<bk::vector_<bk::real, 3>::column, 3> l_real3x3;
+	l_a.add(l_a, l_c);
+	l_c = l_b + l_b;
+
+	real3x3 l_real3x3(real3(1, 0, 0),
+					  real3(0, 1, 0),
+					  real3(0, 0, 1));
 
 	typedef bk::_vector_base::mul_<bk::vector_<bk::real, 3>::column, bk::vector_<bk::real, 3> >::result dot_type;
 	dot_type l_dot;
