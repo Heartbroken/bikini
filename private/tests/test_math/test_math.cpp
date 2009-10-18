@@ -29,8 +29,16 @@ struct A {};
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+	{
+		typedef bk::make_typelist_<bk::s32, bk::f32>::type nums;
+		typedef bk::variant_<nums> num;
+		num l_n1(1), l_n2(1.f), l_n3;
+
+		int a=0;
+	}
+//////
 	typedef bk::vector_<bk::real, 3> real3;
-	typedef bk::vector_<real3::column, 3> real3x3;
+	typedef bk::vector_<real3, 3>::column real3x3;
 
 	real3 l_real3(1, 1, 1), l_a(2, 2, 2), l_b(3, 3, 3), l_c = l_a + l_b;
 
