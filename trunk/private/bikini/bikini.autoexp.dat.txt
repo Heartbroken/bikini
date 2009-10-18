@@ -35,7 +35,7 @@ bk::_matrix_row_<*,*>{
 	preview
 	(
 		#(
-			"[", $T1, "](",
+			"(",
 			#array
 			(
 				expr :	(($T2*)&$e)[$i],
@@ -57,11 +57,33 @@ bk::matrix_<*,*,*>{
 	preview
 	(
 		#(
-			"[", $T1, "](",
+			"(",
 			#array
 			(
 				expr :	((bk::_matrix_row_<$T2,$T3>*)&$e)[$i],
 				size :	$T1
+			),
+			")"
+		)
+	)
+}
+bk::vector_<*,*,*>{
+	children
+	(
+		#array
+		(
+			expr :		(($T1*)&$e)[$i],
+			size :		$T2
+		)
+	)
+	preview
+	(
+		#(
+			"(",
+			#array
+			(
+				expr :	(($T1*)&$e)[$i],
+				size :	$T2
 			),
 			")"
 		)
