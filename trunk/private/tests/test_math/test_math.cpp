@@ -30,7 +30,10 @@ struct A {};
 int _tmain(int argc, _TCHAR* argv[])
 {
 	bk::vector_<bk::real, 3> l_real3;
-	bk::vector_<bk::vector_<bk::real, 3>, 3> l_real3x3;
+	bk::vector_<bk::vector_<bk::real, 3, bk::vm::column>, 3> l_real3x3;
+
+	typedef bk::vector_<bk::real, 3>::_mul_<bk::vector_<bk::real, 3>, bk::vector_<bk::real, 3, bk::vm::column> >::result dot_type;
+	dot_type l_dot;
 
 /////////////
 
