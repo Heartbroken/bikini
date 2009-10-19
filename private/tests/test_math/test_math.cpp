@@ -48,7 +48,8 @@ int _tmain(int argc, _TCHAR* argv[])
 //////
 	typedef bk::vector_<bk::real, 1> real1;
 	typedef bk::vector_<bk::real, 3> real3;
-	typedef bk::vector_<real3::column, 3> real3x3;
+	typedef bk::vector_<double, 3> double3;
+	typedef bk::vector_<double3::column, 3> real3x3;
 
 	real3 l_real3(1, 1, 1), l_a(2, 2, 2), l_b(3, 3, 3), l_c = l_a + l_b;
 
@@ -59,7 +60,7 @@ int _tmain(int argc, _TCHAR* argv[])
 					  real3(0, 1, 0),
 					  real3(0, 0, 1));
 
-	typedef bk::_vector_base::mul_<real1::column, real3>::result dot_type;
+	typedef bk::_vector_base::mul_<real1::column, real1::column>::result dot_type;
 	dot_type l_dot;
 
 /////////////
