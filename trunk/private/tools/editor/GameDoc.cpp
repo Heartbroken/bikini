@@ -196,7 +196,7 @@ void CGameDoc::Serialize(CArchive& ar)
 			l_pos = l_XML.find("\n", l_pos + 2);
 		}
 
-		ar.Write(l_XML.c_str(), l_XML.length());
+		ar.Write(l_XML.c_str(), (UINT)l_XML.length());
 	}
 	else
 	{

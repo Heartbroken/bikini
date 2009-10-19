@@ -30,9 +30,18 @@ struct A {};
 int _tmain(int argc, _TCHAR* argv[])
 {
 	{
-		typedef bk::make_typelist_<bk::s32, bk::f32, bk::wstring, bk::r3x3>::type nums;
-		typedef bk::variant_<nums> num;
-		num l_n1(1), l_n2(1.f), l_n3 = bk::wstring(L"asfasd"), l_n4 = bk::r3x3_1;
+		typedef bk::make_typelist_<bk::s32, bk::f32, bk::wstring, bk::r3x3>::type types;
+		typedef bk::variant_<types, false> type;
+		
+		bk::array_<type> l_arr;
+
+		l_arr.push_back(1);
+		l_arr.push_back(1.f);
+		l_arr.push_back(bk::wstring(L"Hello World!!!"));
+		l_arr.push_back(bk::r3x3_1);
+		l_arr.push_back(type());
+
+		const type *l_v1 = &l_arr[2];
 
 		int a=0;
 	}
@@ -49,7 +58,7 @@ int _tmain(int argc, _TCHAR* argv[])
 					  real3(0, 1, 0),
 					  real3(0, 0, 1));
 
-	typedef bk::_vector_base::mul_<bk::vector_<bk::real, 3>::column, bk::vector_<bk::real, 3> >::result dot_type;
+	typedef bk::_vector_base::mul_<bk::vector_<bk::real, 3>, bk::vector_<bk::real, 3>::column >::result dot_type;
 	dot_type l_dot;
 
 /////////////
@@ -71,19 +80,19 @@ int _tmain(int argc, _TCHAR* argv[])
 	//	bk::r1x4(1.f, 2.f, 3.f, 4.f) 
 	//	);
 
-	bk::u16 l_oldcw, l_cw;
-
-	__asm
-	{
-		fstcw	l_oldcw				;
-		fwait						;
-		mov		ax, l_oldcw			;
-		or		ax, (2<<8)			;
-//		and		ax, (0xffff^(3<<8))	;
-		mov		l_cw, ax			;
-		fldcw	l_cw				;
-		fwait						;
-	};
+//	bk::u16 l_oldcw, l_cw;
+//
+//	__asm
+//	{
+//		fstcw	l_oldcw				;
+//		fwait						;
+//		mov		ax, l_oldcw			;
+//		or		ax, (2<<8)			;
+////		and		ax, (0xffff^(3<<8))	;
+//		mov		l_cw, ax			;
+//		fldcw	l_cw				;
+//		fwait						;
+//	};
 
 	//__control87_2(_PC_24, MCW_PC, 0, 0);
 	//_controlfp(_PC_24, _MCW_PC);
@@ -113,7 +122,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	l_start = bk::sys_time();
 	for (bk::uint i = 0; i < l_count; ++i)
 	{
-		D3DXMatrixInverse(&l_M1, 0, &l_M0);
+		//D3DXMatrixInverse(&l_M1, 0, &l_M0);
 		l_M0 = l_M1;
 		//break;
 	}

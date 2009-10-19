@@ -776,7 +776,7 @@ bool rendering_D3D9::execute(const create_texture &_command)
 		case video::tf::a8r8g8b8 : l_format = D3DFMT_A8R8G8B8; break;
 	}
 
-	if (FAILED(m_D3DDevice9_p->CreateTexture(_command.size.x(), _command.size.y(), 0, 0, l_format, D3DPOOL_DEFAULT, &l_texture.D3DTexture9_p, 0))) return false;
+	if (FAILED(m_D3DDevice9_p->CreateTexture((UINT)_command.size.x(), (UINT)_command.size.y(), 0, 0, l_format, D3DPOOL_DEFAULT, &l_texture.D3DTexture9_p, 0))) return false;
 
 	m_create_resource(l_texture);
 
@@ -807,7 +807,7 @@ bool rendering_D3D9::execute(const write_texture &_command)
 			}
 
 			IDirect3DTexture9 *l_D3DTex9_p;
-			if (FAILED(m_D3DDevice9_p->CreateTexture(l_size.x(), l_size.y(), 1, 0, l_D3DFormat, D3DPOOL_SYSTEMMEM, &l_D3DTex9_p, 0)))
+			if (FAILED(m_D3DDevice9_p->CreateTexture((UINT)l_size.x(), (UINT)l_size.y(), 1, 0, l_D3DFormat, D3DPOOL_SYSTEMMEM, &l_D3DTex9_p, 0)))
 			{
 				throw_data(l_size.y() * l_pitch);
 				return false;
@@ -879,7 +879,7 @@ bool rendering_D3D9::execute(const write_texture &_command)
 			DWORD l_usage = 0;
 			if (l_size.x() * l_size.y() > 1) l_usage |= D3DUSAGE_AUTOGENMIPMAP;
 
-			m_D3DDevice9_p->CreateTexture(l_size.x(), l_size.y(), 0, l_usage, l_D3DFormat, D3DPOOL_DEFAULT, &l_texture.D3DTexture9_p, 0);
+			m_D3DDevice9_p->CreateTexture((UINT)l_size.x(), (UINT)l_size.y(), 0, l_usage, l_D3DFormat, D3DPOOL_DEFAULT, &l_texture.D3DTexture9_p, 0);
 
 			if (l_usage & D3DUSAGE_AUTOGENMIPMAP) l_texture.D3DTexture9_p->SetAutoGenFilterType(D3DTEXF_ANISOTROPIC);
 			
