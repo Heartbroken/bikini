@@ -60,6 +60,9 @@ BEGIN_MESSAGE_MAP(CClassView, CDockablePane)
 	ON_WM_SETFOCUS()
 	ON_COMMAND_RANGE(ID_SORTING_GROUPBYTYPE, ID_SORTING_SORTBYACCESS, OnSort)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_SORTING_GROUPBYTYPE, ID_SORTING_SORTBYACCESS, OnUpdateSort)
+	ON_UPDATE_COMMAND_UI(ID_STAGEVIEW_REMOVE, &CClassView::OnUpdateStageviewRemove)
+	ON_UPDATE_COMMAND_UI(ID_STAGEVIEW_ADDFOLDER, &CClassView::OnUpdateStageviewAddfolder)
+	ON_UPDATE_COMMAND_UI(ID_STAGEVIEW_ADDSTAGE, &CClassView::OnUpdateStageviewAddstage)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -308,7 +311,8 @@ void CClassView::OnContextMenu(CWnd* pWnd, CPoint point)
 
 	pWndTree->SetFocus();
 	CMenu menu;
-	menu.LoadMenu(IDR_POPUP_SORT);
+	//menu.LoadMenu(IDR_POPUP_SORT);
+	menu.LoadMenu(IDR_POPUP_STAGE);
 
 	CMenu* pSumMenu = menu.GetSubMenu(0);
 
@@ -448,38 +452,6 @@ void CClassView::Clear()
 	m_wndClassView.DeleteAllItems();
 }
 
-//void CClassView::OnLButtonUp(UINT nFlags, CPoint point)
-//{
-//	// TODO: Add your message handler code here and/or call default
-//	CTreeCtrl* pWndTree = (CTreeCtrl*)&m_wndClassView;
-//	ASSERT_VALID(pWndTree);
-//
-//	if (pWnd != pWndTree)
-//	{
-//		CDockablePane::OnContextMenu(pWnd, point);
-//		return;
-//	}
-//
-//	if (point != CPoint(-1, -1))
-//	{
-//		// Select clicked item:
-//		CPoint ptTree = point;
-//		pWndTree->ScreenToClient(&ptTree);
-//
-//		UINT flags = 0;
-//		HTREEITEM hTreeItem = pWndTree->HitTest(ptTree, &flags);
-//		if (hTreeItem != NULL)
-//		{
-//			const GUID &l_GUID = *(GUID*)pWndTree->GetItemData(hTreeItem);
-//			if (&l_GUID != 0)
-//			{
-//			}
-//		}
-//	}
-//
-//	CDockablePane::OnLButtonUp(nFlags, point);
-//}
-
 BOOL CClassView::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 {
 	// TODO: Add your specialized code here and/or call the base class
@@ -515,4 +487,37 @@ BOOL CClassView::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 
 
 	return CDockablePane::OnNotify(wParam, lParam, pResult);
+}
+
+void CClassView::OnUpdateStageviewRemove(CCmdUI *pCmdUI)
+{
+	// TODO: Add your command update UI handler code here
+	pugi::xml_node l_node = theGameDoc->GetNodeByGUID(theGameDoc->SelectedNode());
+
+	if (bk::astring("game") != l_node.name())
+	{
+		pCmdUI->Enable();
+	}
+}
+
+void CClassView::OnUpdateStageviewAddfolder(CCmdUI *pCmdUI)
+{
+	// TODO: Add your command update UI handler code here
+	pugi::xml_node l_node = theGameDoc->GetNodeByGUID(theGameDoc->SelectedNode());
+
+	if (bk::astring("stage") != l_node.name())
+	{
+		pCmdUI->Enable();
+	}
+}
+
+void CClassView::OnUpdateStageviewAddstage(CCmdUI *pCmdUI)
+{
+	// TODO: Add your command update UI handler code here
+	pugi::xml_node l_node = theGameDoc->GetNodeByGUID(theGameDoc->SelectedNode());
+
+	if (bk::astring("stage") != l_node.name())
+	{
+		pCmdUI->Enable();
+	}
 }
