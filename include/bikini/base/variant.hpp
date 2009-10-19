@@ -68,7 +68,18 @@ private:
 	typedef u8 static_data_type[types::max_size];
 	typedef typename select_<_Dynamic, dynamic_data_type, static_data_type>::type data_type;
 	data_type m_data;
+	template<uint _N> struct _all_items_ : _all_items_<_N - 1>
+	{
+		typedef typename _Typelist::item_<_N - 1> an_item;
+		an_item item;
+	};
+	template<> struct _all_items_<0> {};
+	typedef _all_items_<_Typelist::count> _all_items;
+	static _all_items all_items;
 };
+template<typename _T, bool _D>
+typename variant_<_T, _D>::_all_items variant_<_T, _D>::all_items;
+
 typedef variant_<fundamentals> variant;
 
 #include "variant.inl"

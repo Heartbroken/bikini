@@ -133,7 +133,7 @@ inline vector_<_T, _S, _A>::vector_(const _T2 &_0, const _T2 &_1)
 template<typename _T, uint _S, _vector_base::arrange _A> template<typename _T2>
 inline vector_<_T, _S, _A>::vector_(const _T2 &_0, const _T2 &_1, const _T2 &_2)
 :
-	parent(_0, _1), X(_2)
+	parent(_0, _1), X(static_cast<_T>(_2))
 {
 	c_assert(_S == 3)
 }

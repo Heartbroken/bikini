@@ -28,10 +28,12 @@ template<typename _First, typename _Second, typename _Third> struct typelist_<_F
 		typedef typename rest::item_<_Index - 1>::type type;
 		/// Item size
 		static const uint size = sizeof(type);
+		type value;
 	};
 	template<> struct item_<0> {
 		typedef first type;
 		static const uint size = sizeof(type);
+		type value;
 	};
 	/// Type info
 	template<typename _Type> struct type_ {

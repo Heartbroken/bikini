@@ -30,9 +30,9 @@ struct A {};
 int _tmain(int argc, _TCHAR* argv[])
 {
 	{
-		typedef bk::make_typelist_<bk::s32, bk::f32>::type nums;
+		typedef bk::make_typelist_<bk::s32, bk::f32, bk::wstring, bk::r3x3>::type nums;
 		typedef bk::variant_<nums> num;
-		num l_n1(1), l_n2(1.f), l_n3;
+		num l_n1(1), l_n2(1.f), l_n3 = bk::wstring(L"asfasd"), l_n4 = bk::r3x3_1;
 
 		int a=0;
 	}
