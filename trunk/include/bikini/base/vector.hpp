@@ -66,6 +66,13 @@ struct _vector_base
 		typedef typename mul_<typename vector1::element, vector2>::result new_element;
 		typedef _Vector_<new_element, _Size, column> result;
 	};
+	template<typename _Type1, typename _Type2, arrange _Arrange1, arrange _Arrange2, template<typename, uint, arrange> class _Vector_>
+	struct mul_<_Vector_<_Type1, 1, _Arrange1>, _Vector_<_Type2, 1, _Arrange2> >
+	{
+		typedef _Vector_<_Type1, 1, row> vector1;
+		typedef _Vector_<_Type2, 1, column> vector2;
+		typedef typename mul_<typename vector1::element, typename vector2::element>::result result;
+	};
 };
 
 template<typename _Type, uint _Size, _vector_base::arrange _Arrange = _vector_base::row>
