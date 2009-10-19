@@ -302,6 +302,16 @@ BEGIN
     END
 END
 
+IDR_POPUP_STAGE MENU 
+BEGIN
+    POPUP "StageView"
+    BEGIN
+        MENUITEM "Add Stage",                   ID_STAGEVIEW_ADDSTAGE
+        MENUITEM "Add Folder",                  ID_STAGEVIEW_ADDFOLDER
+        MENUITEM "Remove",                      ID_STAGEVIEW_REMOVE
+    END
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

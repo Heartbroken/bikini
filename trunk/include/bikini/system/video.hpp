@@ -8,6 +8,10 @@
 
 #pragma once
 
+struct rc
+{
+};
+
 struct video : device
 {
 
