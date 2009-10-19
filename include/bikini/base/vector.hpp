@@ -32,46 +32,37 @@ struct _vector_base
 	template<typename _Type1, typename _Type2, uint _Size, arrange _Arrange, template<typename, uint, arrange> class _Vector_>
 	struct mul_<_Vector_<_Type1, _Size, _Arrange>, _Type2>
 	{
-		typedef _Vector_<_Type1, _Size, _Arrange> vector1;
-		typedef typename mul_<typename vector1::element, _Type2>::result new_element;
+		typedef typename mul_<_Type1, _Type2>::result new_element;
 		typedef _Vector_<new_element, _Size, _Arrange> result;
 	};
 	template<typename _Type1, typename _Type2, uint _Size, arrange _Arrange, template<typename, uint, arrange> class _Vector_>
 	struct mul_<_Type1, _Vector_<_Type2, _Size, _Arrange> >
 	{
-		typedef _Vector_<_Type2, _Size, _Arrange> vector2;
-		typedef typename mul_<_Type1, typename vector2::element>::result new_element;
+		typedef typename mul_<_Type1, _Type2>::result new_element;
 		typedef _Vector_<new_element, _Size, _Arrange> result;
 	};
 	template<typename _Type1, typename _Type2, uint _Size, arrange _Arrange, template<typename, uint, arrange> class _Vector_>
 	struct mul_<_Vector_<_Type1, _Size, _Arrange>, _Vector_<_Type2, _Size, _Arrange> >
 	{
-		typedef _Vector_<_Type1, _Size, _Arrange> vector1;
-		typedef _Vector_<_Type2, _Size, _Arrange> vector2;
-		typedef typename mul_<typename vector1::element, typename vector2::element>::result new_element;
+		typedef typename mul_<_Type1, _Type2>::result new_element;
 		typedef _Vector_<new_element, _Size, _Arrange> result;
 	};
 	template<typename _Type1, typename _Type2, uint _Size, template<typename, uint, arrange> class _Vector_>
 	struct mul_<_Vector_<_Type1, _Size, row>, _Vector_<_Type2, _Size, column> >
 	{
-		typedef _Vector_<_Type1, _Size, row> vector1;
-		typedef _Vector_<_Type2, _Size, column> vector2;
-		typedef typename mul_<typename vector1::element, typename vector2::element>::result result;
+		typedef typename mul_<_Type1, _Type2>::result result;
 	};
 	template<typename _Type1, typename _Type2, uint _Size, template<typename, uint, arrange> class _Vector_>
 	struct mul_<_Vector_<_Type1, _Size, column>, _Vector_<_Type2, _Size, row> >
 	{
-		typedef _Vector_<_Type1, _Size, column> vector1;
-		typedef _Vector_<_Type2, _Size, row> vector2;
-		typedef typename mul_<typename vector1::element, vector2>::result new_element;
+//		typedef _Vector_<_Type2, _Size, row> vector2;
+		typedef typename mul_<_Type1, _Vector_<_Type2, _Size, row> >::result new_element;
 		typedef _Vector_<new_element, _Size, column> result;
 	};
 	template<typename _Type1, typename _Type2, arrange _Arrange1, arrange _Arrange2, template<typename, uint, arrange> class _Vector_>
 	struct mul_<_Vector_<_Type1, 1, _Arrange1>, _Vector_<_Type2, 1, _Arrange2> >
 	{
-		typedef _Vector_<_Type1, 1, row> vector1;
-		typedef _Vector_<_Type2, 1, column> vector2;
-		typedef typename mul_<typename vector1::element, typename vector2::element>::result result;
+		typedef typename mul_<_Type1, _Type2>::result result;
 	};
 };
 
