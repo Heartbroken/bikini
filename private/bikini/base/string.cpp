@@ -13,20 +13,20 @@ namespace bk { /*---------------------------------------------------------------
 astring utf8(const wstring &_s)
 {
 	uint l_wlength = _s.length();
-	uint l_alength = WideCharToMultiByte(CP_UTF8, 0, _s.c_str(), l_wlength, 0, 0, 0, 0);
+	uint l_alength = WideCharToMultiByte(CP_UTF8, 0, _s.c_str(), (int)l_wlength, 0, 0, 0, 0);
 
 	astring l_s; l_s.resize(l_alength);
-	WideCharToMultiByte(CP_UTF8, 0, _s.c_str(), l_wlength, &l_s[0], l_alength, 0, 0);
+	WideCharToMultiByte(CP_UTF8, 0, _s.c_str(), (int)l_wlength, &l_s[0], (int)l_alength, 0, 0);
 
 	return l_s;
 }
 wstring utf8(const astring &_s)
 {
 	uint l_alength = _s.length();
-	uint l_wlength = MultiByteToWideChar(CP_UTF8, 0, _s.c_str(), l_alength, 0, 0);
+	uint l_wlength = MultiByteToWideChar(CP_UTF8, 0, _s.c_str(), (int)l_alength, 0, 0);
 
 	wstring l_s; l_s.resize(l_wlength);
-	MultiByteToWideChar(CP_UTF8, 0, _s.c_str(), l_alength, &l_s[0], l_wlength);
+	MultiByteToWideChar(CP_UTF8, 0, _s.c_str(), (int)l_alength, &l_s[0], (int)l_wlength);
 
 	return l_s;
 }

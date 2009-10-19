@@ -8,6 +8,24 @@
 
 #pragma once
 
+#ifdef _DEBUG
+
+template<typename _Typelist, uint _I>
+struct _typelist_item_
+{
+	typename _Typelist::item_<_I>::type value;
+};
+template<typename _Typelist, uint _I = _Typelist::count>
+struct _typelist_walker_ : _typelist_walker_<_Typelist, _I - 1>
+{
+	_typelist_item_<_Typelist, _I - 1> _;
+};
+template<typename _Typelist>
+struct _typelist_walker_<_Typelist, 0>
+{};
+
+#endif
+
 // _variant_helper_
 template<typename _L, bool _D>
 struct _variant_helper_
@@ -25,22 +43,34 @@ struct _variant_helper_<_L, false>
 template<typename _L, bool _D>
 inline variant_<_L, _D>::variant_() : m_type(bad_ID)
 {
+#	ifdef _DEBUG
+	static _typelist_walker_<types> l_types;
+#	endif
 }
 template<typename _L, bool _D>
 inline variant_<_L, _D>::variant_(const variant_ &_v) : m_type(bad_ID)
 {
 	construct(_v.type(), _v.data());
+#	ifdef _DEBUG
+	static _typelist_walker_<types> l_types;
+#	endif
 }
 template<typename _L, bool _D> template<typename _T>
 inline variant_<_L, _D>::variant_(const _T &_v) : m_type(bad_ID)
 {
 	c_assert(_L::type_<_T>::exists);
 	construct(_L::type_<_T>::index, &_v);
+#	ifdef _DEBUG
+	static _typelist_walker_<types> l_types;
+#	endif
 }
 template<typename _L, bool _D> template<typename _L2, bool _D2>
 inline variant_<_L, _D>::variant_(const variant_<_L2, _D2> &_v) : m_type(bad_ID)
 {
 	construct(_L::otherlist<_L2>::remap(_v.type()), _v.data());
+#	ifdef _DEBUG
+	static _typelist_walker_<types> l_types;
+#	endif
 }
 template<typename _L, bool _D>
 inline variant_<_L, _D>::~variant_()

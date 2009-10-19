@@ -62,23 +62,37 @@ template<typename _Typelist, bool _Dynamic = true> struct variant_
 	template<typename _Type> inline const _Type& get_() const;
 	/// Get a variant value. If there is no value return default value
 	template<typename _Type> inline const _Type& def(const _Type &_def) const;
+
+	//struct _types;
 private:
 	uint m_type;
 	typedef handle dynamic_data_type;
 	typedef u8 static_data_type[types::max_size];
 	typedef typename select_<_Dynamic, dynamic_data_type, static_data_type>::type data_type;
 	data_type m_data;
-	template<uint _N> struct _all_items_ : _all_items_<_N - 1>
-	{
-		typedef typename _Typelist::item_<_N - 1> an_item;
-		an_item item;
-	};
-	template<> struct _all_items_<0> {};
-	typedef _all_items_<_Typelist::count> _all_items;
-	static _all_items all_items;
+
+	//template<uint _I> struct type_
+	//{
+	//	typedef typename types::rest::item_<_I - 1>::type type;
+	//	type value;
+	//};
+	//template<> struct type_<0>
+	//{
+	//	typedef typename types::item_<0>::type type;
+	//	type value;
+	//};
+	//static type_<types::count - 1> _types;
 };
-template<typename _T, bool _D>
-typename variant_<_T, _D>::_all_items variant_<_T, _D>::all_items;
+//template<typename _T, bool _D>
+//struct variant_<_T, _D>::_types
+//{
+//	typename types::item_<0>::type type0;
+//	typename types::item_<1>::type type1;
+//	typename types::item_<2>::type type2;
+//};
+
+//template<typename _T, bool _D>
+//typename variant_<_T, _D>::type_<_T::count - 1> variant_<_T, _D>::_types;
 
 typedef variant_<fundamentals> variant;
 
