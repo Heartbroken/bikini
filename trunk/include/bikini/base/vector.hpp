@@ -79,17 +79,14 @@ struct vector_ : vector_<_Type, _Size - 1, _Arrange>
 	element X;
 
 	inline vector_();
-	//inline vector_(const column &_v);
-	template<typename _Type2>
-	explicit inline vector_(const _Type2 &_0);
-	template<typename _Type2>
-	inline vector_(const _Type2 &_0, const _Type2 &_1);
-	template<typename _Type2>
-	inline vector_(const _Type2 &_0, const _Type2 &_1, const _Type2 &_2);
+	inline vector_(const vector_ &_v);
+	explicit inline vector_(const _Type &_0);
+	inline vector_(const _Type &_0, const _Type &_1);
+	inline vector_(const _Type &_0, const _Type &_1, const _Type &_2);
 
 	//
-	inline operator row& () { return static_cast<row&>(*this); }
-	inline operator column& () { return static_cast<column&>(*this); }
+	inline operator row& () { return *reinterpret_cast<row*>(this); }
+	inline operator column& () { return *reinterpret_cast<column*>(this); }
 
 	//
 	template<typename _Type2, _vector_base::arrange _Arrange2>
@@ -111,29 +108,29 @@ struct vector_<_Type, 0, _Arrange>
 template<typename _T, uint _S, _vector_base::arrange _A>
 inline vector_<_T, _S, _A>::vector_()
 {}
-//template<typename _T, uint _S, _vector_base::arrange _A>
-//inline vector_<_T, _S, _A>::vector_(const column &_v)
-//:
-//	parent(column::parent(_v))
-//{}
-template<typename _T, uint _S, _vector_base::arrange _A> template<typename _T2>
-inline vector_<_T, _S, _A>::vector_(const _T2 &_0)
+template<typename _T, uint _S, _vector_base::arrange _A>
+inline vector_<_T, _S, _A>::vector_(const vector_ &_v)
 :
-	X(static_cast<_T>(_0))
+	parent(_v)
+{}
+template<typename _T, uint _S, _vector_base::arrange _A>
+inline vector_<_T, _S, _A>::vector_(const _T &_0)
+:
+	X(_0)
 {
 	c_assert(_S == 1)
 }
-template<typename _T, uint _S, _vector_base::arrange _A> template<typename _T2>
-inline vector_<_T, _S, _A>::vector_(const _T2 &_0, const _T2 &_1)
+template<typename _T, uint _S, _vector_base::arrange _A>
+inline vector_<_T, _S, _A>::vector_(const _T &_0, const _T &_1)
 :
-	parent(_0), X(static_cast<_T>(_1))
+	parent(_0), X(_1)
 {
 	c_assert(_S == 2)
 }
-template<typename _T, uint _S, _vector_base::arrange _A> template<typename _T2>
-inline vector_<_T, _S, _A>::vector_(const _T2 &_0, const _T2 &_1, const _T2 &_2)
+template<typename _T, uint _S, _vector_base::arrange _A>
+inline vector_<_T, _S, _A>::vector_(const _T &_0, const _T &_1, const _T &_2)
 :
-	parent(_0, _1), X(static_cast<_T>(_2))
+	parent(_0, _1), X(_2)
 {
 	c_assert(_S == 3)
 }
