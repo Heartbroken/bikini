@@ -89,5 +89,32 @@ bk::vector_<*,*,*>{
 		)
 	)
 }
+bk::typelist_<*,*>::item_<*>{
+	preview ( #($e.value) )
+}
+bk::variant_<*,*>{
+	children
+	(
+		#switch ($e.m_type)
+		#case 0 (#(*($T1::item_<0>*)$e.m_data))
+		#case 1 (#(*($T1::item_<1>*)$e.m_data))
+		#case 2 (#(*($T1::item_<2>*)$e.m_data))
+		#case 3 (#(*($T1::item_<3>*)$e.m_data))
+		#case 4 (#(*($T1::item_<4>*)$e.m_data))
+		#case 5 (#(*($T1::item_<5>*)$e.m_data))
+		#default ("nothing")
+	)
+	preview
+	(
+		#switch ($e.m_type)
+		#case 0 (#(*($T1::item_<0>*)$e.m_data))
+		#case 1 (#(*($T1::item_<1>*)$e.m_data))
+		#case 2 (#(*($T1::item_<2>*)$e.m_data))
+		#case 3 (#(*($T1::item_<3>*)$e.m_data))
+		#case 4 (#(*($T1::item_<4>*)$e.m_data))
+		#case 5 (#(*($T1::item_<5>*)$e.m_data))
+		#default ("nothing")
+	)
+}
 
 ; bikini types -------------------------------------------------------------------------------
