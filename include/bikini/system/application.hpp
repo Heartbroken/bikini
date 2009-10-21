@@ -33,6 +33,8 @@ struct application : manager
 		task(const info &_info, application &_application);
 		~task();
 
+		bool update(real _dt);
+
 	protected:
 		virtual void main() = 0;
 

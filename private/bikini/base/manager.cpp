@@ -12,7 +12,7 @@ namespace bk { /*---------------------------------------------------------------
 
 // manager
 
-manager::manager() : m_counter(0) {
+manager::manager() /*: m_counter(0)*/ {
 }
 manager::~manager() {
 	for (uint l_ID = m_objects.first_ID(); l_ID != bad_ID; l_ID = m_objects.next_ID(l_ID))
@@ -77,7 +77,7 @@ void manager::clear() {
 	{
 		delete m_objects.get(l_ID);
 	}
-	m_counter = 0;
+	//m_counter = 0;
 }
 void manager::destroy() {
 	clear();
