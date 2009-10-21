@@ -131,6 +131,127 @@ namespace gameswf
 
 #elif TU_CONFIG_LINK_TO_THREAD == 2	// libpthread
 // TODO
+#error Not implemented
+#elif TU_CONFIG_LINK_TO_THREAD == 3	// Windows API
+
+#include <windows.h>
+
+namespace gameswf
+{
+
+	struct tu_thread
+	{
+		tu_thread(int (*fn)(void *), void* data)
+		{
+			IF_VERBOSE_ACTION(log_msg("gameswf is in multi thread mode\n"));
+			m_thread = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)fn, data, 0, 0);
+			assert(m_thread);
+		}
+
+		~tu_thread()
+		{
+			kill();
+		}
+
+		void wait()
+		{
+			if (m_thread)
+			{
+				WaitForSingleObject(m_thread, INFINITE);
+				CloseHandle(m_thread);
+				m_thread = NULL;
+			}
+		}
+
+		void kill()
+		{
+			if (m_thread)
+			{
+				CloseHandle(m_thread);
+				m_thread = NULL;
+			}
+		}
+
+	private:
+
+		HANDLE m_thread;
+
+	};
+
+	struct tu_mutex
+	{
+		tu_mutex()
+		{
+			InitializeCriticalSection(&m_mutex);
+		}
+
+		~tu_mutex() 
+		{
+			DeleteCriticalSection(&m_mutex);
+		}
+
+		inline void lock() 
+		{
+			EnterCriticalSection(&m_mutex);
+		}
+
+		inline void unlock() 
+		{
+			LeaveCriticalSection(&m_mutex);
+		}
+
+		private:
+
+			CRITICAL_SECTION m_mutex;
+	};
+
+	// like autoptr
+	struct tu_autolock
+	{
+		tu_mutex& m_mutex;
+		tu_autolock(tu_mutex& mutex) :
+			m_mutex(mutex)
+		{
+			m_mutex.lock();
+		}
+
+		~tu_autolock()
+		{
+			m_mutex.unlock();
+		}
+	};
+
+	struct tu_condition
+	{
+		tu_condition()
+		{
+			m_cond = CreateEvent(0, FALSE, FALSE, NULL);
+		}
+
+		~tu_condition()
+		{
+			CloseHandle(m_cond);
+		}
+
+		// Wait on the condition variable cond and unlock the provided mutex.
+		// The mutex must the locked before entering this function.
+		void wait()
+		{
+			WaitForSingleObject(m_cond, INFINITE);
+			m_cond_mutex.lock();
+		}
+
+		void signal()
+		{
+			SetEvent(m_cond);
+		}
+
+		HANDLE m_cond;
+		tu_mutex m_cond_mutex;
+	};
+
+}
+
 #else
 
 namespace gameswf
