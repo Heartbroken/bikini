@@ -27,7 +27,6 @@ application::~application()
 {
 	timeEndPeriod(1);
 }
-
 bool application::run()
 {
 	ticker l_ticker(0.1f);
@@ -57,13 +56,22 @@ bool application::run()
 application::task::task(const info &_info, application &_application)
 :
 	manager::object(_info, _application), m_task(*this, &application::task::main, _info.name.c_str())
-{
-	m_task.run();
-}
-
+{}
 application::task::~task()
 {
-	if(!m_task.done()) m_task.terminate();
+	if(!m_task.done())
+	{
+		m_task.terminate();
+	}
+}
+bool application::task::update(real _dt)
+{
+	if (!m_task.started())
+	{
+		m_task.run();
+	}
+
+	return true;
 }
 
 // application::task::info

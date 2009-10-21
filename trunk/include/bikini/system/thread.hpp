@@ -37,6 +37,8 @@ struct task_ : noncopyable {
 	inline ~task_();
 	/// start execution
 	inline bool run(_A0 _a0 = _A0(), _A1 _a1 = _A1(), _A2 _a2 = _A2(), _A3 _a3 = _A3(), _A4 _a4 = _A4(), _A5 _a5 = _A5(), _A6 _a6 = _A6(), _A7 _a7 = _A7(), _A8 _a8 = _A8(), _A9 _a9 = _A9());
+	/// check if execution is started
+	inline bool started() const;
 	/// check if execution is finished
 	inline bool done() const;
 	/// wait while execution will be finished and return the result

@@ -224,6 +224,12 @@ inline bool task_<_R, _A0, _A1, _A2, _A3, _A4, _A5, _A6, _A7, _A8, _A9>::run(_A0
 }
 
 template<typename _R, typename _A0, typename _A1, typename _A2, typename _A3, typename _A4, typename _A5, typename _A6, typename _A7, typename _A8, typename _A9>
+inline bool task_<_R, _A0, _A1, _A2, _A3, _A4, _A5, _A6, _A7, _A8, _A9>::started() const
+{
+	return m_handle != 0;
+}
+
+template<typename _R, typename _A0, typename _A1, typename _A2, typename _A3, typename _A4, typename _A5, typename _A6, typename _A7, typename _A8, typename _A9>
 inline bool task_<_R, _A0, _A1, _A2, _A3, _A4, _A5, _A6, _A7, _A8, _A9>::done() const {
 	assert(m_handle != 0);
 	if(WaitForSingleObject(m_handle, 0) == WAIT_TIMEOUT) return false;
