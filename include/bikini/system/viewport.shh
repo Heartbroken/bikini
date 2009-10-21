@@ -1,0 +1,26 @@
+/*---------------------------------------------------------------------------------------------*//*
+
+	Binary Kinematics 3 - C++ Game Programming Library
+	Copyright (C) 2008-2009 Viktor Reutskyy
+	viktor.reutskyy@gmail.com
+
+*//*---------------------------------------------------------------------------------------------*/
+
+// WARNING!!! shader.shh must be included before this file
+
+#include "next_c_register.shh"
+#define used_c_registers 2
+
+struct viewport_consts
+{
+	float4 area;	// x - left, y - top, z - width, w - height
+	float2 depth;	// x - Z min, y - Z max
+};
+static const uint viewport_offset = next_c_register_index;
+
+#if !defined(__cplusplus) /*---------------------------------------------------------------------*/
+
+viewport_consts viewport : register(next_c_register);
+
+#endif /* !defined(__cplusplus) -----------------------------------------------------------------*/
+
