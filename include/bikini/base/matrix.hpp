@@ -14,10 +14,9 @@ template
 	typename _Matrix,
 	typename _Element,
 	uint _Columns, uint _Rows,
-	uint _Elementstride = sizeof(_Element),
-	uint _Rowstride = _Elementstride * _Columns
+	uint _Rowstride = sizeof(_Element) * _Columns
 >
-struct _matrix_ : _matrix_<_Matrix, _Element, _Columns, _Rows - 1, _Elementstride, _Rowstride>
+struct _matrix_ : _matrix_<_Matrix, _Element, _Columns, _Rows - 1, _Rowstride>
 {
 	template <uint _Size>
 	struct _row_ : _row_<_Size - 1>
@@ -32,14 +31,14 @@ struct _matrix_ : _matrix_<_Matrix, _Element, _Columns, _Rows - 1, _Elementstrid
 	{
 	};
 
-	typedef _matrix_<_Matrix, _Element, _Columns, _Rows - 1, _Elementstride, _Rowstride> _parent;
+	typedef _matrix_<_Matrix, _Element, _Columns, _Rows - 1, _Rowstride> _parent;
 	typedef _row_<_Columns> _row;
 
 	const _row& _element() const;
 	_row& _element();
 };
-template <typename _M, typename _E, uint _C, uint _Es, uint _Rs>
-struct _matrix_<_M, _E, _C, 0, _Es, _Rs>
+template <typename _M, typename _E, uint _C, uint _Rs>
+struct _matrix_<_M, _E, _C, 0, _Rs>
 {
 };
 
@@ -49,9 +48,9 @@ template
 	typename _Vector,
 	typename _Element,
 	uint _Size,
-	uint _Elementstride = sizeof(_Element)
+	uint _Padding = 0
 >
-struct _vector_ : _matrix_<_Vector, _Element, _Size, 1, _Elementstride>
+struct _vector_ : _matrix_<_Vector, _Element, _Size, 1, sizeof(_Element) * _Size + _Padding>
 {
 	const _Element& _element() const;
 	_Element& _element();
