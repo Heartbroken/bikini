@@ -17,9 +17,9 @@ application::application()
 	timeBeginPeriod(1);
 
 #	if defined(WIN32)	// console window
-	typedef HWND (WINAPI *GetConsoleWindow_fn)(void);
+	typedef HWND (WINAPI *GetConsoleWindowFn)(void);
 	HMODULE l_kernel32_h = GetModuleHandleA("kernel32.dll");
-	GetConsoleWindow_fn GetConsoleWindow = (GetConsoleWindow_fn)GetProcAddress(l_kernel32_h, "GetConsoleWindow");
+	GetConsoleWindowFn GetConsoleWindow = (GetConsoleWindowFn)GetProcAddress(l_kernel32_h, "GetConsoleWindow");
 	if(GetConsoleWindow != 0) ShowWindow(GetConsoleWindow(), SW_MAXIMIZE);
 	SetConsoleTitleA(" bikini-iii");
 #	endif
