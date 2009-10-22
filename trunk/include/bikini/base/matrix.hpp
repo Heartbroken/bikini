@@ -23,6 +23,10 @@ struct _matrix_ : _matrix_<_Matrix, _Element, _Columns, _Rows - 1, _Rowstride>
 	{
 		typedef _row_<_Size - 1> _parent;
 
+		_row_();
+		_row_(const _row_ &_r);
+		_row_(const _parent &_r);
+
 		const _Element& _element() const;
 		_Element& _element();
 	};
@@ -33,6 +37,10 @@ struct _matrix_ : _matrix_<_Matrix, _Element, _Columns, _Rows - 1, _Rowstride>
 
 	typedef _matrix_<_Matrix, _Element, _Columns, _Rows - 1, _Rowstride> _parent;
 	typedef _row_<_Columns> _row;
+
+	_matrix_();
+	_matrix_(const _matrix_ &_m);
+	_matrix_(const _parent &_m);
 
 	const _row& _element() const;
 	_row& _element();

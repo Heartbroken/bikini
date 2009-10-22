@@ -11,6 +11,24 @@
 // _matrix_::_row_
 
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs> template <uint _S>
+_matrix_<_M, _E, _C, _R, _Rs>::_row_<_S>::_row_()
+{
+}
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs> template <uint _S>
+_matrix_<_M, _E, _C, _R, _Rs>::_row_<_S>::_row_(const _row_ &_r)
+:
+	_parent(_r)
+{
+	_element() = _r._element();
+}
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs> template <uint _S>
+_matrix_<_M, _E, _C, _R, _Rs>::_row_<_S>::_row_(const _parent &_r)
+:
+	_parent(_r)
+{
+}
+
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs> template <uint _S>
 const _E& _matrix_<_M, _E, _C, _R, _Rs>::_row_<_S>::_element() const
 {
 	return *(const _E*)((const byte*)this + _Rs * (_R - 1) + sizeof(_E) * (_S - 1));
@@ -23,6 +41,17 @@ _E& _matrix_<_M, _E, _C, _R, _Rs>::_row_<_S>::_element()
 
 
 // _matrix_
+
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+_matrix_<_M, _E, _C, _R, _Rs>::_matrix_()
+{
+}
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+_matrix_<_M, _E, _C, _R, _Rs>::_matrix_(const _parent &_m)
+:
+	_parent(_m)
+{
+}
 
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
 const typename _matrix_<_M, _E, _C, _R, _Rs>::_row& _matrix_<_M, _E, _C, _R, _Rs>::_element() const
