@@ -30,38 +30,49 @@ struct A {};
 int _tmain(int argc, _TCHAR* argv[])
 {
 	{
-		typedef bk::make_typelist_<bk::s32, bk::f32, bk::wstring, bk::r3x3>::type types;
-		typedef bk::variant_<types, false> type;
-		
-		bk::array_<type> l_arr;
+		typedef bk::matrix3x3_<float> float3x3;
+		typedef bk::vector3_<float> float3;
 
-		l_arr.push_back(1);
-		l_arr.push_back(1.f);
-		l_arr.push_back(bk::wstring(L"Hello World!!!"));
-		l_arr.push_back(bk::r3x3_1);
-		l_arr.push_back(type());
-
-		const type *l_v1 = &l_arr[2];
+		float3 l_f3;
+		float3x3 l_f3x3;
 
 		int a=0;
 	}
+	//{
+	//	typedef bk::make_typelist_<bk::s32, bk::f32, bk::wstring, bk::r3x3>::type types;
+	//	typedef bk::variant_<types, false> type;
+	//	
+	//	bk::array_<type> l_arr;
+
+	//	l_arr.push_back(1);
+	//	l_arr.push_back(1.f);
+	//	l_arr.push_back(bk::wstring(L"Hello World!!!"));
+	//	l_arr.push_back(bk::r3x3_1);
+	//	l_arr.push_back(type());
+
+	//	const type *l_v1 = &l_arr[2];
+
+	//	int a=0;
+	//}
 //////
-	typedef bk::vector_<bk::real, 1> real1;
-	typedef bk::vector_<bk::real, 3> real3;
-	typedef bk::vector_<double, 3> double3;
-	typedef bk::vector_<double3::column, 3> real3x3;
+	//{
+	//	typedef bk::vector_<bk::real, 1> real1;
+	//	typedef bk::vector_<bk::real, 3> real3;
+	//	typedef bk::vector_<double, 3> double3;
+	//	typedef bk::vector_<double3::column, 3> real3x3;
 
-	real3 l_real3(1, 1, 1), l_a(2, 2, 2), l_b(3, 3, 3), l_c = l_a + l_b;
+	//	real3 l_real3(1, 1, 1), l_a(2, 2, 2), l_b(3, 3, 3), l_c = l_a + l_b;
 
-	l_a.add(l_a, l_c);
-	l_c = l_b + l_b;
+	//	l_a.add(l_a, l_c);
+	//	l_c = l_b + l_b;
 
-	real3x3 l_real3x3(real3(1, 0, 0),
-					  real3(0, 1, 0),
-					  real3(0, 0, 1));
+	//	real3x3 l_real3x3(real3(1, 0, 0),
+	//					  real3(0, 1, 0),
+	//					  real3(0, 0, 1));
 
-	typedef bk::_vector_base::mul_<real1::column, real1::column>::result dot_type;
-	dot_type l_dot;
+	//	typedef bk::_vector_base::mul_<real1::column, real1::column>::result dot_type;
+	//	dot_type l_dot;
+	//}
 
 /////////////
 
