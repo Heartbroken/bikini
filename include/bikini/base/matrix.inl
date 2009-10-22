@@ -8,6 +8,51 @@
 
 #pragma once
 
+// _matrix_<...>::_row_
+
+template <typename _M, typename _E, uint _C, uint _R, uint _Es, uint _Rs> template <uint _S>
+const _E& _matrix_<_M, _E, _C, _R, _Es, _Rs>::_row_<_S>::_element() const
+{
+	return *(const _E*)((const byte*)this + _Rs * (_R - 1) + _Es * (_S - 1));
+}
+template <typename _M, typename _E, uint _C, uint _R, uint _Es, uint _Rs> template <uint _S>
+_E& _matrix_<_M, _E, _C, _R, _Es, _Rs>::_row_<_S>::_element()
+{
+	return *(_E*)((byte*)this + _Rs * (_R - 1) + _Es * (_S - 1));
+}
+
+
+// _matrix_
+
+template <typename _M, typename _E, uint _C, uint _R, uint _Es, uint _Rs>
+const typename _matrix_<_M, _E, _C, _R, _Es, _Rs>::_row& _matrix_<_M, _E, _C, _R, _Es, _Rs>::_element() const
+{
+	return *(const _row*)this;
+}
+template <typename _M, typename _E, uint _C, uint _R, uint _Es, uint _Rs>
+typename _matrix_<_M, _E, _C, _R, _Es, _Rs>::_row& _matrix_<_M, _E, _C, _R, _Es, _Rs>::_element()
+{
+	return *(_row*)this;
+}
+
+// _vector_
+
+template <typename _V, typename _E, uint _S, uint _Es>
+const _E& _vector_<_V, _E, _S, _Es>::_element() const
+{
+	return super::_elment()._element();
+}
+template <typename _V, typename _E, uint _S, uint _Es>
+_E& _vector_<_V, _E, _S, _Es>::_element()
+{
+	return super::_elment()._element();
+}
+
+
+
+
+
+
 // _matrix_row_
 
 template<uint _S, typename _T>

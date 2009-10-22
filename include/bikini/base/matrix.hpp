@@ -8,6 +8,71 @@
 
 #pragma once
 
+///
+template
+<
+	typename _Matrix,
+	typename _Element,
+	uint _Columns, uint _Rows,
+	uint _Elementstride = sizeof(_Element),
+	uint _Rowstride = _Elementstride * _Columns
+>
+struct _matrix_ : _matrix_<_Matrix, _Element, _Columns, _Rows - 1, _Elementstride, _Rowstride>
+{
+	template <uint _Size>
+	struct _row_ : _row_<_Size - 1>
+	{
+		typedef _row_<_Size - 1> _parent;
+
+		const _Element& _element() const;
+		_Element& _element();
+	};
+	template <>
+	struct _row_<0>
+	{
+	};
+
+	typedef _matrix_<_Matrix, _Element, _Columns, _Rows - 1, _Elementstride, _Rowstride> _parent;
+	typedef _row_<_Columns> _row;
+
+	const _row& _element() const;
+	_row& _element();
+};
+template <typename _M, typename _E, uint _C, uint _Es, uint _Rs>
+struct _matrix_<_M, _E, _C, 0, _Es, _Rs>
+{
+};
+
+///
+template
+<
+	typename _Vector,
+	typename _Element,
+	uint _Size,
+	uint _Elementstride = sizeof(_Element)
+>
+struct _vector_ : _matrix_<_Vector, _Element, _Size, 1, _Elementstride>
+{
+	const _Element& _element() const;
+	_Element& _element();
+};
+
+template <typename _Type>
+struct matrix3x3_ : _matrix_<matrix3x3_<_Type>, _Type, 3, 3>
+{
+	_Type m11, m12, m13,
+		  m21, m22, m23,
+		  m31, m32, m33;
+};
+
+template <typename _Type>
+struct vector3_ : _vector_<vector3_<_Type>, _Type, 3>
+{
+	_Type x, y, z;
+};
+
+
+
 ///	Uber-matrix row template. Used internally by matrix_ template.
 /**	Each _matrix_row_<_Size, _Type> struct has one member varable m_cell of cell_type type,
 	and also inherits _Size - 1 cells from it's parent type _matrix_row_<_Size - 1, _Type>
