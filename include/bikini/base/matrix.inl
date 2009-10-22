@@ -8,7 +8,7 @@
 
 #pragma once
 
-// _matrix_<...>::_row_
+// _matrix_::_row_
 
 template <typename _M, typename _E, uint _C, uint _R, uint _Es, uint _Rs> template <uint _S>
 const _E& _matrix_<_M, _E, _C, _R, _Es, _Rs>::_row_<_S>::_element() const
