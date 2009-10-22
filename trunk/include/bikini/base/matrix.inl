@@ -10,40 +10,40 @@
 
 // _matrix_::_row_
 
-template <typename _M, typename _E, uint _C, uint _R, uint _Es, uint _Rs> template <uint _S>
-const _E& _matrix_<_M, _E, _C, _R, _Es, _Rs>::_row_<_S>::_element() const
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs> template <uint _S>
+const _E& _matrix_<_M, _E, _C, _R, _Rs>::_row_<_S>::_element() const
 {
-	return *(const _E*)((const byte*)this + _Rs * (_R - 1) + _Es * (_S - 1));
+	return *(const _E*)((const byte*)this + _Rs * (_R - 1) + sizeof(_E) * (_S - 1));
 }
-template <typename _M, typename _E, uint _C, uint _R, uint _Es, uint _Rs> template <uint _S>
-_E& _matrix_<_M, _E, _C, _R, _Es, _Rs>::_row_<_S>::_element()
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs> template <uint _S>
+_E& _matrix_<_M, _E, _C, _R, _Rs>::_row_<_S>::_element()
 {
-	return *(_E*)((byte*)this + _Rs * (_R - 1) + _Es * (_S - 1));
+	return *(_E*)((byte*)this + _Rs * (_R - 1) + sizeof(_E) * (_S - 1));
 }
 
 
 // _matrix_
 
-template <typename _M, typename _E, uint _C, uint _R, uint _Es, uint _Rs>
-const typename _matrix_<_M, _E, _C, _R, _Es, _Rs>::_row& _matrix_<_M, _E, _C, _R, _Es, _Rs>::_element() const
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+const typename _matrix_<_M, _E, _C, _R, _Rs>::_row& _matrix_<_M, _E, _C, _R, _Rs>::_element() const
 {
 	return *(const _row*)this;
 }
-template <typename _M, typename _E, uint _C, uint _R, uint _Es, uint _Rs>
-typename _matrix_<_M, _E, _C, _R, _Es, _Rs>::_row& _matrix_<_M, _E, _C, _R, _Es, _Rs>::_element()
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+typename _matrix_<_M, _E, _C, _R, _Rs>::_row& _matrix_<_M, _E, _C, _R, _Rs>::_element()
 {
 	return *(_row*)this;
 }
 
 // _vector_
 
-template <typename _V, typename _E, uint _S, uint _Es>
-const _E& _vector_<_V, _E, _S, _Es>::_element() const
+template <typename _V, typename _E, uint _S, uint _P>
+const _E& _vector_<_V, _E, _S, _P>::_element() const
 {
 	return super::_elment()._element();
 }
-template <typename _V, typename _E, uint _S, uint _Es>
-_E& _vector_<_V, _E, _S, _Es>::_element()
+template <typename _V, typename _E, uint _S, uint _P>
+_E& _vector_<_V, _E, _S, _P>::_element()
 {
 	return super::_elment()._element();
 }
