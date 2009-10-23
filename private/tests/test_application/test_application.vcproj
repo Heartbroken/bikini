@@ -380,7 +380,7 @@
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)$(ProjectName) ($(PlatformName)!$(ConfigurationName)).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\library\xbox"
+				AdditionalLibraryDirectories="..\..\..\library; ..\..\..\library\external"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
