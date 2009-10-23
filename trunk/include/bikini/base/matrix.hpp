@@ -30,15 +30,9 @@ struct _matrix_
 		_row_();
 		_row_(const _row_ &_r);
 		_row_(const _parent &_r);
-
-		const _Element& _element() const;
-		_Element& _element();
-		void _set(const _row_ &_r);
 	};
 	template <>
-	struct _row_<0>
-	{
-	};
+	struct _row_<0> {};
 
 	typedef _matrix_<_Matrix, _Element, _Columns, _Rows - 1, _Rowstride> _parent;
 	typedef _row_<_Columns> _row;
@@ -47,14 +41,14 @@ struct _matrix_
 	_matrix_(const _matrix_ &_m);
 	_matrix_(const _parent &_m);
 
+	_matrix_& operator = (const _matrix_ &_m);
+
 	const _row& _element() const;
 	_row& _element();
 	void _set(const _matrix_ &_m);
 };
 template <typename _M, typename _E, uint _C, uint _Rs>
-struct _matrix_<_M, _E, _C, 0, _Rs>
-{
-};
+struct _matrix_<_M, _E, _C, 0, _Rs> {};
 
 template <typename _Type, uint _Columns, uint _Rows>
 struct matrix__
