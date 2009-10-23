@@ -33,6 +33,7 @@ struct _matrix_
 
 		const _Element& _element() const;
 		_Element& _element();
+		void _set(const _row_ &_r);
 	};
 	template <>
 	struct _row_<0>
@@ -48,6 +49,7 @@ struct _matrix_
 
 	const _row& _element() const;
 	_row& _element();
+	void _set(const _matrix_ &_m);
 };
 template <typename _M, typename _E, uint _C, uint _Rs>
 struct _matrix_<_M, _E, _C, 0, _Rs>

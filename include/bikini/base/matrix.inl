@@ -39,6 +39,28 @@ _E& _matrix_<_M, _E, _C, _R, _Rs>::_row_<_S>::_element()
 	return *(_E*)((byte*)this + _Rs * (_R - 1) + sizeof(_E) * (_S - 1));
 }
 
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs, uint _S>
+struct _matrix_row_set_helper_
+{
+	typedef typename _matrix_<_M, _E, _C, _R, _Rs>::_row_<_S> row;
+	static void set(row &_a, const row &_b)
+	{
+		_matrix_row_set_helper_<_M, _E, _C, _R, _Rs>::_row_<_S>::set(_a, _b);
+		_a._element() = _b._element();
+	}
+};
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+struct _matrix_row_set_helper_<_M, _E, _C, _R, _Rs, 0>
+{
+	typedef typename _matrix_<_M, _E, _C, _R, _Rs>::_row_<0> row;
+	static void set(row &_a, const row &_b) {}
+};
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs> template <uint _S>
+void _matrix_<_M, _E, _C, _R, _Rs>::_row_<_S>::_set(const _row_ &_r)
+{
+	_matrix_row_set_helper_::set(*this, _r);
+}
+
 
 // _matrix_
 
@@ -62,6 +84,28 @@ template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
 typename _matrix_<_M, _E, _C, _R, _Rs>::_row& _matrix_<_M, _E, _C, _R, _Rs>::_element()
 {
 	return *(_row*)this;
+}
+
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+struct _matrix_set_helper_
+{
+	typedef _matrix_<_M, _E, _C, _R, _Rs> matrix;
+	static void set(matrix &_a, const matrix &_b)
+	{
+		_matrix_set_helper_<_M, _E, _C, _R - 1, _Rs>::set(_a, _b);
+		_a._element() = _b._element();
+	}
+};
+template <typename _M, typename _E, uint _C, uint _Rs>
+struct _matrix_set_helper_<_M, _E, _C, 0, _Rs>
+{
+	typedef _matrix_<_M, _E, _C, 0, _Rs> matrix;
+	static void set(matrix &_a, const matrix &_b) {}
+};
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+void _matrix_<_M, _E, _C, _R, _Rs>::_set(const _matrix_ &_m)
+{
+	_matrix_set_helper_<_M, _E, _C, _R, _Rs>::set(*this, _m);
 }
 
 // _vector_
