@@ -33,10 +33,10 @@ int _tmain(int argc, _TCHAR* argv[])
 		typedef bk::matrix__<float, 3, 3> float3x3;
 		typedef bk::vector__<float, 3> float3;
 
-		float3 l_f3_a, l_f3_b;
-		float3x3 l_f3x3;
+		float3 l_a, l_b;
+		float3x3 l_m;
 
-		l_f3_a._set(l_f3_b);
+		l_a = l_b;
 
 		int a=0;
 	}

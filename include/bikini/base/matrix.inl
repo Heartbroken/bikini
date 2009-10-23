@@ -8,6 +8,71 @@
 
 #pragma once
 
+// _matrix_row_helper_
+
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs, uint _S>
+struct _matrix_row_helper_
+{
+	typedef typename _matrix_<_M, _E, _C, _R, _Rs>::_row_<_S> _row;
+	typedef _matrix_row_helper_<_M, _E, _C, _R, _Rs, _S - 1> _parent;
+	static const _E& element(const _row &_r) { return *(const _E*)((const byte*)&_r + _Rs * (_R - 1) + sizeof(_E) * (_S - 1)); }
+	static _E& element(_row &_r) { return *(_E*)((byte*)&_r + _Rs * (_R - 1) + sizeof(_E) * (_S - 1)); }
+	static void set(_row &_a, const _row &_b) { _parent::set(_a, _b); element(_a) = element(_b); }
+	static void get(const _row &_a, _row &_b) { _parent::get(_a, _b); element(_b) = element(_a); }
+	static void neg(_row &_a) { _parent::neg(_a); element(_a) = -element(_a); }
+	static void add(const _row &_a, const _row &_b, _row &_c) { _parent::add(_a, _b, _c); element(_c) = element(_a) + element(_b); }
+	static void sub(const _row &_a, const _row &_b, _row &_c) { _parent::sub(_a, _b, _c); element(_c) = element(_a) - element(_b); }
+	static void mul(const _row &_a, const _E &_b, _row &_c) { _parent::mul(_a, _b, _c); element(_c) = element(_a) * _b; }
+	static void div(const _row &_a, const _E &_b, _row &_c) { _parent::div(_a, _b, _c); element(_c) = element(_a) / _b; }
+	static bool cmp(const _row &_a, const _row &_b) { return _parent::cmp(_a, _b) && element(_a) == element(_b); }
+};
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+struct _matrix_row_helper_<_M, _E, _C, _R, _Rs, 0>
+{
+	typedef typename _matrix_<_M, _E, _C, _R, _Rs>::_row_<0> _row;
+	static void set(_row &_a, const _row &_b) {}
+	static void get(const _row &_a, _row &_b) {}
+	static void neg(_row &_a) {}
+	static void add(const _row &_a, const _row &_b, _row &_c) {}
+	static void sub(const _row &_a, const _row &_b, _row &_c) {}
+	static void mul(const _row &_a, const _E &_b, _row &_c) {}
+	static void div(const _row &_a, const _E &_b, _row &_c) {}
+	static bool cmp(const _row &_a, const _row &_b) {}
+};
+
+// _matrix_helper_
+
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+struct _matrix_helper_
+{
+	typedef _matrix_<_M, _E, _C, _R, _Rs> _matrix;
+	typedef _matrix_helper_<_M, _E, _C, _R - 1, _Rs> _parent;
+	typedef _matrix_row_helper_<_M, _E, _C, _R, _Rs, _C> _row;
+	static const typename _matrix::_row& element(const _matrix &_m) { return *(const _matrix::_row*)&_m; }
+	static typename _matrix::_row& element(_matrix &_m) { return *(_matrix::_row*)&_m; }
+	static void set(_matrix &_a, const _matrix &_b) { _parent::set(_a, _b); _row::set(element(_a), element(_b)); }
+	static void get(const _matrix &_a, _matrix &_b) { _parent::get(_a, _b); _row::get(element(_a), element(_b)); }
+	static void neg(_matrix &_a) { _parent::neg(_a); _row::neg(_a._element()); }
+	static void add(const _matrix &_a, const _matrix &_b, _matrix &_c) { _parent::add(_a, _b, _c); _row::add(element(_a), element(_b), element(_c)); }
+	static void sub(const _matrix &_a, const _matrix &_b, _matrix &_c) { _parent::sub(_a, _b, _c); _row::sub(element(_a), element(_b), element(_c)); }
+	static void mul(const _matrix &_a, const _E &_b, _matrix &_c) { _parent::mul(_a, _b, _c); _row::mul(element(_a), _b, element(_c)); }
+	static void div(const _matrix &_a, const _E &_b, _matrix &_c) { _parent::mul(_a, _b, _c); _row::div(element(_a), _b, element(_c)); }
+	static bool cmp(const _matrix &_a, const _matrix &_b) { return _parent::cmp(_a, _b) && _row::cmp(element(_a), element(_b)); }
+};
+template <typename _M, typename _E, uint _C, uint _Rs>
+struct _matrix_helper_<_M, _E, _C, 0, _Rs>
+{
+	typedef _matrix_<_M, _E, _C, 0, _Rs> _matrix;
+	static void set(_matrix &_a, const _matrix &_b) {}
+	static void get(const _matrix &_a, _matrix &_b) {}
+	static void neg(_matrix &_a) {}
+	static void add(const _matrix &_a, const _matrix &_b, _matrix &_c) {}
+	static void sub(const _matrix &_a, const _matrix &_b, _matrix &_c) {}
+	static void mul(const _matrix &_a, const _E &_b, _matrix &_c) {}
+	static void div(const _matrix &_a, const _E &_b, _matrix &_c) {}
+	static bool cmp(const _matrix &_a, const _matrix &_b) {}
+};
+
 // _matrix_::_row_
 
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs> template <uint _S>
@@ -28,40 +93,6 @@ _matrix_<_M, _E, _C, _R, _Rs>::_row_<_S>::_row_(const _parent &_r)
 {
 }
 
-template <typename _M, typename _E, uint _C, uint _R, uint _Rs> template <uint _S>
-const _E& _matrix_<_M, _E, _C, _R, _Rs>::_row_<_S>::_element() const
-{
-	return *(const _E*)((const byte*)this + _Rs * (_R - 1) + sizeof(_E) * (_S - 1));
-}
-template <typename _M, typename _E, uint _C, uint _R, uint _Rs> template <uint _S>
-_E& _matrix_<_M, _E, _C, _R, _Rs>::_row_<_S>::_element()
-{
-	return *(_E*)((byte*)this + _Rs * (_R - 1) + sizeof(_E) * (_S - 1));
-}
-
-template <typename _M, typename _E, uint _C, uint _R, uint _Rs, uint _S>
-struct _matrix_row_set_helper_
-{
-	typedef typename _matrix_<_M, _E, _C, _R, _Rs>::_row_<_S> row;
-	static void set(row &_a, const row &_b)
-	{
-		_matrix_row_set_helper_<_M, _E, _C, _R, _Rs>::_row_<_S>::set(_a, _b);
-		_a._element() = _b._element();
-	}
-};
-template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-struct _matrix_row_set_helper_<_M, _E, _C, _R, _Rs, 0>
-{
-	typedef typename _matrix_<_M, _E, _C, _R, _Rs>::_row_<0> row;
-	static void set(row &_a, const row &_b) {}
-};
-template <typename _M, typename _E, uint _C, uint _R, uint _Rs> template <uint _S>
-void _matrix_<_M, _E, _C, _R, _Rs>::_row_<_S>::_set(const _row_ &_r)
-{
-	_matrix_row_set_helper_::set(*this, _r);
-}
-
-
 // _matrix_
 
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
@@ -74,38 +105,11 @@ _matrix_<_M, _E, _C, _R, _Rs>::_matrix_(const _parent &_m)
 	_parent(_m)
 {
 }
-
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-const typename _matrix_<_M, _E, _C, _R, _Rs>::_row& _matrix_<_M, _E, _C, _R, _Rs>::_element() const
+_matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator = (const _matrix_ &_m)
 {
-	return *(const _row*)this;
-}
-template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-typename _matrix_<_M, _E, _C, _R, _Rs>::_row& _matrix_<_M, _E, _C, _R, _Rs>::_element()
-{
-	return *(_row*)this;
-}
-
-template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-struct _matrix_set_helper_
-{
-	typedef _matrix_<_M, _E, _C, _R, _Rs> matrix;
-	static void set(matrix &_a, const matrix &_b)
-	{
-		_matrix_set_helper_<_M, _E, _C, _R - 1, _Rs>::set(_a, _b);
-		_a._element() = _b._element();
-	}
-};
-template <typename _M, typename _E, uint _C, uint _Rs>
-struct _matrix_set_helper_<_M, _E, _C, 0, _Rs>
-{
-	typedef _matrix_<_M, _E, _C, 0, _Rs> matrix;
-	static void set(matrix &_a, const matrix &_b) {}
-};
-template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-void _matrix_<_M, _E, _C, _R, _Rs>::_set(const _matrix_ &_m)
-{
-	_matrix_set_helper_<_M, _E, _C, _R, _Rs>::set(*this, _m);
+	_matrix_helper_<_M, _E, _C, _R, _Rs>::set(*this, _m);
+	return *this;
 }
 
 // _vector_
