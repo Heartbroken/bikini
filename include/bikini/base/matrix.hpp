@@ -16,10 +16,14 @@ template
 	uint _Columns, uint _Rows,
 	uint _Rowstride = sizeof(_Element) * _Columns
 >
-struct _matrix_ : _matrix_<_Matrix, _Element, _Columns, _Rows - 1, _Rowstride>
+struct _matrix_
+:
+	_matrix_<_Matrix, _Element, _Columns, _Rows - 1, _Rowstride>
 {
 	template <uint _Size>
-	struct _row_ : _row_<_Size - 1>
+	struct _row_
+	:
+		_row_<_Size - 1>
 	{
 		typedef _row_<_Size - 1> _parent;
 
@@ -50,6 +54,52 @@ struct _matrix_<_M, _E, _C, 0, _Rs>
 {
 };
 
+template <typename _Type, uint _Columns, uint _Rows>
+struct matrix__
+:
+	_matrix_<matrix__<_Type, _Columns, _Rows>, _Type, _Columns, _Rows>
+{
+	_Type m[_Rows][_Columns];
+};
+
+template <typename _Type>
+struct matrix__<_Type, 1, 1>
+:
+	_matrix_<matrix__<_Type, 1, 1>, _Type, 1, 1>
+{
+	_Type m11;
+};
+
+template <typename _Type>
+struct matrix__<_Type, 2, 2>
+:
+	_matrix_<matrix__<_Type, 2, 2>, _Type, 2, 2>
+{
+	_Type m11, m12,
+		  m21, m22;
+};
+
+template <typename _Type>
+struct matrix__<_Type, 3, 3>
+:
+	_matrix_<matrix__<_Type, 3, 3>, _Type, 3, 3>
+{
+	_Type m11, m12, m13,
+		  m21, m22, m23,
+		  m31, m32, m33;
+};
+
+template <typename _Type>
+struct matrix__<_Type, 4, 4>
+:
+	_matrix_<matrix__<_Type, 4, 4>, _Type, 4, 4>
+{
+	_Type m11, m12, m13, m14,
+		  m21, m22, m23, m24,
+		  m31, m32, m33, m34,
+		  m41, m42, m43, m44;
+};
+
 ///
 template
 <
@@ -58,24 +108,52 @@ template
 	uint _Size,
 	uint _Padding = 0
 >
-struct _vector_ : _matrix_<_Vector, _Element, _Size, 1, sizeof(_Element) * _Size + _Padding>
+struct _vector_
+:
+	_matrix_<_Vector, _Element, _Size, 1, sizeof(_Element) * _Size + _Padding>
 {
 	const _Element& _element() const;
 	_Element& _element();
 };
 
-template <typename _Type>
-struct matrix3x3_ : _matrix_<matrix3x3_<_Type>, _Type, 3, 3>
+template <typename _Type, uint _Size>
+struct vector__
+:
+	_vector_<vector__<_Type, _Size>, _Type, _Size>
 {
-	_Type m11, m12, m13,
-		  m21, m22, m23,
-		  m31, m32, m33;
+	_Type v[_Size];
 };
 
 template <typename _Type>
-struct vector3_ : _vector_<vector3_<_Type>, _Type, 3>
+struct vector__<_Type, 1>
+:
+	_vector_<vector__<_Type, 1>, _Type, 1>
+{
+	_Type x;
+};
+
+template <typename _Type>
+struct vector__<_Type, 2>
+:
+	_vector_<vector__<_Type, 2>, _Type, 2>
+{
+	_Type x, y;
+};
+
+template <typename _Type>
+struct vector__<_Type, 3>
+:
+	_vector_<vector__<_Type, 3>, _Type, 3>
 {
 	_Type x, y, z;
+};
+
+template <typename _Type>
+struct vector__<_Type, 4>
+:
+	_vector_<vector__<_Type, 4>, _Type, 4>
+{
+	_Type x, y, z, w;
 };
 
 
