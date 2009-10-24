@@ -20,6 +20,14 @@ struct _matrix_
 :
 	_matrix_<_Matrix, _Element, _Columns, _Rows - 1, _Rowstride>
 {
+	_matrix_& operator - ();
+	_matrix_& operator += (const _matrix_ &_m);
+	_matrix_& operator -= (const _matrix_ &_m);
+	_matrix_& operator *= (const _matrix_ &_m);
+	_matrix_& operator /= (const _matrix_ &_m);
+	_matrix_& operator *= (const _Element &_s);
+	_matrix_& operator /= (const _Element &_s);
+
 	template <uint _Size>
 	struct _row_ : _row_<_Size - 1>
 	{
@@ -29,14 +37,6 @@ struct _matrix_
 	template <> struct _row_<0> {};
 
 	typedef _row_<_Columns> _row;
-
-	_matrix_& operator - ();
-	_matrix_& operator += (const _matrix_ &_m);
-	_matrix_& operator -= (const _matrix_ &_m);
-	_matrix_& operator *= (const _matrix_ &_m);
-	_matrix_& operator /= (const _matrix_ &_m);
-	_matrix_& operator *= (const _Element &_s);
-	_matrix_& operator /= (const _Element &_s);
 
 	const _row& operator [] (uint _i) const;
 	_row& operator [] (uint _i);
