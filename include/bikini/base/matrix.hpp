@@ -40,6 +40,7 @@ struct _matrix_
 	const _row& operator [] (uint _i) const;
 	_row& operator [] (uint _i);
 
+	operator const _Matrix& () const { return *(const _Matrix*)this; }
 	operator _Matrix& () { return *(_Matrix*)this; }
 
 };
