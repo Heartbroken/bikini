@@ -28,8 +28,7 @@ struct _matrix_
 	_matrix_& operator *= (const _Element &_s);
 	_matrix_& operator /= (const _Element &_s);
 
-	template <uint _Size>
-	struct _row_ : _row_<_Size - 1>
+	template <uint _Size> struct _row_ : _row_<_Size - 1>
 	{
 		const _Element& operator [] (uint _i) const;
 		_Element& operator [] (uint _i);
@@ -47,12 +46,12 @@ struct _matrix_
 template <typename _M, typename _E, uint _C, uint _Rs>
 struct _matrix_<_M, _E, _C, 0, _Rs> {};
 
-template <typename _Type, uint _Columns, uint _Rows>
+template <typename _Type, uint _Columns, uint _Rows, uint _Extra = 0>
 struct matrix__
 :
-	_matrix_<matrix__<_Type, _Columns, _Rows>, _Type, _Columns, _Rows>
+	_matrix_<matrix__<_Type, _Columns, _Rows>, _Type, _Columns, _Rows, sizeof(_Type) * (_Columns + _Extra)>
 {
-	_Type m[_Rows][_Columns];
+	_Type m[_Rows][_Columns + _Extra];
 };
 
 template <typename _Type>
@@ -99,27 +98,22 @@ template
 	typename _Vector,
 	typename _Element,
 	uint _Size,
-	uint _Padding = 0
+	uint _Extra = 0
 >
 struct _vector_
 :
-	_matrix_<_Vector, _Element, _Size, 1, sizeof(_Element) * _Size + _Padding>
+	_matrix_<_Vector, _Element, _Size, 1, sizeof(_Element) * (_Size + _Extra)>
 {
 	const _Element& operator [] (uint _i) const;
 	_Element& operator [] (uint _i);
 };
 
-template <typename _Type, uint _Size>
+template <typename _Type, uint _Size, uint _Extra = 0>
 struct vector__
 :
 	_vector_<vector__<_Type, _Size>, _Type, _Size>
 {
-	_Type v[_Size];
-
-	vector__(const _Type _v[_Size])
-	{
-		memcpy(v, _v, sizeof(_Type) * _Size);
-	}
+	_Type v[_Size + _Extra];
 };
 
 template <typename _Type>
@@ -147,10 +141,6 @@ struct vector__<_Type, 3>
 
 	vector__()
 	{}
-	//vector__(const vector__ &_v)
-	//:
-	//	x(_v.x), y(_v.y), z(_v.z)
-	//{}
 	vector__(const _Type &_x, const _Type &_y, const _Type &_z)
 	:
 		x(_x), y(_y), z(_z)
