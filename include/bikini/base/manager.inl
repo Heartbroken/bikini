@@ -16,39 +16,40 @@ inline _T& manager::get_(uint _ID) const
 	return static_cast<_T&>(get(_ID));
 }
 template<typename _I>
-inline uint manager::spawn(const _I &_info)
+inline _I::object manager::spawn(const _I &_info)
 {
-	_I::object &l_o = * new _I::object(_info, static_cast<typename _I::manager&>(*this));
-	return l_o.ID();
+	uint l_ID = m_objects.add(0);
+	m_objects.get(l_ID) = new _I::object::instance(_info, static_cast<typename _I::manager&>(*this));
+	return (_I::object&)object(*this, l_ID);
 }
 template<typename _I>
 inline uint manager::spawn(const _I &_info, typename _I::a0 _a0)
 {
-	_I::object &l_o = * new _I::object(_info, static_cast<typename _I::manager&>(*this), _a0);
+	_I::object &l_o = * new _I::object::instance(_info, static_cast<typename _I::manager&>(*this), _a0);
 	return l_o.ID();
 }
 template<typename _I>
 inline uint manager::spawn(const _I &_info, typename _I::a0 _a0, typename _I::a1 _a1)
 {
-	_I::object &l_o = * new _I::object(_info, static_cast<typename _I::manager&>(*this), _a0, _a1);
+	_I::object &l_o = * new _I::object::instance(_info, static_cast<typename _I::manager&>(*this), _a0, _a1);
 	return l_o.ID();
 }
 template<typename _I>
 inline uint manager::spawn(const _I &_info, typename _I::a0 _a0, typename _I::a1 _a1, typename _I::a2 _a2)
 {
-	_I::object &l_o = * new _I::object(_info, static_cast<typename _I::manager&>(*this), _a0, _a1, _a2);
+	_I::object &l_o = * new _I::object::instance(_info, static_cast<typename _I::manager&>(*this), _a0, _a1, _a2);
 	return l_o.ID();
 }
 template<typename _I>
 inline uint manager::spawn(const _I &_info, typename _I::a0 _a0, typename _I::a1 _a1, typename _I::a2 _a2, typename _I::a3 _a3)
 {
-	_I::object &l_o = * new _I::object(_info, static_cast<typename _I::manager&>(*this), _a0, _a1, _a2, _a3);
+	_I::object &l_o = * new _I::object::instance(_info, static_cast<typename _I::manager&>(*this), _a0, _a1, _a2, _a3);
 	return l_o.ID();
 }
 template<typename _I>
 inline uint manager::spawn(const _I &_info, typename _I::a0 _a0, typename _I::a1 _a1, typename _I::a2 _a2, typename _I::a3 _a3, typename _I::a4 _a4)
 {
-	_I::object &l_o = * new _I::object(_info, static_cast<typename _I::manager&>(*this), _a0, _a1, _a2, _a3, _a4);
+	_I::object &l_o = * new _I::object::instance(_info, static_cast<typename _I::manager&>(*this), _a0, _a1, _a2, _a3, _a4);
 	return l_o.ID();
 }
 template<typename _I>
@@ -64,54 +65,54 @@ inline uint manager::m_find_shared(const _I &_info)
 	}
 	return bad_ID;
 }
-template<typename _I>
-inline uint manager::request(const _I &_info)
-{
-	uint l_ID = m_find_shared(_info);
-	if(l_ID == bad_ID) l_ID = spawn(_info);
-	get(l_ID).add_ref(); m_shared.push_back(l_ID);
-	return l_ID;
-}
-template<typename _I>
-inline uint manager::request(const _I &_info, typename _I::a0 _a0)
-{
-	uint l_ID = m_find_shared(_info);
-	if(l_ID == bad_ID) l_ID = spawn(_info, _a0);
-	get(l_ID).add_ref(); m_shared.push_back(l_ID);
-	return l_ID;
-}
-template<typename _I>
-inline uint manager::request(const _I &_info, typename _I::a0 _a0, typename _I::a1 _a1)
-{
-	uint l_ID = m_find_shared(_info);
-	if(l_ID == bad_ID) l_ID = spawn(_info, _a0, _a1);
-	get(l_ID).add_ref(); m_shared.push_back(l_ID);
-	return l_ID;
-}
-template<typename _I>
-inline uint manager::request(const _I &_info, typename _I::a0 _a0, typename _I::a1 _a1, typename _I::a2 _a2)
-{
-	uint l_ID = m_find_shared(_info);
-	if(l_ID == bad_ID) l_ID = spawn(_info, _a0, _a1, _a2);
-	get(l_ID).add_ref(); m_shared.push_back(l_ID);
-	return l_ID;
-}
-template<typename _I>
-inline uint manager::request(const _I &_info, typename _I::a0 _a0, typename _I::a1 _a1, typename _I::a2 _a2, typename _I::a3 _a3)
-{
-	uint l_ID = m_find_shared(_info);
-	if(l_ID == bad_ID) l_ID = spawn(_info, _a0, _a1, _a2, _a3);
-	get(l_ID).add_ref(); m_shared.push_back(l_ID);
-	return l_ID;
-}
-template<typename _I>
-inline uint manager::request(const _I &_info, typename _I::a0 _a0, typename _I::a1 _a1, typename _I::a2 _a2, typename _I::a3 _a3, typename _I::a4 _a4)
-{
-	uint l_ID = m_find_shared(_info);
-	if(l_ID == bad_ID) l_ID = spawn(_info, _a0, _a1, _a2, _a3, _a4);
-	get(l_ID).add_ref(); m_shared.push_back(l_ID);
-	return l_ID;
-}
+//template<typename _I>
+//inline uint manager::request(const _I &_info)
+//{
+//	uint l_ID = m_find_shared(_info);
+//	if(l_ID == bad_ID) l_ID = spawn(_info);
+//	get(l_ID).add_ref(); m_shared.push_back(l_ID);
+//	return l_ID;
+//}
+//template<typename _I>
+//inline uint manager::request(const _I &_info, typename _I::a0 _a0)
+//{
+//	uint l_ID = m_find_shared(_info);
+//	if(l_ID == bad_ID) l_ID = spawn(_info, _a0);
+//	get(l_ID).add_ref(); m_shared.push_back(l_ID);
+//	return l_ID;
+//}
+//template<typename _I>
+//inline uint manager::request(const _I &_info, typename _I::a0 _a0, typename _I::a1 _a1)
+//{
+//	uint l_ID = m_find_shared(_info);
+//	if(l_ID == bad_ID) l_ID = spawn(_info, _a0, _a1);
+//	get(l_ID).add_ref(); m_shared.push_back(l_ID);
+//	return l_ID;
+//}
+//template<typename _I>
+//inline uint manager::request(const _I &_info, typename _I::a0 _a0, typename _I::a1 _a1, typename _I::a2 _a2)
+//{
+//	uint l_ID = m_find_shared(_info);
+//	if(l_ID == bad_ID) l_ID = spawn(_info, _a0, _a1, _a2);
+//	get(l_ID).add_ref(); m_shared.push_back(l_ID);
+//	return l_ID;
+//}
+//template<typename _I>
+//inline uint manager::request(const _I &_info, typename _I::a0 _a0, typename _I::a1 _a1, typename _I::a2 _a2, typename _I::a3 _a3)
+//{
+//	uint l_ID = m_find_shared(_info);
+//	if(l_ID == bad_ID) l_ID = spawn(_info, _a0, _a1, _a2, _a3);
+//	get(l_ID).add_ref(); m_shared.push_back(l_ID);
+//	return l_ID;
+//}
+//template<typename _I>
+//inline uint manager::request(const _I &_info, typename _I::a0 _a0, typename _I::a1 _a1, typename _I::a2 _a2, typename _I::a3 _a3, typename _I::a4 _a4)
+//{
+//	uint l_ID = m_find_shared(_info);
+//	if(l_ID == bad_ID) l_ID = spawn(_info, _a0, _a1, _a2, _a3, _a4);
+//	get(l_ID).add_ref(); m_shared.push_back(l_ID);
+//	return l_ID;
+//}
 
 // manager::object
 
