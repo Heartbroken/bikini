@@ -11,15 +11,18 @@
 /// manager
 /**	[TODO]
  */
-struct manager : noncopyable {
+struct manager : noncopyable
+{
 	/// manager::object
 	/**	[TODO]
 	 */
-	struct object : noncopyable {
+	struct object : noncopyable
+	{
 		/// manager::object::info
 		/**	[TODO]
 		 */
-		struct info : noncopyable {
+		struct info : noncopyable
+		{
 			info(uint _type);
 			virtual ~info();
 			inline uint type() const;
@@ -27,6 +30,14 @@ struct manager : noncopyable {
 		private:
 			uint m_type;
 		};
+
+		///// manager::object::instance
+		///**
+		// */
+		//struct instance
+		//{
+		//private:
+		//};
 
 		inline const info& get_info() const;
 		template<typename _Info> const _Info& get_info_() const;
