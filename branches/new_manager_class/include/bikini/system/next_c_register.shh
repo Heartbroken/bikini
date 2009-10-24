@@ -1,0 +1,198 @@
+/*---------------------------------------------------------------------------------------------*//*
+
+	Binary Kinematics 3 - C++ Game Programming Library
+	Copyright (C) 2008-2009 Viktor Reutskyy
+	viktor.reutskyy@gmail.com
+
+*//*---------------------------------------------------------------------------------------------*/
+
+#ifndef next_c_register_index
+#	include "increment_c_register.shh"
+#endif
+
+#ifndef used_c_registers
+#	error The number of used c registers is not specified
+#endif
+
+#if used_c_registers > 59
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 58
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 57
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 56
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 55
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 54
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 53
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 52
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 51
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 50
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 49
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 48
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 47
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 46
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 45
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 44
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 43
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 42
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 41
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 40
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 39
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 38
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 37
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 36
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 35
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 34
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 33
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 32
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 31
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 30
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 29
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 28
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 27
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 26
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 25
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 24
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 23
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 22
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 21
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 20
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 19
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 18
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 17
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 16
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 15
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 14
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 13
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 12
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 11
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 10
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 9
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 8
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 7
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 6
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 5
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 4
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 3
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 2
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 1
+#	include "increment_c_register.shh"
+#endif
+#if used_c_registers > 0
+#	include "increment_c_register.shh"
+#endif
+
+#undef used_c_registers
