@@ -30,13 +30,23 @@ struct A {};
 int _tmain(int argc, _TCHAR* argv[])
 {
 	{
-		typedef bk::matrix__<float, 3, 3> float3x3;
+		typedef bk::matrix__<float, 3, 2> float3x2;
 		typedef bk::vector__<float, 3> float3;
 
-		float3 l_a, l_b;
-		float3x3 l_m;
+		float3 l_a(1, 1, 1), l_b(2, 2, 2), l_c = l_a;
+		float3x2 l_m;
 
-		l_a = l_b;
+		l_m[0][2] = 100.f;
+		l_a[1] = 5.f;
+
+		l_c = l_b;
+		l_a += l_c;
+		l_c -= l_a;
+		l_c = -l_c;
+		l_a *= l_c;
+		l_a /= l_b;
+		l_b *= 3.f;
+		l_b /= 2.f;
 
 		int a=0;
 	}
