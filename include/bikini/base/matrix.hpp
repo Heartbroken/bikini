@@ -21,31 +21,28 @@ struct _matrix_
 	_matrix_<_Matrix, _Element, _Columns, _Rows - 1, _Rowstride>
 {
 	template <uint _Size>
-	struct _row_
-	:
-		_row_<_Size - 1>
+	struct _row_ : _row_<_Size - 1>
 	{
-		typedef _row_<_Size - 1> _parent;
-
-		_row_();
-		_row_(const _row_ &_r);
-		_row_(const _parent &_r);
+		const _Element& operator [] (uint _i) const;
+		_Element& operator [] (uint _i);
 	};
-	template <>
-	struct _row_<0> {};
+	template <> struct _row_<0> {};
 
-	typedef _matrix_<_Matrix, _Element, _Columns, _Rows - 1, _Rowstride> _parent;
 	typedef _row_<_Columns> _row;
 
-	_matrix_();
-	_matrix_(const _matrix_ &_m);
-	_matrix_(const _parent &_m);
+	_matrix_& operator - ();
+	_matrix_& operator += (const _matrix_ &_m);
+	_matrix_& operator -= (const _matrix_ &_m);
+	_matrix_& operator *= (const _matrix_ &_m);
+	_matrix_& operator /= (const _matrix_ &_m);
+	_matrix_& operator *= (const _Element &_s);
+	_matrix_& operator /= (const _Element &_s);
 
-	_matrix_& operator = (const _matrix_ &_m);
+	const _row& operator [] (uint _i) const;
+	_row& operator [] (uint _i);
 
-	const _row& _element() const;
-	_row& _element();
-	void _set(const _matrix_ &_m);
+	operator _Matrix& () { return *(_Matrix*)this; }
+
 };
 template <typename _M, typename _E, uint _C, uint _Rs>
 struct _matrix_<_M, _E, _C, 0, _Rs> {};
@@ -108,8 +105,8 @@ struct _vector_
 :
 	_matrix_<_Vector, _Element, _Size, 1, sizeof(_Element) * _Size + _Padding>
 {
-	const _Element& _element() const;
-	_Element& _element();
+	const _Element& operator [] (uint _i) const;
+	_Element& operator [] (uint _i);
 };
 
 template <typename _Type, uint _Size>
@@ -118,6 +115,11 @@ struct vector__
 	_vector_<vector__<_Type, _Size>, _Type, _Size>
 {
 	_Type v[_Size];
+
+	vector__(const _Type _v[_Size])
+	{
+		memcpy(v, _v, sizeof(_Type) * _Size);
+	}
 };
 
 template <typename _Type>
@@ -142,6 +144,17 @@ struct vector__<_Type, 3>
 	_vector_<vector__<_Type, 3>, _Type, 3>
 {
 	_Type x, y, z;
+
+	vector__()
+	{}
+	//vector__(const vector__ &_v)
+	//:
+	//	x(_v.x), y(_v.y), z(_v.z)
+	//{}
+	vector__(const _Type &_x, const _Type &_y, const _Type &_z)
+	:
+		x(_x), y(_y), z(_z)
+	{}
 };
 
 template <typename _Type>
