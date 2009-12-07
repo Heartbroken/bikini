@@ -47,6 +47,13 @@ struct _matrix_
 template <typename _M, typename _E, uint _C, uint _Rs>
 struct _matrix_<_M, _E, _C, 0, _Rs> {};
 
+template <uint _I, uint _J, typename _M, typename _E, uint _S, uint _Ss>
+inline const _matrix_<_M, _E, _S - 1, _S - 1, _Ss> minor_(const _matrix_<_M, _E, _S, _S, _Ss> &_m)
+{
+	_matrix_<_M, _E, _S - 1, _S - 1, _Ss> l_m;
+	return l_m;
+}
+
 template <typename _Type, uint _Columns, uint _Rows, uint _Extra = 0>
 struct matrix__
 :
