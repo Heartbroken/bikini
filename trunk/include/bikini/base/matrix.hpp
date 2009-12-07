@@ -47,10 +47,17 @@ struct _matrix_
 template <typename _M, typename _E, uint _C, uint _Rs>
 struct _matrix_<_M, _E, _C, 0, _Rs> {};
 
-template <uint _I, uint _J, typename _M, typename _E, uint _S, uint _Ss>
-inline const _matrix_<_M, _E, _S - 1, _S - 1, _Ss> minor_(const _matrix_<_M, _E, _S, _S, _Ss> &_m)
+template <uint _I, uint _J, typename _M, typename _M2, typename _E, uint _S, uint _Ss>
+inline _matrix_<_M2, _E, _S - 1, _S - 1, (_S - 1) * sizeof(_E)> minor_(const _matrix_<_M, _E, _S, _S, _Ss> &_m)
 {
-	_matrix_<_M, _E, _S - 1, _S - 1, _Ss> l_m;
+	typedef _matrix_<_M, _E, _S, _S, _Ss> matrix;
+	typedef _matrix_<_M2, _E, _S - 1, _S - 1, (_S - 1) * sizeof(_E)> minor;
+	template <uint _C, uint _R> struct _helper_ { static inline void get(const matrix &_a, minor &_b)
+	{
+	}};
+	template <uint _C> struct _helper_<_C, 0> { static inline void get(const matrix &_a, minor &_b) {}};
+	minor l_m;
+	_helper_<_S - 1, _S - 1>::get(_m, l_m);
 	return l_m;
 }
 

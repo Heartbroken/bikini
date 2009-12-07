@@ -49,6 +49,12 @@ int _tmain(int argc, _TCHAR* argv[])
 		l_b /= 2.f;
 
 		int a=0;
+
+		typedef bk::matrix__<float, 3, 3> float3x3;
+		typedef bk::matrix__<float, 2, 2> float2x2;
+
+		float3x3 l_matrix;
+		float2x2 l_minor = bk::minor_<0, 0>(l_matrix);
 	}
 	//{
 	//	typedef bk::make_typelist_<bk::s32, bk::f32, bk::wstring, bk::r3x3>::type types;
