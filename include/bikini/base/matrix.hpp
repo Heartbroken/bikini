@@ -37,6 +37,9 @@ struct _matrix_
 
 	typedef _row_<_Columns> _row;
 
+	template <uint _I, uint _J> _Element& cell_() { return ((_Element*)this)[_J * _Columns + _I]; }
+	template <uint _I, uint _J> const _Element& cell_() const { return ((const _Element*)this)[_J * _Columns + _I]; }
+
 	const _row& operator [] (uint _i) const;
 	_row& operator [] (uint _i);
 
@@ -46,20 +49,6 @@ struct _matrix_
 };
 template <typename _M, typename _E, uint _C, uint _Rs>
 struct _matrix_<_M, _E, _C, 0, _Rs> {};
-
-template <uint _I, uint _J, typename _M, typename _M2, typename _E, uint _S, uint _Ss>
-inline _matrix_<_M2, _E, _S - 1, _S - 1, (_S - 1) * sizeof(_E)> minor_(const _matrix_<_M, _E, _S, _S, _Ss> &_m)
-{
-	typedef _matrix_<_M, _E, _S, _S, _Ss> matrix;
-	typedef _matrix_<_M2, _E, _S - 1, _S - 1, (_S - 1) * sizeof(_E)> minor;
-	template <uint _C, uint _R> struct _helper_ { static inline void get(const matrix &_a, minor &_b)
-	{
-	}};
-	template <uint _C> struct _helper_<_C, 0> { static inline void get(const matrix &_a, minor &_b) {}};
-	minor l_m;
-	_helper_<_S - 1, _S - 1>::get(_m, l_m);
-	return l_m;
-}
 
 template <typename _Type, uint _Columns, uint _Rows, uint _Extra = 0>
 struct matrix__
@@ -106,6 +95,30 @@ struct matrix__<_Type, 4, 4>
 		  m31, m32, m33, m34,
 		  m41, m42, m43, m44;
 };
+
+
+template <typename _Ma, typename _Mi, uint _C, uint _R, uint _I, uint _J>
+struct _matrix__minor_helper_ { static inline void get(const _Ma &_a, _Mi &_b)
+{
+	_matrix__minor_helper_<_Ma,_Mi, _C, _R, _I - 1, _J>::get(_a, _b);
+	_b.cell_<_I - 1, _J - 1>() = _a.cell_<(_I > _C ? _I : _I - 1), (_J > _R ? _J : _J - 1)>();
+}};
+template <typename _Ma, typename _Mi, uint _C, uint _R, uint _J>
+struct _matrix__minor_helper_<_Ma, _Mi, _C, _R, 0, _J> { static inline void get(const _Ma &_a, _Mi &_b)
+{
+	_matrix__minor_helper_<_Ma,_Mi, _C, _R, _C, _J - 1>::get(_a, _b);
+}};
+template <typename _Ma, typename _Mi, uint _C, uint _R>
+struct _matrix__minor_helper_<_Ma, _Mi, _C, _R, 0, 0> { static inline void get(const _Ma &_a, _Mi &_b)
+{
+}};
+template <uint _I, uint _J, typename _T, uint _S>
+inline matrix__<_T, _S - 1, _S - 1> minor_(const matrix__<_T, _S, _S> &_m)
+{
+	matrix__<_T, _S - 1, _S - 1> l_m;
+	_matrix__minor_helper_<matrix__<_T, _S, _S>, matrix__<_T, _S - 1, _S - 1>, _I, _J, _S - 1, _S - 1>::get(_m, l_m);
+	return l_m;
+}
 
 ///
 template
