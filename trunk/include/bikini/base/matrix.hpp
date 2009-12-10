@@ -120,6 +120,14 @@ inline matrix__<_T, _S - 1, _S - 1> minor_(const matrix__<_T, _S, _S> &_m)
 	return l_m;
 }
 
+template <uint _C, uint _R, typename _T, uint _S>
+inline const _T determinant_(const matrix__<_T, _S, _S> &_m)
+{
+	typedef matrix__<_T, _S, _S> matrix;
+	minor l_m; _matrix__minor_helper_<matrix, minor, _C, _R, _S - 1, _S - 1>::get(_m, l_m);
+	return l_m;
+}
+
 ///
 template
 <
