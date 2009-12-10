@@ -17,10 +17,14 @@ template
 	uint _Rowstride = sizeof(_Element) * _Columns
 >
 struct _matrix_
-:
-	_matrix_<_Matrix, _Element, _Columns, _Rows - 1, _Rowstride>
 {
+	typedef _Matrix matrix;
+	typedef _Element element;
+	static const uint columns = _Columns;
+	static const uint rows = _Rows;
+
 	_matrix_& operator - ();
+	_matrix_& operator = (const _matrix_ &_m);
 	_matrix_& operator += (const _matrix_ &_m);
 	_matrix_& operator -= (const _matrix_ &_m);
 	_matrix_& operator *= (const _matrix_ &_m);
@@ -28,17 +32,14 @@ struct _matrix_
 	_matrix_& operator *= (const _Element &_s);
 	_matrix_& operator /= (const _Element &_s);
 
-	template <uint _Size> struct _row_ : _row_<_Size - 1>
-	{
-		const _Element& operator [] (uint _i) const;
-		_Element& operator [] (uint _i);
-	};
-	template <> struct _row_<0> {};
-
-	typedef _row_<_Columns> _row;
-
 	template <uint _C, uint _R> _Element& cell_() { return ((_Element*)this)[_R * _Columns + _C]; }
 	template <uint _C, uint _R> const _Element& cell_() const { return ((const _Element*)this)[_R * _Columns + _C]; }
+
+	struct _row
+	{
+		const _Element& operator [] (uint _i) const { return ((const _Element*)this)[_i]; }
+		_Element& operator [] (uint _i) { return ((_Element*)this)[_i]; }
+	};
 
 	const _row& operator [] (uint _i) const;
 	_row& operator [] (uint _i);
@@ -47,8 +48,6 @@ struct _matrix_
 	operator _Matrix& () { return *(_Matrix*)this; }
 
 };
-template <typename _M, typename _E, uint _C, uint _Rs>
-struct _matrix_<_M, _E, _C, 0, _Rs> {};
 
 template <typename _Type, uint _Columns, uint _Rows, uint _Extra = 0>
 struct matrix__
