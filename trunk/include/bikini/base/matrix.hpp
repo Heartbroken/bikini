@@ -105,10 +105,10 @@ struct _matrix__minor_helper_ { static inline void get(const _Ma &_a, _Mi &_b)
 template <typename _Ma, typename _Mi, uint _C, uint _R, uint _J>
 struct _matrix__minor_helper_<_Ma, _Mi, _C, _R, 0, _J> { static inline void get(const _Ma &_a, _Mi &_b)
 {
-	_matrix__minor_helper_<_Ma,_Mi, _C, _R, _Ma::columns, _J - 1>::get(_a, _b);
+	_matrix__minor_helper_<_Ma,_Mi, _C, _R, _Ma::columns - 1, _J - 1>::get(_a, _b);
 }};
-template <typename _Ma, typename _Mi, uint _C, uint _R>
-struct _matrix__minor_helper_<_Ma, _Mi, _C, _R, 0, 0> { static inline void get(const _Ma &_a, _Mi &_b)
+template <typename _Ma, typename _Mi, uint _C, uint _R, uint _I>
+struct _matrix__minor_helper_<_Ma, _Mi, _C, _R, _I, 0> { static inline void get(const _Ma &_a, _Mi &_b)
 {}};
 template <uint _C, uint _R, typename _T, uint _S, uint _E>
 inline matrix__<_T, _S - 1, _S - 1> minor_(const matrix__<_T, _S, _S, _E> &_m)
@@ -119,24 +119,35 @@ inline matrix__<_T, _S - 1, _S - 1> minor_(const matrix__<_T, _S, _S, _E> &_m)
 	return l_m;
 }
 
-template <typename _T, uint _S, uint _E, uint _I = _S, uint _J = _S>
-struct _matrix__determinant_helper_ { static inline void get(const matrix__<_T, _S, _S, _E> &_m, _T &_r)
+template <typename _T, uint _I>
+struct _matrix__determinant_product_helper_ { static inline _T get(_T _a, _T _b)
 {
-	_matrix__determinant_helper_<_T, _S, _E, _I - 1, _J>::get(_m, _r);
+	return _a * -_b;
+}};
+template <typename _T>
+struct _matrix__determinant_product_helper_<_T, 0> { static inline _T get(_T _a, _T _b)
+{
+	return _a * _b;
+}};
+template <typename _T, uint _S, uint _E, uint _I = _S, uint _J = _S>
+struct _matrix__determinant_helper_ { static inline _T get(const matrix__<_T, _S, _S, _E> &_m)
+{
+	return _matrix__determinant_helper_<_T, _S, _E, _I - 1, _J>::get(_m) + _matrix__determinant_product_helper_<_T, (_I - 1 + _J - 1) % 2>::get(determinant(minor_<_I - 1, _J - 1>(_m)), _m.cell_<_I - 1, _J - 1>());
 }};
 template <typename _T, uint _S, uint _E, uint _J>
-struct _matrix__determinant_helper_<_T, _S, _E, 0, _J> { static inline void get(const matrix__<_T, _S, _S, _E> &_m, _T &_r)
+struct _matrix__determinant_helper_<_T, _S, _E, 1, _J> { static inline _T get(const matrix__<_T, _S, _S, _E> &_m)
 {
-	_matrix__determinant_helper_<_T, _S, _E, _S, _J - 1>::get(_m, _r);
+	return _matrix__determinant_product_helper_<_T, (_J - 1) % 2>::get(determinant(minor_<0, _J - 1>(_m)), _m.cell_<0, _J - 1>());
 }};
 template <typename _T, uint _S, uint _E>
-struct _matrix__determinant_helper_<_T, _S, _E, 0, 0> { static inline void get(const matrix__<_T, _S, _S, _E> &_m, _T &_r)
-{}};
+struct _matrix__determinant_helper_<_T, _S, _E, 1, 1> { static inline _T get(const matrix__<_T, _S, _S, _E> &_m)
+{
+	return _m.cell_<0, 0>();
+}};
 template <typename _T, uint _S, uint _E>
 inline const _T determinant(const matrix__<_T, _S, _S, _E> &_m)
 {
-	_T l_r = 0; _matrix__determinant_helper_<_T, _S, _E>::get(_m, l_r);
-	return l_r;
+	return _matrix__determinant_helper_<_T, _S, _E>::get(_m);
 }
 
 ///
