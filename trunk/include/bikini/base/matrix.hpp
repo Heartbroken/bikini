@@ -135,7 +135,7 @@ struct _matrix__determinant_helper_<_T, _S, _E, 0, 0> { static inline void get(c
 template <typename _T, uint _S, uint _E>
 inline const _T determinant(const matrix__<_T, _S, _S, _E> &_m)
 {
-	_T l_r; _matrix__determinant_helper_<_T, _S, _E>::get(_m, l_r);
+	_T l_r = 0; _matrix__determinant_helper_<_T, _S, _E>::get(_m, l_r);
 	return l_r;
 }
 
