@@ -53,8 +53,21 @@ int _tmain(int argc, _TCHAR* argv[])
 		typedef bk::matrix__<float, 3, 3> float3x3;
 		typedef bk::matrix__<float, 2, 2> float2x2;
 
+		float l_f44[] =
+		{
+			1.f, 2.f, 3.f,
+			3.f, 1.f, 2.f,
+			2.f, 3.f, 1.f
+		};
 		float3x3 l_matrix;
-		float2x2 l_minor = bk::minor_<0, 0>(l_matrix);
+		memcpy(&l_matrix, l_f44, sizeof(l_f44));
+
+		float2x2 l_minor = bk::minor_<1, 1>(l_matrix);
+
+		float l_determinant = bk::determinant(l_matrix);
+		float l_determinant2 = bk::determinant((bk::r3x3&)l_matrix);
+
+		int b=0;
 	}
 	//{
 	//	typedef bk::make_typelist_<bk::s32, bk::f32, bk::wstring, bk::r3x3>::type types;
