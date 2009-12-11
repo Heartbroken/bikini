@@ -105,27 +105,38 @@ struct _matrix__minor_helper_ { static inline void get(const _Ma &_a, _Mi &_b)
 template <typename _Ma, typename _Mi, uint _C, uint _R, uint _J>
 struct _matrix__minor_helper_<_Ma, _Mi, _C, _R, 0, _J> { static inline void get(const _Ma &_a, _Mi &_b)
 {
-	_matrix__minor_helper_<_Ma,_Mi, _C, _R, _C, _J - 1>::get(_a, _b);
+	_matrix__minor_helper_<_Ma,_Mi, _C, _R, _Ma::columns, _J - 1>::get(_a, _b);
 }};
 template <typename _Ma, typename _Mi, uint _C, uint _R>
 struct _matrix__minor_helper_<_Ma, _Mi, _C, _R, 0, 0> { static inline void get(const _Ma &_a, _Mi &_b)
+{}};
+template <uint _C, uint _R, typename _T, uint _S, uint _E>
+inline matrix__<_T, _S - 1, _S - 1> minor_(const matrix__<_T, _S, _S, _E> &_m)
 {
-}};
-template <uint _C, uint _R, typename _T, uint _S>
-inline matrix__<_T, _S - 1, _S - 1> minor_(const matrix__<_T, _S, _S> &_m)
-{
-	typedef matrix__<_T, _S, _S> matrix;
+	typedef matrix__<_T, _S, _S, _E> matrix;
 	typedef matrix__<_T, _S - 1, _S - 1> minor;
 	minor l_m; _matrix__minor_helper_<matrix, minor, _C, _R, _S - 1, _S - 1>::get(_m, l_m);
 	return l_m;
 }
 
-template <uint _C, uint _R, typename _T, uint _S>
-inline const _T determinant_(const matrix__<_T, _S, _S> &_m)
+template <typename _T, uint _S, uint _E, uint _I = _S, uint _J = _S>
+struct _matrix__determinant_helper_ { static inline void get(const matrix__<_T, _S, _S, _E> &_m, _T &_r)
 {
-	typedef matrix__<_T, _S, _S> matrix;
-	minor l_m; _matrix__minor_helper_<matrix, minor, _C, _R, _S - 1, _S - 1>::get(_m, l_m);
-	return l_m;
+	_matrix__determinant_helper_<_T, _S, _E, _I - 1, _J>::get(_m, _r);
+}};
+template <typename _T, uint _S, uint _E, uint _J>
+struct _matrix__determinant_helper_<_T, _S, _E, 0, _J> { static inline void get(const matrix__<_T, _S, _S, _E> &_m, _T &_r)
+{
+	_matrix__determinant_helper_<_T, _S, _E, _S, _J - 1>::get(_m, _r);
+}};
+template <typename _T, uint _S, uint _E>
+struct _matrix__determinant_helper_<_T, _S, _E, 0, 0> { static inline void get(const matrix__<_T, _S, _S, _E> &_m, _T &_r)
+{}};
+template <typename _T, uint _S, uint _E>
+inline const _T determinant(const matrix__<_T, _S, _S, _E> &_m)
+{
+	_T l_r; _matrix__determinant_helper_<_T, _S, _E>::get(_m, l_r);
+	return l_r;
 }
 
 ///
