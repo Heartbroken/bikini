@@ -32,8 +32,8 @@ struct _matrix_
 	_matrix_& operator *= (const _Element &_s);
 	_matrix_& operator /= (const _Element &_s);
 
-	template <uint _C, uint _R> _Element& cell_() { return ((_Element*)this)[_R * _Columns + _C]; }
-	template <uint _C, uint _R> const _Element& cell_() const { return ((const _Element*)this)[_R * _Columns + _C]; }
+	template <uint _I, uint _J> _Element& cell_() { return ((_Element*)this)[_J * _Columns + _I]; }
+	template <uint _I, uint _J> const _Element& cell_() const { return ((const _Element*)this)[_J * _Columns + _I]; }
 
 	struct _row
 	{
@@ -63,6 +63,13 @@ struct matrix__<_Type, 1, 1>
 	_matrix_<matrix__<_Type, 1, 1>, _Type, 1, 1>
 {
 	_Type m11;
+
+	inline matrix__()
+	{}
+	inline matrix__(_Type _m11)
+	:
+		m11(_m11)
+	{}
 };
 
 template <typename _Type>
@@ -72,6 +79,15 @@ struct matrix__<_Type, 2, 2>
 {
 	_Type m11, m12,
 		  m21, m22;
+
+	inline matrix__()
+	{}
+	inline matrix__(_Type _m11, _Type _m12,
+					_Type _m21, _Type _m22)
+	:
+		m11(_m11), m12(_m12),
+		m21(_m21), m22(_m22)
+	{}
 };
 
 template <typename _Type>
@@ -82,6 +98,17 @@ struct matrix__<_Type, 3, 3>
 	_Type m11, m12, m13,
 		  m21, m22, m23,
 		  m31, m32, m33;
+
+	inline matrix__()
+	{}
+	inline matrix__(_Type _m11, _Type _m12, _Type _m13,
+					_Type _m21, _Type _m22, _Type _m23,
+					_Type _m31, _Type _m32, _Type _m33)
+	:
+		m11(_m11), m12(_m12), m13(_m13),
+		m21(_m21), m22(_m22), m23(_m23),
+		m31(_m31), m32(_m32), m33(_m33)
+	{}
 };
 
 template <typename _Type>
@@ -93,6 +120,19 @@ struct matrix__<_Type, 4, 4>
 		  m21, m22, m23, m24,
 		  m31, m32, m33, m34,
 		  m41, m42, m43, m44;
+
+	inline matrix__()
+	{}
+	inline matrix__(_Type _m11, _Type _m12, _Type _m13, _Type _m14,
+					_Type _m21, _Type _m22, _Type _m23, _Type _m24,
+					_Type _m31, _Type _m32, _Type _m33, _Type _m34,
+					_Type _m41, _Type _m42, _Type _m43, _Type _m44)
+	:
+		m11(_m11), m12(_m12), m13(_m13), m14(_m14),
+		m21(_m21), m22(_m22), m23(_m23), m24(_m24),
+		m31(_m31), m32(_m32), m33(_m33), m34(_m34),
+		m41(_m41), m42(_m42), m43(_m43), m44(_m44)
+	{}
 };
 
 
@@ -120,24 +160,25 @@ inline matrix__<_T, _S - 1, _S - 1> minor_(const matrix__<_T, _S, _S, _E> &_m)
 }
 
 template <typename _T, uint _I>
-struct _matrix__determinant_product_helper_ { static inline _T get(_T _a, _T _b)
+struct _matrix__product_sign_helper_ { static inline _T get(_T _a, _T _b)
 {
 	return _a * -_b;
 }};
 template <typename _T>
-struct _matrix__determinant_product_helper_<_T, 0> { static inline _T get(_T _a, _T _b)
+struct _matrix__product_sign_helper_<_T, 0> { static inline _T get(_T _a, _T _b)
 {
 	return _a * _b;
 }};
+
 template <typename _T, uint _S, uint _E, uint _I = _S, uint _J = _S>
 struct _matrix__determinant_helper_ { static inline _T get(const matrix__<_T, _S, _S, _E> &_m)
 {
-	return _matrix__determinant_helper_<_T, _S, _E, _I - 1, _J>::get(_m) + _matrix__determinant_product_helper_<_T, (_I - 1 + _J - 1) % 2>::get(determinant(minor_<_I - 1, _J - 1>(_m)), _m.cell_<_I - 1, _J - 1>());
+	return _matrix__determinant_helper_<_T, _S, _E, _I - 1, _J>::get(_m) + _matrix__product_sign_helper_<_T, (_I - 1 + _J - 1) % 2>::get(determinant(minor_<_I - 1, _J - 1>(_m)), _m.cell_<_I - 1, _J - 1>());
 }};
 template <typename _T, uint _S, uint _E, uint _J>
 struct _matrix__determinant_helper_<_T, _S, _E, 1, _J> { static inline _T get(const matrix__<_T, _S, _S, _E> &_m)
 {
-	return _matrix__determinant_product_helper_<_T, (_J - 1) % 2>::get(determinant(minor_<0, _J - 1>(_m)), _m.cell_<0, _J - 1>());
+	return _matrix__product_sign_helper_<_T, (_J - 1) % 2>::get(determinant(minor_<0, _J - 1>(_m)), _m.cell_<0, _J - 1>());
 }};
 template <typename _T, uint _S, uint _E>
 struct _matrix__determinant_helper_<_T, _S, _E, 1, 1> { static inline _T get(const matrix__<_T, _S, _S, _E> &_m)
@@ -148,6 +189,36 @@ template <typename _T, uint _S, uint _E>
 inline const _T determinant(const matrix__<_T, _S, _S, _E> &_m)
 {
 	return _matrix__determinant_helper_<_T, _S, _E>::get(_m);
+}
+
+template <typename _T, uint _S, uint _E, uint _I = _S, uint _J = _S>
+struct _matrix__inverse_helper_ { static inline void get(const matrix__<_T, _S, _S, _E> &_m, matrix__<_T, _S, _S, _E> &_im, _T _d)
+{
+	_matrix__inverse_helper_<_T, _S, _E, _I - 1, _J>::get(_m, _im, _d);
+	_im.cell_<_J - 1, _I - 1>() = _matrix__product_sign_helper_<_T, (_I - 1 + _J - 1) % 2>::get(determinant(minor_<_I - 1, _J - 1>(_m)), _d);
+}};
+template <typename _T, uint _S, uint _E, uint _J>
+struct _matrix__inverse_helper_<_T, _S, _E, 0, _J> { static inline void get(const matrix__<_T, _S, _S, _E> &_m, matrix__<_T, _S, _S, _E> &_im, _T _d)
+{
+	_matrix__inverse_helper_<_T, _S, _E, _S, _J - 1>::get(_m, _im, _d);
+}};
+template <typename _T, uint _S, uint _E>
+struct _matrix__inverse_helper_<_T, _S, _E, _S, 0> { static inline void get(const matrix__<_T, _S, _S, _E> &_m, matrix__<_T, _S, _S, _E> &_im, _T _d)
+{}};
+template <typename _T, uint _S, uint _E>
+inline bool inverse(const matrix__<_T, _S, _S, _E> &_m, matrix__<_T, _S, _S, _E> &_im)
+{
+	_T l_d = determinant(_m);
+	if(l_d < eps && l_d > -eps) return false;
+	_matrix__inverse_helper_<_T, _S, _E>::get(_m, _im, _T(1) / l_d);
+	return true;
+}
+template <typename _T, uint _S, uint _E>
+inline const matrix__<_T, _S, _S, _E> inverse(const matrix__<_T, _S, _S, _E> &_m)
+{
+	matrix__<_T, _S, _S, _E> l_m;
+	if(!inverse(_m, l_m)) return _m;
+	return l_m;
 }
 
 ///
@@ -180,6 +251,13 @@ struct vector__<_Type, 1>
 	_vector_<vector__<_Type, 1>, _Type, 1>
 {
 	_Type x;
+
+	inline vector__()
+	{}
+	explicit inline vector__(_Type _x)
+	:
+		x(_x)
+	{}
 };
 
 template <typename _Type>
@@ -188,6 +266,13 @@ struct vector__<_Type, 2>
 	_vector_<vector__<_Type, 2>, _Type, 2>
 {
 	_Type x, y;
+
+	inline vector__()
+	{}
+	inline vector__(_Type _x, _Type _y)
+	:
+		x(_x), y(_y)
+	{}
 };
 
 template <typename _Type>
@@ -197,9 +282,9 @@ struct vector__<_Type, 3>
 {
 	_Type x, y, z;
 
-	vector__()
+	inline vector__()
 	{}
-	vector__(const _Type &_x, const _Type &_y, const _Type &_z)
+	inline vector__(_Type _x, _Type _y, _Type _z)
 	:
 		x(_x), y(_y), z(_z)
 	{}
@@ -211,8 +296,69 @@ struct vector__<_Type, 4>
 	_vector_<vector__<_Type, 4>, _Type, 4>
 {
 	_Type x, y, z, w;
+
+	inline vector__()
+	{}
+	inline vector__(_Type _x, _Type _y, _Type _z, _Type _w)
+	:
+		x(_x), y(_y), z(_z), w(_w)
+	{}
 };
 
+template <typename _T, uint _S, uint _E, uint _I = _S>
+struct _vector__dot_helper_ { static inline const _T get(const vector__<_T, _S, _E> &_a, const vector__<_T, _S, _E> &_b)
+{
+	return _vector__dot_helper_<_T, _S, _E, _I - 1>::get(_a, _b) + _a.cell_<_I - 1, 0>() * _b.cell_<_I - 1, 0>();
+}};
+template <typename _T, uint _S, uint _E>
+struct _vector__dot_helper_<_T, _S, _E, 0> { static inline const _T get(const vector__<_T, _S, _E> &_a, const vector__<_T, _S, _E> &_b)
+{
+	return 0;
+}};
+template <typename _T, uint _S, uint _E>
+inline const _T dot(const vector__<_T, _S, _E> &_a, const vector__<_T, _S, _E> &_b)
+{
+	return _vector__dot_helper_<_T, _S, _E>::get(_a, _b);
+}
+
+template <typename _T, uint _S, uint _E>
+inline const _T length(const vector__<_T, _S, _E> &_a)
+{
+	return sqrt(dot(_a, _a));
+}
+template <typename _T, uint _S, uint _E>
+inline const _T length2(const vector__<_T, _S, _E> &_a)
+{
+	return dot(_a, _a);
+}
+
+template <typename _T, uint _S, uint _E>
+inline const vector__<_T, _S, _E> normalize(const vector__<_T, _S, _E> &_a)
+{
+	_T l_length = length(_a);
+	return l_length > eps ? _a * (_T(1) / l_length) : _a;
+}
+
+template <typename _T, uint _E>
+inline const vector__<_T, 2, _E> cross(const vector__<_T, 2, _E> &_a)
+{
+	return vector__<_T, 2, _E>(_a.y, -_a.x);
+}
+template <typename _T, uint _E>
+inline const _T cross(const vector__<_T, 2, _E> &_a, const vector__<_T, 2, _E> &_b)
+{
+	return _a.x * _b.y - _a.y * _b.x;
+}
+template <typename _T, uint _E>
+inline const vector__<_T, 3, _E> cross(const vector__<_T, 3, _E> &_a, const vector__<_T, 3, _E> &_b)
+{
+	return vector__<_T, 3, _E>(_a.y * _b.z - _a.z * _b.y, _a.z * _b.x - _a.x * _b.z, _a.x * _b.y - _a.y * _b.z);
+}
+template <typename _T, uint _E>
+inline const _T cross(const vector__<_T, 3, _E> &_a, const vector__<_T, 3, _E> &_b, const vector__<_T, 3, _E> &_c)
+{
+	return dot(cross(_a, _b), _c);
+}
 
 
 ///	Uber-matrix row template. Used internally by matrix_ template.
