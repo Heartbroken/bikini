@@ -48,6 +48,9 @@ int _tmain(int argc, _TCHAR* argv[])
 		l_b *= 3.f;
 		l_b /= 2.f;
 
+		float l_dot = bk::dot(l_a, l_b);
+		float l_dot2 = bk::dot((bk::real3&)l_a, (bk::real3&)l_b);
+
 		int a=0;
 
 		typedef bk::matrix__<float, 3, 3> float3x3;
@@ -66,6 +69,9 @@ int _tmain(int argc, _TCHAR* argv[])
 
 		float l_determinant = bk::determinant(l_matrix);
 		float l_determinant2 = bk::determinant((bk::r3x3&)l_matrix);
+
+		float3x3 l_inverse = bk::inverse(l_matrix);
+		bk::r3x3 l_inverse2 = bk::inverse((bk::r3x3&)l_matrix);
 
 		int b=0;
 	}
