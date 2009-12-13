@@ -96,6 +96,8 @@ void CFileView::FillFileView()
 	m_wndFileView.InsertItem(_T("GUIs"), 0, 0, hRoot);
 	m_wndFileView.InsertItem(_T("Scenes"), 0, 0, hRoot);
 	m_wndFileView.InsertItem(_T("Scripts"), 0, 0, hRoot);
+	m_wndFileView.InsertItem(_T("Meshes"), 0, 0, hRoot);
+	m_wndFileView.InsertItem(_T("Textures"), 0, 0, hRoot);
 
 	m_wndFileView.Expand(hRoot, TVE_EXPAND);
 
