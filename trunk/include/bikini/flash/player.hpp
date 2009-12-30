@@ -57,6 +57,14 @@ private:
 		virtual void close(uint _ID) = 0;
 	};
 
+	// flash sensor interface
+	struct sensor
+	{
+		virtual uint get_key_count() = 0;
+		virtual void get_key_state(uint _i, uint &_code, bool &_state) = 0;
+		virtual void get_mouse_state(bool &_show, short2 &_point, bool &_button) = 0;
+	};
+
 	bool create(renderer &_renderer, loader &_loader);
 	struct _gameswf; _gameswf *m_gameswf_p;
 	bk::loader m_defloader;
