@@ -12,6 +12,9 @@ namespace bk { /*---------------------------------------------------------------
 
 namespace flash { /*-----------------------------------------------------------------------------*/
 
+bk::loader default_flash_loader;
+null_flash_sensor default_flash_sensor;
+
 // gameswf callbacks
 
 struct player::_gameswf : gameswf::render_handler
@@ -224,13 +227,14 @@ struct player::_gameswf : gameswf::render_handler
 
 	// members
 
+	sensor &m_sensor;
 	loader &m_loader;
 	renderer &m_renderer;
 	gameswf::player &m_player;
 
-	_gameswf(renderer &_renderer, loader &_loader)
+	_gameswf(renderer &_renderer, loader &_loader, sensor &_sensor)
 	:
-		m_renderer(_renderer), m_loader(_loader),
+		m_renderer(_renderer), m_loader(_loader), m_sensor(_sensor),
 		m_player(* new gameswf::player())
 	{
 		m_player.add_ref();
@@ -286,6 +290,9 @@ struct player::_gameswf : gameswf::render_handler
 	bool update(real _dt)
 	{
 		set_handlers();
+		short2 l_point; bool l_button;
+		m_sensor.mouse_state(l_point, l_button);
+		m_player.get_root()->notify_mouse_state(l_point.x(), l_point.y(), l_button ? 1 : 0);
 		m_player.get_root()->advance(_dt);
 		reset_handlers();
 		return true;
@@ -309,9 +316,9 @@ player::player()
 {}
 player::~player()
 {}
-bool player::create(renderer &_renderer, loader &_loader)
+bool player::create(renderer &_renderer, loader &_loader, sensor &_sensor)
 {
-	m_gameswf_p = new _gameswf(_renderer, _loader);
+	m_gameswf_p = new _gameswf(_renderer, _loader, _sensor);
 	return true;
 }
 bool player::update(real _dt)

@@ -8,7 +8,7 @@
 
 #pragma once
 
-// _player_renderer_helper_
+// _player_renderer_proxy_
 
 template<typename _Renderer, typename _Interface> struct _player_renderer_proxy_ : _Interface
 {
@@ -26,7 +26,7 @@ private:
 	_Renderer &m_renderer;
 };
 
-// _player_loader_helper_
+// _player_loader_proxy_
 
 template<typename _Loader, typename _Interface> struct _player_loader_proxy_ : _Interface
 {
@@ -41,17 +41,56 @@ private:
 	_Loader &m_loader;
 };
 
+// _player_sensor_prox_
+
+template<typename _Sensor, typename _Interface> struct _player_sensor_prox_ : _Interface
+{
+	inline _player_sensor_prox_(_Sensor &_sensor) : m_sensor(_sensor) {}
+	uint key_count() const { return m_sensor.key_count(); }
+	void key_state(uint _i, uint &_code, bool &_state) const { m_sensor.key_state(_i, _code, _state); }
+	void mouse_state(short2 &_point, bool &_button) const { m_sensor.mouse_state(_point, _button); }
+
+private:
+	_Sensor &m_sensor;
+};
+
 // player
+
+extern bk::loader default_flash_loader;
+
+struct null_flash_sensor
+{
+	uint key_count() const { return 0; }
+	void key_state(uint _i, uint &_code, bool &_state) const {}
+	void mouse_state(short2 &_point, bool &_button) const {}
+};
+extern null_flash_sensor default_flash_sensor;
 
 template<typename _R>
 inline bool player::create(_R &_renderer)
 {
 	return create(*(renderer*) new _player_renderer_proxy_<_R, renderer>(_renderer),
-				  *(loader*) new _player_loader_proxy_<bk::loader, loader>(m_defloader));
+				  *(loader*) new _player_loader_proxy_<bk::loader, loader>(default_flash_loader),
+				  *(sensor*) new _player_loader_proxy_<null_flash_sensor, sensor>(default_flash_sensor));
 }
 template<typename _R, typename _L>
 inline bool player::create(_R &_renderer, _L &_loader)
 {
 	return create(*(renderer*) new _player_renderer_proxy_<_R, renderer>(_renderer),
-				  *(loader*) new _player_loader_proxy_<_L, loader>(_loader));
+				  *(loader*) new _player_loader_proxy_<_L, loader>(_loader),
+				  *(sensor*) new _player_loader_proxy_<null_flash_sensor, sensor>(default_flash_sensor));
+}
+//template<typename _R, typename _S>
+//inline bool player::create(_R &_renderer, _S &_sensor)
+//{
+//	return create(*(renderer*) new _player_renderer_proxy_<_R, renderer>(_renderer),
+//				  *(loader*) new _player_loader_proxy_<bk::loader, loader>(default_flash_loader),
+//				  *(sensor*) new _player_loader_proxy_<_S, sensor>(_sensor));
+//}
+template<typename _R, typename _L, typename _S>
+inline bool player::create(_R &_renderer, _L &_loader, _S &_sensor)
+{
+	return create(*(renderer*) new _player_renderer_proxy_<_R, renderer>(_renderer),
+				  *(loader*) new _player_loader_proxy_<_L, loader>(_loader),
+				  *(sensor*) new _player_loader_proxy_<_S, sensor>(_sensor));
 }
