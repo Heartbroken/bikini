@@ -56,41 +56,34 @@ private:
 
 // player
 
-extern bk::loader default_flash_loader;
+extern bk::loader default_loader;
 
-struct null_flash_sensor
+struct null_sensor
 {
 	inline uint key_count() const { return 0; }
 	inline void key_state(uint _i, uint &_code, bool &_state) const {}
 	inline void mouse_state(short2 &_point, bool &_button) const { _point = short2(0, 0); _button = false; }
 };
-extern null_flash_sensor default_flash_sensor;
+extern null_sensor default_sensor;
 
 template<typename _R>
 inline bool player::create(_R &_renderer)
 {
 	return create(*(renderer*) new _player_renderer_proxy_<_R, renderer>(_renderer),
-				  *(loader*) new _player_loader_proxy_<bk::loader, loader>(default_flash_loader),
-				  *(sensor*) new _player_sensor_prox_<null_flash_sensor, sensor>(default_flash_sensor));
+				  *(sensor*) new _player_sensor_prox_<null_sensor, sensor>(default_sensor),
+				  *(loader*) new _player_loader_proxy_<bk::loader, loader>(default_loader));
 }
-template<typename _R, typename _L>
-inline bool player::create(_R &_renderer, _L &_loader)
+template<typename _R, typename _S>
+inline bool player::create(_R &_renderer, _S &_sensor)
 {
 	return create(*(renderer*) new _player_renderer_proxy_<_R, renderer>(_renderer),
-				  *(loader*) new _player_loader_proxy_<_L, loader>(_loader),
-				  *(sensor*) new _player_sensor_prox_<null_flash_sensor, sensor>(default_flash_sensor));
+				  *(sensor*) new _player_sensor_prox_<_S, sensor>(_sensor),
+				  *(loader*) new _player_loader_proxy_<bk::loader, loader>(default_loader));
 }
-//template<typename _R, typename _S>
-//inline bool player::create(_R &_renderer, _S &_sensor)
-//{
-//	return create(*(renderer*) new _player_renderer_proxy_<_R, renderer>(_renderer),
-//				  *(loader*) new _player_loader_proxy_<bk::loader, loader>(default_flash_loader),
-//				  *(sensor*) new _player_loader_proxy_<_S, sensor>(_sensor));
-//}
-template<typename _R, typename _L, typename _S>
-inline bool player::create(_R &_renderer, _L &_loader, _S &_sensor)
+template<typename _R, typename _S, typename _L>
+inline bool player::create(_R &_renderer, _S &_sensor, _L &_loader)
 {
 	return create(*(renderer*) new _player_renderer_proxy_<_R, renderer>(_renderer),
-				  *(loader*) new _player_loader_proxy_<_L, loader>(_loader),
-				  *(sensor*) new _player_sensor_prox_<_S, sensor>(_sensor));
+				  *(sensor*) new _player_sensor_prox_<_S, sensor>(_sensor),
+				  *(loader*) new _player_loader_proxy_<_L, loader>(_loader));
 }

@@ -12,12 +12,12 @@ namespace bk { /*---------------------------------------------------------------
 
 namespace flash { /*-----------------------------------------------------------------------------*/
 
-bk::loader default_flash_loader;
-null_flash_sensor default_flash_sensor;
+bk::loader default_loader;
+null_sensor default_sensor;
 
 // gameswf callbacks
 
-struct player::_gameswf : gameswf::render_handler
+struct player::_private : gameswf::render_handler
 {
 	// loading ------------------------------------------------------------------------------------
 
@@ -232,19 +232,20 @@ struct player::_gameswf : gameswf::render_handler
 	renderer &m_renderer;
 	gameswf::player &m_player;
 
-	_gameswf(renderer &_renderer, loader &_loader, sensor &_sensor)
+	_private(renderer &_renderer, sensor &_sensor, loader &_loader)
 	:
-		m_renderer(_renderer), m_loader(_loader), m_sensor(_sensor),
+		m_renderer(_renderer), m_sensor(_sensor), m_loader(_loader),
 		m_player(* new gameswf::player())
 	{
 		m_player.add_ref();
-		gameswf::register_file_opener_callback(&_gameswf::open);
+		gameswf::register_file_opener_callback(&_private::open);
 	}
-	~_gameswf()
+	~_private()
 	{
 		stop();
 		m_player.drop_ref();
 		delete &m_renderer;
+		delete &m_sensor;
 		delete &m_loader;
 	}
 	void set_handlers()
@@ -305,38 +306,38 @@ struct player::_gameswf : gameswf::render_handler
 		return true;
 	}
 };
-player::loader *player::_gameswf::loader_p = 0;
-player::renderer *player::_gameswf::renderer_p = 0;
+player::loader *player::_private::loader_p = 0;
+player::renderer *player::_private::renderer_p = 0;
 
 // player
 
 player::player()
 :
-	m_gameswf_p(0)
+	m_private(0)
 {}
 player::~player()
 {}
-bool player::create(renderer &_renderer, loader &_loader, sensor &_sensor)
+bool player::create(renderer &_renderer, sensor &_sensor, loader &_loader)
 {
-	m_gameswf_p = new _gameswf(_renderer, _loader, _sensor);
+	m_private = new _private(_renderer, _sensor, _loader);
 	return true;
 }
 bool player::update(real _dt)
 {
-	return m_gameswf_p->update(_dt);
+	return m_private->update(_dt);
 }
 bool player::render() const
 {
-	return m_gameswf_p->render();
+	return m_private->render();
 }
 void player::destroy()
 {
-	delete m_gameswf_p;
-	m_gameswf_p = 0;
+	delete m_private;
+	m_private = 0;
 }
 bool player::play(const astring &_path)
 {
-	return m_gameswf_p->play(_path.c_str());
+	return m_private->play(_path.c_str());
 }
 bool player::play(const wstring &_path)
 {
@@ -344,15 +345,15 @@ bool player::play(const wstring &_path)
 	uint l_alength = WideCharToMultiByte(CP_UTF8, 0, _path.c_str(), (s32)l_wlength, 0, 0, 0, 0);
 	achar* l_path = (achar*)_malloca(l_alength * sizeof(achar));
 	WideCharToMultiByte(CP_UTF8, 0, _path.c_str(), (int)l_wlength, l_path, (int)l_alength, 0, 0);
-	return m_gameswf_p->play(l_path);
+	return m_private->play(l_path);
 }
 bool player::pause(bool _yes)
 {
-	return m_gameswf_p->pause(_yes);
+	return m_private->pause(_yes);
 }
 bool player::stop()
 {
-	return m_gameswf_p->stop();
+	return m_private->stop();
 }
 
 } /* namespace flash ----------------------------------------------------------------------------*/

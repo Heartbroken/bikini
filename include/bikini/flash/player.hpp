@@ -21,9 +21,8 @@ struct player
 	~player();
 
 	template<typename _Renderer> inline bool create(_Renderer &_renderer);
-	template<typename _Renderer, typename _Loader> inline bool create(_Renderer &_renderer, _Loader &_loader);
-	//template<typename _Renderer, typename _Sensor> inline bool create(_Renderer &_renderer, _Sensor &_sensor);
-	template<typename _Renderer, typename _Loader, typename _Sensor> inline bool create(_Renderer &_renderer, _Loader &_loader, _Sensor &_sensor);
+	template<typename _Renderer, typename _Sensor> inline bool create(_Renderer &_renderer, _Sensor &_sensor);
+	template<typename _Renderer, typename _Sensor, typename _Loader> inline bool create(_Renderer &_renderer, _Sensor &_sensor, _Loader &_loader);
 
 	bool update(real _dt);
 	bool render() const;
@@ -49,6 +48,14 @@ private:
 		virtual void end_render() = 0;
 	};
 
+	// flash sensor interface
+	struct sensor
+	{
+		virtual uint key_count() const = 0;
+		virtual void key_state(uint _i, uint &_code, bool &_state) const = 0;
+		virtual void mouse_state(short2 &_point, bool &_button) const = 0;
+	};
+
 	// flash loader interface
 	struct loader
 	{
@@ -59,17 +66,8 @@ private:
 		virtual void close(uint _ID) = 0;
 	};
 
-	// flash sensor interface
-	struct sensor
-	{
-		virtual uint key_count() const = 0;
-		virtual void key_state(uint _i, uint &_code, bool &_state) const = 0;
-		virtual void mouse_state(short2 &_point, bool &_button) const = 0;
-	};
-
-	bool create(renderer &_renderer, loader &_loader, sensor &_sensor);
-	struct _gameswf; _gameswf *m_gameswf_p;
-	//bk::loader m_defloader;
+	bool create(renderer &_renderer, sensor &_sensor, loader &_loader);
+	struct _private; _private *m_private;
 };
 
 #include "player.inl"
