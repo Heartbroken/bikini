@@ -24,6 +24,7 @@ namespace flash { /*------------------------------------------------------------
 
 #include "flash/player.hpp"
 #include "flash/renderer.hpp"
+#include "flash/sensor.hpp"
 
 } /* namespace flash ----------------------------------------------------------------------------*/
 
