@@ -48,7 +48,9 @@ template<typename _Sensor, typename _Interface> struct _player_sensor_prox_ : _I
 	inline _player_sensor_prox_(_Sensor &_sensor) : m_sensor(_sensor) {}
 	uint key_count() const { return m_sensor.key_count(); }
 	void key_state(uint _i, uint &_code, bool &_state) const { m_sensor.key_state(_i, _code, _state); }
+	void reset_keys() { m_sensor.reset_keys(); }
 	void mouse_state(short2 &_point, bool &_button) const { m_sensor.mouse_state(_point, _button); }
+	void set_hittest(const hittest &_hittest) { m_sensor.set_hittest(_hittest); }
 
 private:
 	_Sensor &m_sensor;

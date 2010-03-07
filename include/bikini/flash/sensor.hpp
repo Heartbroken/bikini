@@ -21,6 +21,8 @@ struct sensor
 
 	void mouse_state(short2 &_point, bool &_button) const;
 
+	void set_hittest(const hittest &_hittest);
+
 	struct _private; _private * m_private;
 
 private:
@@ -30,4 +32,6 @@ private:
 	struct mouse { short2 point; bool button; };
 	mouse m_mouse;
 	void set_mouse_state(const short2 &_point, bool _button) { m_mouse.point = _point; m_mouse.button = _button; }
+	hittest m_hittest;
+	bool do_hittest(const short2 &_point);
 };

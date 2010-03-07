@@ -11,6 +11,7 @@
 typedef matrix_<1, 2, s16> short2;
 typedef matrix_<1, 3, f32> float3;
 typedef matrix_<2, 3, f32> xform;
+typedef functor_<bool, const short2&> hittest;
 
 ///	flash player
 /**	[TODO]
@@ -53,7 +54,9 @@ private:
 	{
 		virtual uint key_count() const = 0;
 		virtual void key_state(uint _i, uint &_code, bool &_state) const = 0;
+		virtual void reset_keys() = 0;
 		virtual void mouse_state(short2 &_point, bool &_button) const = 0;
+		virtual void set_hittest(const hittest &_hittest) = 0;
 	};
 
 	// flash loader interface

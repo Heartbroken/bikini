@@ -239,6 +239,7 @@ struct player::_private : gameswf::render_handler
 	{
 		m_player.add_ref();
 		gameswf::register_file_opener_callback(&_private::open);
+		m_sensor.set_hittest(hittest(*this, &_private::do_hittest));
 	}
 	~_private()
 	{
@@ -304,6 +305,11 @@ struct player::_private : gameswf::render_handler
 		m_player.get_root()->display();
 		reset_handlers();
 		return true;
+	}
+	bool do_hittest(const short2 &_point)
+	{
+		if (m_player.get_root() == 0) return false;
+		return m_player.get_root()->get_root_movie()->get_topmost_mouse_entity(PIXELS_TO_TWIPS(_point.x()), PIXELS_TO_TWIPS(_point.y())) != 0;
 	}
 };
 player::loader *player::_private::loader_p = 0;
