@@ -30,6 +30,10 @@ struct sensor::_private
 	{
 		m_sensor.set_mouse_state(_point, _button);
 	}
+	bool do_hittest(const short2 &_point)
+	{
+		return m_sensor.do_hittest(_point);
+	}
 
 private:
 	sensor &m_sensor;
@@ -89,17 +93,23 @@ private:
 		{
 			case WM_LBUTTONDOWN :
 			{
-				set_mouse_state(short2(LOWORD(_lparam), HIWORD(_lparam)), true);
+				short2 l_point(LOWORD(_lparam), HIWORD(_lparam));
+				set_mouse_state(l_point, true);
+				if (do_hittest(l_point)) return 0;
 				break;
 			}
 			case WM_LBUTTONUP :
 			{
-				set_mouse_state(short2(LOWORD(_lparam), HIWORD(_lparam)), false);
+				short2 l_point(LOWORD(_lparam), HIWORD(_lparam));
+				set_mouse_state(l_point, false);
+				if (do_hittest(l_point)) return 0;
 				break;
 			}
 			case WM_MOUSEMOVE :
 			{
-				set_mouse_state(short2(LOWORD(_lparam), HIWORD(_lparam)), _wparam & MK_LBUTTON);
+				short2 l_point(LOWORD(_lparam), HIWORD(_lparam));
+				set_mouse_state(l_point, _wparam & MK_LBUTTON);
+				if (do_hittest(l_point)) return 0;
 				break;
 			}
 		}
@@ -112,9 +122,14 @@ _win_sensor *_win_sensor::first_p = 0;
 
 // sensor
 
+static bool _null_hittest(const short2&)
+{
+	return true;
+}
+
 sensor::sensor()
 :
-	m_private(0)
+	m_private(0), m_hittest(&_null_hittest)
 {
 }
 
@@ -146,6 +161,14 @@ void sensor::mouse_state(short2 &_point, bool &_button) const
 {
 	_point = m_mouse.point;
 	_button = m_mouse.button;
+}
+void sensor::set_hittest(const hittest &_hittest)
+{
+	m_hittest = _hittest;
+}
+bool sensor::do_hittest(const short2 &_point)
+{
+	return m_hittest(_point);
 }
 
 
