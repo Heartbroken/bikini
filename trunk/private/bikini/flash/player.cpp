@@ -49,6 +49,13 @@ struct player::_private : gameswf::render_handler
 		else std::cout << _message;
 	}
 
+	// fscommand ----------------------------------------------------------------------------------
+
+	static void fscommand(gameswf::character* _movie, const char* _command, const char* _arg)
+	{
+		std::cout << "command: '" << _command << "' arg: '" << _arg << "'\n";
+	}
+
 	// rendering ----------------------------------------------------------------------------------
 
 	// gameswf types
@@ -255,6 +262,7 @@ struct player::_private : gameswf::render_handler
 		renderer_p = &m_renderer;
 		gameswf::set_render_handler(this);
 		gameswf::register_log_callback(log);
+		gameswf::register_fscommand_callback(fscommand);
 	}
 	void reset_handlers()
 	{
@@ -262,6 +270,7 @@ struct player::_private : gameswf::render_handler
 		renderer_p = 0;
 		gameswf::set_render_handler(0);
 		gameswf::register_log_callback(0);
+		gameswf::register_fscommand_callback(0);
 	}
 	bool play(const achar* _path)
 	{
