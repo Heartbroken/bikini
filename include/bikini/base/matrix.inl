@@ -61,64 +61,120 @@ struct _matrix_helper_<_M, _C, 0>
 // _matrix_
 
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-_matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator - ()
+inline _matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator - ()
 {
 	_matrix_helper_<matrix, _C, _R>::neg(*this);
 	return *this;
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-_matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator = (const _matrix_ &_m)
+inline _matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator = (const _matrix_ &_m)
 {
 	_matrix_helper_<matrix, _C, _R>::set(*this, _m);
 	return *this;
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-_matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator += (const _matrix_ &_m)
+inline _matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator += (const _matrix_ &_m)
 {
 	_matrix_helper_<matrix, _C, _R>::add(*this, _m);
 	return *this;
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-_matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator -= (const _matrix_ &_m)
+inline _matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator -= (const _matrix_ &_m)
 {
 	_matrix_helper_<matrix, _C, _R>::sub(*this, _m);
 	return *this;
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-_matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator *= (const _matrix_ &_m)
+inline _matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator *= (const _matrix_ &_m)
 {
 	_matrix_helper_<matrix, _C, _R>::mul(*this, _m);
 	return *this;
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-_matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator /= (const _matrix_ &_m)
+inline _matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator /= (const _matrix_ &_m)
 {
 	_matrix_helper_<matrix, _C, _R>::div(*this, _m);
 	return *this;
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-_matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator *= (const _E &_s)
+inline _matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator *= (const _E &_s)
 {
 	_matrix_helper_<matrix, _C, _R>::mul(*this, _s);
 	return *this;
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-_matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator /= (const _E &_s)
+inline _matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator /= (const _E &_s)
 {
 	_matrix_helper_<matrix, _C, _R>::div(*this, _s);
 	return *this;
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-const typename _matrix_<_M, _E, _C, _R, _Rs>::_row& _matrix_<_M, _E, _C, _R, _Rs>::operator [] (uint _i) const
+inline const _M _matrix_<_M, _E, _C, _R, _Rs>::operator + (const _matrix_ &_m) const
+{
+	return _M(*this) += _m;
+}
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+inline const _M _matrix_<_M, _E, _C, _R, _Rs>::operator - (const _matrix_ &_m) const
+{
+	return _M(*this) -= _m;
+}
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+inline const _M _matrix_<_M, _E, _C, _R, _Rs>::operator * (const _matrix_ &_m) const
+{
+	return _M(*this) *= _m;
+}
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+inline const _M _matrix_<_M, _E, _C, _R, _Rs>::operator / (const _matrix_ &_m) const
+{
+	return _M(*this) /= _m;
+}
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+inline const _M _matrix_<_M, _E, _C, _R, _Rs>::operator * (const _E &_s) const
+{
+	return _M(*this) *= _s;
+}
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+inline const _M _matrix_<_M, _E, _C, _R, _Rs>::operator / (const _E &_s) const
+{
+	return _M(*this) /= _s;
+}
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs> template <uint _I, uint _J>
+inline _E& _matrix_<_M, _E, _C, _R, _Rs>::cell_()
+{
+	return ((_E*)this)[_J * _C + _I];
+}
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs> template <uint _I, uint _J>
+inline const _E& _matrix_<_M, _E, _C, _R, _Rs>::cell_() const
+{
+	return ((const _E*)this)[_J * _C + _I];
+}
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+struct _matrix_<_M, _E, _C, _R, _Rs>::_row
+{
+	inline _E& operator [] (uint _i) { return ((_E*)this)[_i]; }
+	inline const _E& operator [] (uint _i) const { return ((const _E*)this)[_i]; }
+};
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+inline const typename _matrix_<_M, _E, _C, _R, _Rs>::_row& _matrix_<_M, _E, _C, _R, _Rs>::operator [] (uint _i) const
 {
 	assert(_i < _R);
 	return *(const _row*)((const byte*)this + _Rs * _i);
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-typename _matrix_<_M, _E, _C, _R, _Rs>::_row& _matrix_<_M, _E, _C, _R, _Rs>::operator [] (uint _i)
+inline typename _matrix_<_M, _E, _C, _R, _Rs>::_row& _matrix_<_M, _E, _C, _R, _Rs>::operator [] (uint _i)
 {
 	assert(_i < _R);
 	return *(_row*)((byte*)this + _Rs * _i);
+}
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+inline _matrix_<_M, _E, _C, _R, _Rs>::operator _M& ()
+{
+	return *(_M*)this;
+}
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+inline _matrix_<_M, _E, _C, _R, _Rs>::operator const _M& () const
+{
+	return *(const _M*)this;
 }
 
 // _vector_
