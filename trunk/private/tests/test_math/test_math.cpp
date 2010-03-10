@@ -40,7 +40,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		l_a[1] = 5.f;
 
 		l_c = l_b;
-		l_a += l_c;
+		l_a = l_a + l_c;
 		l_c -= l_a;
 		l_c = -l_c;
 		l_a *= l_c;

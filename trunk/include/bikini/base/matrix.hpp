@@ -23,30 +23,32 @@ struct _matrix_
 	static const uint columns = _Columns;
 	static const uint rows = _Rows;
 
-	_matrix_& operator - ();
-	_matrix_& operator = (const _matrix_ &_m);
-	_matrix_& operator += (const _matrix_ &_m);
-	_matrix_& operator -= (const _matrix_ &_m);
-	_matrix_& operator *= (const _matrix_ &_m);
-	_matrix_& operator /= (const _matrix_ &_m);
-	_matrix_& operator *= (const _Element &_s);
-	_matrix_& operator /= (const _Element &_s);
+	inline _matrix_& operator - ();
+	inline _matrix_& operator = (const _matrix_ &_m);
+	inline _matrix_& operator += (const _matrix_ &_m);
+	inline _matrix_& operator -= (const _matrix_ &_m);
+	inline _matrix_& operator *= (const _matrix_ &_m);
+	inline _matrix_& operator /= (const _matrix_ &_m);
+	inline _matrix_& operator *= (const _Element &_s);
+	inline _matrix_& operator /= (const _Element &_s);
 
-	template <uint _I, uint _J> _Element& cell_() { return ((_Element*)this)[_J * _Columns + _I]; }
-	template <uint _I, uint _J> const _Element& cell_() const { return ((const _Element*)this)[_J * _Columns + _I]; }
+	inline const _Matrix operator + (const _matrix_ &_m) const;
+	inline const _Matrix operator - (const _matrix_ &_m) const;
+	inline const _Matrix operator * (const _matrix_ &_m) const;
+	inline const _Matrix operator / (const _matrix_ &_m) const;
+	inline const _Matrix operator * (const _Element &_s) const;
+	inline const _Matrix operator / (const _Element &_s) const;
 
-	struct _row
-	{
-		const _Element& operator [] (uint _i) const { return ((const _Element*)this)[_i]; }
-		_Element& operator [] (uint _i) { return ((_Element*)this)[_i]; }
-	};
+	template <uint _I, uint _J> inline _Element& cell_();
+	template <uint _I, uint _J> inline const _Element& cell_() const;
 
-	const _row& operator [] (uint _i) const;
-	_row& operator [] (uint _i);
+	struct _row;
 
-	operator const _Matrix& () const { return *(const _Matrix*)this; }
-	operator _Matrix& () { return *(_Matrix*)this; }
+	inline const _row& operator [] (uint _i) const;
+	inline _row& operator [] (uint _i);
 
+	inline operator _Matrix& ();
+	inline operator const _Matrix& () const;
 };
 
 template <typename _Type, uint _Columns, uint _Rows, uint _Extra = 0>
