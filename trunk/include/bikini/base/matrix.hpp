@@ -51,6 +51,26 @@ struct _matrix_
 	inline operator const _Matrix& () const;
 };
 
+template <typename _Ma, typename _Mb, typename _Mc, uint _I, uint _J>
+struct _matrix__mul_helper_ { static void mul(const _Ma &_a, const _Mb &_b, _Mc &_c)
+{
+	_matrix__mul_helper_<_Ma, _Mb, _Mc, _I - 1, _J>::mul(_a, _b, _c);
+	_c.cell_<_I - 1, _J - 1>() = 0;
+}};
+template <typename _Ma, typename _Mb, typename _Mc, uint _J>
+struct _matrix__mul_helper_<_Ma, _Mb, _Mc, 0, _J> { static void mul(const _Ma &_a, const _Mb &_b, _Mc &_c)
+{
+	_matrix__mul_helper_<_Ma, _Mb, _Mc, _Ma::columns, _J - 1>::mul(_a, _b, _c);
+}};
+template <typename _Ma, typename _Mb, typename _Mc, uint _I>
+struct _matrix__mul_helper_<_Ma, _Mb, _Mc, _I, 0> { static void mul(const _Ma &_a, const _Mb &_b, _Mc &_c)
+{}};
+template <typename _Ma, typename _Mb, typename _Mc>
+void mul(const _Ma &_a, const _Mb &_b, _Mc &_c)
+{
+	_matrix__mul_helper_<_Ma, _Mb, _Mc, _Ma::columns, _Mb::rows>::mul(_a, _b, _c);
+}
+
 template <typename _Type, uint _Columns, uint _Rows, uint _Extra = 0>
 struct matrix__
 :
