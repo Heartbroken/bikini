@@ -12,6 +12,10 @@ namespace bk { /*---------------------------------------------------------------
 
 namespace flash { /*-----------------------------------------------------------------------------*/
 
+#ifndef GWL_WNDPROC
+#	define GWL_WNDPROC			(-4)
+#endif // #ifndef GWL_WNDPROC
+
 // _private
 
 struct sensor::_private

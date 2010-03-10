@@ -581,7 +581,7 @@ bool rendering_D3D9::execute(const create_schain &_command)
 	l_D3DPP.BackBufferHeight = 0;
 	l_D3DPP.BackBufferFormat = D3DFMT_X8R8G8B8;
 	l_D3DPP.FullScreen_RefreshRateInHz = 0;
-	l_D3DPP.MultiSampleType = (D3DMULTISAMPLE_TYPE)4;
+	l_D3DPP.MultiSampleType = (D3DMULTISAMPLE_TYPE)8;
 	l_D3DPP.MultiSampleQuality = 0;
 	l_D3DPP.EnableAutoDepthStencil = FALSE;
 	l_D3DPP.SwapEffect = D3DSWAPEFFECT_DISCARD;
