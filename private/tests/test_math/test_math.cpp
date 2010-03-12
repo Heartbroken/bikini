@@ -56,14 +56,13 @@ int _tmain(int argc, _TCHAR* argv[])
 		typedef bk::matrix__<float, 3, 3> float3x3;
 		typedef bk::matrix__<float, 2, 2> float2x2;
 
-		float l_f44[] =
-		{
+		float3x3 l_matrix
+		(
 			1.f, 2.f, 3.f,
 			3.f, 1.f, 2.f,
 			2.f, 3.f, 1.f
-		};
-		float3x3 l_matrix;
-		memcpy(&l_matrix, l_f44, sizeof(l_f44));
+		);
+		float3x3 l_transpose = bk::transpose(l_matrix);
 
 		float2x2 l_minor = bk::minor_<1, 1>(l_matrix);
 
@@ -72,6 +71,24 @@ int _tmain(int argc, _TCHAR* argv[])
 
 		float3x3 l_inverse = bk::inverse(l_matrix);
 		bk::r3x3 l_inverse2 = bk::inverse((bk::r3x3&)l_matrix);
+
+		float3x3 l_unit = bk::mul(l_matrix, l_inverse);
+
+		float3x3 l_ma
+		(
+			1, 2, 3,
+			4, 5, 6,
+			7, 8, 9
+		);
+		float3x3 l_mb
+		(
+			9, 8, 7,
+			6, 5, 4,
+			3, 2, 1
+		);
+		float3x3 l_mc = bk::mul(l_ma, l_mb);
+
+		l_c = bk::mul(l_a, l_ma);
 
 		int b=0;
 	}

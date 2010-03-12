@@ -177,6 +177,163 @@ inline _matrix_<_M, _E, _C, _R, _Rs>::operator const _M& () const
 	return *(const _M*)this;
 }
 
+// _matrix_ multiply
+
+template <typename _Ma, typename _Mb, typename _Mc, uint _C, uint _R, uint _I = _Ma::columns>
+struct _matrix__mul_dot_helper_ { static void dot(const _Ma &_a, const _Mb &_b, _Mc &_c)
+{
+	_matrix__mul_dot_helper_<_Ma, _Mb, _Mc, _C, _R, _I - 1>::dot(_a, _b, _c);
+	_c.cell_<_C, _R>() += _a.cell_<_I - 1, _R>() * _b.cell_<_C, _I - 1>();
+}};
+template <typename _Ma, typename _Mb, typename _Mc, uint _C, uint _R>
+struct _matrix__mul_dot_helper_<_Ma, _Mb, _Mc, _C, _R, 0> { static void dot(const _Ma &_a, const _Mb &_b, _Mc &_c)
+{
+	_c.cell_<_C, _R>() = 0;
+}};
+template <typename _Ma, typename _Mb, typename _Mc, uint _I = _Mb::columns, uint _J = _Ma::rows>
+struct _matrix__mul_helper_ { static void mul(const _Ma &_a, const _Mb &_b, _Mc &_c)
+{
+	_matrix__mul_helper_<_Ma, _Mb, _Mc, _I - 1, _J>::mul(_a, _b, _c);
+	_matrix__mul_dot_helper_<_Ma, _Mb, _Mc, _I - 1, _J - 1>::dot(_a, _b, _c);
+}};
+template <typename _Ma, typename _Mb, typename _Mc, uint _J>
+struct _matrix__mul_helper_<_Ma, _Mb, _Mc, 0, _J> { static void mul(const _Ma &_a, const _Mb &_b, _Mc &_c)
+{
+	_matrix__mul_helper_<_Ma, _Mb, _Mc, _Ma::columns, _J - 1>::mul(_a, _b, _c);
+}};
+template <typename _Ma, typename _Mb, typename _Mc, uint _I>
+struct _matrix__mul_helper_<_Ma, _Mb, _Mc, _I, 0> { static void mul(const _Ma &_a, const _Mb &_b, _Mc &_c)
+{}};
+
+template <typename _Ma, typename _Mb, typename _Mc>
+void mul(const _Ma &_a, const _Mb &_b, _Mc &_c)
+{
+	c_assert(_Ma::columns == _Mb::rows && _Ma::rows == _Mc::rows && _Mb::columns == _Mc::columns);
+	_matrix__mul_helper_<_Ma, _Mb, _Mc>::mul(_a, _b, _c);
+}
+
+// matrix__ transpose
+
+template <typename _Ma, typename _Mt, uint _I = _Ma::columns, uint _J = _Ma::rows>
+struct _matrix__transpose_helper_ { static void get(const _Ma &_a, _Mt &_b)
+{
+	_matrix__transpose_helper_<_Ma, _Mt, _I - 1, _J>::get(_a, _b);
+	_b.cell_<_J - 1, _I - 1>() = _a.cell_<_I - 1, _J - 1>();
+}};
+template <typename _Ma, typename _Mt, uint _J>
+struct _matrix__transpose_helper_<_Ma, _Mt, 0, _J> { static void get(const _Ma &_a, _Mt &_b)
+{
+	_matrix__transpose_helper_<_Ma, _Mt, _Ma::columns, _J - 1>::get(_a, _b);
+}};
+template <typename _Ma, typename _Mt, uint _I>
+struct _matrix__transpose_helper_<_Ma, _Mt, _I, 0> { static void get(const _Ma &_a, _Mt &_b)
+{}};
+template <typename _T, uint _C, uint _R, uint _E>
+inline const matrix__<_T, _R, _C> transpose(const matrix__<_T, _C, _R, _E> &_m)
+{
+	typedef matrix__<_T, _C, _R> matrix0;
+	typedef matrix__<_T, _R, _C> matrix1;
+	matrix__<_T, _R, _C> l_m;
+	_matrix__transpose_helper_<matrix0, matrix1>::get(_m, l_m);
+	return l_m;
+}
+
+// matrix__ minor, determinant, inverse
+
+template <typename _Ma, typename _Mi, uint _C, uint _R, uint _I, uint _J>
+struct _matrix__minor_helper_ { static inline void get(const _Ma &_a, _Mi &_b)
+{
+	_matrix__minor_helper_<_Ma,_Mi, _C, _R, _I - 1, _J>::get(_a, _b);
+	_b.cell_<_I - 1, _J - 1>() = _a.cell_<(_I > _C ? _I : _I - 1), (_J > _R ? _J : _J - 1)>();
+}};
+template <typename _Ma, typename _Mi, uint _C, uint _R, uint _J>
+struct _matrix__minor_helper_<_Ma, _Mi, _C, _R, 0, _J> { static inline void get(const _Ma &_a, _Mi &_b)
+{
+	_matrix__minor_helper_<_Ma,_Mi, _C, _R, _Ma::columns - 1, _J - 1>::get(_a, _b);
+}};
+template <typename _Ma, typename _Mi, uint _C, uint _R, uint _I>
+struct _matrix__minor_helper_<_Ma, _Mi, _C, _R, _I, 0> { static inline void get(const _Ma &_a, _Mi &_b)
+{}};
+template <uint _C, uint _R, typename _T, uint _S, uint _E>
+inline matrix__<_T, _S - 1, _S - 1> minor_(const matrix__<_T, _S, _S, _E> &_m)
+{
+	typedef matrix__<_T, _S, _S, _E> matrix;
+	typedef matrix__<_T, _S - 1, _S - 1> minor;
+	minor l_m; _matrix__minor_helper_<matrix, minor, _C, _R, _S - 1, _S - 1>::get(_m, l_m);
+	return l_m;
+}
+
+template <typename _T, uint _I>
+struct _matrix__product_sign_helper_ { static inline _T get(_T _a, _T _b)
+{
+	return _a * -_b;
+}};
+template <typename _T>
+struct _matrix__product_sign_helper_<_T, 0> { static inline _T get(_T _a, _T _b)
+{
+	return _a * _b;
+}};
+
+template <typename _T, uint _S, uint _E, uint _I = _S, uint _J = _S>
+struct _matrix__determinant_helper_ { static inline _T get(const matrix__<_T, _S, _S, _E> &_m)
+{
+	return _matrix__determinant_helper_<_T, _S, _E, _I - 1, _J>::get(_m) + _matrix__product_sign_helper_<_T, (_I - 1 + _J - 1) % 2>::get(determinant(minor_<_I - 1, _J - 1>(_m)), _m.cell_<_I - 1, _J - 1>());
+}};
+template <typename _T, uint _S, uint _E, uint _J>
+struct _matrix__determinant_helper_<_T, _S, _E, 1, _J> { static inline _T get(const matrix__<_T, _S, _S, _E> &_m)
+{
+	return _matrix__product_sign_helper_<_T, (_J - 1) % 2>::get(determinant(minor_<0, _J - 1>(_m)), _m.cell_<0, _J - 1>());
+}};
+template <typename _T, uint _S, uint _E>
+struct _matrix__determinant_helper_<_T, _S, _E, 1, 1> { static inline _T get(const matrix__<_T, _S, _S, _E> &_m)
+{
+	return _m.cell_<0, 0>();
+}};
+template <typename _T, uint _S, uint _E>
+inline const _T determinant(const matrix__<_T, _S, _S, _E> &_m)
+{
+	return _matrix__determinant_helper_<_T, _S, _E>::get(_m);
+}
+
+template <typename _T, uint _S, uint _E, uint _I = _S, uint _J = _S>
+struct _matrix__inverse_helper_ { static inline void get(const matrix__<_T, _S, _S, _E> &_m, matrix__<_T, _S, _S, _E> &_im, _T _d)
+{
+	_matrix__inverse_helper_<_T, _S, _E, _I - 1, _J>::get(_m, _im, _d);
+	_im.cell_<_J - 1, _I - 1>() = _matrix__product_sign_helper_<_T, (_I - 1 + _J - 1) % 2>::get(determinant(minor_<_I - 1, _J - 1>(_m)), _d);
+}};
+template <typename _T, uint _S, uint _E, uint _J>
+struct _matrix__inverse_helper_<_T, _S, _E, 0, _J> { static inline void get(const matrix__<_T, _S, _S, _E> &_m, matrix__<_T, _S, _S, _E> &_im, _T _d)
+{
+	_matrix__inverse_helper_<_T, _S, _E, _S, _J - 1>::get(_m, _im, _d);
+}};
+template <typename _T, uint _S, uint _E>
+struct _matrix__inverse_helper_<_T, _S, _E, _S, 0> { static inline void get(const matrix__<_T, _S, _S, _E> &_m, matrix__<_T, _S, _S, _E> &_im, _T _d)
+{}};
+template <typename _T, uint _S, uint _E>
+inline bool inverse(const matrix__<_T, _S, _S, _E> &_m, matrix__<_T, _S, _S, _E> &_im)
+{
+	_T l_d = determinant(_m);
+	if(l_d < eps && l_d > -eps) return false;
+	_matrix__inverse_helper_<_T, _S, _E>::get(_m, _im, _T(1) / l_d);
+	return true;
+}
+template <typename _T, uint _S, uint _E>
+inline const matrix__<_T, _S, _S, _E> inverse(const matrix__<_T, _S, _S, _E> &_m)
+{
+	matrix__<_T, _S, _S, _E> l_m;
+	if(!inverse(_m, l_m)) return _m;
+	return l_m;
+}
+
+// matrix__ multiply
+
+template <typename _T, uint _C, uint _M, uint _R, uint _Ea, uint _Eb>
+inline const matrix__<_T, _C, _R> mul(matrix__<_T, _M, _R, _Ea> &_a, matrix__<_T, _C, _M, _Eb> &_b)
+{
+	matrix__<_T, _C, _R> l_m; mul(_a, _b, l_m);
+	return l_m;
+}
+
 // _vector_
 
 template <typename _V, typename _E, uint _S, uint _P>
@@ -190,10 +347,79 @@ _E& _vector_<_V, _E, _S, _P>::operator [] (uint _i)
 	return super::operator [] (0)[_i];
 }
 
+// vector__ function
+
+template <typename _T, uint _S, uint _E, uint _I = _S>
+struct _vector__dot_helper_ { static inline const _T get(const vector__<_T, _S, _E> &_a, const vector__<_T, _S, _E> &_b)
+{
+	return _vector__dot_helper_<_T, _S, _E, _I - 1>::get(_a, _b) + _a.cell_<_I - 1, 0>() * _b.cell_<_I - 1, 0>();
+}};
+template <typename _T, uint _S, uint _E>
+struct _vector__dot_helper_<_T, _S, _E, 0> { static inline const _T get(const vector__<_T, _S, _E> &_a, const vector__<_T, _S, _E> &_b)
+{
+	return 0;
+}};
+template <typename _T, uint _S, uint _E>
+inline const _T dot(const vector__<_T, _S, _E> &_a, const vector__<_T, _S, _E> &_b)
+{
+	return _vector__dot_helper_<_T, _S, _E>::get(_a, _b);
+}
+
+template <typename _T, uint _S, uint _E>
+inline const _T length(const vector__<_T, _S, _E> &_a)
+{
+	return sqrt(dot(_a, _a));
+}
+template <typename _T, uint _S, uint _E>
+inline const _T length2(const vector__<_T, _S, _E> &_a)
+{
+	return dot(_a, _a);
+}
+
+template <typename _T, uint _S, uint _E>
+inline const vector__<_T, _S, _E> normalize(const vector__<_T, _S, _E> &_a)
+{
+	_T l_length = length(_a);
+	return l_length > eps ? _a * (_T(1) / l_length) : _a;
+}
+
+template <typename _T, uint _E>
+inline const vector__<_T, 2, _E> cross(const vector__<_T, 2, _E> &_a)
+{
+	return vector__<_T, 2, _E>(_a.y, -_a.x);
+}
+template <typename _T, uint _E>
+inline const _T cross(const vector__<_T, 2, _E> &_a, const vector__<_T, 2, _E> &_b)
+{
+	return _a.x * _b.y - _a.y * _b.x;
+}
+template <typename _T, uint _E>
+inline const vector__<_T, 3, _E> cross(const vector__<_T, 3, _E> &_a, const vector__<_T, 3, _E> &_b)
+{
+	return vector__<_T, 3, _E>(_a.y * _b.z - _a.z * _b.y, _a.z * _b.x - _a.x * _b.z, _a.x * _b.y - _a.y * _b.z);
+}
+template <typename _T, uint _E>
+inline const _T cross(const vector__<_T, 3, _E> &_a, const vector__<_T, 3, _E> &_b, const vector__<_T, 3, _E> &_c)
+{
+	return dot(cross(_a, _b), _c);
+}
+
+template <typename _T, uint _C, uint _R, uint _Ea, uint _Eb>
+inline const vector__<_T, _C> mul(const vector__<_T, _R, _Ea> &_a, const matrix__<_T, _C, _R, _Eb> &_b)
+{
+	vector__<_T, _C> l_v; mul(_a, _b, l_v);
+	return l_v;
+}
+template <typename _T, uint _C, uint _R, uint _Ea, uint _Eb>
+inline const vector__<_T, _R> mul(const matrix__<_T, _C, _R, _Eb> &_a, const vector__<_T, _C, _Ea> &_b)
+{
+	vector__<_T, _R> l_v; mul(_b, transpose(_a), l_v);
+	return l_v;
+}
 
 
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // _matrix_row_
 
