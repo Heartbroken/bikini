@@ -88,7 +88,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		);
 		float3x3 l_mc = bk::mul(l_ma, l_mb);
 
-		l_c = bk::mul(l_a, l_ma);
+		l_c = bk::mul(l_ma, l_a);
 
 		int b=0;
 	}

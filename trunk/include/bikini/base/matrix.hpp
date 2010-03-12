@@ -100,12 +100,12 @@ struct matrix__<_Type, 1, 1>
 {
 	_Type m11;
 
-	inline matrix__()
-	{}
-	inline matrix__(_Type _m11)
-	:
-		m11(_m11)
-	{}
+	inline matrix__();
+	//{}
+	inline matrix__(_Type _m11);
+	//:
+	//	m11(_m11)
+	//{}
 };
 
 template <typename _Type>
@@ -116,14 +116,14 @@ struct matrix__<_Type, 2, 2>
 	_Type m11, m12,
 		  m21, m22;
 
-	inline matrix__()
-	{}
+	inline matrix__();
+	//{}
 	inline matrix__(_Type _m11, _Type _m12,
-					_Type _m21, _Type _m22)
-	:
-		m11(_m11), m12(_m12),
-		m21(_m21), m22(_m22)
-	{}
+					_Type _m21, _Type _m22);
+	//:
+	//	m11(_m11), m12(_m12),
+	//	m21(_m21), m22(_m22)
+	//{}
 };
 
 template <typename _Type>
@@ -135,16 +135,16 @@ struct matrix__<_Type, 3, 3>
 		  m21, m22, m23,
 		  m31, m32, m33;
 
-	inline matrix__()
-	{}
+	inline matrix__();
+	//{}
 	inline matrix__(_Type _m11, _Type _m12, _Type _m13,
 					_Type _m21, _Type _m22, _Type _m23,
-					_Type _m31, _Type _m32, _Type _m33)
-	:
-		m11(_m11), m12(_m12), m13(_m13),
-		m21(_m21), m22(_m22), m23(_m23),
-		m31(_m31), m32(_m32), m33(_m33)
-	{}
+					_Type _m31, _Type _m32, _Type _m33);
+	//:
+	//	m11(_m11), m12(_m12), m13(_m13),
+	//	m21(_m21), m22(_m22), m23(_m23),
+	//	m31(_m31), m32(_m32), m33(_m33)
+	//{}
 };
 
 template <typename _Type>
@@ -157,18 +157,18 @@ struct matrix__<_Type, 4, 4>
 		  m31, m32, m33, m34,
 		  m41, m42, m43, m44;
 
-	inline matrix__()
-	{}
+	inline matrix__();
+	//{}
 	inline matrix__(_Type _m11, _Type _m12, _Type _m13, _Type _m14,
 					_Type _m21, _Type _m22, _Type _m23, _Type _m24,
 					_Type _m31, _Type _m32, _Type _m33, _Type _m34,
-					_Type _m41, _Type _m42, _Type _m43, _Type _m44)
-	:
-		m11(_m11), m12(_m12), m13(_m13), m14(_m14),
-		m21(_m21), m22(_m22), m23(_m23), m24(_m24),
-		m31(_m31), m32(_m32), m33(_m33), m34(_m34),
-		m41(_m41), m42(_m42), m43(_m43), m44(_m44)
-	{}
+					_Type _m41, _Type _m42, _Type _m43, _Type _m44);
+	//:
+	//	m11(_m11), m12(_m12), m13(_m13), m14(_m14),
+	//	m21(_m21), m22(_m22), m23(_m23), m24(_m24),
+	//	m31(_m31), m32(_m32), m33(_m33), m34(_m34),
+	//	m41(_m41), m42(_m42), m43(_m43), m44(_m44)
+	//{}
 };
 
 //template <typename _Ma, typename _Mt, uint _I = _Ma::columns, uint _J = _Ma::rows>
@@ -318,12 +318,12 @@ struct vector__<_Type, 1>
 {
 	_Type x;
 
-	inline vector__()
-	{}
-	explicit inline vector__(_Type _x)
-	:
-		x(_x)
-	{}
+	inline vector__();
+	//{}
+	explicit inline vector__(_Type _x);
+	//:
+	//	x(_x)
+	//{}
 };
 
 template <typename _Type>
@@ -333,12 +333,12 @@ struct vector__<_Type, 2>
 {
 	_Type x, y;
 
-	inline vector__()
-	{}
-	inline vector__(_Type _x, _Type _y)
-	:
-		x(_x), y(_y)
-	{}
+	inline vector__();
+	//{}
+	inline vector__(_Type _x, _Type _y);
+	//:
+	//	x(_x), y(_y)
+	//{}
 };
 
 template <typename _Type>
@@ -348,12 +348,12 @@ struct vector__<_Type, 3>
 {
 	_Type x, y, z;
 
-	inline vector__()
-	{}
-	inline vector__(_Type _x, _Type _y, _Type _z)
-	:
-		x(_x), y(_y), z(_z)
-	{}
+	inline vector__();
+	//{}
+	inline vector__(_Type _x, _Type _y, _Type _z);
+	//:
+	//	x(_x), y(_y), z(_z)
+	//{}
 };
 
 template <typename _Type>
@@ -363,12 +363,12 @@ struct vector__<_Type, 4>
 {
 	_Type x, y, z, w;
 
-	inline vector__()
-	{}
-	inline vector__(_Type _x, _Type _y, _Type _z, _Type _w)
-	:
-		x(_x), y(_y), z(_z), w(_w)
-	{}
+	inline vector__();
+	//{}
+	inline vector__(_Type _x, _Type _y, _Type _z, _Type _w);
+	//:
+	//	x(_x), y(_y), z(_z), w(_w)
+	//{}
 };
 
 //template <typename _T, uint _S, uint _E, uint _I = _S>

@@ -212,6 +212,56 @@ void mul(const _Ma &_a, const _Mb &_b, _Mc &_c)
 	_matrix__mul_helper_<_Ma, _Mb, _Mc>::mul(_a, _b, _c);
 }
 
+// matrix__
+
+template <typename _T>
+inline matrix__<_T, 1, 1>::matrix__()
+{}
+template <typename _T>
+inline matrix__<_T, 1, 1>::matrix__(_T _m11)
+:
+	m11(_m11)
+{}
+
+template <typename _T>
+inline matrix__<_T, 2, 2>::matrix__()
+{}
+template <typename _T>
+inline matrix__<_T, 2, 2>::matrix__(_T _m11, _T _m12,
+									_T _m21, _T _m22)
+:
+	m11(_m11), m12(_m12),
+	m21(_m21), m22(_m22)
+{}
+
+template <typename _T>
+inline matrix__<_T, 3, 3>::matrix__()
+{}
+template <typename _T>
+inline matrix__<_T, 3, 3>::matrix__(_T _m11, _T _m12, _T _m13,
+									_T _m21, _T _m22, _T _m23,
+									_T _m31, _T _m32, _T _m33)
+:
+	m11(_m11), m12(_m12), m13(_m13),
+	m21(_m21), m22(_m22), m23(_m23),
+	m31(_m31), m32(_m32), m33(_m33)
+{}
+
+template <typename _T>
+inline matrix__<_T, 4, 4>::matrix__()
+{}
+template <typename _T>
+inline matrix__<_T, 4, 4>::matrix__(_T _m11, _T _m12, _T _m13, _T _m14,
+									_T _m21, _T _m22, _T _m23, _T _m24,
+									_T _m31, _T _m32, _T _m33, _T _m34,
+									_T _m41, _T _m42, _T _m43, _T _m44)
+:
+	m11(_m11), m12(_m12), m13(_m13), m14(_m14),
+	m21(_m21), m22(_m22), m23(_m23), m24(_m24),
+	m31(_m31), m32(_m32), m33(_m33), m34(_m34),
+	m41(_m41), m42(_m42), m43(_m43), m44(_m44)
+{}
+
 // matrix__ transpose
 
 template <typename _Ma, typename _Mt, uint _I = _Ma::columns, uint _J = _Ma::rows>
@@ -346,6 +396,44 @@ _E& _vector_<_V, _E, _S, _P>::operator [] (uint _i)
 {
 	return super::operator [] (0)[_i];
 }
+
+// vector__
+
+template <typename _T>
+inline vector__<_T, 1>::vector__()
+{}
+template <typename _T>
+inline vector__<_T, 1>::vector__(_T _x)
+:
+	x(_x)
+{}
+
+template <typename _T>
+inline vector__<_T, 2>::vector__()
+{}
+template <typename _T>
+inline vector__<_T, 2>::vector__(_T _x, _T _y)
+:
+	x(_x), y(_y)
+{}
+
+template <typename _T>
+inline vector__<_T, 3>::vector__()
+{}
+template <typename _T>
+inline vector__<_T, 3>::vector__(_T _x, _T _y, _T _z)
+:
+	x(_x), y(_y), z(_z)
+{}
+
+template <typename _T>
+inline vector__<_T, 4>::vector__()
+{}
+template <typename _T>
+inline vector__<_T, 4>::vector__(_T _x, _T _y, _T _z, _T _w)
+:
+	x(_x), y(_y), z(_z), w(_w)
+{}
 
 // vector__ function
 
