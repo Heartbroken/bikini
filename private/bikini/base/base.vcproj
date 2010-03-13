@@ -552,6 +552,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\bikini\base\vector.inl"
+				>
+			</File>
+			<File
 				RelativePath=".\watch.cpp"
 				>
 			</File>

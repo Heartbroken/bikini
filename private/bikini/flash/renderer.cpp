@@ -130,7 +130,7 @@ bool renderer::begin_render(const color &_background, const rect &_viewport)
 		l_viewport.set_clear_color(_background);
 		l_viewport.clear();
 
-		flash_vs::viewport.area = real4((real)_viewport.min().x, (real)_viewport.min().y, (real)_viewport.size().x, (real)_viewport.size().y);
+		flash_vs::viewport.area = float4((float)_viewport.min().x, (float)_viewport.min().y, (float)_viewport.size().x, (float)_viewport.size().y);
 
 		vo::memreader &l_memreader = m_video.get_<vo::memreader>(m_memreader_ID);
 		l_memreader.clear();
@@ -140,10 +140,10 @@ bool renderer::begin_render(const color &_background, const rect &_viewport)
 }
 void renderer::set_xform(const xform &_xform)
 {
-	flash_vs::shape.xform = r2x4
+	flash_vs::shape.xform = float4x2
 	(
-		real4(_xform[0][0], _xform[0][1], _xform[0][2] - 10.f, 0),
-		real4(_xform[1][0], _xform[1][1], _xform[1][2] - 10.f, 0)
+		_xform[0][0], _xform[0][1], _xform[0][2] - 10.f, 0,
+		_xform[1][0], _xform[1][1], _xform[1][2] - 10.f, 0
 	);
 }
 void renderer::set_color(const color &_color)
@@ -158,15 +158,15 @@ void renderer::set_texture(uint _ID, const xform &_txform)
 
 		m_texset_ID = l_texture.texset_ID;
 
-		flash_vs::shape.txform = r2x4
+		flash_vs::shape.txform = float4x2
 		(
-			real4(_txform[0][0], _txform[0][1], _txform[0][2], 0),
-			real4(_txform[1][0], _txform[1][1], _txform[1][2], 0)
+			_txform[0][0], _txform[0][1], _txform[0][2], 0,
+			_txform[1][0], _txform[1][1], _txform[1][2], 0
 		);
 
-		flash_vs::shape.tex_scale = real4
+		flash_vs::shape.tex_scale = float4
 		(
-			 real(1) / real(l_texture.width), real(1) / real(l_texture.height), 0, 0
+			 float(1) / float(l_texture.width), float(1) / float(l_texture.height), 0, 0
 		);
 	}
 	else
