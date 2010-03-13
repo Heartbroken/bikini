@@ -130,7 +130,7 @@ bool renderer::begin_render(const color &_background, const rect &_viewport)
 		l_viewport.set_clear_color(_background);
 		l_viewport.clear();
 
-		flash_vs::viewport.area = real4((real)_viewport.min().x(), (real)_viewport.min().y(), (real)_viewport.size().x(), (real)_viewport.size().y());
+		flash_vs::viewport.area = real4((real)_viewport.min().x, (real)_viewport.min().y, (real)_viewport.size().x, (real)_viewport.size().y);
 
 		vo::memreader &l_memreader = m_video.get_<vo::memreader>(m_memreader_ID);
 		l_memreader.clear();

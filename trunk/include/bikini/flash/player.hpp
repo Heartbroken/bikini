@@ -8,9 +8,9 @@
 
 #pragma once
 
-typedef matrix_<1, 2, s16> short2;
-typedef matrix_<1, 3, f32> float3;
-typedef matrix_<2, 3, f32> xform;
+typedef vector_<s16, 2> short2;
+typedef vector_<f32, 3> float3;
+typedef matrix_<f32, 3, 2> xform;
 typedef functor_<bool, const short2&> hittest;
 
 ///	flash player

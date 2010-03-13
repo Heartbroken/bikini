@@ -139,7 +139,8 @@ struct player::_private : gameswf::render_handler
 	// Geometric and color transforms for mesh and line_strip rendering.
 	void set_matrix(const matrix &_m)
 	{
-		xform l_xform(float3(_m.m_[0][0], _m.m_[0][1], _m.m_[0][2]), float3(_m.m_[1][0], _m.m_[1][1], _m.m_[1][2]));
+		xform l_xform(_m.m_[0][0], _m.m_[0][1], _m.m_[0][2],
+					  _m.m_[1][0], _m.m_[1][1], _m.m_[1][2]);
 		m_renderer.set_xform(l_xform);
 	}
 	void set_cxform(const cxform &_cx)
@@ -185,7 +186,7 @@ struct player::_private : gameswf::render_handler
 	void fill_style_bitmap(s32 _fill_side, bitmap_info *_bi_p, const matrix &_m, bitmap_wrap_mode _wm)
 	{
 		bitmap &l_bitmap = *(bitmap*)_bi_p;
-		xform l_txform(float3(_m.m_[0][0], _m.m_[0][1], _m.m_[0][2]), float3(_m.m_[1][0], _m.m_[1][1], _m.m_[1][2]));
+		xform l_txform(_m.m_[0][0], _m.m_[0][1], _m.m_[0][2], _m.m_[1][0], _m.m_[1][1], _m.m_[1][2]);
 		m_renderer.set_texture(l_bitmap.texture_ID, l_txform);
 		m_renderer.set_color(white);
 	}
@@ -303,7 +304,7 @@ struct player::_private : gameswf::render_handler
 		set_handlers();
 		short2 l_point; bool l_button;
 		m_sensor.mouse_state(l_point, l_button);
-		m_player.get_root()->notify_mouse_state(l_point.x(), l_point.y(), l_button ? 1 : 0);
+		m_player.get_root()->notify_mouse_state(l_point.x, l_point.y, l_button ? 1 : 0);
 		m_player.get_root()->advance(_dt);
 		reset_handlers();
 		return true;
@@ -318,7 +319,7 @@ struct player::_private : gameswf::render_handler
 	bool do_hittest(const short2 &_point)
 	{
 		if (m_player.get_root() == 0) return false;
-		return m_player.get_root()->get_root_movie()->get_topmost_mouse_entity(PIXELS_TO_TWIPS(_point.x()), PIXELS_TO_TWIPS(_point.y())) != 0;
+		return m_player.get_root()->get_root_movie()->get_topmost_mouse_entity(PIXELS_TO_TWIPS(_point.x), PIXELS_TO_TWIPS(_point.y)) != 0;
 	}
 };
 player::loader *player::_private::loader_p = 0;
