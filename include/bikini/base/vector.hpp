@@ -20,8 +20,16 @@ struct _vector_
 :
 	_matrix_<_Vector, _Element, _Size, 1, sizeof(_Element) * (_Size + _Extra)>
 {
+	typedef _Vector vector;
+
 	const _Element& operator [] (uint _i) const;
 	_Element& operator [] (uint _i);
+
+	//template <typename _V1, typename _E1, uint _S1, uint _Ex1>
+	//inline operator typename _vector_<_V1, _E1, _S1, _Ex1>::vector () const
+	//{
+	//	return *(_vector_<_V1, _E1, _S1, _Ex1>::vector*)this;
+	//}
 };
 
 template <typename _Type, uint _Size, uint _Extra = 0>

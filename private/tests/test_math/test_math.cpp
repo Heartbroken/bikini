@@ -32,9 +32,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		typedef bk::matrix_<float, 3, 2> float3x2;
 		typedef bk::vector_<float, 3> float3;
+		typedef bk::vector_<float, 2> float2;
 
 		float3 l_a(1, 1, 1), l_b(2, 2, 2), l_c = l_a;
 		float3x2 l_m;
+
+		//float2 l_f2 = l_a;
 
 		l_m[0][2] = 100.f;
 		l_a[1] = 5.f;

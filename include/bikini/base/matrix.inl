@@ -64,15 +64,16 @@ struct _matrix_helper_<_M, _C, 0>
 // _matrix_
 
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-inline _matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator - ()
-{
-	_matrix_helper_<matrix, _C, _R>::neg(*this);
-	return *this;
-}
-template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
 inline _matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator = (const _matrix_ &_m)
 {
 	_matrix_helper_<matrix, _C, _R>::set(*this, _m);
+	return *this;
+}
+
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+inline _matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator - ()
+{
+	_matrix_helper_<matrix, _C, _R>::neg(*this);
 	return *this;
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
@@ -184,6 +185,43 @@ inline _matrix_<_M, _E, _C, _R, _Rs>::operator const _M& () const
 {
 	return *(const _M*)this;
 }
+
+// _matrix_ convert
+
+template <typename _M0, typename _M1, uint _I = _M1::columns, uint _J = _M1::rows>
+struct _matrix_convert_helper_ { static void get(const _M0 &_a, _M1 &_b)
+{
+	_matrix_convert_helper_<_M0, _M1, _I - 1, _J>::get(_a, _b);
+	_b.cell_<_I - 1, _J - 1>() = _a.cell_<_I - 1, _J - 1>();
+}};
+template <typename _M0, typename _M1, uint _J>
+struct _matrix_convert_helper_<_M0, _M1, 0, _J> { static void get(const _M0 &_a, _M1 &_b)
+{
+	_matrix_convert_helper_<_M0, _M1, _M1::columns, _J - 1>::get(_a, _b);
+}};
+template <typename _M0, typename _M1, uint _I>
+struct _matrix_convert_helper_<_M0, _M1, _I, 0> { static void get(const _M0 &_a, _M1 &_b)
+{}};
+
+//template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+//template <typename _M1, typename _E1, uint _C1, uint _R1, uint _Rs1>
+//inline _matrix_<_M, _E, _C, _R, _Rs>::operator const typename _matrix_<_M1, _E1, _C1, _R1, _Rs1>::matrix () const
+//{
+//	typedef typename _matrix_<_M1, _E1, _C1, _R1, _Rs1>::matrix matrix1;
+//	c_assert(matrix1::columns <= _C && matrix1::rows <= _R);
+//	matrix1 l_m; _matrix_convert_helper_<_matrix_, matrix1>::get(*this, l_m);
+//	return l_m;
+//}
+
+//template <typename _M, typename _E, uint _C, uint _R, uint _Rs> template <typename _M1>
+//inline _matrix_<_M, _E, _C, _R, _Rs>::operator _M1 () const
+//{
+//	typedef _M1 matrix1;
+//	c_assert(matrix1::columns <= _C && matrix1::rows <= _R);
+//	matrix1 l_m; _matrix_convert_helper_<_matrix_, matrix1>::get(*this, l_m);
+//	return l_m;
+//}
+
 
 // _matrix_ multiply
 
