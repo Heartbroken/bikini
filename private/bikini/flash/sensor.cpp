@@ -14,33 +14,69 @@ namespace flash { /*------------------------------------------------------------
 
 #ifndef GWL_WNDPROC
 #	define GWL_WNDPROC			(-4)
-#endif // #ifndef GWL_WNDPROC
+#endif // GWL_WNDPROC
 
 // _private
+
+static bool _null_hittest(const short2&)
+{
+	return true;
+}
 
 struct sensor::_private
 {
 	_private(sensor &_sensor)
 	:
-		m_sensor(_sensor)
+		m_hittest(&_null_hittest)
 	{}
 	virtual ~_private()
 	{}
+
 	void add_key_state(uint _code, bool _state)
 	{
-		m_sensor.add_key_state(_code, _state);
+		key l_key = { _code, _state };
+		m_keys.push_back(l_key); 
 	}
+	virtual uint key_count() const
+	{
+		return m_keys.size();
+	}
+	virtual void key_state(uint _i, uint &_code, bool &_state) const
+	{
+		_code = m_keys[_i].code;
+		_state = m_keys[_i].state;
+	}
+	virtual void reset_keys()
+	{
+		m_keys.resize(0);
+	}
+
 	void set_mouse_state(const short2 &_point, bool _button)
 	{
-		m_sensor.set_mouse_state(_point, _button);
+		m_mouse.point = _point;
+		m_mouse.button = _button;
+	}
+	virtual void mouse_state(short2 &_point, bool &_button) const
+	{
+		_point = m_mouse.point;
+		_button = m_mouse.button;
+	}
+
+	void set_hittest(const hittest &_hittest)
+	{
+		m_hittest = _hittest;
 	}
 	bool do_hittest(const short2 &_point)
 	{
-		return m_sensor.do_hittest(_point);
+		return m_hittest(_point);
 	}
 
 private:
-	sensor &m_sensor;
+	struct key { uint code; bool state; };
+	array_<key> m_keys;
+	struct mouse { short2 point; bool button; };
+	mouse m_mouse;
+	hittest m_hittest;
 };
 
 // win_sensor
@@ -70,6 +106,19 @@ struct _win_sensor : sensor::_private
 		}
 
 		SetWindowLongPtr(m_window, GWL_WNDPROC, (LONG_PTR)m_oldwndproc);
+	}
+
+	void mouse_state(short2 &_point, bool &_button) const
+	{
+		super::mouse_state(_point, _button);
+
+		POINT l_p;
+		if (GetCursorPos(&l_p))
+		{
+			ScreenToClient(m_window, &l_p);
+			_point.x = (s16)l_p.x;
+			_point.y = (s16)l_p.y;
+		}
 	}
 
 private:
@@ -126,14 +175,9 @@ _win_sensor *_win_sensor::first_p = 0;
 
 // sensor
 
-static bool _null_hittest(const short2&)
-{
-	return true;
-}
-
 sensor::sensor()
 :
-	m_private(0), m_hittest(&_null_hittest)
+	m_private(0)
 {
 }
 
@@ -150,31 +194,29 @@ void sensor::destroy()
 
 uint sensor::key_count() const
 {
-	return m_keys.size();
+	if (m_private == 0) return 0;
+	return m_private->key_count();
 }
 void sensor::key_state(uint _i, uint &_code, bool &_state) const
 {
-	_code = m_keys[_i].code;
-	_state = m_keys[_i].state;
+	if (m_private == 0) return;
+	return m_private->key_state(_i, _code, _state);
 }
 void sensor::reset_keys()
 {
-	m_keys.resize(0);
+	if (m_private == 0) return;
+	return m_private->reset_keys();
 }
 void sensor::mouse_state(short2 &_point, bool &_button) const
 {
-	_point = m_mouse.point;
-	_button = m_mouse.button;
+	if (m_private == 0) return;
+	return m_private->mouse_state(_point, _button);
 }
 void sensor::set_hittest(const hittest &_hittest)
 {
-	m_hittest = _hittest;
+	if (m_private == 0) return;
+	return m_private->set_hittest(_hittest);
 }
-bool sensor::do_hittest(const short2 &_point)
-{
-	return m_hittest(_point);
-}
-
 
 } /* namespace flash ----------------------------------------------------------------------------*/
 
