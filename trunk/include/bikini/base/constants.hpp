@@ -20,3 +20,9 @@ const real r_0 = real(0);
 const real r_1 = real(1);
 /// real 0.5
 const real r_05 = real(0.5);
+/// float 0
+const float f_0 = float(0);
+/// float 1
+const float f_1 = float(1);
+/// float 0.5
+const float f_05 = float(0.5);
