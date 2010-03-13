@@ -51,6 +51,20 @@ struct _matrix_
 
 	inline operator _Matrix& ();
 	inline operator const _Matrix& () const;
+
+	//inline _matrix_() {}
+	//template <typename _M1>
+	//explicit inline _matrix_(const _M1 &_m)
+	//{
+	//	c_assert(_M1::columns >= _C && _M1::rows >= _R);
+	//	*this = (_matrix_&)_m;
+	//}
+
+	//template <typename _M1, typename _E1, uint _C1, uint _R1, uint _Rs1>
+	//inline operator const typename _matrix_<_M1, _E1, _C1, _R1, _Rs1>::matrix () const;
+
+	//template <typename _Matrix1>
+	//inline operator _Matrix1 () const;
 };
 
 template <typename _Type, uint _Columns, uint _Rows, uint _Extra = 0>
