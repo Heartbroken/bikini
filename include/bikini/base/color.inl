@@ -11,75 +11,72 @@
 // color
 template<typename _T>
 inline color_<_T>::color_()
-{
-}
+{}
 template<typename _T>
 inline color_<_T>::color_(_T _r, _T _g, _T _b, _T _a)
 :
-	matrix_<1, 4, _T>(_r, _g, _b, _a)
-{
-}
+	r(_r), g(_g), b(_b), a(_a)
+{}
 template<typename _T>
 inline color_<_T>::color_(u8 _r, u8 _g, u8 _b, u8 _a)
 :
-	matrix_<1, 4, _T>(_T(_r)/_T(255), _T(_g)/_T(255), _T(_b)/_T(255), _T(_a)/_T(255))
-{
-}
+	r(_T(_r)/_T(255)), g(_T(_g)/_T(255)), b(_T(_b)/_T(255)), a(_T(_a)/_T(255))
+{}
 template<typename _T>
 inline color_<_T>::color_(u32 _c)
 :
-	matrix_<1, 4, _T>(_T((_c>>16)&0xff)/_T(255), _T((_c>>8)&0xff)/_T(255), _T((_c>>0)&0xff)/_T(255), _T((_c>>24)&0xff)/_T(255))
+	r(_T((_c>>16)&0xff)/_T(255)), g(_T((_c>>8)&0xff)/_T(255)), b(_T((_c>>0)&0xff)/_T(255)), a(_T((_c>>24)&0xff)/_T(255))
 {
 }
-template<typename _T>
-inline const _T color_<_T>::r() const
-{
-	return x();
-}
-template<typename _T>
-inline _T& color_<_T>::r()
-{
-	return x();
-}
-template<typename _T>
-inline const _T color_<_T>::g() const
-{
-	return y();
-}
-template<typename _T>
-inline _T& color_<_T>::g()
-{
-	return y();
-}
-template<typename _T>
-inline const _T color_<_T>::b() const
-{
-	return z();
-}
-template<typename _T>
-inline _T& color_<_T>::b()
-{
-	return z();
-}
-template<typename _T>
-inline const _T color_<_T>::a() const
-{
-	return w();
-}
-template<typename _T>
-inline _T& color_<_T>::a()
-{
-	return w();
-}
+//template<typename _T>
+//inline const _T color_<_T>::r() const
+//{
+//	return x();
+//}
+//template<typename _T>
+//inline _T& color_<_T>::r()
+//{
+//	return x();
+//}
+//template<typename _T>
+//inline const _T color_<_T>::g() const
+//{
+//	return y();
+//}
+//template<typename _T>
+//inline _T& color_<_T>::g()
+//{
+//	return y();
+//}
+//template<typename _T>
+//inline const _T color_<_T>::b() const
+//{
+//	return z();
+//}
+//template<typename _T>
+//inline _T& color_<_T>::b()
+//{
+//	return z();
+//}
+//template<typename _T>
+//inline const _T color_<_T>::a() const
+//{
+//	return w();
+//}
+//template<typename _T>
+//inline _T& color_<_T>::a()
+//{
+//	return w();
+//}
 template<typename _T>
 inline color_<_T>::operator u32 () const
 {
 	return
 	(
-		((0xff & u32(a() * _T(255))) << 24)|
-		((0xff & u32(r() * _T(255))) << 16)|
-		((0xff & u32(g() * _T(255))) <<  8)|
-		((0xff & u32(b() * _T(255))) <<  0)
+		((0xff & u32(a * _T(255))) << 24)|
+		((0xff & u32(r * _T(255))) << 16)|
+		((0xff & u32(g * _T(255))) <<  8)|
+		((0xff & u32(b * _T(255))) <<  0)
 	);
 }
 

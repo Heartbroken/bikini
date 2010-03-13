@@ -30,8 +30,8 @@ struct A {};
 int _tmain(int argc, _TCHAR* argv[])
 {
 	{
-		typedef bk::matrix__<float, 3, 2> float3x2;
-		typedef bk::vector__<float, 3> float3;
+		typedef bk::matrix_<float, 3, 2> float3x2;
+		typedef bk::vector_<float, 3> float3;
 
 		float3 l_a(1, 1, 1), l_b(2, 2, 2), l_c = l_a;
 		float3x2 l_m;
@@ -53,8 +53,8 @@ int _tmain(int argc, _TCHAR* argv[])
 
 		int a=0;
 
-		typedef bk::matrix__<float, 3, 3> float3x3;
-		typedef bk::matrix__<float, 2, 2> float2x2;
+		typedef bk::matrix_<float, 3, 3> float3x3;
+		typedef bk::matrix_<float, 2, 2> float2x2;
 
 		float3x3 l_matrix
 		(
@@ -135,10 +135,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	bk::rbig l_start;
 	
 	bk::r4x4 l_m0(
-		bk::r1x4(1.f, 3.f, 3.f, 4.f),
-		bk::r1x4(5.f, 6.f, 7.f, 8.f),
-		bk::r1x4(1.f, 2.f, 3.f, 5.f),
-		bk::r1x4(1.f, 2.f, 3.f, 4.f) 
+		1.f, 3.f, 3.f, 4.f,
+		5.f, 6.f, 7.f, 8.f,
+		1.f, 2.f, 3.f, 5.f,
+		1.f, 2.f, 3.f, 4.f 
 	), l_m1;
 	//l_m0 = bk::r4x4(
 	//	bk::r1x4(1.f, 3.f, 3.f, 4.f),

@@ -25,148 +25,153 @@ struct _vector_
 };
 
 template <typename _Type, uint _Size, uint _Extra = 0>
-struct vector__
+struct vector_
 :
-	_vector_<vector__<_Type, _Size>, _Type, _Size>
+	_vector_<vector_<_Type, _Size>, _Type, _Size>
 {
 	_Type v[_Size + _Extra];
 };
 
 template <typename _Type>
-struct vector__<_Type, 1>
+struct vector_<_Type, 1>
 :
-	_vector_<vector__<_Type, 1>, _Type, 1>
+	_vector_<vector_<_Type, 1>, _Type, 1>
 {
 	_Type x;
 
-	inline vector__();
+	inline vector_();
 	//{}
-	explicit inline vector__(_Type _x);
+	explicit inline vector_(_Type _x);
 	//:
 	//	x(_x)
 	//{}
 };
 
 template <typename _Type>
-struct vector__<_Type, 2>
+struct vector_<_Type, 2>
 :
-	_vector_<vector__<_Type, 2>, _Type, 2>
+	_vector_<vector_<_Type, 2>, _Type, 2>
 {
 	_Type x, y;
 
-	inline vector__();
+	inline vector_();
 	//{}
-	inline vector__(_Type _x, _Type _y);
+	inline vector_(_Type _x, _Type _y);
 	//:
 	//	x(_x), y(_y)
 	//{}
 };
 
 template <typename _Type>
-struct vector__<_Type, 3>
+struct vector_<_Type, 3>
 :
-	_vector_<vector__<_Type, 3>, _Type, 3>
+	_vector_<vector_<_Type, 3>, _Type, 3>
 {
 	_Type x, y, z;
 
-	inline vector__();
+	inline vector_();
 	//{}
-	inline vector__(_Type _x, _Type _y, _Type _z);
+	inline vector_(_Type _x, _Type _y, _Type _z);
 	//:
 	//	x(_x), y(_y), z(_z)
 	//{}
 };
 
 template <typename _Type>
-struct vector__<_Type, 4>
+struct vector_<_Type, 4>
 :
-	_vector_<vector__<_Type, 4>, _Type, 4>
+	_vector_<vector_<_Type, 4>, _Type, 4>
 {
 	_Type x, y, z, w;
 
-	inline vector__();
+	inline vector_();
 	//{}
-	inline vector__(_Type _x, _Type _y, _Type _z, _Type _w);
+	inline vector_(_Type _x, _Type _y, _Type _z, _Type _w);
 	//:
 	//	x(_x), y(_y), z(_z), w(_w)
 	//{}
 };
 
 //template <typename _T, uint _S, uint _E, uint _I = _S>
-//struct _vector__dot_helper_ { static inline const _T get(const vector__<_T, _S, _E> &_a, const vector__<_T, _S, _E> &_b)
+//struct _vector_dot_helper_ { static inline const _T get(const vector_<_T, _S, _E> &_a, const vector_<_T, _S, _E> &_b)
 //{
-//	return _vector__dot_helper_<_T, _S, _E, _I - 1>::get(_a, _b) + _a.cell_<_I - 1, 0>() * _b.cell_<_I - 1, 0>();
+//	return _vector_dot_helper_<_T, _S, _E, _I - 1>::get(_a, _b) + _a.cell_<_I - 1, 0>() * _b.cell_<_I - 1, 0>();
 //}};
 //template <typename _T, uint _S, uint _E>
-//struct _vector__dot_helper_<_T, _S, _E, 0> { static inline const _T get(const vector__<_T, _S, _E> &_a, const vector__<_T, _S, _E> &_b)
+//struct _vector_dot_helper_<_T, _S, _E, 0> { static inline const _T get(const vector_<_T, _S, _E> &_a, const vector_<_T, _S, _E> &_b)
 //{
 //	return 0;
 //}};
 template <typename _T, uint _S, uint _E>
-inline const _T dot(const vector__<_T, _S, _E> &_a, const vector__<_T, _S, _E> &_b);
+inline const _T dot(const vector_<_T, _S, _E> &_a, const vector_<_T, _S, _E> &_b);
 //{
-//	return _vector__dot_helper_<_T, _S, _E>::get(_a, _b);
+//	return _vector_dot_helper_<_T, _S, _E>::get(_a, _b);
 //}
 
 template <typename _T, uint _S, uint _E>
-inline const _T length(const vector__<_T, _S, _E> &_a);
+inline const _T length(const vector_<_T, _S, _E> &_a);
 //{
 //	return sqrt(dot(_a, _a));
 //}
 template <typename _T, uint _S, uint _E>
-inline const _T length2(const vector__<_T, _S, _E> &_a);
+inline const _T length2(const vector_<_T, _S, _E> &_a);
 //{
 //	return dot(_a, _a);
 //}
 
 template <typename _T, uint _S, uint _E>
-inline const vector__<_T, _S, _E> normalize(const vector__<_T, _S, _E> &_a);
+inline const vector_<_T, _S, _E> normalize(const vector_<_T, _S, _E> &_a);
 //{
 //	_T l_length = length(_a);
 //	return l_length > eps ? _a * (_T(1) / l_length) : _a;
 //}
 
 template <typename _T, uint _E>
-inline const vector__<_T, 2, _E> cross(const vector__<_T, 2, _E> &_a);
+inline const vector_<_T, 2, _E> cross(const vector_<_T, 2, _E> &_a);
 //{
-//	return vector__<_T, 2, _E>(_a.y, -_a.x);
+//	return vector_<_T, 2, _E>(_a.y, -_a.x);
 //}
 template <typename _T, uint _E>
-inline const _T cross(const vector__<_T, 2, _E> &_a, const vector__<_T, 2, _E> &_b);
+inline const _T cross(const vector_<_T, 2, _E> &_a, const vector_<_T, 2, _E> &_b);
 //{
 //	return _a.x * _b.y - _a.y * _b.x;
 //}
 template <typename _T, uint _E>
-inline const vector__<_T, 3, _E> cross(const vector__<_T, 3, _E> &_a, const vector__<_T, 3, _E> &_b);
+inline const vector_<_T, 3, _E> cross(const vector_<_T, 3, _E> &_a, const vector_<_T, 3, _E> &_b);
 //{
-//	return vector__<_T, 3, _E>(_a.y * _b.z - _a.z * _b.y, _a.z * _b.x - _a.x * _b.z, _a.x * _b.y - _a.y * _b.z);
+//	return vector_<_T, 3, _E>(_a.y * _b.z - _a.z * _b.y, _a.z * _b.x - _a.x * _b.z, _a.x * _b.y - _a.y * _b.z);
 //}
 template <typename _T, uint _E>
-inline const _T cross(const vector__<_T, 3, _E> &_a, const vector__<_T, 3, _E> &_b, const vector__<_T, 3, _E> &_c);
+inline const _T cross(const vector_<_T, 3, _E> &_a, const vector_<_T, 3, _E> &_b, const vector_<_T, 3, _E> &_c);
 //{
 //	return dot(cross(_a, _b), _c);
 //}
 
 template <typename _T, uint _C, uint _R, uint _Ea, uint _Eb>
-inline const vector__<_T, _C> mul(const vector__<_T, _R, _Ea> &_a, const matrix__<_T, _C, _R, _Eb> &_b);
+inline const vector_<_T, _C> mul(const vector_<_T, _R, _Ea> &_a, const matrix_<_T, _C, _R, _Eb> &_b);
 //{
-//	vector__<_T, _C> l_v; mul(_a, _b, l_v);
+//	vector_<_T, _C> l_v; mul(_a, _b, l_v);
 //	return l_v;
 //}
 template <typename _T, uint _C, uint _R, uint _Ea, uint _Eb>
-inline const vector__<_T, _R> mul(const matrix__<_T, _C, _R, _Eb> &_a, const vector__<_T, _C, _Ea> &_b);
+inline const vector_<_T, _R> mul(const matrix_<_T, _C, _R, _Eb> &_a, const vector_<_T, _C, _Ea> &_b);
 //{
-//	vector__<_T, _R> l_v; mul(_b, transpose(_a), l_v);
+//	vector_<_T, _R> l_v; mul(_b, transpose(_a), l_v);
 //	return l_v;
 //}
 
-typedef vector__<float, 2> float2;
-typedef vector__<float, 3> float3;
-typedef vector__<float, 4> float4;
-typedef vector__<real, 2> real2;
-typedef vector__<real, 3> real3;
-typedef vector__<real, 4> real4;
+typedef vector_<sint, 2> sint2;
+typedef vector_<float, 2> float2;
+typedef vector_<float, 3> float3;
+typedef vector_<float, 4> float4;
+typedef vector_<real, 2> real2;
+typedef vector_<real, 3> real3;
+typedef vector_<real, 4> real4;
 
+const sint2 sint2_0(s_0, s_0);
+const sint2 sint2_1(s_1, s_1);
+const sint2 sint2_x(s_1, s_0);
+const sint2 sint2_y(s_0, s_1);
 const float2 float2_0(f_0, f_0);
 const float2 float2_x(f_1, f_0);
 const float2 float2_y(f_0, f_1);
@@ -181,6 +186,130 @@ const real3 real3_0(r_0, r_0, r_0);
 const real3 real3_x(r_1, r_0, r_0);
 const real3 real3_y(r_0, r_1, r_0);
 const real3 real3_z(r_0, r_0, r_1);
+
+
+//////////////////////////////////////////////////////////////////////////
+
+// _vector_
+
+template <typename _V, typename _E, uint _S, uint _P>
+const _E& _vector_<_V, _E, _S, _P>::operator [] (uint _i) const
+{
+	return super::operator [] (0)[_i];
+}
+template <typename _V, typename _E, uint _S, uint _P>
+_E& _vector_<_V, _E, _S, _P>::operator [] (uint _i)
+{
+	return super::operator [] (0)[_i];
+}
+
+// vector_
+
+template <typename _T>
+inline vector_<_T, 1>::vector_()
+{}
+template <typename _T>
+inline vector_<_T, 1>::vector_(_T _x)
+:
+	x(_x)
+{}
+
+template <typename _T>
+inline vector_<_T, 2>::vector_()
+{}
+template <typename _T>
+inline vector_<_T, 2>::vector_(_T _x, _T _y)
+:
+	x(_x), y(_y)
+{}
+
+template <typename _T>
+inline vector_<_T, 3>::vector_()
+{}
+template <typename _T>
+inline vector_<_T, 3>::vector_(_T _x, _T _y, _T _z)
+:
+	x(_x), y(_y), z(_z)
+{}
+
+template <typename _T>
+inline vector_<_T, 4>::vector_()
+{}
+template <typename _T>
+inline vector_<_T, 4>::vector_(_T _x, _T _y, _T _z, _T _w)
+:
+	x(_x), y(_y), z(_z), w(_w)
+{}
+
+// vector_ function
+
+template <typename _T, uint _S, uint _E, uint _I = _S>
+struct _vector_dot_helper_ { static inline const _T get(const vector_<_T, _S, _E> &_a, const vector_<_T, _S, _E> &_b)
+{
+	return _vector_dot_helper_<_T, _S, _E, _I - 1>::get(_a, _b) + _a.cell_<_I - 1, 0>() * _b.cell_<_I - 1, 0>();
+}};
+template <typename _T, uint _S, uint _E>
+struct _vector_dot_helper_<_T, _S, _E, 0> { static inline const _T get(const vector_<_T, _S, _E> &_a, const vector_<_T, _S, _E> &_b)
+{
+	return 0;
+}};
+template <typename _T, uint _S, uint _E>
+inline const _T dot(const vector_<_T, _S, _E> &_a, const vector_<_T, _S, _E> &_b)
+{
+	return _vector_dot_helper_<_T, _S, _E>::get(_a, _b);
+}
+
+template <typename _T, uint _S, uint _E>
+inline const _T length(const vector_<_T, _S, _E> &_a)
+{
+	return sqrt(dot(_a, _a));
+}
+template <typename _T, uint _S, uint _E>
+inline const _T length2(const vector_<_T, _S, _E> &_a)
+{
+	return dot(_a, _a);
+}
+
+template <typename _T, uint _S, uint _E>
+inline const vector_<_T, _S, _E> normalize(const vector_<_T, _S, _E> &_a)
+{
+	_T l_length = length(_a);
+	return l_length > eps ? _a * (_T(1) / l_length) : _a;
+}
+
+template <typename _T, uint _E>
+inline const vector_<_T, 2, _E> cross(const vector_<_T, 2, _E> &_a)
+{
+	return vector_<_T, 2, _E>(_a.y, -_a.x);
+}
+template <typename _T, uint _E>
+inline const _T cross(const vector_<_T, 2, _E> &_a, const vector_<_T, 2, _E> &_b)
+{
+	return _a.x * _b.y - _a.y * _b.x;
+}
+template <typename _T, uint _E>
+inline const vector_<_T, 3, _E> cross(const vector_<_T, 3, _E> &_a, const vector_<_T, 3, _E> &_b)
+{
+	return vector_<_T, 3, _E>(_a.y * _b.z - _a.z * _b.y, _a.z * _b.x - _a.x * _b.z, _a.x * _b.y - _a.y * _b.z);
+}
+template <typename _T, uint _E>
+inline const _T cross(const vector_<_T, 3, _E> &_a, const vector_<_T, 3, _E> &_b, const vector_<_T, 3, _E> &_c)
+{
+	return dot(cross(_a, _b), _c);
+}
+
+template <typename _T, uint _C, uint _R, uint _Ea, uint _Eb>
+inline const vector_<_T, _C> mul(const vector_<_T, _R, _Ea> &_a, const matrix_<_T, _C, _R, _Eb> &_b)
+{
+	vector_<_T, _C> l_v; mul(_a, _b, l_v);
+	return l_v;
+}
+template <typename _T, uint _C, uint _R, uint _Ea, uint _Eb>
+inline const vector_<_T, _R> mul(const matrix_<_T, _C, _R, _Eb> &_a, const vector_<_T, _C, _Ea> &_b)
+{
+	vector_<_T, _R> l_v; mul(_b, transpose(_a), l_v);
+	return l_v;
+}
 
 
 

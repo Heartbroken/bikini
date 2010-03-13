@@ -37,11 +37,11 @@ inline bool rect::operator == (const rect &_r) const
 }
 inline const rect rect::operator + (const sint2 &_p) const
 {
-	return rect(m_min.x() + _p.x(), m_min.y() + _p.y(), m_max.x() - m_min.x() + _p.x(), m_max.y() - m_min.y() + _p.y());
+	return rect(m_min.x + _p.x, m_min.y + _p.y, m_max.x - m_min.x + _p.x, m_max.y - m_min.y + _p.y);
 }
 inline const rect rect::operator & (const rect &_r) const
 {
-	return rect(bk::max(m_min.x(), _r.min().x()), bk::max(m_min.y(), _r.min().y()), bk::min(m_max.x(), _r.max().x()), bk::min(m_max.y(), _r.max().y()));
+	return rect(bk::max(m_min.x, _r.min().x), bk::max(m_min.y, _r.min().y), bk::min(m_max.x, _r.max().x), bk::min(m_max.y, _r.max().y));
 }
 inline rect& rect::operator += (const sint2 &_p)
 {

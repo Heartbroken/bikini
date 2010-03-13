@@ -9,20 +9,44 @@
 #pragma once
 
 /// color
-template<typename _Type> struct color_ : matrix_<1, 4, _Type>
+//template<typename _Type>
+//struct color_
+//:
+//	_vector_<color_<_Type>, _Type, 4>
+//{
+//	_Type r, g, b, a;
+//
+//	inline color_()
+//	{}
+//	inline color_(_Type _r, _Type _g, _Type _b, _Type _a = _Type(1))
+//	:
+//		r(_r), g(_g), b(_b), a(_a)
+//	{}
+//	inline color_(u8 _r, u8 _g, u8 _b, u8 _a = u8(255))
+//	:
+//		r(_r), g(_g), b(_b), a(_a)
+//	{}
+//};
+
+template<typename _Type>
+struct color_
+:
+	_vector_<color_<_Type>, _Type, 4>
 {
+	_Type r, g, b, a;
+
 	inline color_();
 	inline color_(_Type _r, _Type _g, _Type _b, _Type _a = _Type(1));
 	inline color_(u8 _r, u8 _g, u8 _b, u8 _a = u8(255));
 	inline color_(u32 _c);
-	inline const _Type r() const;
-	inline _Type& r();
-	inline const _Type g() const;
-	inline _Type& g();
-	inline const _Type b() const;
-	inline _Type& b();
-	inline const _Type a() const;
-	inline _Type& a();
+	//inline const _Type r() const;
+	//inline _Type& r();
+	//inline const _Type g() const;
+	//inline _Type& g();
+	//inline const _Type b() const;
+	//inline _Type& b();
+	//inline const _Type a() const;
+	//inline _Type& a();
 	inline operator u32 () const;
 };
 typedef color_<real> color;
