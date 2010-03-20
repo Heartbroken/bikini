@@ -41,11 +41,14 @@ private:
 	{
 		virtual uint create_texture(uint _format, pointer _data, uint _width, uint _height, uint _pitch) = 0;
 		virtual void destroy_texture(uint _ID) = 0;
+		virtual uint create_mesh(const short2 _points[], uint _count) = 0;
+		virtual void destroy_mesh(uint _ID) = 0;
 		virtual bool begin_render(const color &_background, const rect &_viewport) = 0;
 		virtual void set_xform(const xform &_xform) = 0;
 		virtual void set_color(const color &_color) = 0;
 		virtual void set_texture(uint _ID, const xform &_txform) = 0;
 		virtual void draw_tristrip(const short2* _points, uint _count) = 0;
+		virtual void draw_mesh(uint _ID) = 0;
 		virtual void end_render() = 0;
 	};
 

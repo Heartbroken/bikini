@@ -61,6 +61,7 @@ struct player::_private : gameswf::render_handler
 	// gameswf types
 
 	typedef gameswf::bitmap_info bitmap_info;
+	typedef gameswf::mesh_info mesh_info;
 	typedef gameswf::video_handler video_handler;
 	typedef gameswf::rgba rgba;
 	typedef gameswf::matrix matrix;
@@ -95,6 +96,27 @@ struct player::_private : gameswf::render_handler
 		}
 		~bitmap()
 		{
+			if (renderer_p) renderer_p->destroy_texture(texture_ID);
+		}
+	};
+
+	// mesh
+
+	struct mesh : mesh_info
+	{
+		uint mesh_ID;
+
+		inline mesh()
+		:
+			mesh_ID(bad_ID)
+		{}
+		inline mesh(pointer _coords, s32 _vertex_count)
+		{
+			mesh_ID = renderer_p ? renderer_p->create_mesh((short2*)_coords, _vertex_count) : bad_ID;
+		}
+		~mesh()
+		{
+			if (renderer_p) renderer_p->destroy_mesh(mesh_ID);
 		}
 	};
 
@@ -120,6 +142,12 @@ struct player::_private : gameswf::render_handler
 	video_handler* create_video_handler()
 	{
 		return 0;
+	}
+
+	// <viktor.reutskyy>
+	mesh_info* create_mesh_info_tristrip(pointer _coords, s32 _vertex_count)
+	{
+		return new mesh(_coords, _vertex_count);
 	}
 
 	// Bracket the displaying of a frame from a movie.
@@ -170,6 +198,12 @@ struct player::_private : gameswf::render_handler
 	// sequence.  Each coord is a 16-bit signed integer.
 	void draw_line_strip(pointer _coords, s32 _vertex_count)
 	{
+	}
+
+	// Draw mesh
+	void draw_mesh(const mesh_info *_mesh)
+	{
+		m_renderer.draw_mesh(static_cast<const mesh*>(_mesh)->mesh_ID);
 	}
 
 	// Set line and fill styles for mesh & line_strip
