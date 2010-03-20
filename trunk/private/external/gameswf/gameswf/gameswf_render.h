@@ -27,6 +27,9 @@ namespace gameswf
 		bitmap_info*	create_bitmap_info_rgba(image::rgba* im);
 		video_handler*	create_video_handler();
 
+		// <viktor.reutskyy>
+		mesh_info*		create_mesh_info_tristrip(const void* coords, int vertex_count);
+
 		// Bracket the displaying of a frame from a movie.
 		// Fill the background color, and set up default
 		// transforms, etc.
@@ -56,6 +59,9 @@ namespace gameswf
 		// triangle-list order.  The type of the array should
 		// be float[vertex_count*2]
 		void draw_triangle_list(const coord_component coords[], int vertex_count);
+
+		// <viktor.reutskyy>
+		void	draw_mesh(const mesh_info* mesh);
 
 		// Draw a line-strip using the current line style.
 		// Clear the style list after rendering.

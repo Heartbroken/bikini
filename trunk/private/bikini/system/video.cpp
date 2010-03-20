@@ -781,7 +781,7 @@ bool vbuffer::update(real _dt)
 		if (get_video().exists(l_source_ID))
 		{
 			object &l_object = get_video().get_<object>(l_source_ID);
-			if (!valid() || version() < l_object.version())
+			if (l_object.valid()) if (!valid() || version() < l_object.version())
 			{
 				switch (l_object.type())
 				{
@@ -799,13 +799,16 @@ bool vbuffer::update(real _dt)
 							m_size = l_reader.size();
 						}
 
-						add_data(l_reader.data(), l_reader.size());
+						if (m_size > 0)
+						{
+							add_data(l_reader.data(), l_reader.size());
 
-						video::rendering::write_vbuffer l_write_vbuffer;
-						l_write_vbuffer.ID = m_resource_ID;
-						l_write_vbuffer.size = l_reader.size();
-						l_write_vbuffer.reset = true;
-						add_command(l_write_vbuffer);
+							video::rendering::write_vbuffer l_write_vbuffer;
+							l_write_vbuffer.ID = m_resource_ID;
+							l_write_vbuffer.size = l_reader.size();
+							l_write_vbuffer.reset = true;
+							add_command(l_write_vbuffer);
+						}
 
 						break;
 					}
@@ -824,6 +827,8 @@ void vbuffer::set_source(uint _ID)
 
 	if (get_video().exists(_ID)) m_source_ID = add_relation(_ID);
 	else m_source_ID = bad_ID;
+
+	set_invalid();
 }
 
 // vformat::info

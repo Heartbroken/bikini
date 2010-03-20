@@ -650,6 +650,16 @@ namespace gameswf
 		virtual int get_height() const { return 0; }
 	};
 
+	// <viktor.reutskyy>
+	// Your render_handler creates mesh_info's for gameswf.  You
+	// need to subclass mesh_info in order to add the
+	// information and functionality your app needs to render
+	// using vertex buffers.
+	struct mesh_info : public ref_counted
+	{
+		virtual ~mesh_info() {}
+	};
+
 	// You must define a subclass of render_handler, and pass an
 	// instance to set_render_handler().
 	struct render_handler
@@ -662,6 +672,11 @@ namespace gameswf
 		virtual bitmap_info*	create_bitmap_info_rgb(image::rgb* im) = 0;
 		virtual bitmap_info*	create_bitmap_info_rgba(image::rgba* im) = 0;
 		virtual video_handler*	create_video_handler() = 0;
+
+		// <viktor.reutskyy>
+		virtual mesh_info*		create_mesh_info_tristrip(const void* coords, int vertex_count) = 0;
+		//virtual mesh_info*		create_mesh_info_trilist(const void* coords, int vertex_count) = 0;
+		//virtual mesh_info*		create_mesh_info_linestrip(const void* coords, int vertex_count) = 0;
 
 		// Bracket the displaying of a frame from a movie.
 		// Fill the background color, and set up default
@@ -693,6 +708,9 @@ namespace gameswf
 		// Coords is a list of (x,y) coordinate pairs, in
 		// sequence.  Each coord is a 16-bit signed integer.
 		virtual void	draw_line_strip(const void* coords, int vertex_count) = 0;
+
+		// <viktor.reutskyy>
+		virtual void	draw_mesh(const mesh_info* mesh) = 0;
 
 		// Set line and fill styles for mesh & line_strip
 		// rendering.

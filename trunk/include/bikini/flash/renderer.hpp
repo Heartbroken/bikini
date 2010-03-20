@@ -20,11 +20,14 @@ struct renderer
 
 	uint create_texture(uint _format, pointer _data, uint _width, uint _height, uint _pitch);
 	void destroy_texture(uint _ID);
+	uint create_mesh(const short2 _points[], uint _count);
+	void destroy_mesh(uint _ID);
 	bool begin_render(const color &_background, const rect &_viewport);
 	void set_xform(const xform &_xform);
 	void set_color(const color &_color);
 	void set_texture(uint _ID, const xform &_txform);
 	void draw_tristrip(const short2* _points, uint _count);
+	void draw_mesh(uint _ID);
 	void end_render();
 
 private:
@@ -46,8 +49,10 @@ private:
 	uint m_states_ID;
 	vo::texture::info m_texture;
 	vo::texset::info m_texset;
-	struct texture { uint texture_ID, width, height, memreader_ID, texset_ID; };
+	struct texture { uint width, height, texture_ID, memreader_ID, texset_ID; };
 	pool_<texture> m_textures;
 	uint m_texset_ID;
 	uint m_deftexset_ID;
+	struct mesh { uint size, vbuffer_ID, memreader_ID, vbufset_ID; };
+	pool_<mesh> m_meshes;
 };

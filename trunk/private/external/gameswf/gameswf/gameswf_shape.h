@@ -77,10 +77,14 @@ namespace gameswf
 	// For holding a pre-tesselated shape.
 	{
 		mesh();
+		~mesh();
 
 		void	set_tri_strip(const point pts[], int count); // TODO remove
 		void reserve_triangles(int expected_triangle_count);
 		void add_triangle(const coord_component pts[6]);
+
+		// <viktor.reutskyy>
+		void	done();
 
 		void	display(const base_fill_style& style, float ratio) const;
 
@@ -89,6 +93,8 @@ namespace gameswf
 	private:
 		array<coord_component>	m_triangle_strip;// TODO remove
 		array<coord_component> m_triangle_list;
+		// <viktor.reutskyy>
+		mesh_info* m_mesh;
 	};
 
 

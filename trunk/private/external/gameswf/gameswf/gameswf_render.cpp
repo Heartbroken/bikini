@@ -62,6 +62,13 @@ namespace gameswf
 			else return NULL; //hack new bogus_bi;
 		}
 
+		// <viktor.reutskyy>
+		mesh_info*	create_mesh_info_tristrip(const void* coords, int vertex_count)
+		{
+			if (s_render_handler) return s_render_handler->create_mesh_info_tristrip(coords, vertex_count);
+			else return NULL;
+		}
+
 		// Bracket the displaying of a frame from a movie.
 		// Fill the background color, and set up default
 		// transforms, etc.
@@ -116,6 +123,11 @@ namespace gameswf
 			if (s_render_handler) s_render_handler->draw_triangle_list(coords, vertex_count);
 		}
 		
+		// <viktor.reutskyy>
+		void draw_mesh(const mesh_info* mesh)
+		{
+			if (s_render_handler) s_render_handler->draw_mesh(mesh);
+		}
 
 		// Draw a line-strip using the current line style.
 		// Clear the style list after rendering.

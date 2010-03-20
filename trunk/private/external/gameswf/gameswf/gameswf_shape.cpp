@@ -399,7 +399,13 @@ namespace gameswf
 
 	
 	mesh::mesh()
+	:
+		m_mesh(0)
 	{
+	}
+	mesh::~mesh()
+	{
+		delete m_mesh;
 	}
 
 	void	mesh::set_tri_strip(const point pts[], int count)
@@ -428,9 +434,24 @@ namespace gameswf
 		m_triangle_list.append(pts, 6);
 	}
 
+	// <viktor.reutskyy>
+	void mesh::done()
+	{
+		if (m_triangle_strip.size() > 0)
+			m_mesh = render::create_mesh_info_tristrip(&m_triangle_strip[0], m_triangle_strip.size() >> 1);
+		//else if (m_triangle_list.size() > 0)
+		//	m_mesh = render::create_mesh_info_trilist(&m_triangle_list[0], m_triangle_list.size() >> 1);
+	}
 
 	void	mesh::display(const base_fill_style& style, float ratio) const
 	{
+		if (m_mesh)
+		{
+			style.apply(0, ratio);
+			render::draw_mesh(m_mesh);
+			return;
+		}
+
 		// pass mesh to renderer.
 		if (m_triangle_strip.size() > 0)
 		{
@@ -821,6 +842,14 @@ namespace gameswf
 #endif // USE_NEW_TESSELATOR
 
 		// triangles should be collected now into the meshes for each fill style.
+
+		// <viktor.reutskyy>
+		for (int i = 0, s = m_layers.size(); i < s; ++i)
+		{
+			layer& l = m_layers[i];
+			for (int i = 0, s = l.m_meshes.size(); i < s; ++i)
+				if (l.m_meshes[i]) l.m_meshes[i]->done();
+		}
 	}
 
 
