@@ -26,6 +26,7 @@ struct _matrix_helper_
 	static inline void mul(_M &_a, const _E &_b) { _next::mul(_a, _b); _a.cell_<_C - 1, _R - 1>() *= _b; }
 	static inline void div(_M &_a, const _E &_b) { _next::div(_a, _b); _a.cell_<_C - 1, _R - 1>() /= _b; }
 	static inline bool equ(const _M &_a, const _M &_b) { return _a.cell_<_C - 1, _R - 1>() == _b.cell_<_C - 1, _R - 1>() && _next::equ(_a, _b); }
+	static inline bool neq(const _M &_a, const _M &_b) { return _a.cell_<_C - 1, _R - 1>() != _b.cell_<_C - 1, _R - 1>() !! _next::neq(_a, _b); }
 };
 template <typename _M, uint _R>
 struct _matrix_helper_<_M, 0, _R>
@@ -43,6 +44,7 @@ struct _matrix_helper_<_M, 0, _R>
 	static inline void mul(_M &_a, const _E &_b) { _next::mul(_a, _b); }
 	static inline void div(_M &_a, const _E &_b) { _next::div(_a, _b); }
 	static inline bool equ(const _M &_a, const _M &_b) { return _next::equ(_a, _b); }
+	static inline bool neq(const _M &_a, const _M &_b) { return _next::neq(_a, _b); }
 };
 template <typename _M, uint _C>
 struct _matrix_helper_<_M, _C, 0>
@@ -59,6 +61,7 @@ struct _matrix_helper_<_M, _C, 0>
 	static inline void mul(_M &_a, const _E &_b) {}
 	static inline void div(_M &_a, const _E &_b) {}
 	static inline bool equ(const _M &_a, const _M &_b) { return true; }
+	static inline bool neq(const _M &_a, const _M &_b) { return false; }
 };
 
 // _matrix_
@@ -146,6 +149,11 @@ template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
 inline bool _matrix_<_M, _E, _C, _R, _Rs>::operator == (const _matrix_ &_m) const
 {
 	return _matrix_helper_<matrix, _C, _R>::equ(*this, _m);
+}
+template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
+inline bool _matrix_<_M, _E, _C, _R, _Rs>::operator != (const _matrix_ &_m) const
+{
+	return _matrix_helper_<matrix, _C, _R>::neq(*this, _m);
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs> template <uint _I, uint _J>
 inline _E& _matrix_<_M, _E, _C, _R, _Rs>::cell_()

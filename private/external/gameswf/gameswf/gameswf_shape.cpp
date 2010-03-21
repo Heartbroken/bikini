@@ -399,13 +399,7 @@ namespace gameswf
 
 	
 	mesh::mesh()
-	:
-		m_mesh(0)
 	{
-	}
-	mesh::~mesh()
-	{
-		delete m_mesh;
 	}
 
 	void	mesh::set_tri_strip(const point pts[], int count)
@@ -445,10 +439,10 @@ namespace gameswf
 
 	void	mesh::display(const base_fill_style& style, float ratio) const
 	{
-		if (m_mesh)
+		if (m_mesh.get_ptr())
 		{
 			style.apply(0, ratio);
-			render::draw_mesh(m_mesh);
+			render::draw_mesh(m_mesh.get_ptr());
 			return;
 		}
 
@@ -514,10 +508,23 @@ namespace gameswf
 		}
 	}
 
+	// <viktor.reutskyy>
+	void line_strip::done(Uint16 width)
+	{
+		if (m_coords.size() > 0)
+			m_mesh = render::create_mesh_info_linestrip(&m_coords[0], m_coords.size() >> 1, (float)width);
+	}
 
 	void	line_strip::display(const base_line_style& style, float ratio) const
 	// Render this line strip in the given style.
 	{
+		if (m_mesh.get_ptr())
+		{
+			style.apply(ratio);
+			render::draw_mesh(m_mesh.get_ptr());
+			return;
+		}
+
 		assert(m_coords.size() > 1);
 		assert((m_coords.size() & 1) == 0);
 
@@ -843,13 +850,6 @@ namespace gameswf
 
 		// triangles should be collected now into the meshes for each fill style.
 
-		// <viktor.reutskyy>
-		for (int i = 0, s = m_layers.size(); i < s; ++i)
-		{
-			layer& l = m_layers[i];
-			for (int i = 0, s = l.m_meshes.size(); i < s; ++i)
-				if (l.m_meshes[i]) l.m_meshes[i]->done();
-		}
 	}
 
 
@@ -871,6 +871,26 @@ namespace gameswf
 	// Make room for a new layer.
 	{
 		m_layers.resize(m_layers.size() + 1);
+	}
+
+	// <viktor.reutskyy>
+	void mesh_set::done(const array<fill_style>& fills,
+			  const array<line_style>& line_styles)
+	{
+		// <viktor.reutskyy>
+		for (int i = 0, s = m_layers.size(); i < s; ++i)
+		{
+			layer& l = m_layers[i];
+			for (int i = 0, s = l.m_meshes.size(); i < s; ++i)
+				if (l.m_meshes[i]) l.m_meshes[i]->done();
+			for (int i = 0, s = l.m_line_strips.size(); i < s; ++i)
+				if (l.m_line_strips[i])
+				{
+					int	style = l.m_line_strips[i]->get_style();
+					Uint16 width = line_styles[style].get_width();
+					l.m_line_strips[i]->done(width);
+				}
+		}
 	}
 
 	void	mesh_set::display(
@@ -1613,6 +1633,7 @@ namespace gameswf
 
 		// Construct a new mesh to handle this error tolerance.
 		mesh_set*	m = new mesh_set(this, object_space_max_error * 0.75f);
+		m->done(fill_styles, line_styles); // <viktor.reutskyy>
 		m_cached_meshes.push_back(m);
 		m->display(mat, cx, fill_styles, line_styles);
 		

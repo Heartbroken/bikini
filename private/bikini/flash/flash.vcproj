@@ -568,6 +568,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\line_mesh.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\player.cpp"
 				>
 			</File>

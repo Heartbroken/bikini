@@ -12,8 +12,12 @@ namespace bk { /*---------------------------------------------------------------
 
 namespace flash { /*-----------------------------------------------------------------------------*/
 
+extern void build_line_mesh(const short2 _points[], uint _count, real _width, array_<short2> &_mesh);
+
 bk::loader default_loader;
 null_sensor default_sensor;
+
+static const uint small_mesh_size = 100;
 
 // gameswf callbacks
 
@@ -147,7 +151,16 @@ struct player::_private : gameswf::render_handler
 	// <viktor.reutskyy>
 	mesh_info* create_mesh_info_tristrip(pointer _coords, s32 _vertex_count)
 	{
+		if (_vertex_count <= small_mesh_size) return 0;
 		return new mesh(_coords, _vertex_count);
+	}
+	mesh_info* create_mesh_info_linestrip(pointer _coords, s32 _vertex_count, f32 _width)
+	{
+		static array_<short2> l_mesh; l_mesh.resize(0);
+		build_line_mesh((short2*)_coords, _vertex_count, _width, l_mesh);
+
+		if (l_mesh.size() <= small_mesh_size) return 0;
+		return new mesh(&l_mesh[0], l_mesh.size());
 	}
 
 	// Bracket the displaying of a frame from a movie.
@@ -198,6 +211,11 @@ struct player::_private : gameswf::render_handler
 	// sequence.  Each coord is a 16-bit signed integer.
 	void draw_line_strip(pointer _coords, s32 _vertex_count)
 	{
+		static array_<short2> l_mesh; l_mesh.resize(0);
+		build_line_mesh((short2*)_coords, _vertex_count, m_line_width, l_mesh);
+
+		if (!l_mesh.empty())
+			m_renderer.draw_tristrip(&l_mesh[0], l_mesh.size());
 	}
 
 	// Draw mesh
@@ -210,6 +228,7 @@ struct player::_private : gameswf::render_handler
 	// rendering.
 	void fill_style_disable(s32 _fill_side)
 	{
+		m_renderer.set_texture(bad_ID, xform());
 	}
 	void fill_style_color(s32 _fill_side, const rgba &_color)
 	{
@@ -230,9 +249,13 @@ struct player::_private : gameswf::render_handler
 	}
 	void line_style_color(rgba _color)
 	{
+		color l_color(_color.m_r, _color.m_g, _color.m_b, _color.m_a);
+		m_renderer.set_color(l_color);
+		m_renderer.set_texture(bad_ID, xform());
 	}
 	void line_style_width(f32 _width)
 	{
+		m_line_width = (real)_width;
 	}
 
 	// Special function to draw a rectangular bitmap;
@@ -273,6 +296,8 @@ struct player::_private : gameswf::render_handler
 	loader &m_loader;
 	renderer &m_renderer;
 	gameswf::player &m_player;
+
+	real m_line_width;
 
 	_private(renderer &_renderer, sensor &_sensor, loader &_loader)
 	:

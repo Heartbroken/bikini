@@ -68,6 +68,11 @@ namespace gameswf
 			if (s_render_handler) return s_render_handler->create_mesh_info_tristrip(coords, vertex_count);
 			else return NULL;
 		}
+		mesh_info*		create_mesh_info_linestrip(const void* coords, int vertex_count, float width)
+		{
+			if (s_render_handler) return s_render_handler->create_mesh_info_linestrip(coords, vertex_count, width);
+			else return NULL;
+		}
 
 		// Bracket the displaying of a frame from a movie.
 		// Fill the background color, and set up default

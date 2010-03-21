@@ -35,6 +35,7 @@ namespace flash_vf { static const D3DVERTEXELEMENT9 data[] =
 namespace flash_rs { static const DWORD data[] =
 {
 	D3DRS_CULLMODE, D3DCULL_CCW,
+//	D3DRS_CULLMODE, D3DCULL_NONE,
 //	D3DRS_FILLMODE, D3DFILL_WIREFRAME,
 	DWORD(-1), DWORD(-1),
 };}

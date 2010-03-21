@@ -676,7 +676,7 @@ namespace gameswf
 		// <viktor.reutskyy>
 		virtual mesh_info*		create_mesh_info_tristrip(const void* coords, int vertex_count) = 0;
 		//virtual mesh_info*		create_mesh_info_trilist(const void* coords, int vertex_count) = 0;
-		//virtual mesh_info*		create_mesh_info_linestrip(const void* coords, int vertex_count) = 0;
+		virtual mesh_info*		create_mesh_info_linestrip(const void* coords, int vertex_count, float width) = 0;
 
 		// Bracket the displaying of a frame from a movie.
 		// Fill the background color, and set up default
