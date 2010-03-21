@@ -77,7 +77,6 @@ namespace gameswf
 	// For holding a pre-tesselated shape.
 	{
 		mesh();
-		~mesh();
 
 		void	set_tri_strip(const point pts[], int count); // TODO remove
 		void reserve_triangles(int expected_triangle_count);
@@ -94,7 +93,7 @@ namespace gameswf
 		array<coord_component>	m_triangle_strip;// TODO remove
 		array<coord_component> m_triangle_list;
 		// <viktor.reutskyy>
-		mesh_info* m_mesh;
+		smart_ptr<gameswf::mesh_info> m_mesh;
 	};
 
 
@@ -104,6 +103,9 @@ namespace gameswf
 		line_strip();
 		line_strip(int style, const point coords[], int coord_count);
 
+		// <viktor.reutskyy>
+		void	done(Uint16 width);
+
 		void	display(const base_line_style& style, float ratio) const;
 
 		int	get_style() const { return m_style; }
@@ -112,6 +114,8 @@ namespace gameswf
 	private:
 		int	m_style;
 		array<coord_component>	m_coords;
+		// <viktor.reutskyy>
+		smart_ptr<gameswf::mesh_info> m_mesh;
 	};
 
 
@@ -125,6 +129,10 @@ namespace gameswf
 		~mesh_set();
 
 		float	get_error_tolerance() const { return m_error_tolerance; }
+
+		// <viktor.reutskyy>
+		void done(const array<fill_style>& fills,
+				  const array<line_style>& line_styles);
 
 		void display(
 			const matrix& m,

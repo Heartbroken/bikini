@@ -40,6 +40,7 @@ struct _matrix_
 	inline const _Matrix operator / (const _Element &_s) const;
 
 	inline bool operator == (const _matrix_ &_m) const;
+	inline bool operator != (const _matrix_ &_m) const;
 
 	template <uint _I, uint _J> inline _Element& cell_();
 	template <uint _I, uint _J> inline const _Element& cell_() const;
