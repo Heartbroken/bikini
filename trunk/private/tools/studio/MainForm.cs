@@ -28,6 +28,7 @@ namespace Studio
             m_solutionExplorer = new DummySolutionExplorer();
             m_solutionExplorer.RightToLeftLayout = RightToLeftLayout;
 			m_deserializeDockContent = new DeserializeDockContent(GetContentFromPersistString);
+            //Text = Bikini.Command("");
         }
 
 		private void menuItemExit_Click(object sender, System.EventArgs e)
