@@ -114,7 +114,7 @@ struct player::_private : gameswf::render_handler
 		:
 			mesh_ID(bad_ID)
 		{}
-		inline mesh(pointer _coords, s32 _vertex_count)
+		inline mesh(pointer _coords, uint _vertex_count)
 		{
 			mesh_ID = renderer_p ? renderer_p->create_mesh((short2*)_coords, _vertex_count) : bad_ID;
 		}
