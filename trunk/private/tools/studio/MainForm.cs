@@ -246,7 +246,7 @@ namespace Studio
 
 		private void MainForm_Load(object sender, System.EventArgs e)
 		{
-			string configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "docking.xml");
+			string configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "studio.layout");
 
 			if (File.Exists(configFile))
 				dockPanel.LoadFromXml(configFile, m_deserializeDockContent);
@@ -254,7 +254,7 @@ namespace Studio
 
 		private void MainForm_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-            string configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "docking.xml");
+            string configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "studio.layout");
             if (m_bSaveLayout)
                 dockPanel.SaveAsXml(configFile);
             else if (File.Exists(configFile))
