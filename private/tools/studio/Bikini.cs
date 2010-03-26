@@ -8,18 +8,17 @@ namespace Studio
     {
 #if DEBUG
 #   if x86
-        [DllImport("bikini (Win32!Debug).dll", CharSet = CharSet.Auto)]
+        [DllImport("bikini (Win32!Debug).dll", CharSet = CharSet.Unicode)]
 #   elif x64
-        [DllImport("bikini (x64!Debug).dll", CharSet = CharSet.Auto)]
+        [DllImport("bikini (x64!Debug).dll", CharSet = CharSet.Unicode)]
 #   endif
 #elif RELEASE
 #   if x86
-        [DllImport("bikini (Win32!Release).dll", CharSet = CharSet.Auto)]
+        [DllImport("bikini (Win32!Release).dll", CharSet = CharSet.Unicode)]
 #   elif x64
-        [DllImport("bikini (x64!Release).dll", CharSet = CharSet.Auto)]
+        [DllImport("bikini (x64!Release).dll", CharSet = CharSet.Unicode)]
 #   endif
 #endif
-        [return: MarshalAs(UnmanagedType.LPStr)]
-        public static extern String Request([MarshalAs(UnmanagedType.LPStr)] String _XML);
+        public static extern String Request(String _XML);
     }
 }
