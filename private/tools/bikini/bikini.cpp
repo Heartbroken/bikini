@@ -5,7 +5,7 @@
 
 extern "C"
 __declspec(dllexport)
-const wchar_t * __stdcall Request(const wchar_t * _XML)
+const bk::wchar* __stdcall request(const bk::wchar* _command)
 {
 	return L"Hello!!!";
 }
