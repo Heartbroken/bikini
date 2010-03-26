@@ -9,9 +9,3 @@ const wchar_t * __stdcall Request(const wchar_t * _XML)
 {
 	return L"Hello!!!";
 }
-
-//extern "C"
-//__declspec(dllexport)
-//void __stdcall Request2()
-//{
-//}

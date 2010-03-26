@@ -52,19 +52,19 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Win32' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;x86</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;Win32</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Win32' ">
     <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE;x86;RELEASE</DefineConstants>
+    <DefineConstants>TRACE;Win32;RELEASE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -602,7 +602,8 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "$(SolutionDir)..\..\tools\$(ProjectName)\$(ProjectName) ($(PlatformName)!$(ConfigurationName)).*" /S /Y /A
-xcopy "$(SolutionDir)..\..\tools\bikini\*.dll" "$(SolutionDir)..\..\tools\$(ProjectName)\*.dll" /S /Y /A</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(SolutionDir)..\..\tools\bikini\bikini ($(PlatformName)!$(ConfigurationName)).dll" "$(TargetDir)*.dll" /S /Y /A
+xcopy "$(TargetPath)" "$(SolutionDir)..\..\tools\$(ProjectName)\$(ProjectName) ($(PlatformName)!$(ConfigurationName)).*" /S /Y /A
+xcopy "$(TargetDir)*.dll" "$(SolutionDir)..\..\tools\$(ProjectName)\*.dll" /S /Y /A</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -6,19 +6,19 @@ namespace Studio
 {
     class Bikini
     {
-#if DEBUG
-#   if x86
+#       if DEBUG
+#           if Win32
         [DllImport("bikini (Win32!Debug).dll", CharSet = CharSet.Unicode)]
-#   elif x64
+#           elif x64
         [DllImport("bikini (x64!Debug).dll", CharSet = CharSet.Unicode)]
-#   endif
-#elif RELEASE
-#   if x86
+#           endif
+#       elif RELEASE
+#           if Win32
         [DllImport("bikini (Win32!Release).dll", CharSet = CharSet.Unicode)]
-#   elif x64
+#           elif x64
         [DllImport("bikini (x64!Release).dll", CharSet = CharSet.Unicode)]
-#   endif
-#endif
+#           endif
+#       endif
         public static extern String Request(String _XML);
     }
 }
