@@ -20,30 +20,14 @@ namespace Studio
 
             String l_response = request(l_request);
 
-            byte[] l_byteArray = Encoding.ASCII.GetBytes(l_response);
-            MemoryStream l_streamIn = new MemoryStream(l_byteArray);
-            XmlTextReader l_xmlIn = new XmlTextReader(l_streamIn);
-            l_xmlIn.WhitespaceHandling = WhitespaceHandling.None;
-            l_xmlIn.MoveToContent();
+            Object l_result = ReadResult(l_response);
 
-            if (l_xmlIn.Name == "result" && l_xmlIn.IsStartElement())
-            {
-                l_xmlIn.ReadStartElement();
-                if (l_xmlIn.Name == "int")
-                {
-                    int l_r = Convert.ToInt32(l_xmlIn.GetAttribute("value"));
-                    l_xmlIn.ReadStartElement();
-                }
-                else if (l_xmlIn.Name == "real")
-                {
-                    double l_r = Convert.ToDouble(l_xmlIn.GetAttribute("value"), CultureInfo.InvariantCulture);
-                    l_xmlIn.ReadStartElement();
-                }
-                l_xmlIn.ReadEndElement();
-            }
+            if (l_result is bool && Convert.ToBoolean(l_result)) return true;
 
             return false;
         }
+
+        // Request/Response
 
         static XmlTextWriter StartWriteRequest(String _name)
         {
@@ -60,16 +44,36 @@ namespace Studio
         }
         static String GetType<_T>(_T _v)
         {
-            String l_type = _v.GetType().ToString();
-            if (l_type == "System.Int32" ||
-                l_type == "System.Int64") return "number";
-            else if (l_type == "System.Int32") return "boolean";
-            return l_type;
+            switch (_v.GetType().ToString())
+            {
+                case "System.Boolean": return "boolean";
+                case "System.Int16": return "number";
+                case "System.UInt16": return "number";
+                case "System.Int32": return "number";
+                case "System.UInt32": return "number";
+                case "System.Int64": return "number";
+                case "System.UInt64": return "number";
+                case "System.IntPtr": return "number";
+                case "System.UIntPtr": return "number";
+                case "System.Single": return "number";
+                case "System.Double": return "number";
+                case "System.String": return "string";
+            }
+            return _v.GetType().ToString();
+        }
+        static String ToString<_T>(_T _v)
+        {
+            switch (_v.GetType().ToString())
+            {
+                case "System.Single": return Convert.ToSingle(_v).ToString(CultureInfo.InvariantCulture);
+                case "System.Double": return Convert.ToDouble(_v).ToString(CultureInfo.InvariantCulture);
+            }
+            return _v.ToString();
         }
         static void WriteArgument<_T>(XmlTextWriter _xml, _T _v)
         {
             _xml.WriteStartElement(GetType(_v));
-            _xml.WriteAttributeString("value", _v.ToString());
+            _xml.WriteString(ToString(_v));
             _xml.WriteEndElement();
         }
         static String EndWriteRequest(XmlTextWriter _xml)
@@ -88,6 +92,35 @@ namespace Studio
         static String WriteRequest(String _name)
         {
             return EndWriteRequest(StartWriteRequest(_name));
+        }
+        static Object ReadResult(String _response)
+        {
+            Object l_result = null;
+
+            byte[] l_byteArray = Encoding.ASCII.GetBytes(_response);
+            MemoryStream l_streamIn = new MemoryStream(l_byteArray);
+            XmlTextReader l_xmlIn = new XmlTextReader(l_streamIn);
+            l_xmlIn.WhitespaceHandling = WhitespaceHandling.None;
+            l_xmlIn.MoveToContent();
+
+            if (l_xmlIn.Name == "result" && l_xmlIn.IsStartElement())
+            {
+                l_xmlIn.ReadStartElement();
+                if (l_xmlIn.IsStartElement())
+                {
+                    if (l_xmlIn.Name == "boolean")
+                        l_result = Convert.ToBoolean(l_xmlIn.ReadString());
+                    else if (l_xmlIn.Name == "number")
+                        l_result = Convert.ToDouble(l_xmlIn.ReadString(), CultureInfo.InvariantCulture);
+                    else if (l_xmlIn.Name == "string")
+                        l_result = l_xmlIn.ReadString();
+
+                    l_xmlIn.ReadEndElement();
+                }
+                l_xmlIn.ReadEndElement();
+            }
+
+            return l_result;
         }
 
         // P/Invoke

@@ -1,9 +1,9 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "stdafx.h"
 
-bk::real test_command()
+bool test_command()
 {
-	return 12345;
+	return true;
 }
 
 BOOL APIENTRY DllMain(HMODULE _module, DWORD _reason, LPVOID)
@@ -12,7 +12,7 @@ BOOL APIENTRY DllMain(HMODULE _module, DWORD _reason, LPVOID)
 	{
 	case DLL_PROCESS_ATTACH :
 		commands::create();
-		commands::add_command("Test", bk::functor_<bk::real>(&test_command));
+		commands::add_command("Test", bk::functor_<bool>(&test_command));
 		break;
 	case DLL_THREAD_ATTACH :
 		break;

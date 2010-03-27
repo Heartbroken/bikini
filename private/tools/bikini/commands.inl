@@ -32,17 +32,17 @@ template <> inline bk::sint pop<bk::sint>(const pugi::xml_node &_n, bk::uint _i)
 inline void push(pugi::xml_node &_n, bool _v)
 {
 	pugi::xml_node l_n = _n.append_child(); l_n.set_name("boolean");
-	l_n.append_attribute("value").set_value(_v ? "true" : "false");
+	l_n.append_child(pugi::node_pcdata).set_value(_v ? "true" : "false");
 }
 inline void push(pugi::xml_node &_n, bk::sint _v)
 {
 	pugi::xml_node l_n = _n.append_child(); l_n.set_name("number");
-	l_n.append_attribute("value").set_value(bk::format("%d", _v));
+	l_n.append_child(pugi::node_pcdata).set_value(bk::format("%d", _v));
 }
 inline void push(pugi::xml_node &_n, bk::real _v)
 {
 	pugi::xml_node l_n = _n.append_child(); l_n.set_name("number");
-	l_n.append_attribute("value").set_value(bk::format("%f", _v));
+	l_n.append_child(pugi::node_pcdata).set_value(bk::format("%f", _v));
 }
 
 //
