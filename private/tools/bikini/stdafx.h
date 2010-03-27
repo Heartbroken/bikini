@@ -17,3 +17,10 @@
 
 // bikini-iii
 #include <bikini.hpp>
+
+// bikini-iii external
+#include <pugixml/pugixml.hpp>
+#pragma comment(lib, "pugixml ("_PLATFORM_"!"_CONFIGURATION_")")
+
+// internal
+#include "commands.h"
