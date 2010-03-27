@@ -58,9 +58,17 @@ namespace Studio
 
             return l_xml;
         }
+        static String GetType<_T>(_T _v)
+        {
+            String l_type = _v.GetType().ToString();
+            if (l_type == "System.Int32" ||
+                l_type == "System.Int64") return "number";
+            else if (l_type == "System.Int32") return "boolean";
+            return l_type;
+        }
         static void WriteArgument<_T>(XmlTextWriter _xml, _T _v)
         {
-            _xml.WriteStartElement(_v.GetType().ToString());
+            _xml.WriteStartElement(GetType(_v));
             _xml.WriteAttributeString("value", _v.ToString());
             _xml.WriteEndElement();
         }
