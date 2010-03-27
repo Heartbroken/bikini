@@ -12,28 +12,11 @@ namespace Studio
     {
         public static Boolean Test()
         {
-            MemoryStream l_streamOut = new MemoryStream();
+            XmlTextWriter l_xmlOut = StartWriteRequest("Test");
+            WriteArgument(l_xmlOut, 54321);
+            String l_request = EndWriteRequest(l_xmlOut);
 
-            XmlTextWriter l_xmlOut = new XmlTextWriter(l_streamOut, Encoding.UTF8);
-            l_xmlOut.Formatting = Formatting.Indented;
-
-            l_xmlOut.WriteStartElement("request");
-            {
-                l_xmlOut.WriteStartElement("command");
-                l_xmlOut.WriteAttributeString("name", "Test");
-                {
-                    l_xmlOut.WriteStartElement("arguments");
-                    l_xmlOut.WriteEndElement();
-                }
-                l_xmlOut.WriteEndElement();
-            }
-            l_xmlOut.WriteEndElement();
-
-            l_xmlOut.Flush();
-            l_streamOut.Seek(0, SeekOrigin.Begin);
-
-            StreamReader l_streamReader = new StreamReader(l_streamOut);
-            String l_request = l_streamReader.ReadToEnd();
+            //String l_request = WriteRequest("Test");
 
             String l_response = request(l_request);
 
@@ -43,28 +26,60 @@ namespace Studio
             l_xmlIn.WhitespaceHandling = WhitespaceHandling.None;
             l_xmlIn.MoveToContent();
 
-            if (l_xmlIn.Name == "response" && l_xmlIn.IsStartElement())
+            if (l_xmlIn.Name == "result" && l_xmlIn.IsStartElement())
             {
                 l_xmlIn.ReadStartElement();
-                if (l_xmlIn.Name == "result" && l_xmlIn.IsStartElement())
+                if (l_xmlIn.Name == "int")
                 {
+                    int l_r = Convert.ToInt32(l_xmlIn.GetAttribute("value"));
                     l_xmlIn.ReadStartElement();
-                    if (l_xmlIn.Name == "int")
-                    {
-                        int l_r = Convert.ToInt32(l_xmlIn.GetAttribute("value"));
-                        l_xmlIn.ReadStartElement();
-                    }
-                    else if (l_xmlIn.Name == "real")
-                    {
-                        double l_r = Convert.ToDouble(l_xmlIn.GetAttribute("value"), CultureInfo.InvariantCulture);
-                        l_xmlIn.ReadStartElement();
-                    }
-                    l_xmlIn.ReadEndElement();
+                }
+                else if (l_xmlIn.Name == "real")
+                {
+                    double l_r = Convert.ToDouble(l_xmlIn.GetAttribute("value"), CultureInfo.InvariantCulture);
+                    l_xmlIn.ReadStartElement();
                 }
                 l_xmlIn.ReadEndElement();
             }
 
             return false;
+        }
+
+        static XmlTextWriter StartWriteRequest(String _name)
+        {
+            MemoryStream l_stream = new MemoryStream();
+
+            XmlTextWriter l_xml = new XmlTextWriter(l_stream, Encoding.UTF8);
+            //l_xml.Formatting = Formatting.Indented;
+
+            l_xml.WriteStartElement("command");
+            l_xml.WriteAttributeString("name", "Test");
+            l_xml.WriteStartElement("arguments");
+
+            return l_xml;
+        }
+        static void WriteArgument<_T>(XmlTextWriter _xml, _T _v)
+        {
+            _xml.WriteStartElement(_v.GetType().ToString());
+            _xml.WriteAttributeString("value", _v.ToString());
+            _xml.WriteEndElement();
+        }
+        static String EndWriteRequest(XmlTextWriter _xml)
+        {
+            _xml.WriteEndElement();
+            _xml.WriteEndElement();
+
+            _xml.Flush();
+            _xml.BaseStream.Seek(0, SeekOrigin.Begin);
+
+            StreamReader l_streamReader = new StreamReader(_xml.BaseStream);
+            String l_request = l_streamReader.ReadToEnd();
+
+            return l_request;
+        }
+        static String WriteRequest(String _name)
+        {
+            return EndWriteRequest(StartWriteRequest(_name));
         }
 
         // P/Invoke

@@ -344,6 +344,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\commands.inl"
+				>
+			</File>
+			<File
 				RelativePath=".\dllmain.cpp"
 				>
 				<FileConfiguration
