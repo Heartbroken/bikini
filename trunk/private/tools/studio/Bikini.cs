@@ -10,11 +10,11 @@ namespace Studio
 {
     class Bikini
     {
-        public static Boolean Test()
+        public static Boolean Test(int _int, string _string)
         {
             XmlTextWriter l_xml = StartWriteRequest("Test");
-            WriteRequestArgument(l_xml, 54321);
-            WriteRequestArgument(l_xml, "Second argument");
+            WriteRequestArgument(l_xml, _int);
+            WriteRequestArgument(l_xml, _string);
             String l_request = EndWriteRequest(l_xml);
 
             //String l_request = WriteRequest("Test");

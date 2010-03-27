@@ -29,7 +29,7 @@ namespace Studio
             m_solutionExplorer.RightToLeftLayout = RightToLeftLayout;
 			m_deserializeDockContent = new DeserializeDockContent(GetContentFromPersistString);
 
-            Bikini.Test();
+            Bikini.Test(-125, "Test call");
         }
 
 		private void menuItemExit_Click(object sender, System.EventArgs e)
