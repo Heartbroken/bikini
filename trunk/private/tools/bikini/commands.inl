@@ -17,15 +17,40 @@ inline pugi::xml_node child(const pugi::xml_node &_n, bk::uint _i)
 	return pugi::xml_node();
 }
 
-template <typename _T> inline _T pop(const pugi::xml_node &_n, bk::uint _i);
-template <> inline bool pop<bool>(const pugi::xml_node &_n, bk::uint _i)
+template <typename _T> struct pop;
+template <> struct pop<bool> { static inline bool a(const pugi::xml_node &_n, bk::uint _i)
 {
-	return child(_n, _i).attribute("value").as_bool();
-}
-template <> inline bk::sint pop<bk::sint>(const pugi::xml_node &_n, bk::uint _i)
+	bk::astring l_s = child(_n, _i).child_value();
+	if (l_s == "0" || l_s == "false") return false;
+	return true;
+}};
+template <> struct pop<bk::uint> { static inline bk::uint a(const pugi::xml_node &_n, bk::uint _i)
 {
-	return child(_n, _i).attribute("value").as_int();
-}
+	bk::uint l_v; sscanf_s(child(_n, _i).child_value(), "%d", &l_v);
+	return l_v;
+}};
+template <> struct pop<bk::sint> { static inline bk::sint a(const pugi::xml_node &_n, bk::uint _i)
+{
+	bk::sint l_v; sscanf_s(child(_n, _i).child_value(), "%d", &l_v);
+	return l_v;
+}};
+template <> struct pop<bk::real> { static inline bk::real a(const pugi::xml_node &_n, bk::uint _i)
+{
+	bk::real l_v; sscanf_s(child(_n, _i).child_value(), "%f", &l_v);
+	return l_v;
+}};
+template <> struct pop<const bk::achar*> { static inline const bk::achar* a(const pugi::xml_node &_n, bk::uint _i)
+{
+	return child(_n, _i).child_value();
+}};
+template <> struct pop<bk::astring> { static inline bk::astring a(const pugi::xml_node &_n, bk::uint _i)
+{
+	return child(_n, _i).child_value();
+}};
+template <> struct pop<const bk::astring&> { static inline const bk::achar* a(const pugi::xml_node &_n, bk::uint _i)
+{
+	return child(_n, _i).child_value();
+}};
 
 //
 
@@ -34,15 +59,35 @@ inline void push(pugi::xml_node &_n, bool _v)
 	pugi::xml_node l_n = _n.append_child(); l_n.set_name("boolean");
 	l_n.append_child(pugi::node_pcdata).set_value(_v ? "true" : "false");
 }
-inline void push(pugi::xml_node &_n, bk::sint _v)
+inline void push(pugi::xml_node &_n, unsigned int _v)
 {
 	pugi::xml_node l_n = _n.append_child(); l_n.set_name("number");
 	l_n.append_child(pugi::node_pcdata).set_value(bk::format("%d", _v));
 }
-inline void push(pugi::xml_node &_n, bk::real _v)
+inline void push(pugi::xml_node &_n, int _v)
+{
+	pugi::xml_node l_n = _n.append_child(); l_n.set_name("number");
+	l_n.append_child(pugi::node_pcdata).set_value(bk::format("%d", _v));
+}
+inline void push(pugi::xml_node &_n, float _v)
 {
 	pugi::xml_node l_n = _n.append_child(); l_n.set_name("number");
 	l_n.append_child(pugi::node_pcdata).set_value(bk::format("%f", _v));
+}
+inline void push(pugi::xml_node &_n, double _v)
+{
+	pugi::xml_node l_n = _n.append_child(); l_n.set_name("number");
+	l_n.append_child(pugi::node_pcdata).set_value(bk::format("%f", _v));
+}
+inline void push(pugi::xml_node &_n, const char* _v)
+{
+	pugi::xml_node l_n = _n.append_child(); l_n.set_name("string");
+	l_n.append_child(pugi::node_pcdata).set_value(_v);
+}
+inline void push(pugi::xml_node &_n, const bk::astring &_v)
+{
+	pugi::xml_node l_n = _n.append_child(); l_n.set_name("string");
+	l_n.append_child(pugi::node_pcdata).set_value(_v.c_str());
 }
 
 //
@@ -50,6 +95,7 @@ inline void push(pugi::xml_node &_n, bk::real _v)
 struct _command { virtual void execute(const pugi::xml_node &_a, pugi::xml_node &_r) = 0; };
 template <typename _F> struct command_;
 
+// _R
 template <typename _R>
 struct command_<bk::functor_<_R> > : _command
 {
@@ -62,12 +108,35 @@ struct command_<bk::functor_<_R, _A0> > : _command
 {
 	typedef bk::functor_<_R, _A0> F; F f;
 	inline command_(F _f) : f(_f) {}
-	void execute(const pugi::xml_node &_a, pugi::xml_node &_r) { push(_r, f(pop<_A0>(_a, 0))); }
+	void execute(const pugi::xml_node &_a, pugi::xml_node &_r) { push(_r, f(pop<_A0>::a(_a, 0))); }
 };
 template <typename _R, typename _A0, typename _A1>
 struct command_<bk::functor_<_R, _A0, _A1> > : _command
 {
 	typedef bk::functor_<_R, _A0, _A1> F; F f;
 	inline command_(F _f) : f(_f) {}
-	void execute(const pugi::xml_node &_a, pugi::xml_node &_r) { push(_r, f(pop<_A0>(_a, 0), pop<_A1>(_a, 1))); }
+	void execute(const pugi::xml_node &_a, pugi::xml_node &_r) { push(_r, f(pop<_A0>::a(_a, 0), pop<_A1>::a(_a, 1))); }
+};
+
+// void
+template <>
+struct command_<bk::functor_<void> > : _command
+{
+	typedef bk::functor_<void> F; F f;
+	inline command_(F _f) : f(_f) {}
+	void execute(const pugi::xml_node &_a, pugi::xml_node &_r) { f(); }
+};
+template <typename _A0>
+struct command_<bk::functor_<void, _A0> > : _command
+{
+	typedef bk::functor_<void, _A0> F; F f;
+	inline command_(F _f) : f(_f) {}
+	void execute(const pugi::xml_node &_a, pugi::xml_node &_r) { f(pop<_A0>::a(_a, 0)); }
+};
+template <typename _A0, typename _A1>
+struct command_<bk::functor_<void, _A0, _A1> > : _command
+{
+	typedef bk::functor_<void, _A0, _A1> F; F f;
+	inline command_(F _f) : f(_f) {}
+	void execute(const pugi::xml_node &_a, pugi::xml_node &_r) { f(pop<_A0>::a(_a, 0), pop<_A1>::a(_a, 1)); }
 };
