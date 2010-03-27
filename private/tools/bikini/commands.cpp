@@ -54,7 +54,7 @@ const bk::wchar* __stdcall request(const bk::wchar* _command)
 
 			std::ostringstream l_stream;
 			pugi::xml_writer_stream l_writer(l_stream);
-			l_document.save(l_writer, "    ", pugi::format_no_declaration);
+			l_document.save(l_writer, "  ", pugi::format_no_declaration | pugi::format_indent);
 
 			static bk::wstring l_xml;
 			l_xml = bk::utf8(l_stream.str());
