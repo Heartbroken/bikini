@@ -106,11 +106,11 @@ namespace Studio
             BikiniGuiView l_guiView = new BikiniGuiView();
 
             int l_count = 1;
-            string l_text = "Gui" + l_count.ToString();
+            string l_text = "Document" + l_count.ToString();
             while (FindDocument(l_text) != null)
             {
                 l_count++;
-                l_text = "Gui" + l_count.ToString();
+                l_text = "Document" + l_count.ToString();
             }
             l_guiView.Text = l_text;
             return l_guiView;
