@@ -15,6 +15,7 @@ namespace Studio
         public BikiniGuiView()
         {
             InitializeComponent();
+            Bikini.CreateGuiView(panel1.Handle);
         }
 
         protected override string GetPersistString()

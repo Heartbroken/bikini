@@ -1,9 +1,11 @@
 //
 
+void add_command(const bk::achar* _name, _command &_c);
+
 template <typename _F>
-inline void add_command(const bk::achar* _name, const _F &_functor)
+inline void add(const bk::achar* _name, const _F &_functor)
 {
-	add(_name, * new command_<_F>(_functor));
+	add_command(_name, * new command_<_F>(_functor));
 }
 
 //
