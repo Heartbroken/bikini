@@ -471,5 +471,10 @@ namespace Studio
             Close();
             m_bSaveLayout = true;
         }
+
+        private void bikiniTimer_Tick(object sender, EventArgs e)
+        {
+            Bikini.Update(30.0f * 0.001f);
+        }
     }
 }

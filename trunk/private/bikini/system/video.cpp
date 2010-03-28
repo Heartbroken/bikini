@@ -1152,7 +1152,6 @@ bool window::update(real _dt)
 		add_command(l_create_schain);
 	}
 
-
 	if (!(m_flags & force_redraw))
 	{
 		for (uint i = 0, s = viewport_count(); i < s; ++i)
