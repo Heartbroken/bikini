@@ -16,7 +16,7 @@ void destroy()
 	delete g_command_map_p;
 }
 
-void add(const bk::achar* _name, _command &_c)
+void add_command(const bk::achar* _name, _command &_c)
 {
 	remove(_name);
 	(*g_command_map_p)[_name] = &_c;

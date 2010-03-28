@@ -10,6 +10,30 @@ namespace Studio
 {
     class Bikini
     {
+        public static Boolean Update(float _dt)
+        {
+            XmlTextWriter l_xml = StartWriteRequest("Update");
+            WriteRequestArgument(l_xml, _dt);
+            String l_request = EndWriteRequest(l_xml);
+
+            String l_response = request(l_request);
+            Object l_result = ReadResult(l_response);
+
+            if (l_result is bool && Convert.ToBoolean(l_result)) return true;
+            return false;
+        }
+        public static UInt64 CreateGuiView(IntPtr _handle)
+        {
+            XmlTextWriter l_xml = StartWriteRequest("CreateGuiView");
+            WriteRequestArgument(l_xml, _handle);
+            String l_request = EndWriteRequest(l_xml);
+
+            String l_response = request(l_request);
+            Object l_result = ReadResult(l_response);
+
+            if (l_result is double) return Convert.ToUInt64(l_result);
+            return Convert.ToUInt64(-1);
+        }
         public static Boolean Test(int _int, string _string)
         {
             XmlTextWriter l_xml = StartWriteRequest("Test");
@@ -36,28 +60,13 @@ namespace Studio
             l_xml.Formatting = Formatting.Indented;
 
             l_xml.WriteStartElement("command");
-            l_xml.WriteAttributeString("name", "Test");
+            l_xml.WriteAttributeString("name", _name);
             l_xml.WriteStartElement("arguments");
 
             return l_xml;
         }
         static String GetType<_T>(_T _v)
         {
-            //switch (_v.GetType().ToString())
-            //{
-            //    case "System.Boolean": return "boolean";
-            //    case "System.Int16": return "number";
-            //    case "System.UInt16": return "number";
-            //    case "System.Int32": return "number";
-            //    case "System.UInt32": return "number";
-            //    case "System.Int64": return "number";
-            //    case "System.UInt64": return "number";
-            //    case "System.IntPtr": return "number";
-            //    case "System.UIntPtr": return "number";
-            //    case "System.Single": return "number";
-            //    case "System.Double": return "number";
-            //    case "System.String": return "string";
-            //}
             if (_v is Boolean) return "boolean";
             if (_v is Int16) return "number";
             if (_v is UInt16) return "number";
@@ -74,11 +83,6 @@ namespace Studio
         }
         static String ToString<_T>(_T _v)
         {
-            //switch (_v.GetType().ToString())
-            //{
-            //    case "System.Single": return Convert.ToSingle(_v).ToString(CultureInfo.InvariantCulture);
-            //    case "System.Double": return Convert.ToDouble(_v).ToString(CultureInfo.InvariantCulture);
-            //}
             if (_v is Single) return Convert.ToSingle(_v).ToString(CultureInfo.InvariantCulture);
             if (_v is Double) return Convert.ToDouble(_v).ToString(CultureInfo.InvariantCulture);
             return _v.ToString();
