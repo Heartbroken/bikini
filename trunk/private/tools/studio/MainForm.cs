@@ -90,8 +90,9 @@ namespace Studio
 
 		private void menuItemNew_Click(object sender, System.EventArgs e)
 		{
-			DummyDoc dummyDoc = CreateNewDocument();
-			if (dockPanel.DocumentStyle == DocumentStyle.SystemMdi)
+			//DummyDoc dummyDoc = CreateNewDocument();
+            BikiniGuiView dummyDoc = CreateNewGuiView();
+            if (dockPanel.DocumentStyle == DocumentStyle.SystemMdi)
 			{
 				dummyDoc.MdiParent = this;
 				dummyDoc.Show();
@@ -99,6 +100,21 @@ namespace Studio
 			else
 				dummyDoc.Show(dockPanel);
 		}
+
+        private BikiniGuiView CreateNewGuiView()
+        {
+            BikiniGuiView l_guiView = new BikiniGuiView();
+
+            int l_count = 1;
+            string l_text = "Gui" + l_count.ToString();
+            while (FindDocument(l_text) != null)
+            {
+                l_count++;
+                l_text = "Gui" + l_count.ToString();
+            }
+            l_guiView.Text = l_text;
+            return l_guiView;
+        }
 
 		private DummyDoc CreateNewDocument()
 		{
