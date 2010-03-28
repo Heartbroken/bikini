@@ -34,6 +34,15 @@ namespace Studio
             if (l_result is double) return Convert.ToUInt64(l_result);
             return Convert.ToUInt64(-1);
         }
+        public static void DestroyGuiView(UInt64 _ID)
+        {
+            XmlTextWriter l_xml = StartWriteRequest("DestroyGuiView");
+            WriteRequestArgument(l_xml, _ID);
+            String l_request = EndWriteRequest(l_xml);
+
+            String l_response = request(l_request);
+            //Object l_result = ReadResult(l_response);
+        }
         public static Boolean Test(int _int, string _string)
         {
             XmlTextWriter l_xml = StartWriteRequest("Test");

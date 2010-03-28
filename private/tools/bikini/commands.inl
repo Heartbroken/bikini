@@ -36,6 +36,11 @@ template <> struct pop<bk::sint> { static inline bk::sint a(const pugi::xml_node
 	bk::sint l_v; sscanf_s(child(_n, _i).child_value(), "%d", &l_v);
 	return l_v;
 }};
+template <> struct pop<bk::handle> { static inline bk::handle a(const pugi::xml_node &_n, bk::uint _i)
+{
+	bk::handle l_v; sscanf_s(child(_n, _i).child_value(), "%d", &l_v);
+	return l_v;
+}};
 template <> struct pop<bk::real> { static inline bk::real a(const pugi::xml_node &_n, bk::uint _i)
 {
 	bk::real l_v; sscanf_s(child(_n, _i).child_value(), "%f", &l_v);
