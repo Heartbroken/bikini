@@ -10,8 +10,6 @@ namespace Studio
 {
     class Bikini
     {
-        public const UInt64 BadID = 0xffffffffffffffff;
-
         public static Boolean Update(float _dt)
         {
             XmlTextWriter l_xml = StartWriteRequest("Update");

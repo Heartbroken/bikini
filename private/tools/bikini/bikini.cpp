@@ -8,9 +8,6 @@ namespace bikini { /*-----------------------------------------------------------
 bk::video g_video;
 bk::vo::window::info g_vo_window_info;
 
-//
-bk::vo::memreader::info g_vo_memreader_info;
-
 bk::uint create_window(bk::handle _handle)
 {
 	bk::uint l_vo_window_ID = g_video.spawn(g_vo_window_info, (HWND)_handle);
@@ -38,9 +35,6 @@ void create()
 	commands::add("DestroyGuiView", l_destroy_gui_view);
 	bk::functor_<bool, bk::real> l_update(&update);
 	commands::add("Update", l_update);
-
-	//
-	//g_video.spawn(g_vo_memreader_info);
 }
 void destroy()
 {
