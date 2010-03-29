@@ -107,6 +107,8 @@ struct video : device
 		static const uint ibuffer_size = 1000;
 		bool add_issue(const issue &_issue);
 		issue get_issue();
+		thread::flag m_all_commands_done;
+		void wait() { m_all_commands_done.wait(); }
 	};
 	
 	/* video object -----------------------------------------------------------------------------*/

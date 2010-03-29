@@ -20,7 +20,8 @@ video::rendering::rendering(video &_video)
 	m_video(_video),
 	m_task(*this, &rendering::m_proc, "bikini-iii rendering"),
 	m_cbuffer(cbuffer_size), m_dbuffer(dbuffer_size), m_ibuffer(ibuffer_size),
-	m_has_command(false, false), m_can_read_data(false, false), m_can_write_data(false, true)
+	m_has_command(false, false), m_can_read_data(false, false), m_can_write_data(false, true),
+	m_all_commands_done(false, false)
 {}
 video::rendering::~rendering()
 {
@@ -203,6 +204,7 @@ void video::rendering::m_proc()
 			}
 			else
 			{
+				m_all_commands_done.set();
 				m_has_command.wait(real(0.1));
 			}
 		}
@@ -280,6 +282,7 @@ bool video::update(real _dt)
 		}
 
 		m_cbuffer.clear();
+		m_rendering.wait();
 	}
 
 	return true;
@@ -1140,10 +1143,13 @@ window::~window()
 		l_window_pp = &((*l_window_pp)->next_p);
 	}
 
-	SetWindowLongPtr(m_window, GWL_WNDPROC, (LONG_PTR)m_oldwndproc);
+	if (m_window != 0 && GetWindowLongPtrW(m_window, GWL_WNDPROC) == (LONG_PTR)_wndproc)
+		SetWindowLongPtr(m_window, GWL_WNDPROC, (LONG_PTR)m_oldwndproc);
 }
 bool window::update(real _dt)
 {
+	if (m_window == 0) return true;
+
 	if (!valid() || !resource_valid(m_resource_ID))
 	{
 		video::rendering::create_schain l_create_schain;
@@ -1239,6 +1245,12 @@ long window::m_wndproc(uint _message, uint _wparam, uint _lparam)
 				m_flags &= ~erase_background;
 			}
 			m_flags |= force_redraw;
+			break;
+		}
+		case WM_DESTROY :
+		{
+			SetWindowLongPtr(m_window, GWL_WNDPROC, (LONG_PTR)m_oldwndproc);
+			m_window = 0;
 			break;
 		}
 	}
