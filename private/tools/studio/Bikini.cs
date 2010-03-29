@@ -18,8 +18,8 @@ namespace Studio
             WriteRequestArgument(l_xml, _dt);
             String l_request = EndWriteRequest(l_xml);
 
-            String l_response = request(l_request);
-            Object l_result = ReadResult(l_response);
+            //String l_response = request(l_request);
+            Object l_result = ReadResult(request(l_request));
 
             if (l_result is bool && Convert.ToBoolean(l_result)) return true;
             return false;
@@ -30,8 +30,8 @@ namespace Studio
             WriteRequestArgument(l_xml, _handle);
             String l_request = EndWriteRequest(l_xml);
 
-            String l_response = request(l_request);
-            Object l_result = ReadResult(l_response);
+            //String l_response = request(l_request);
+            Object l_result = ReadResult(request(l_request));
 
             if (l_result is double) return Convert.ToUInt64(l_result);
             return Convert.ToUInt64(-1);
@@ -42,8 +42,8 @@ namespace Studio
             WriteRequestArgument(l_xml, _ID);
             String l_request = EndWriteRequest(l_xml);
 
-            String l_response = request(l_request);
-            //Object l_result = ReadResult(l_response);
+            //String l_response = request(l_request);
+            Object l_result = ReadResult(request(l_request));
         }
         public static Boolean Test(int _int, string _string)
         {
@@ -54,8 +54,8 @@ namespace Studio
 
             //String l_request = WriteRequest("Test");
 
-            String l_response = request(l_request);
-            Object l_result = ReadResult(l_response);
+            //String l_response = request(l_request);
+            Object l_result = ReadResult(request(l_request));
 
             if (l_result is bool && Convert.ToBoolean(l_result)) return true;
             return false;
@@ -121,11 +121,14 @@ namespace Studio
         {
             return EndWriteRequest(StartWriteRequest(_name));
         }
-        static Object ReadResult(String _response)
+        static Object ReadResult(IntPtr _response)
         {
+            String l_response = Marshal.PtrToStringUni(_response);
             Object l_result = null;
 
-            byte[] l_byteArray = Encoding.ASCII.GetBytes(_response);
+            if (_response == null) return l_result;
+
+            byte[] l_byteArray = Encoding.ASCII.GetBytes(l_response);
             MemoryStream l_streamIn = new MemoryStream(l_byteArray);
             XmlTextReader l_xmlIn = new XmlTextReader(l_streamIn);
             l_xmlIn.WhitespaceHandling = WhitespaceHandling.None;
@@ -144,8 +147,8 @@ namespace Studio
                         l_result = l_xmlIn.ReadString();
 
                     l_xmlIn.ReadEndElement();
+                    l_xmlIn.ReadEndElement();
                 }
-                l_xmlIn.ReadEndElement();
             }
 
             return l_result;
@@ -166,6 +169,6 @@ namespace Studio
                 [DllImport("bikini (x64!Release).dll", CharSet = CharSet.Unicode)]
 #           endif
 #       endif
-        public static extern String request(String _command);
+        public static extern IntPtr request(String _command);
     }
 }
