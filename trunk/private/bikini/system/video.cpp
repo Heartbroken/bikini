@@ -272,6 +272,7 @@ bool video::update(real _dt)
 
 		for (command_map::iterator i = m_cbuffer.begin(), e = m_cbuffer.end(); i != e; ++i)
 		{
+			//m_rendering.execute(i->second);
 			if (!m_rendering.add_command(i->second))
 			{
 				std::cerr << "WARNING: Rendering command buffer is full.\n";

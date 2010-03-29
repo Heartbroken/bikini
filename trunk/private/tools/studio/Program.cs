@@ -14,7 +14,13 @@ namespace Studio
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Application.Idle += new EventHandler(Application_Idle);
             Application.Run(new MainForm());
+        }
+
+        static private void Application_Idle(Object sender, EventArgs e)
+        {
+            Bikini.Update(1.0f / 30.0f);
         }
     }
 }

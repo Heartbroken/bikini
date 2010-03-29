@@ -474,7 +474,7 @@ namespace Studio
 
         private void bikiniTimer_Tick(object sender, EventArgs e)
         {
-            Bikini.Update(30.0f * 0.001f);
+            //Bikini.Update(30.0f * 0.001f);
         }
     }
 }
