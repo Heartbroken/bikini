@@ -26,19 +26,34 @@ template <> struct pop<bool> { static inline bool a(const pugi::xml_node &_n, bk
 	if (l_s == "0" || l_s == "false") return false;
 	return true;
 }};
-template <> struct pop<bk::uint> { static inline bk::uint a(const pugi::xml_node &_n, bk::uint _i)
+template <> struct pop<unsigned int> { static inline unsigned int a(const pugi::xml_node &_n, bk::uint _i)
 {
-	bk::uint l_v; sscanf_s(child(_n, _i).child_value(), "%d", &l_v);
+	unsigned int l_v; sscanf_s(child(_n, _i).child_value(), "%u", &l_v);
 	return l_v;
 }};
-template <> struct pop<bk::sint> { static inline bk::sint a(const pugi::xml_node &_n, bk::uint _i)
+template <> struct pop<int> { static inline int a(const pugi::xml_node &_n, bk::uint _i)
 {
-	bk::sint l_v; sscanf_s(child(_n, _i).child_value(), "%d", &l_v);
+	int l_v; sscanf_s(child(_n, _i).child_value(), "%d", &l_v);
+	return l_v;
+}};
+template <> struct pop<unsigned __int64> { static inline unsigned __int64 a(const pugi::xml_node &_n, bk::uint _i)
+{
+	unsigned __int64 l_v; sscanf_s(child(_n, _i).child_value(), "%I64u", &l_v);
+	return l_v;
+}};
+template <> struct pop<__int64> { static inline __int64 a(const pugi::xml_node &_n, bk::uint _i)
+{
+	__int64 l_v; sscanf_s(child(_n, _i).child_value(), "%I64d", &l_v);
 	return l_v;
 }};
 template <> struct pop<bk::handle> { static inline bk::handle a(const pugi::xml_node &_n, bk::uint _i)
 {
-	bk::handle l_v; sscanf_s(child(_n, _i).child_value(), "%d", &l_v);
+	bk::handle l_v;
+#ifdef _WIN64
+	sscanf_s(child(_n, _i).child_value(), "%I64d", &l_v);
+#else
+	sscanf_s(child(_n, _i).child_value(), "%d", &l_v);
+#endif
 	return l_v;
 }};
 template <> struct pop<bk::real> { static inline bk::real a(const pugi::xml_node &_n, bk::uint _i)
