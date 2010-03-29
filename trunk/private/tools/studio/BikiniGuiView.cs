@@ -16,6 +16,10 @@ namespace Studio
         {
             InitializeComponent();
         }
+        ~BikiniGuiView()
+        {
+            if (m_viewID != Bikini.BadID) Bikini.DestroyGuiView(m_viewID);
+        }
 
         protected override string GetPersistString()
         {
@@ -24,19 +28,15 @@ namespace Studio
             return GetType().ToString() + "," + "" + "," + Text;
         }
 
-        UInt64 m_ID = 0;
+        UInt64 m_viewID = Bikini.BadID;
         IntPtr m_handle = (IntPtr)0;
         private void BikiniGuiView_Paint(object sender, PaintEventArgs e)
         {
             if (m_handle != panel1.Handle)
             {
-                if (m_ID != 0) Bikini.DestroyGuiView(m_ID);
-                m_ID = Bikini.CreateGuiView(panel1.Handle);
+                if (m_viewID != Bikini.BadID) Bikini.DestroyGuiView(m_viewID);
+                m_viewID = Bikini.CreateGuiView(panel1.Handle);
                 m_handle = panel1.Handle;
-            }
-            if (!Visible)
-            {
-
             }
         }
 

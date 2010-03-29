@@ -69,12 +69,22 @@ inline void push(pugi::xml_node &_n, bool _v)
 inline void push(pugi::xml_node &_n, unsigned int _v)
 {
 	pugi::xml_node l_n = _n.append_child(); l_n.set_name("number");
-	l_n.append_child(pugi::node_pcdata).set_value(bk::format("%d", _v));
+	l_n.append_child(pugi::node_pcdata).set_value(bk::format("%u", _v));
 }
 inline void push(pugi::xml_node &_n, int _v)
 {
 	pugi::xml_node l_n = _n.append_child(); l_n.set_name("number");
 	l_n.append_child(pugi::node_pcdata).set_value(bk::format("%d", _v));
+}
+inline void push(pugi::xml_node &_n, unsigned __int64 _v)
+{
+	pugi::xml_node l_n = _n.append_child(); l_n.set_name("number");
+	l_n.append_child(pugi::node_pcdata).set_value(bk::format("%I64u", _v));
+}
+inline void push(pugi::xml_node &_n, __int64 _v)
+{
+	pugi::xml_node l_n = _n.append_child(); l_n.set_name("number");
+	l_n.append_child(pugi::node_pcdata).set_value(bk::format("%I64d", _v));
 }
 inline void push(pugi::xml_node &_n, float _v)
 {
