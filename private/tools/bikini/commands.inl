@@ -1,5 +1,7 @@
 //
 
+struct _command;
+
 void add_command(const bk::achar* _name, _command &_c);
 
 template <typename _F>
