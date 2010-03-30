@@ -30,9 +30,9 @@ namespace Studio
             if (l_result is bool) return Convert.ToBoolean(l_result);
             return false;
         }
-        public static UInt64 CreateGuiView(IntPtr _handle)
+        public static UInt64 CreateView(IntPtr _handle)
         {
-            XmlTextWriter l_xml = StartWriteRequest("CreateGuiView");
+            XmlTextWriter l_xml = StartWriteRequest("CreateView");
             WriteRequestArgument(l_xml, _handle);
             String l_request = EndWriteRequest(l_xml);
 
@@ -42,14 +42,22 @@ namespace Studio
             if (l_result is double) return Convert.ToUInt64(l_result);
             return Convert.ToUInt64(-1);
         }
-        public static void DestroyGuiView(UInt64 _ID)
+        public static void ResetView(UInt64 _ID, IntPtr _handle)
         {
-            XmlTextWriter l_xml = StartWriteRequest("DestroyGuiView");
+            XmlTextWriter l_xml = StartWriteRequest("ResetView");
+            WriteRequestArgument(l_xml, _ID);
+            WriteRequestArgument(l_xml, _handle);
+            String l_request = EndWriteRequest(l_xml);
+
+            ReadResult(request(l_request));
+        }
+        public static void DestroyView(UInt64 _ID)
+        {
+            XmlTextWriter l_xml = StartWriteRequest("DestroyView");
             WriteRequestArgument(l_xml, _ID);
             String l_request = EndWriteRequest(l_xml);
 
-            //String l_response = request(l_request);
-            Object l_result = ReadResult(request(l_request));
+            ReadResult(request(l_request));
         }
         public static Boolean Test(int _int, string _string)
         {

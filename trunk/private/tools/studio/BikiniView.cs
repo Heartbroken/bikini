@@ -10,15 +10,17 @@ using Studio.WinFormsUI.Docking;
 
 namespace Studio
 {
-    public partial class BikiniGuiView : DockContent
+    public partial class BikiniView : DockContent
     {
-        public BikiniGuiView()
+        public BikiniView()
         {
             InitializeComponent();
+            m_viewID = Bikini.CreateView(panel1.Handle);
+            m_handle = panel1.Handle;
         }
-        ~BikiniGuiView()
+        ~BikiniView()
         {
-            if (m_viewID != Bikini.BadID) Bikini.DestroyGuiView(m_viewID);
+            Bikini.DestroyView(m_viewID);
         }
 
         protected override string GetPersistString()
@@ -43,8 +45,7 @@ namespace Studio
         {
             if (m_handle != panel1.Handle)
             {
-                if (m_viewID != Bikini.BadID) Bikini.DestroyGuiView(m_viewID);
-                m_viewID = Bikini.CreateGuiView(panel1.Handle);
+                Bikini.ResetView(m_viewID, panel1.Handle);
                 m_handle = panel1.Handle;
             }
             Refresh();
