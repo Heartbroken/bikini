@@ -7,6 +7,7 @@ namespace bikini { /*-----------------------------------------------------------
 
 bk::video g_video;
 bk::vo::window::info g_vo_window_info;
+bk::ticker g_ticker(1.f / 30.f);
 
 //
 bk::vo::memreader::info g_vo_memreader_info;
@@ -24,9 +25,17 @@ void destroy_window(bk::uint _ID)
 {
 	g_video.kill(_ID);
 }
-bool update(bk::real _dt)
+bool update()
 {
-	return g_video.update(_dt);
+	g_ticker.sync();
+
+	static bk::rbig sl_time = bk::sys_time();
+
+	bk::rbig l_newtime = bk::sys_time();
+	bk::rbig l_dt = l_newtime - sl_time;
+	sl_time = l_newtime;
+
+	return g_video.update((bk::real)l_dt);
 }
 
 void create()
@@ -36,11 +45,8 @@ void create()
 	commands::add("CreateGuiView", l_create_gui_view);
 	bk::functor_<void, bk::uint> l_destroy_gui_view(&destroy_window);
 	commands::add("DestroyGuiView", l_destroy_gui_view);
-	bk::functor_<bool, bk::real> l_update(&update);
+	bk::functor_<bool> l_update(&update);
 	commands::add("Update", l_update);
-
-	//
-	//g_video.spawn(g_vo_memreader_info);
 }
 void destroy()
 {

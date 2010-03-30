@@ -12,16 +12,22 @@ namespace Studio
     {
         public const UInt64 BadID = 0xffffffffffffffff;
 
-        public static Boolean Update(float _dt)
+        public static Boolean Create()
         {
-            XmlTextWriter l_xml = StartWriteRequest("Update");
-            WriteRequestArgument(l_xml, _dt);
-            String l_request = EndWriteRequest(l_xml);
-
-            //String l_response = request(l_request);
-            Object l_result = ReadResult(request(l_request));
+            Object l_result = ReadResult(request(WriteRequest("Create")));
 
             if (l_result is bool && Convert.ToBoolean(l_result)) return true;
+            return false;
+        }
+        public static void Destroy()
+        {
+            request(WriteRequest("Destroy"));
+        }
+        public static Boolean Update()
+        {
+            Object l_result = ReadResult(request(WriteRequest("Update")));
+
+            if (l_result is bool) return Convert.ToBoolean(l_result);
             return false;
         }
         public static UInt64 CreateGuiView(IntPtr _handle)
