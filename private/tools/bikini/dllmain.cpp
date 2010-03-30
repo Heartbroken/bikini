@@ -8,9 +8,14 @@ extern void destroy();
 
 } // namespace bikini /*-------------------------------------------------------------------------*/
 
-bool test_command(bk::sint _a, const bk::astring &_b)
+bool create_bikini()
 {
+	bikini::create();
 	return true;
+}
+void destroy_bikini()
+{
+	bikini::destroy();
 }
 
 BOOL APIENTRY DllMain(HMODULE _module, DWORD _reason, LPVOID)
@@ -20,9 +25,8 @@ BOOL APIENTRY DllMain(HMODULE _module, DWORD _reason, LPVOID)
 		case DLL_PROCESS_ATTACH :
 		{
 			commands::create();
-			bk::functor_<bool, bk::sint, const bk::astring&> l_command(&test_command);
-			commands::add("Test", l_command);
-			bikini::create();
+			commands::add("Create", bk::functor_<bool>(&create_bikini));
+			commands::add("Destroy", bk::functor(&destroy_bikini));
 			break;
 		}
 		case DLL_THREAD_ATTACH :
@@ -35,7 +39,8 @@ BOOL APIENTRY DllMain(HMODULE _module, DWORD _reason, LPVOID)
 		}
 		case DLL_PROCESS_DETACH :
 		{
-			bikini::destroy();
+			commands::remove("Destroy");
+			commands::remove("Create");
 			commands::destroy();
 			break;
 		}

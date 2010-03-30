@@ -6,21 +6,29 @@ namespace Studio
 {
     static class Program
     {
+        static private MainForm m_mainForm = null;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Idle += new EventHandler(Application_Idle);
-            Application.Run(new MainForm());
+            if (Bikini.Create())
+            {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Idle += new EventHandler(Application_Idle);
+                m_mainForm = new MainForm();
+                Application.Run(m_mainForm);
+                Bikini.Destroy();
+            }
         }
 
         static private void Application_Idle(Object sender, EventArgs e)
         {
-            Bikini.Update(1.0f / 30.0f);
+            m_mainForm.UpdateViews();
+            Bikini.Update();
         }
     }
 }

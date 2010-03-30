@@ -88,6 +88,18 @@ namespace Studio
 			}
 		}
 
+        public void UpdateViews()
+        {
+            for (int index = dockPanel.Contents.Count - 1; index >= 0; index--)
+            {
+                if (dockPanel.Contents[index] is BikiniGuiView)
+                {
+                    BikiniGuiView content = (BikiniGuiView)dockPanel.Contents[index];
+                    content.UpdateView();
+                }
+            }
+        }
+
 		private void menuItemNew_Click(object sender, System.EventArgs e)
 		{
 			//DummyDoc dummyDoc = CreateNewDocument();

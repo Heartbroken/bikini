@@ -37,6 +37,10 @@ namespace Studio
 
         private void guiViewTimer_Tick(object sender, EventArgs e)
         {
+        }
+
+        public void UpdateView()
+        {
             if (m_handle != panel1.Handle)
             {
                 if (m_viewID != Bikini.BadID) Bikini.DestroyGuiView(m_viewID);

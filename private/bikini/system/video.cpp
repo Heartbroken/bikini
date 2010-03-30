@@ -10,6 +10,7 @@
 
 
 #define GWL_WNDPROC			(-4)
+#define USE_RENDERING_THREAD	1
 
 namespace bk { /*--------------------------------------------------------------------------------*/
 
@@ -20,29 +21,37 @@ video::rendering::rendering(video &_video)
 	m_video(_video),
 	m_task(*this, &rendering::m_proc, "bikini-iii rendering"),
 	m_cbuffer(cbuffer_size), m_dbuffer(dbuffer_size), m_ibuffer(ibuffer_size),
-	m_has_command(false, false), m_can_read_data(false, false), m_can_write_data(false, true),
-	m_all_commands_done(false, false)
+	m_has_command(false, false), m_can_read_data(false, false), m_can_write_data(false, true)
 {}
 video::rendering::~rendering()
 {
 }
 bool video::rendering::create()
 {
+#if USE_RENDERING_THREAD
 	m_run = true;
 	if (!m_task.run())
 	{
 		m_run = false;
 		return false;
 	}
+#else
+	m_task.run();
+	initialize();
+#endif
 	return true;
 }
 void video::rendering::destroy()
 {
+#if USE_RENDERING_THREAD
 	if (m_run)
 	{
 		m_run = false;
 		m_task.wait();
 	}
+#else
+	finalize();
+#endif
 }
 bool video::rendering::add_command(const command &_command)
 {
@@ -191,6 +200,7 @@ static inline void set_key_field(u64 & _key, const _key_field &_field, u64 _valu
 
 void video::rendering::m_proc()
 {
+#if USE_RENDERING_THREAD
 	if (initialize())
 	{
 		while (m_run)
@@ -204,13 +214,13 @@ void video::rendering::m_proc()
 			}
 			else
 			{
-				m_all_commands_done.set();
 				m_has_command.wait(real(0.1));
 			}
 		}
 
 		finalize();
 	}
+#endif
 }
 
 // video
@@ -272,7 +282,7 @@ bool video::update(real _dt)
 
 		for (command_map::iterator i = m_cbuffer.begin(), e = m_cbuffer.end(); i != e; ++i)
 		{
-			//m_rendering.execute(i->second);
+#if USE_RENDERING_THREAD
 			if (!m_rendering.add_command(i->second))
 			{
 				std::cerr << "WARNING: Rendering command buffer is full.\n";
@@ -280,10 +290,12 @@ bool video::update(real _dt)
 				// If ring buffer is full. Wait and retry
 				while (!m_rendering.add_command(i->second)) sleep(0);
 			}
+#else
+			m_rendering.execute(i->second);
+#endif
 		}
 
 		m_cbuffer.clear();
-		m_rendering.wait();
 	}
 
 	return true;
@@ -295,7 +307,11 @@ void video::destroy()
 }
 inline void video::add_command(const command &_command)
 {
+#if USE_RENDERING_THREAD
 	m_rendering.add_command(_command);
+#else
+	m_rendering.execute(_command);
+#endif
 }
 inline void video::add_command(u64 _sort_key, const command &_command)
 {
@@ -1242,18 +1258,21 @@ long window::m_wndproc(uint _message, uint _wparam, uint _lparam)
 						FillRgn(l_hdc, l_rgn, (HBRUSH)GetStockObject(BLACK_BRUSH));
 						ReleaseDC(m_window, l_hdc);
 					}
+					DeleteObject(l_rgn2);
 				}
+				DeleteObject(l_rgn);
+
 				m_flags &= ~erase_background;
 			}
 			m_flags |= force_redraw;
 			break;
 		}
-		case WM_DESTROY :
-		{
-			SetWindowLongPtr(m_window, GWL_WNDPROC, (LONG_PTR)m_oldwndproc);
-			m_window = 0;
-			break;
-		}
+		//case WM_DESTROY :
+		//{
+		//	SetWindowLongPtr(m_window, GWL_WNDPROC, (LONG_PTR)m_oldwndproc);
+		//	m_window = 0;
+		//	break;
+		//}
 	}
 
 	return (long)CallWindowProc(m_oldwndproc, m_window, (UINT)_message, _wparam, _lparam);
