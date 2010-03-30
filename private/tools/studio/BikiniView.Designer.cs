@@ -1,6 +1,6 @@
 ﻿namespace Studio
 {
-    partial class BikiniGuiView
+    partial class BikiniView
     {
         /// <summary>
         /// Required designer variable.

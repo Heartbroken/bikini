@@ -3,15 +3,14 @@
 
 namespace bikini { /*----------------------------------------------------------------------------*/
 
-extern void create();
+extern bool create();
 extern void destroy();
 
 } // namespace bikini /*-------------------------------------------------------------------------*/
 
 bool create_bikini()
 {
-	bikini::create();
-	return true;
+	return bikini::create();
 }
 void destroy_bikini()
 {

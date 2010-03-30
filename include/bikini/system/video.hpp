@@ -519,6 +519,8 @@ struct window : video::object
 	window(const info &_info, video &_video, HWND _window);
 	~window();
 
+	bool reset(HWND _window);
+
 	bool update(real _dt);
 
 	uint add_viewport();

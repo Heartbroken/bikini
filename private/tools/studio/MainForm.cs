@@ -92,9 +92,9 @@ namespace Studio
         {
             for (int index = dockPanel.Contents.Count - 1; index >= 0; index--)
             {
-                if (dockPanel.Contents[index] is BikiniGuiView)
+                if (dockPanel.Contents[index] is BikiniView)
                 {
-                    BikiniGuiView content = (BikiniGuiView)dockPanel.Contents[index];
+                    BikiniView content = (BikiniView)dockPanel.Contents[index];
                     content.UpdateView();
                 }
             }
@@ -103,7 +103,7 @@ namespace Studio
 		private void menuItemNew_Click(object sender, System.EventArgs e)
 		{
 			//DummyDoc dummyDoc = CreateNewDocument();
-            BikiniGuiView dummyDoc = CreateNewGuiView();
+            BikiniView dummyDoc = CreateNewGuiView();
             if (dockPanel.DocumentStyle == DocumentStyle.SystemMdi)
 			{
 				dummyDoc.MdiParent = this;
@@ -113,9 +113,9 @@ namespace Studio
 				dummyDoc.Show(dockPanel);
 		}
 
-        private BikiniGuiView CreateNewGuiView()
+        private BikiniView CreateNewGuiView()
         {
-            BikiniGuiView l_guiView = new BikiniGuiView();
+            BikiniView l_guiView = new BikiniView();
 
             int l_count = 1;
             string l_text = "Document" + l_count.ToString();

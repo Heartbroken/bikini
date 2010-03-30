@@ -1163,6 +1163,19 @@ window::~window()
 	if (m_window != 0 && GetWindowLongPtrW(m_window, GWL_WNDPROC) == (LONG_PTR)_wndproc)
 		SetWindowLongPtr(m_window, GWL_WNDPROC, (LONG_PTR)m_oldwndproc);
 }
+bool window::reset(HWND _window)
+{
+	// We should do this only if prev window is already destroed !!!
+	assert(m_window == 0);
+
+	//if (m_window != 0 && GetWindowLongPtrW(m_window, GWL_WNDPROC) == (LONG_PTR)_wndproc)
+	//	SetWindowLongPtr(m_window, GWL_WNDPROC, (LONG_PTR)m_oldwndproc);
+
+	m_window = _window;
+	m_oldwndproc = (WNDPROC)SetWindowLongPtr(m_window, GWL_WNDPROC, (LONG_PTR)_wndproc);
+	set_invalid();
+	return true;
+}
 bool window::update(real _dt)
 {
 	if (m_window == 0) return true;
@@ -1267,12 +1280,14 @@ long window::m_wndproc(uint _message, uint _wparam, uint _lparam)
 			m_flags |= force_redraw;
 			break;
 		}
-		//case WM_DESTROY :
-		//{
-		//	SetWindowLongPtr(m_window, GWL_WNDPROC, (LONG_PTR)m_oldwndproc);
-		//	m_window = 0;
-		//	break;
-		//}
+		case WM_DESTROY :
+		{
+			LRESULT l_result = CallWindowProc(m_oldwndproc, m_window, (UINT)_message, _wparam, _lparam);
+			SetWindowLongPtr(m_window, GWL_WNDPROC, (LONG_PTR)m_oldwndproc);
+			m_window = 0;
+			return l_result;
+			break;
+		}
 	}
 
 	return (long)CallWindowProc(m_oldwndproc, m_window, (UINT)_message, _wparam, _lparam);
