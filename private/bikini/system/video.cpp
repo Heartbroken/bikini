@@ -1227,7 +1227,7 @@ bool window::update(real _dt)
 
 	return true;
 }
-long _stdcall window::_wndproc(HWND _window, uint _message, uint _wparam, uint _lparam)
+LRESULT _stdcall window::_wndproc(HWND _window, uint _message, uint _wparam, uint _lparam)
 {
 	window *l_window_p = window::first_p;
 	while (l_window_p)
@@ -1242,7 +1242,7 @@ long _stdcall window::_wndproc(HWND _window, uint _message, uint _wparam, uint _
 
 	return 1;
 }
-long window::m_wndproc(uint _message, uint _wparam, uint _lparam)
+LRESULT window::m_wndproc(uint _message, uint _wparam, uint _lparam)
 {
 	switch (_message)
 	{
@@ -1290,7 +1290,7 @@ long window::m_wndproc(uint _message, uint _wparam, uint _lparam)
 		}
 	}
 
-	return (long)CallWindowProc(m_oldwndproc, m_window, (UINT)_message, _wparam, _lparam);
+	return CallWindowProc(m_oldwndproc, m_window, (UINT)_message, _wparam, _lparam);
 }
 uint window::add_viewport()
 {

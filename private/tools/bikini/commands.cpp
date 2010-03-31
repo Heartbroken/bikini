@@ -34,9 +34,10 @@ void remove(const bk::achar* _name)
 // export interface
 
 extern "C" __declspec(dllexport)
-const bk::wchar* __stdcall request(const bk::wchar* _command)
+const char* __stdcall request(const char* _command)
 {
-	std::stringstream l_stream(bk::utf8(_command));
+	bk::astring l_xml(_command);
+	std::istringstream l_stream(l_xml);
 	pugi::xml_document l_document;
 	l_document.load(l_stream, pugi::format_default|pugi::format_write_bom_utf8);
 	pugi::xml_node l_command = l_document.child("command");
@@ -56,23 +57,12 @@ const bk::wchar* __stdcall request(const bk::wchar* _command)
 			pugi::xml_writer_stream l_writer(l_stream);
 			l_document.save(l_writer, "  ", pugi::format_no_declaration | pugi::format_indent);
 
-			static bk::wstring l_xml;
-			l_xml = bk::utf8(l_stream.str());
+			static bk::astring l_xml;
+			l_xml = l_stream.str();
 			return l_xml.c_str();
-
-			//bk::wstring l_xml;
-			//l_xml = bk::utf8(l_stream.str());
-			//return l_xml.c_str();
-
-			//static bk::wchar* l_str = new bk::wchar[1024];
-			//wcscpy_s(l_str, 1024, bk::utf8(l_stream.str()).c_str());
-			//return l_str;
-
-			//return L"<result><number>0</number></result>";
-			return 0;
 		}
 	}
-	return L"<error />";
+	return "<error />";
 }
 
 } /* namespace commands -------------------------------------------------------------------------*/
