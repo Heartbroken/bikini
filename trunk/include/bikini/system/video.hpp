@@ -532,9 +532,9 @@ struct window : video::object
 private:
 	HWND m_window;
 	uint m_resource_ID;
-	static long _stdcall _wndproc(HWND _window, uint _message, uint _wparam, uint _lparam);
+	static LRESULT _stdcall _wndproc(HWND _window, uint _message, uint _wparam, uint _lparam);
 	static window *first_p; window *next_p;
-	long m_wndproc(uint _message, uint _wparam, uint _lparam);
+	LRESULT m_wndproc(uint _message, uint _wparam, uint _lparam);
 	WNDPROC m_oldwndproc;
 	viewport::info m_viewport_info;
 	uint_array m_viewports;

@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace Studio
 {
-    class Bikini
+    static class Bikini
     {
         public const UInt64 BadID = 0xffffffffffffffff;
 
@@ -36,7 +36,6 @@ namespace Studio
             WriteRequestArgument(l_xml, _handle);
             String l_request = EndWriteRequest(l_xml);
 
-            //String l_response = request(l_request);
             Object l_result = ReadResult(request(l_request));
 
             if (l_result is double) return Convert.ToUInt64(l_result);
@@ -66,9 +65,6 @@ namespace Studio
             WriteRequestArgument(l_xml, _string);
             String l_request = EndWriteRequest(l_xml);
 
-            //String l_request = WriteRequest("Test");
-
-            //String l_response = request(l_request);
             Object l_result = ReadResult(request(l_request));
 
             if (l_result is bool && Convert.ToBoolean(l_result)) return true;
@@ -137,7 +133,7 @@ namespace Studio
         }
         static Object ReadResult(IntPtr _response)
         {
-            String l_response = Marshal.PtrToStringUni(_response);
+            String l_response = Marshal.PtrToStringAnsi(_response);
             Object l_result = null;
 
             if (_response == null) return l_result;
@@ -172,15 +168,15 @@ namespace Studio
 
 #       if DEBUG
 #           if Win32
-                [DllImport("bikini (Win32!Debug).dll", CharSet = CharSet.Unicode)]
+                [DllImport("bikini (Win32!Debug).dll", CharSet = CharSet.Ansi)]
 #           elif x64
-                [DllImport("bikini (x64!Debug).dll", CharSet = CharSet.Unicode)]
+                [DllImport("bikini (x64!Debug).dll", CharSet = CharSet.Ansi)]
 #           endif
 #       elif RELEASE
 #           if Win32
-                [DllImport("bikini (Win32!Release).dll", CharSet = CharSet.Unicode)]
+                [DllImport("bikini (Win32!Release).dll", CharSet = CharSet.Ansi)]
 #           elif x64
-                [DllImport("bikini (x64!Release).dll", CharSet = CharSet.Unicode)]
+                [DllImport("bikini (x64!Release).dll", CharSet = CharSet.Ansi)]
 #           endif
 #       endif
         public static extern IntPtr request(String _command);
