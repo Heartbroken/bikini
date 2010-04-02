@@ -14,8 +14,8 @@ bk::uint create_window(bk::handle _handle)
 	bk::uint l_vo_window_ID = g_video.spawn(g_vo_window_info, (HWND)_handle);
 	bk::uint l_vo_viewport_ID = g_video.get_<bk::vo::window>(l_vo_window_ID).viewport_ID(0);
 	g_video.get_<bk::vo::viewport>(l_vo_viewport_ID).set_clear_flags(bk::cf::color);
-	bk::color l_color(bk::random_0.get(1.f), bk::random_0.get(1.f), bk::random_0.get(1.f));
-	g_video.get_<bk::vo::viewport>(l_vo_viewport_ID).set_clear_color(l_color);
+	//bk::color l_color(bk::random_0.get(1.f), bk::random_0.get(1.f), bk::random_0.get(1.f));
+	g_video.get_<bk::vo::viewport>(l_vo_viewport_ID).set_clear_color(bk::black);
 	return l_vo_window_ID;
 }
 void reset_window(bk::uint _ID, bk::handle _handle)
