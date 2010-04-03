@@ -19,7 +19,7 @@ bool bikini::create()
 		commands::add("Update", bk::functor_<bool>(*this, &bikini::update));
 		commands::add("Destroy", bk::functor(*this, &bikini::destroy));
 
-		commands::add("NewSolution", bk::functor_<bool, const bk::wstring&>(*this, &bikini::new_solution));
+		commands::add("CreateSolution", bk::functor_<bool, const bk::wstring&>(*this, &bikini::create_solution));
 
 		// test
 		commands::add("CreateView", bk::functor_<bk::uint, bk::handle>(*this, &bikini::create_window));
@@ -47,14 +47,14 @@ void bikini::destroy()
 	commands::remove("ResetView");
 	commands::remove("CreateView");
 
-	commands::remove("NewSolution");
+	commands::remove("CreateSolution");
 
 	commands::remove("Destroy");
 	commands::remove("Update");
 	m_video.destroy();
 }
 
-bool bikini::new_solution(const bk::wstring &_path)
+bool bikini::create_solution(const bk::wstring &_path)
 {
 	return true;
 }
