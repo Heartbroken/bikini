@@ -75,6 +75,14 @@ template <> struct pop<const bk::astring&> { static inline const bk::achar* a(co
 {
 	return child(_n, _i).child_value();
 }};
+template <> struct pop<bk::wstring> { static inline bk::wstring a(const pugi::xml_node &_n, bk::uint _i)
+{
+	return bk::utf8(child(_n, _i).child_value());
+}};
+template <> struct pop<const bk::wstring&> { static inline bk::wstring a(const pugi::xml_node &_n, bk::uint _i)
+{
+	return bk::utf8(child(_n, _i).child_value());
+}};
 
 //
 
