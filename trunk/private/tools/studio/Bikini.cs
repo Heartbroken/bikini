@@ -31,9 +31,9 @@ namespace Studio
             return false;
         }
 
-        public static Boolean NewSolution()
+        public static Boolean CreateSolution()
         {
-            XmlTextWriter l_xml = StartWriteRequest("NewSolution");
+            XmlTextWriter l_xml = StartWriteRequest("CreateSolution");
             WriteRequestArgument(l_xml, "Русские буквы");
             String l_request = EndWriteRequest(l_xml);
 

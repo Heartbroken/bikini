@@ -12,6 +12,9 @@ namespace Studio
 {
     public partial class BikiniView : DockContent
     {
+        private UInt64 m_viewID = Bikini.BadID;
+        private IntPtr m_handle = (IntPtr)0;
+
         public BikiniView()
         {
             InitializeComponent();
@@ -19,7 +22,7 @@ namespace Studio
             m_handle = panel1.Handle;
 
             // test
-            Bikini.NewSolution();
+            Bikini.CreateSolution();
         }
         ~BikiniView()
         {
@@ -31,17 +34,6 @@ namespace Studio
             // Add extra information into the persist string for this document
             // so that it is available when deserialized.
             return GetType().ToString() + "," + "" + "," + Text;
-        }
-
-        UInt64 m_viewID = Bikini.BadID;
-        IntPtr m_handle = (IntPtr)0;
-        private void BikiniGuiView_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void guiViewTimer_Tick(object sender, EventArgs e)
-        {
         }
 
         public void UpdateView()

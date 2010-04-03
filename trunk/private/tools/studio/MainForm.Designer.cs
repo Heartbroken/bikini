@@ -98,7 +98,6 @@ namespace Studio
             this.toolBarButtonLayoutByCode = new System.Windows.Forms.ToolStripButton();
             this.toolBarButtonLayoutByXml = new System.Windows.Forms.ToolStripButton();
             this.dockPanel = new Studio.WinFormsUI.Docking.DockPanel();
-            this.bikiniTimer = new System.Windows.Forms.Timer(this.components);
             this.mainMenu.SuspendLayout();
             this.toolBar.SuspendLayout();
             this.SuspendLayout();
@@ -594,12 +593,6 @@ namespace Studio
             this.dockPanel.Skin = dockPanelSkin1;
             this.dockPanel.TabIndex = 0;
             // 
-            // bikiniTimer
-            // 
-            this.bikiniTimer.Enabled = true;
-            this.bikiniTimer.Interval = 10;
-            this.bikiniTimer.Tick += new System.EventHandler(this.bikiniTimer_Tick);
-            // 
             // MainForm
             // 
             this.ClientSize = new System.Drawing.Size(579, 409);
@@ -679,6 +672,5 @@ namespace Studio
         private System.Windows.Forms.StatusStrip statusBar;
         private System.Windows.Forms.ToolStripMenuItem showRightToLeft;
         private System.Windows.Forms.ToolStripMenuItem exitWithoutSavingLayout;
-        private System.Windows.Forms.Timer bikiniTimer;
     }
 }
