@@ -127,6 +127,10 @@ inline manager& manager::object::get_manager() const
 {
 	return m_manager;
 }
+template <typename _M> inline _M& manager::object::get_manager_() const
+{
+	return static_cast<_M&>(m_manager);
+}
 inline uint manager::object::type() const
 {
 	return m_info.type();
