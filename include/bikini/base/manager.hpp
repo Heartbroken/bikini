@@ -42,6 +42,7 @@ struct manager : noncopyable
 		inline const info& get_info() const;
 		template<typename _Info> const _Info& get_info_() const;
 		inline manager& get_manager() const;
+		template <typename _Manager> inline _Manager& get_manager_() const;
 		inline uint type() const;
 		inline uint ID() const;
 		inline uint add_relation(uint _relation);

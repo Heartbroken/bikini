@@ -24,3 +24,4 @@
 
 // internal
 #include "commands.h"
+#include "solution.h"
