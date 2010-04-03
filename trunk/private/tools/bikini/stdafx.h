@@ -23,5 +23,4 @@
 #pragma comment(lib, "pugixml ("_PLATFORM_"!"_CONFIGURATION_")")
 
 // internal
-#include "commands.h"
-#include "solution.h"
+#include "bikini.h"

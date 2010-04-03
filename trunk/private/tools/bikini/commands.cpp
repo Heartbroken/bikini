@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-namespace commands { /*--------------------------------------------------------------------------*/
+namespace commands { //----------------------------------------------------------------------------
 
 typedef std::map<bk::astring, _command*> command_map;
 command_map *g_command_map_p = 0;
@@ -34,12 +34,12 @@ void remove(const bk::achar* _name)
 // export interface
 
 extern "C" __declspec(dllexport)
-const char* __stdcall request(const char* _command)
+const wchar_t* __stdcall request(const wchar_t* _command)
 {
-	bk::astring l_xml(_command);
-	std::istringstream l_stream(l_xml);
+	bk::astring l_xml(bk::utf8(_command));
+	//std::istringstream l_stream(l_xml);
 	pugi::xml_document l_document;
-	l_document.load(l_stream, pugi::format_default|pugi::format_write_bom_utf8);
+	l_document.load(std::istringstream(l_xml), pugi::format_default|pugi::format_write_bom_utf8);
 	pugi::xml_node l_command = l_document.child("command");
 	if (l_command)
 	{
@@ -57,12 +57,12 @@ const char* __stdcall request(const char* _command)
 			pugi::xml_writer_stream l_writer(l_stream);
 			l_document.save(l_writer, "  ", pugi::format_no_declaration | pugi::format_indent);
 
-			static bk::astring l_xml;
-			l_xml = l_stream.str();
+			static bk::wstring l_xml;
+			l_xml = bk::utf8(l_stream.str());
 			return l_xml.c_str();
 		}
 	}
-	return "<error />";
+	return L"<error />";
 }
 
-} /* namespace commands -------------------------------------------------------------------------*/
+} // namespace commands ---------------------------------------------------------------------------

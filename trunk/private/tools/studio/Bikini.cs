@@ -30,6 +30,20 @@ namespace Studio
             if (l_result is bool) return Convert.ToBoolean(l_result);
             return false;
         }
+
+        public static Boolean NewSolution()
+        {
+            XmlTextWriter l_xml = StartWriteRequest("NewSolution");
+            WriteRequestArgument(l_xml, "Русские буквы");
+            String l_request = EndWriteRequest(l_xml);
+
+            Object l_result = ReadResult(request(l_request));
+
+            if (l_result is bool && Convert.ToBoolean(l_result)) return true;
+            return false;
+        }
+
+        // test
         public static UInt64 CreateView(IntPtr _handle)
         {
             XmlTextWriter l_xml = StartWriteRequest("CreateView");
@@ -133,7 +147,7 @@ namespace Studio
         }
         static Object ReadResult(IntPtr _response)
         {
-            String l_response = Marshal.PtrToStringAnsi(_response);
+            String l_response = Marshal.PtrToStringUni(_response);
             Object l_result = null;
 
             if (_response == null) return l_result;
@@ -168,15 +182,15 @@ namespace Studio
 
 #       if DEBUG
 #           if Win32
-                [DllImport("bikini (Win32!Debug).dll", CharSet = CharSet.Ansi)]
+                [DllImport("bikini (Win32!Debug).dll", CharSet = CharSet.Unicode)]
 #           elif x64
-                [DllImport("bikini (x64!Debug).dll", CharSet = CharSet.Ansi)]
+                [DllImport("bikini (x64!Debug).dll", CharSet = CharSet.Unicode)]
 #           endif
 #       elif RELEASE
 #           if Win32
-                [DllImport("bikini (Win32!Release).dll", CharSet = CharSet.Ansi)]
+                [DllImport("bikini (Win32!Release).dll", CharSet = CharSet.Unicode)]
 #           elif x64
-                [DllImport("bikini (x64!Release).dll", CharSet = CharSet.Ansi)]
+                [DllImport("bikini (x64!Release).dll", CharSet = CharSet.Unicode)]
 #           endif
 #       endif
         public static extern IntPtr request(String _command);

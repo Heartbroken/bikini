@@ -337,6 +337,10 @@
 				RelativePath=".\bikini.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\bikini.h"
+				>
+			</File>
 			<Filter
 				Name="solution"
 				>

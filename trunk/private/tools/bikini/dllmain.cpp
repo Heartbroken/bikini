@@ -1,13 +1,6 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "stdafx.h"
 
-namespace bikini { /*----------------------------------------------------------------------------*/
-
-extern bool create();
-extern void destroy();
-
-} // namespace bikini /*-------------------------------------------------------------------------*/
-
 BOOL APIENTRY DllMain(HMODULE _module, DWORD _reason, LPVOID)
 {
 	switch (_reason)
@@ -15,8 +8,7 @@ BOOL APIENTRY DllMain(HMODULE _module, DWORD _reason, LPVOID)
 		case DLL_PROCESS_ATTACH :
 		{
 			commands::create();
-			commands::add("Create", bk::functor_<bool>(&bikini::create));
-			commands::add("Destroy", bk::functor(&bikini::destroy));
+			commands::add("Create", bk::functor_<bool>(get_bikini(), &bikini::create));
 			break;
 		}
 		case DLL_THREAD_ATTACH :
@@ -29,7 +21,6 @@ BOOL APIENTRY DllMain(HMODULE _module, DWORD _reason, LPVOID)
 		}
 		case DLL_PROCESS_DETACH :
 		{
-			commands::remove("Destroy");
 			commands::remove("Create");
 			commands::destroy();
 			break;

@@ -17,6 +17,9 @@ namespace Studio
             InitializeComponent();
             m_viewID = Bikini.CreateView(panel1.Handle);
             m_handle = panel1.Handle;
+
+            // test
+            Bikini.NewSolution();
         }
         ~BikiniView()
         {
