@@ -120,6 +120,7 @@ namespace Studio
         {
             if (_v is Single) return Convert.ToSingle(_v).ToString(CultureInfo.InvariantCulture);
             if (_v is Double) return Convert.ToDouble(_v).ToString(CultureInfo.InvariantCulture);
+            //if (_v is String) return Encoding.UTF8.GetString(Encoding.Unicode.GetBytes(Convert.ToString(_v)));
             return _v.ToString();
         }
         static void WriteRequestArgument<_T>(XmlTextWriter _xml, _T _v)
@@ -145,14 +146,13 @@ namespace Studio
         {
             return EndWriteRequest(StartWriteRequest(_name));
         }
-        static Object ReadResult(IntPtr _response)
+        static Object ReadResult(String _response)
         {
-            String l_response = Marshal.PtrToStringUni(_response);
             Object l_result = null;
 
             if (_response == null) return l_result;
 
-            byte[] l_byteArray = Encoding.ASCII.GetBytes(l_response);
+            byte[] l_byteArray = Encoding.ASCII.GetBytes(_response);
             MemoryStream l_streamIn = new MemoryStream(l_byteArray);
             XmlTextReader l_xmlIn = new XmlTextReader(l_streamIn);
             l_xmlIn.WhitespaceHandling = WhitespaceHandling.None;
@@ -178,11 +178,21 @@ namespace Studio
             return l_result;
         }
 
+        static String request(String _command)
+        {
+            byte[] l_command = Encoding.UTF8.GetBytes(_command);
+            IntPtr l_responsePtr = request(Marshal.UnsafeAddrOfPinnedArrayElement(l_command, 0));
+            int l_responseLength = Marshal.PtrToStringAnsi(l_responsePtr).Length;
+            byte[] l_response = new byte[l_responseLength];
+            Marshal.Copy(l_responsePtr, l_response, 0, l_responseLength);
+            return Encoding.UTF8.GetString(l_response);
+        }
+
         // P/Invoke
 
 #       if DEBUG
 #           if Win32
-                [DllImport("bikini (Win32!Debug).dll", CharSet = CharSet.Unicode)]
+                [DllImport("bikini (Win32!Debug).dll", CharSet = CharSet.Ansi)]
 #           elif x64
                 [DllImport("bikini (x64!Debug).dll", CharSet = CharSet.Unicode)]
 #           endif
@@ -193,6 +203,6 @@ namespace Studio
                 [DllImport("bikini (x64!Release).dll", CharSet = CharSet.Unicode)]
 #           endif
 #       endif
-        public static extern IntPtr request(String _command);
+        public static extern IntPtr request(IntPtr _command);
     }
 }
