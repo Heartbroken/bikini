@@ -34,9 +34,9 @@ void remove(const bk::achar* _name)
 // export interface
 
 extern "C" __declspec(dllexport)
-const wchar_t* __stdcall request(const wchar_t* _command)
+const char* __stdcall request(const char* _command)
 {
-	bk::astring l_xml(bk::utf8(_command));
+	bk::astring l_xml(_command);
 	//std::istringstream l_stream(l_xml);
 	pugi::xml_document l_document;
 	l_document.load(std::istringstream(l_xml), pugi::format_default|pugi::format_write_bom_utf8);
@@ -57,12 +57,12 @@ const wchar_t* __stdcall request(const wchar_t* _command)
 			pugi::xml_writer_stream l_writer(l_stream);
 			l_document.save(l_writer, "  ", pugi::format_no_declaration | pugi::format_indent);
 
-			static bk::wstring l_xml;
-			l_xml = bk::utf8(l_stream.str());
+			static bk::astring l_xml;
+			l_xml = l_stream.str();
 			return l_xml.c_str();
 		}
 	}
-	return L"<error />";
+	return "<error />";
 }
 
 } // namespace commands ---------------------------------------------------------------------------
