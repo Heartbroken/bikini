@@ -62,6 +62,7 @@
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Win32' ">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -72,6 +73,7 @@
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <DebugSymbols>true</DebugSymbols>
@@ -101,6 +103,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -111,12 +114,180 @@
     <Compile Include="AboutDialog.Designer.cs">
       <DependentUpon>AboutDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Alsing.SyntaxBox\Classes\Caret.cs" />
+    <Compile Include="Alsing.SyntaxBox\Classes\KeyboadActionList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Classes\KeyboardAction.cs" />
+    <Compile Include="Alsing.SyntaxBox\Classes\NativePainter.cs" />
+    <Compile Include="Alsing.SyntaxBox\Classes\Selection.cs" />
+    <Compile Include="Alsing.SyntaxBox\Classes\Structs.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\Autolist\AutoListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\Autolist\TabListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\BaseControls\BaseControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\BaseControls\BaseListBoxControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\BaseControls\BasePanelControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\BaseControls\BorderControl.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\EditView\EditViewControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\FormatLabel\Element.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\FormatLabel\Events.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\FormatLabel\FormatLabelControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\FormatLabel\Row.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\FormatLabel\Word.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\InfoTip\InfoTipForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\IntelliMouse\Events.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\IntelliMouse\IntelliMouse.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\RegionHandler\RegionHandler.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\SplitView\SplitViewChildControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\SplitView\SplitViewControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\SplitView\SplitViewParentControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\Syntaxbox\Dialogs\FindReplace.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\Syntaxbox\Dialogs\GotoLine.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\Syntaxbox\Dialogs\Settings.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\Syntaxbox\Events.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\Syntaxbox\SyntaxBoxControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\Syntaxbox\SyntaxBoxDesigner.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\ThumbControl\ThumbControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\ThumbControl\ThumbControl.Designer.cs">
+      <DependentUpon>ThumbControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Design\CollectionEditorGui.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Design\ComponaCollectionEditor.cs" />
+    <Compile Include="Alsing.SyntaxBox\Design\FilteredTypeConverter.cs" />
+    <Compile Include="Alsing.SyntaxBox\Design\Int32AutoConverter.cs" />
+    <Compile Include="Alsing.SyntaxBox\Design\Int32DefaultConverter.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Row\Row.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Row\RowEventArgs.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Row\RowEventHandler.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Row\RowList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Span\Span.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Span\SpanList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Structs\BracketType.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Structs\TextPoint.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Structs\TextRange.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Undo\UndoBlock.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Undo\UndoBlockCollection.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Undo\UndoBuffer.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Word\Word.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Word\WordList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Export\CollapsingHTMLExporter.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Export\SimpleHTMLExporter.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\ImageIndexList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Parser\DefaultParser.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Parser\IParser.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Parser\NewParser.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Parser\ParserBase.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Parser\ParserEventHandler.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Parser\ParseTools.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Parser\ScanResultSegment.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Parser\ScanResultWord.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Print\SourceCodePrintDocument.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\Pattern\Pattern.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\Pattern\PatternCollection.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\Pattern\PatternExtensions.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\Pattern\PatternList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\Pattern\PatternListList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\Pattern\PatternScanResult.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\Scope\Scope.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\Scope\ScopeList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\SpanDefinition\SpanDefinition.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\SpanDefinition\SpanDefinitionList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\SyntaxDefinition.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\SyntaxDefinitionList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\SyntaxDefinitionLoader.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\TextStyle\TextStyle.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\TextStyle\TextStyleDesignerDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\TextStyle\TextStyleUIEditor.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDocument.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Drawing\DesktopGraphics.cs" />
+    <Compile Include="Alsing.SyntaxBox\Drawing\DrawingTools.cs" />
+    <Compile Include="Alsing.SyntaxBox\Drawing\Enums.cs" />
+    <Compile Include="Alsing.SyntaxBox\Drawing\GDI32\FontEnum.cs" />
+    <Compile Include="Alsing.SyntaxBox\Drawing\GDI32\GDIBrushes.cs" />
+    <Compile Include="Alsing.SyntaxBox\Drawing\GDI32\GDIFont.cs" />
+    <Compile Include="Alsing.SyntaxBox\Drawing\GDI32\GDIObject.cs" />
+    <Compile Include="Alsing.SyntaxBox\Drawing\GDI32\GDIPens.cs" />
+    <Compile Include="Alsing.SyntaxBox\Drawing\GDI32\GDISurface.cs" />
+    <Compile Include="Alsing.SyntaxBox\Globalization\IMEWindow.cs" />
+    <Compile Include="Alsing.SyntaxBox\Interfaces\IPainter.cs" />
+    <Compile Include="Alsing.SyntaxBox\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Text\PatternMatchers\BinPatternMatcher.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\PatternMatchers\DecPatternMatcher.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\PatternMatchers\HexPatternMatcher.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\PatternMatchers\IntPatternMatcher.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\PatternMatchers\IPatternMatcher.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\PatternMatchers\PatternMatcherBase.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\PatternMatchers\PropertyPathPatternMatcher.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\PatternMatchers\RegexPatternMatcher.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\PatternMatchers\RegionPatternMatcher.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\Tokenizer\CharUtils.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\Tokenizer\MatchResult.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\Tokenizer\PatternMatchReference.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\Tokenizer\Token.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\Tokenizer\Tokenizer.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\Tokenizer\TokenTree-API.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\Tokenizer\TokenTree-Util.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\Tokenizer\TokenTree.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\Tokenizer\TokenTreeNode.cs" />
+    <Compile Include="Alsing.SyntaxBox\Win32\Enums.cs" />
+    <Compile Include="Alsing.SyntaxBox\Win32\NativeMethods.cs" />
+    <Compile Include="Alsing.SyntaxBox\Win32\NativeSubclasser.cs" />
     <Compile Include="Bikini.cs" />
     <Compile Include="BikiniView.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="BikiniView.Designer.cs">
       <DependentUpon>BikiniView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LuaDoc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LuaDoc.Designer.cs">
+      <DependentUpon>LuaDoc.cs</DependentUpon>
     </Compile>
     <Compile Include="WinFormsUI\Docking\AutoHideStripBase.cs">
       <SubType>Component</SubType>
@@ -516,8 +687,100 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\Autolist\AutoListForm.resx">
+      <DependentUpon>AutoListForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\Autolist\TabListBox.resx">
+      <DependentUpon>TabListBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\BaseControls\BaseControl.resx">
+      <DependentUpon>BaseControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\BaseControls\BaseListBoxControl.resx">
+      <DependentUpon>BaseListBoxControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\BaseControls\BasePanelControl.resx">
+      <DependentUpon>BasePanelControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\EditView\EditViewControl.resx">
+      <DependentUpon>EditViewControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\FormatLabel\FormatLabelControl.resx">
+      <DependentUpon>FormatLabelControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\InfoTip\InfoTipForm.resx">
+      <DependentUpon>InfoTipForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\IntelliMouse\IntelliMouse.resx">
+      <DependentUpon>IntelliMouse.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\RegionHandler\RegionHandler.resx">
+      <DependentUpon>RegionHandler.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\SplitView\SplitViewChildControl.resx">
+      <DependentUpon>SplitViewChildControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\SplitView\SplitViewControl.resx">
+      <DependentUpon>SplitViewControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\SplitView\SplitViewParentControl.resx">
+      <DependentUpon>SplitViewParentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\Syntaxbox\Dialogs\FindReplace.resx">
+      <DependentUpon>FindReplace.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\Syntaxbox\Dialogs\GotoLine.resx">
+      <DependentUpon>GotoLine.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\Syntaxbox\Dialogs\Settings.resx">
+      <DependentUpon>Settings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\Syntaxbox\SyntaxBoxControl.resx">
+      <DependentUpon>SyntaxBoxControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Design\CollectionEditorGui.resx">
+      <DependentUpon>CollectionEditorGui.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Document\Print\SourceCodePrintDocument.resx">
+      <DependentUpon>SourceCodePrintDocument.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Document\SyntaxDefinition\TextStyle\TextStyleDesignerDialog.resx">
+      <DependentUpon>TextStyleDesignerDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Document\SyntaxDocument.resx">
+      <DependentUpon>SyntaxDocument.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="BikiniView.resx">
       <DependentUpon>BikiniView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LuaDoc.resx">
+      <DependentUpon>LuaDoc.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinFormsUI\Docking\DockPanel.bmp" />
     <EmbeddedResource Include="WinFormsUI\Docking\Resources.resx">
@@ -602,6 +865,33 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Alsing.SyntaxBox\Alsing.SourceCode.SourceCodePrintDocument.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Alsing.SyntaxBox\Alsing.SourceCode.SyntaxDocument.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Alsing.SyntaxBox\Alsing.Windows.Forms.SyntaxBoxControl.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Alsing.SyntaxBox\FlippedCursor.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Alsing.SyntaxBox\MoveDown.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Alsing.SyntaxBox\MoveUp.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Alsing.SyntaxBox\MoveUpDown.cur" />
+    <None Include="Lua.syn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Alsing.SyntaxBox\Text\ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
