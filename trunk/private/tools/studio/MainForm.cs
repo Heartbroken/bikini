@@ -103,7 +103,8 @@ namespace Studio
 		private void menuItemNew_Click(object sender, System.EventArgs e)
 		{
 			//DummyDoc dummyDoc = CreateNewDocument();
-            BikiniView dummyDoc = CreateNewGuiView();
+            //BikiniView dummyDoc = CreateNewGuiView();
+            LuaDoc dummyDoc = CreateNewLuaDoc();
             if (dockPanel.DocumentStyle == DocumentStyle.SystemMdi)
 			{
 				dummyDoc.MdiParent = this;
@@ -112,6 +113,21 @@ namespace Studio
 			else
 				dummyDoc.Show(dockPanel);
 		}
+
+        private LuaDoc CreateNewLuaDoc()
+        {
+            LuaDoc l_luaDoc = new LuaDoc();
+
+            int l_count = 1;
+            string l_text = "Document" + l_count.ToString();
+            while (FindDocument(l_text) != null)
+            {
+                l_count++;
+                l_text = "Document" + l_count.ToString();
+            }
+            l_luaDoc.Text = l_text;
+            return l_luaDoc;
+        }
 
         private BikiniView CreateNewGuiView()
         {
