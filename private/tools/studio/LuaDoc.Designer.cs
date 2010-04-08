@@ -41,9 +41,8 @@
             this.syntaxBoxControl1.AutoListVisible = false;
             this.syntaxBoxControl1.BackColor = System.Drawing.Color.White;
             this.syntaxBoxControl1.BorderStyle = Alsing.Windows.Forms.BorderStyle.None;
-            this.syntaxBoxControl1.BracketBackColor = System.Drawing.Color.Transparent;
+            this.syntaxBoxControl1.BracketBackColor = System.Drawing.Color.Gainsboro;
             this.syntaxBoxControl1.BracketBorderColor = System.Drawing.Color.Transparent;
-            this.syntaxBoxControl1.BracketForeColor = System.Drawing.Color.Red;
             this.syntaxBoxControl1.CopyAsRTF = false;
             this.syntaxBoxControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.syntaxBoxControl1.Document = this.syntaxDocument1;
@@ -77,13 +76,14 @@
             this.syntaxDocument1.Modified = false;
             this.syntaxDocument1.UndoStep = 0;
             // 
-            // Form1
+            // LuaDoc
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(761, 452);
             this.Controls.Add(this.syntaxBoxControl1);
-            this.Name = "Form1";
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Name = "LuaDoc";
             this.Text = "Form1";
             this.ResumeLayout(false);
 
