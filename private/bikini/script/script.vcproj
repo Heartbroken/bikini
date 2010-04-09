@@ -195,6 +195,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="value"
+			>
+			<File
+				RelativePath=".\value.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\bikini\script\value.hpp"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

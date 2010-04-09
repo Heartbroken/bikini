@@ -8,11 +8,6 @@
 
 #pragma once
 
-struct machine
+struct value
 {
-	machine(uint _stacksize = 1024);
-	~machine();
-
-private:
-	handle m_handle;
 };

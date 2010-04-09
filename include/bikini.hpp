@@ -12,5 +12,5 @@
 
 #include "bikini/base.hpp"
 #include "bikini/flash.hpp"
+#include "bikini/script.hpp"
 #include "bikini/system.hpp"
-//#include "bikini/display.hpp"
