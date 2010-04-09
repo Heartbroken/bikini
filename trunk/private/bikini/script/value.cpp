@@ -12,16 +12,6 @@ namespace bk { /*---------------------------------------------------------------
 
 namespace script { /*----------------------------------------------------------------------------*/
 
-machine::machine(uint _stacksize)
-:
-	m_handle(sq_open(_stacksize))
-{
-}
-machine::~machine()
-{
-	sq_close((HSQUIRRELVM)m_handle);
-}
-
 
 } /* namespace script ---------------------------------------------------------------------------*/
 
