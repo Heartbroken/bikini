@@ -11,10 +11,8 @@ L"														\
 int _tmain(int argc, _TCHAR* argv[])
 {
 	bk::script::machine l_script;
-
 	bk::script::object l_programm = l_script.compile(l_code, L"Test code");
-
-	bk::script::object l_result = l_programm();
+	bk::script::object l_result = l_programm(1, 2, 3);
 
 	return 0;
 }

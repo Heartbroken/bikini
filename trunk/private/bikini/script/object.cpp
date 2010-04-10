@@ -37,9 +37,20 @@ bool object::is_valid() const
 	return &m_machine != 0;
 }
 
-object object::operator () ()
+object object::operator () (const value &_a0, const value &_a1, const value &_a2, const value &_a3, const value &_a4)
 {
-	return m_machine.call(*this, values());
+	struct _l { static void push(values &_args, const value &_a0, const value &_a1, const value &_a2, const value &_a3, const value &_a4)
+	{
+		if (_a0.is_nothing()) return;
+
+		_args.push_back(_a0);
+		push(_args, _a1, _a2, _a3, _a4, value());
+	}};
+
+	values l_args;
+	_l::push(l_args, _a0, _a1, _a2, _a3, _a4);
+
+	return m_machine.call(*this, l_args);
 }
 
 } /* namespace script ---------------------------------------------------------------------------*/
