@@ -68,6 +68,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_gtest", "..\tests\test_gtest\test_gtest.vcproj", "{1B1BA396-4506-4242-AAC1-77D94CC0E751}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_script", "..\tests\test_script\test_script.vcproj", "{C349F15D-6A45-4113-BB31-338CBE810162}"
+	ProjectSection(ProjectDependencies) = postProject
+		{537FCF05-5BA7-43CB-9652-35FBF764B18E} = {537FCF05-5BA7-43CB-9652-35FBF764B18E}
+		{DA649A70-DC29-41CE-B8C0-80DC076EC982} = {DA649A70-DC29-41CE-B8C0-80DC076EC982}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

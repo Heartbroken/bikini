@@ -604,6 +604,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\bikini\base\databuffer.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\bikini\base\defines.hpp"
 				>
 			</File>

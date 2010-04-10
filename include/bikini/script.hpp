@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "system.hpp"
+#include "base.hpp"
 
 #pragma comment(lib, "script ("_PLATFORM_"!"_CONFIGURATION_")")
 
@@ -16,8 +16,8 @@ namespace bk { /*---------------------------------------------------------------
 
 namespace script { /*----------------------------------------------------------------------------*/
 
+#include "script/object.hpp"
 #include "script/machine.hpp"
-#include "script/value.hpp"
 
 } /* namespace flash ----------------------------------------------------------------------------*/
 

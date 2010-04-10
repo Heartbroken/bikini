@@ -13,6 +13,8 @@ struct machine
 	machine(uint _stacksize = 1024);
 	~machine();
 
+	object compile(const wchar* _code, const wchar* _name);
+
 private:
 	handle m_handle;
 };
