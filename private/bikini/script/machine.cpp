@@ -67,25 +67,85 @@ void machine::free_reference(uint _ID)
 	}
 }
 
+static void push(HSQUIRRELVM _vm, const value &_v)
+{
+	switch(_v.type())
+	{
+	case value::types::type_<bool>::index :
+		sq_pushbool(_vm, _v.get_<bool>());
+		break;
+	case value::types::type_<u8>::index :
+		sq_pushinteger(_vm, _v.get_<u8>());
+		break;
+	case value::types::type_<s8>::index :
+		sq_pushinteger(_vm, _v.get_<s8>());
+		break;
+	case value::types::type_<u16>::index :
+		sq_pushinteger(_vm, _v.get_<u16>());
+		break;
+	case value::types::type_<s16>::index :
+		sq_pushinteger(_vm, _v.get_<s16>());
+		break;
+	case value::types::type_<u32>::index :
+		sq_pushinteger(_vm, _v.get_<u32>());
+		break;
+	case value::types::type_<s32>::index :
+		sq_pushinteger(_vm, _v.get_<s32>());
+		break;
+	//case value::types::type_<u64>::index :
+	//	sq_pushinteger(_vm, _v.get_<u64>());
+	//	break;
+	//case value::types::type_<s64>::index :
+	//	sq_pushinteger(_vm, _v.get_<s64>());
+	//	break;
+	case value::types::type_<float>::index :
+		sq_pushfloat(_vm, _v.get_<float>());
+		break;
+	case value::types::type_<const wchar*>::index :
+		sq_pushstring(_vm, _v.get_<const wchar*>(), wcslen(_v.get_<const wchar*>()));
+		break;
+	case value::types::type_<wchar*>::index :
+		sq_pushstring(_vm, _v.get_<wchar*>(), wcslen(_v.get_<wchar*>()));
+		break;
+	case value::types::type_<object>::index :
+		sq_pushobject(_vm, sg_objects.get(_v.get_<object>().ID()));
+		break;
+	default:
+		sq_pushnull(_vm);
+	}
+}
 object machine::call(const object &_closure, const values &_args)
 {
 	if (sg_objects.exists(_closure.ID()))
 	{
-		uint l_top = sq_gettop((HSQUIRRELVM)m_handle);
+		HSQUIRRELVM l_vm = (HSQUIRRELVM)m_handle;
 
-		sq_pushobject((HSQUIRRELVM)m_handle, sg_objects.get(_closure.ID()));
-		sq_pushroottable((HSQUIRRELVM)m_handle);
-		// push arguments
+		uint l_top = sq_gettop(l_vm);
 
-		if (SQ_SUCCEEDED(sq_call((HSQUIRRELVM)m_handle, 1, true, true)))
+		push(l_vm, _closure);
+		sq_pushroottable(l_vm);
+		
+		for (uint i = 0, s = _args.size(); i < s; ++i)
+			push(l_vm, _args[i]);
+
+		if (SQ_SUCCEEDED(sq_call(l_vm, _args.size() + 1, true, true)))
 		{
 			object l_result(*this);
-			sq_pop((HSQUIRRELVM)m_handle, 1);
+			sq_pop(l_vm, 1);
 
 			return l_result;
 		}
+		else
+		{
+			sq_getlasterror(l_vm);
+			const wchar* l_error = 0;
+			sq_getstring(l_vm, -1, &l_error);
 
-		sq_settop((HSQUIRRELVM)m_handle, l_top);
+			if (l_error != 0)
+				wprintf(l_error);
+		}
+
+		sq_settop(l_vm, l_top);
 	}
 
 	return object();
