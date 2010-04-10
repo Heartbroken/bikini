@@ -14,6 +14,8 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	bk::script::object l_programm = l_script.compile(l_code, L"Test code");
 
+	bk::script::object l_result = l_programm();
+
 	return 0;
 }
 

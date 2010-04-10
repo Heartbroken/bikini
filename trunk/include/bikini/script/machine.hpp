@@ -18,6 +18,8 @@ struct machine
 	uint make_reference();
 	void free_reference(uint _ID);
 
+	object call(const object &_closure, const values &_args);
+
 private:
 	handle m_handle;
 };

@@ -9,6 +9,15 @@
 #pragma once
 
 struct machine;
+struct object;
+
+typedef variant_<
+	make_typelist_<
+		bool, u8, s8, u16, s16, u32, s32, u64, s64, const wchar*, wchar, object
+	>::type
+> value;
+
+typedef array_<value> values;
 
 struct object
 {
@@ -16,9 +25,13 @@ struct object
 	object(machine &_machine);
 	~object();
 
-	inline bool valid() const { return &m_machine == 0; }
+	inline uint ID() const { return m_ID; }
+
+	bool is_valid() const;
+
+	object operator () ();
 
 private:
 	machine &m_machine;
-	uint m_reference;
+	uint m_ID;
 };

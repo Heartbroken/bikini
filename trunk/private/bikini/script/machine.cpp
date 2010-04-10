@@ -12,10 +12,21 @@ namespace bk { /*---------------------------------------------------------------
 
 namespace script { /*----------------------------------------------------------------------------*/
 
+static void print_function(HSQUIRRELVM, const SQChar* _format, ...)
+{
+	va_list l_args;
+	va_start(l_args, _format);
+
+	vwprintf(_format, l_args);
+
+	va_end(l_args);
+}
+
 machine::machine(uint _stacksize)
 :
 	m_handle(sq_open(_stacksize))
 {
+	sq_setprintfunc((HSQUIRRELVM)m_handle, &print_function, &print_function);
 }
 machine::~machine()
 {
@@ -54,6 +65,30 @@ void machine::free_reference(uint _ID)
 		sq_release((HSQUIRRELVM)m_handle, &sg_objects.get(_ID));
 		sg_objects.remove(_ID);
 	}
+}
+
+object machine::call(const object &_closure, const values &_args)
+{
+	if (sg_objects.exists(_closure.ID()))
+	{
+		uint l_top = sq_gettop((HSQUIRRELVM)m_handle);
+
+		sq_pushobject((HSQUIRRELVM)m_handle, sg_objects.get(_closure.ID()));
+		sq_pushroottable((HSQUIRRELVM)m_handle);
+		// push arguments
+
+		if (SQ_SUCCEEDED(sq_call((HSQUIRRELVM)m_handle, 1, true, true)))
+		{
+			object l_result(*this);
+			sq_pop((HSQUIRRELVM)m_handle, 1);
+
+			return l_result;
+		}
+
+		sq_settop((HSQUIRRELVM)m_handle, l_top);
+	}
+
+	return object();
 }
 
 } /* namespace script ---------------------------------------------------------------------------*/
