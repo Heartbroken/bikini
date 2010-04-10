@@ -8,6 +8,16 @@
 
 #pragma once
 
-struct value
+struct machine;
+
+struct object
 {
+	object();
+	object(machine &_machine);
+	~object();
+
+	inline bool valid() const { return &m_machine == 0; }
+
+private:
+	machine &m_machine;
 };

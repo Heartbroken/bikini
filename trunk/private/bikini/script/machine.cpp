@@ -22,6 +22,20 @@ machine::~machine()
 	sq_close((HSQUIRRELVM)m_handle);
 }
 
+object machine::compile(const wchar* _code, const wchar* _name)
+{
+	struct _l { static SQInteger read(SQUserPointer _code)
+	{
+		wchar* &l_code = *(wchar**)_code;
+		return *(l_code++);
+	}};
+
+	if (SQ_SUCCEEDED(sq_compile((HSQUIRRELVM)m_handle, &_l::read, &_code, _name, false)))
+		return object(*this);
+
+	return object();
+}
+
 
 } /* namespace script ---------------------------------------------------------------------------*/
 

@@ -12,6 +12,22 @@ namespace bk { /*---------------------------------------------------------------
 
 namespace script { /*----------------------------------------------------------------------------*/
 
+object::object()
+:
+	m_machine(*(machine*)0)
+{
+}
+object::object(machine &_machine)
+:
+	m_machine(_machine)
+{
+}
+object::~object()
+{
+	if (&m_machine != 0)
+	{
+	}
+}
 
 } /* namespace script ---------------------------------------------------------------------------*/
 

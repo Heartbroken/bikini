@@ -196,14 +196,14 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="value"
+			Name="object"
 			>
 			<File
-				RelativePath=".\value.cpp"
+				RelativePath=".\object.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\bikini\script\value.hpp"
+				RelativePath="..\..\..\include\bikini\script\object.hpp"
 				>
 			</File>
 		</Filter>
