@@ -15,11 +15,18 @@ struct machine
 
 	object compile(const wchar* _code, const wchar* _name);
 
-	uint make_reference();
-	void free_reference(uint _ID);
-
-	object call(const object &_closure, const values &_args);
+	object root();
 
 private:
 	handle m_handle;
+
+	friend object;
+
+	uint make_reference();
+	uint add_reference(uint _ID);
+	void free_reference(uint _ID);
+
+	bool is_null(const object &_v) const;
+
+	object call(const object &_closure, const values &_args);
 };

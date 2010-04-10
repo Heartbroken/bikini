@@ -24,17 +24,38 @@ object::object(machine &_machine)
 	m_ID(m_machine.make_reference())
 {
 }
+object::object(const object &_object)
+:
+	m_machine(_object.get_machine()),
+	m_ID(_object.is_valid() ? m_machine.add_reference(_object.ID()) : bad_ID)
+{
+}
 object::~object()
 {
-	if (&m_machine != 0)
-	{
+	if (is_valid())
 		m_machine.free_reference(m_ID);
-	}
+}
+
+object& object::operator = (const object &_object)
+{
+	this->~object();
+	new(this) object(_object);
+
+	return *this;
 }
 
 bool object::is_valid() const
 {
 	return &m_machine != 0;
+}
+bool object::is_null() const
+{
+	return is_valid() && m_machine.is_null(*this);
+}
+
+object object::operator [] (const wchar* _key)
+{
+	return object();
 }
 
 object object::operator () (const value &_a0, const value &_a1, const value &_a2, const value &_a3, const value &_a4)
