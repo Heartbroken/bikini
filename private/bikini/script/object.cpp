@@ -14,18 +14,21 @@ namespace script { /*-----------------------------------------------------------
 
 object::object()
 :
-	m_machine(*(machine*)0)
+	m_machine(*(machine*)0),
+	m_reference(bad_ID)
 {
 }
 object::object(machine &_machine)
 :
-	m_machine(_machine)
+	m_machine(_machine),
+	m_reference(m_machine.make_reference())
 {
 }
 object::~object()
 {
 	if (&m_machine != 0)
 	{
+		m_machine.free_reference(m_reference);
 	}
 }
 

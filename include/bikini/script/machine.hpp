@@ -15,6 +15,9 @@ struct machine
 
 	object compile(const wchar* _code, const wchar* _name);
 
+	uint make_reference();
+	void free_reference(uint _ID);
+
 private:
 	handle m_handle;
 };

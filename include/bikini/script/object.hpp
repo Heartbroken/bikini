@@ -20,4 +20,5 @@ struct object
 
 private:
 	machine &m_machine;
+	uint m_reference;
 };

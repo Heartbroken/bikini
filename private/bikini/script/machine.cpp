@@ -36,6 +36,25 @@ object machine::compile(const wchar* _code, const wchar* _name)
 	return object();
 }
 
+static pool_<HSQOBJECT> sg_objects;
+uint machine::make_reference()
+{
+	HSQOBJECT l_object;
+	sq_resetobject(&l_object);
+	sq_getstackobj((HSQUIRRELVM)m_handle, -1, &l_object);
+	sq_addref((HSQUIRRELVM)m_handle, &l_object);
+	sq_pop((HSQUIRRELVM)m_handle, 1);
+
+	return sg_objects.add(l_object);
+}
+void machine::free_reference(uint _ID)
+{
+	if (sg_objects.exists(_ID))
+	{
+		sq_release((HSQUIRRELVM)m_handle, &sg_objects.get(_ID));
+		sg_objects.remove(_ID);
+	}
+}
 
 } /* namespace script ---------------------------------------------------------------------------*/
 
