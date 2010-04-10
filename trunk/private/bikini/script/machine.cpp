@@ -12,6 +12,8 @@ namespace bk { /*---------------------------------------------------------------
 
 namespace script { /*----------------------------------------------------------------------------*/
 
+static pool_<HSQOBJECT> sg_objects;
+
 static void print_function(HSQUIRRELVM, const SQChar* _format, ...)
 {
 	va_list l_args;
@@ -20,51 +22,6 @@ static void print_function(HSQUIRRELVM, const SQChar* _format, ...)
 	vwprintf(_format, l_args);
 
 	va_end(l_args);
-}
-
-machine::machine(uint _stacksize)
-:
-	m_handle(sq_open(_stacksize))
-{
-	sq_setprintfunc((HSQUIRRELVM)m_handle, &print_function, &print_function);
-}
-machine::~machine()
-{
-	sq_close((HSQUIRRELVM)m_handle);
-}
-
-object machine::compile(const wchar* _code, const wchar* _name)
-{
-	struct _l { static SQInteger read(SQUserPointer _code)
-	{
-		wchar* &l_code = *(wchar**)_code;
-		return *(l_code++);
-	}};
-
-	if (SQ_SUCCEEDED(sq_compile((HSQUIRRELVM)m_handle, &_l::read, &_code, _name, false)))
-		return object(*this);
-
-	return object();
-}
-
-static pool_<HSQOBJECT> sg_objects;
-uint machine::make_reference()
-{
-	HSQOBJECT l_object;
-	sq_resetobject(&l_object);
-	sq_getstackobj((HSQUIRRELVM)m_handle, -1, &l_object);
-	sq_addref((HSQUIRRELVM)m_handle, &l_object);
-	sq_pop((HSQUIRRELVM)m_handle, 1);
-
-	return sg_objects.add(l_object);
-}
-void machine::free_reference(uint _ID)
-{
-	if (sg_objects.exists(_ID))
-	{
-		sq_release((HSQUIRRELVM)m_handle, &sg_objects.get(_ID));
-		sg_objects.remove(_ID);
-	}
 }
 
 static void push(HSQUIRRELVM _vm, const value &_v)
@@ -114,6 +71,73 @@ static void push(HSQUIRRELVM _vm, const value &_v)
 		sq_pushnull(_vm);
 	}
 }
+
+machine::machine(uint _stacksize)
+:
+	m_handle(sq_open(_stacksize))
+{
+	sq_setprintfunc((HSQUIRRELVM)m_handle, &print_function, &print_function);
+}
+machine::~machine()
+{
+	sq_close((HSQUIRRELVM)m_handle);
+}
+
+object machine::compile(const wchar* _code, const wchar* _name)
+{
+	struct _l { static SQInteger read(SQUserPointer _code)
+	{
+		wchar* &l_code = *(wchar**)_code;
+		return *(l_code++);
+	}};
+
+	if (SQ_SUCCEEDED(sq_compile((HSQUIRRELVM)m_handle, &_l::read, &_code, _name, false)))
+		return object(*this);
+
+	return object();
+}
+
+object machine::root()
+{
+	sq_pushroottable((HSQUIRRELVM)m_handle);
+	return object(*this);
+}
+
+uint machine::make_reference()
+{
+	HSQOBJECT l_object;
+	sq_resetobject(&l_object);
+	sq_getstackobj((HSQUIRRELVM)m_handle, -1, &l_object);
+	sq_addref((HSQUIRRELVM)m_handle, &l_object);
+	sq_pop((HSQUIRRELVM)m_handle, 1);
+
+	return sg_objects.add(l_object);
+}
+uint machine::add_reference(uint _ID)
+{
+	if (sg_objects.exists(_ID))
+		sq_addref((HSQUIRRELVM)m_handle, &sg_objects.get(_ID));
+
+	return _ID;
+}
+void machine::free_reference(uint _ID)
+{
+	if (sg_objects.exists(_ID))
+		if (sq_release((HSQUIRRELVM)m_handle, &sg_objects.get(_ID)))
+			sg_objects.remove(_ID);
+}
+
+bool machine::is_null(const object &_v) const
+{
+	HSQUIRRELVM l_vm = (HSQUIRRELVM)m_handle;
+
+	push(l_vm, _v);
+	SQObjectType l_type = sq_gettype(l_vm, -1);
+	sq_pop(l_vm, 1);
+
+	return l_type == OT_NULL;
+}
+
 object machine::call(const object &_closure, const values &_args)
 {
 	if (sg_objects.exists(_closure.ID()))

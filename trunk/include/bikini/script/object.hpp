@@ -23,11 +23,18 @@ struct object
 {
 	object();
 	object(machine &_machine);
+	object(const object &_object);
 	~object();
 
+	object& operator = (const object &_object);
+
+	inline machine& get_machine() const { return m_machine; }
 	inline uint ID() const { return m_ID; }
 
 	bool is_valid() const;
+	bool is_null() const;
+
+	object operator [] (const wchar* _key);
 
 	object operator () (const value &_a0 = value(), const value &_a1 = value(), const value &_a2 = value(), const value &_a3 = value(), const value &_a4 = value());
 
