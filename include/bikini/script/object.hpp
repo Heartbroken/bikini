@@ -49,6 +49,11 @@ struct object
 	bool is_instance() const;
 	bool is_weakref() const;
 
+	sint to_integer(sint _default = 0) const;
+	real to_float(real _default = 0) const;
+	bool to_bool(bool _default = false) const;
+	const wchar* to_string(const wchar* _default = L"") const;
+
 	object get(uint _key) const;
 	object get(const wchar* _key) const;
 	void set(uint _key, const value &_v);
