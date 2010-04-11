@@ -55,11 +55,15 @@ bool object::is_null() const
 
 object object::operator [] (const wchar* _key)
 {
-	return object();
+	if (!is_valid()) return object();
+
+	return m_machine.index(*this, _key);
 }
 
 object object::operator () (const value &_a0, const value &_a1, const value &_a2, const value &_a3, const value &_a4)
 {
+	if (!is_valid()) return object();
+
 	struct _l { static void push(values &_args, const value &_a0, const value &_a1, const value &_a2, const value &_a3, const value &_a4)
 	{
 		if (_a0.is_nothing()) return;

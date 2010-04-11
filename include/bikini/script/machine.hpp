@@ -28,5 +28,6 @@ private:
 
 	bool is_null(const object &_v) const;
 
+	object index(const object &_table, const wchar* _key);
 	object call(const object &_closure, const values &_args);
 };
