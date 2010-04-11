@@ -132,6 +132,37 @@ object machine::root()
 	return object(*this);
 }
 
+object machine::new_null()
+{
+	sq_pushnull((HSQUIRRELVM)m_handle);
+	return object(*this);
+}
+object machine::new_integer(sint _v)
+{
+	sq_pushinteger((HSQUIRRELVM)m_handle, (SQInteger)_v);
+	return object(*this);
+}
+object machine::new_float(real _v)
+{
+	sq_pushfloat((HSQUIRRELVM)m_handle, (SQFloat)_v);
+	return object(*this);
+}
+object machine::new_string(const wchar* _v)
+{
+	sq_pushstring((HSQUIRRELVM)m_handle, _v, wcslen(_v));
+	return object(*this);
+}
+object machine::new_table()
+{
+	sq_newtable((HSQUIRRELVM)m_handle);
+	return object(*this);
+}
+object machine::new_array()
+{
+	sq_newarray((HSQUIRRELVM)m_handle, 0);
+	return object(*this);
+}
+
 uint machine::make_reference()
 {
 	HSQOBJECT l_object;
@@ -229,7 +260,42 @@ bool machine::is_weakref(const object &_v) const
 	return type_of((HSQUIRRELVM)m_handle, _v) == OT_WEAKREF;
 }
 
-object machine::index(const object &_array, uint _key)
+void machine::set(object &_array, uint _key, const value &_value)
+{
+	if (sg_objects.exists(_array.ID()))
+	{
+		HSQUIRRELVM l_vm = (HSQUIRRELVM)m_handle;
+
+		uint l_top = sq_gettop(l_vm);
+
+		push(l_vm, _array);
+		sq_pushinteger(l_vm, (SQInteger)_key);
+		push(l_vm, _value);
+
+		sq_set(l_vm, -3);
+
+		sq_settop(l_vm, l_top);
+	}
+}
+void machine::set(object &_table, const wchar* _key, const value &_value)
+{
+	if (sg_objects.exists(_table.ID()))
+	{
+		HSQUIRRELVM l_vm = (HSQUIRRELVM)m_handle;
+
+		uint l_top = sq_gettop(l_vm);
+
+		push(l_vm, _table);
+		sq_pushstring(l_vm, _key, wcslen(_key));
+		push(l_vm, _value);
+
+		sq_set(l_vm, -3);
+
+		sq_settop(l_vm, l_top);
+	}
+}
+
+object machine::get(const object &_array, uint _key)
 {
 	if (sg_objects.exists(_array.ID()))
 	{
@@ -252,7 +318,7 @@ object machine::index(const object &_array, uint _key)
 
 	return object();
 }
-object machine::index(const object &_table, const wchar* _key)
+object machine::get(const object &_table, const wchar* _key)
 {
 	if (sg_objects.exists(_table.ID()))
 	{

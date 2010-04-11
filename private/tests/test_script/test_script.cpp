@@ -17,6 +17,8 @@ const bk::wchar l_code[] = L"							\n\
 	arr <- [1, 2, 3];									\n\
 	class cls { name = \"aaa\" };						\n\
 														\n\
+	foreach (i, v in arr) print(\"[\" + i + \"] = \" + v + \"; \");	\n\
+	print(\"\\n\");										\n\
 														\n\
 ";
 
