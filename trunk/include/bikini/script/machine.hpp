@@ -17,6 +17,13 @@ struct machine
 
 	object root();
 
+	object new_null();
+	object new_integer(sint _v = 0);
+	object new_float(real _v = 0);
+	object new_string(const wchar* _v = L"");
+	object new_table();
+	object new_array();
+
 private:
 	handle m_handle;
 
@@ -43,8 +50,11 @@ private:
 	bool is_instance(const object &_v) const;
 	bool is_weakref(const object &_v) const;
 
-	object index(const object &_array, uint _key);
-	object index(const object &_table, const wchar* _key);
+	void set(object &_array, uint _key, const value &_value);
+	void set(object &_table, const wchar* _key, const value &_value);
+
+	object get(const object &_array, uint _key);
+	object get(const object &_table, const wchar* _key);
 
 	object call(const object &_closure, const values &_args);
 };

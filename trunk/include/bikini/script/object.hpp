@@ -49,8 +49,13 @@ struct object
 	bool is_instance() const;
 	bool is_weakref() const;
 
-	object operator [] (uint _key);
-	object operator [] (const wchar* _key);
+	object get(uint _key) const;
+	object get(const wchar* _key) const;
+	void set(uint _key, const value &_v);
+	void set(const wchar* _key, const value &_v);
+
+	object operator [] (uint _key) const;
+	object operator [] (const wchar* _key) const;
 
 	object operator () (const value &_a0 = value(), const value &_a1 = value(), const value &_a2 = value(), const value &_a3 = value(), const value &_a4 = value());
 

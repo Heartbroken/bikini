@@ -113,17 +113,30 @@ bool object::is_weakref() const
 	return is_valid() && m_machine.is_weakref(*this);
 }
 
-object object::operator [] (uint _key)
+object object::get(uint _key) const
 {
-	if (!is_valid()) return object();
-
-	return m_machine.index(*this, _key);
+	return is_valid() ? m_machine.get(*this, _key) : object();
 }
-object object::operator [] (const wchar* _key)
+object object::get(const wchar* _key) const
 {
-	if (!is_valid()) return object();
+	return is_valid() ? m_machine.get(*this, _key) : object();
+}
+void object::set(uint _key, const value &_v)
+{
+	if (is_valid()) m_machine.set(*this, _key, _v);
+}
+void object::set(const wchar* _key, const value &_v)
+{
+	if (is_valid()) m_machine.set(*this, _key, _v);
+}
 
-	return m_machine.index(*this, _key);
+object object::operator [] (uint _key) const
+{
+	return get(_key);
+}
+object object::operator [] (const wchar* _key) const
+{
+	return get(_key);
 }
 
 object object::operator () (const value &_a0, const value &_a1, const value &_a2, const value &_a3, const value &_a4)
