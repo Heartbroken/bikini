@@ -156,17 +156,102 @@ void machine::free_reference(uint _ID)
 			sg_objects.remove(_ID);
 }
 
+static SQObjectType type_of(HSQUIRRELVM _vm, const object &_v)
+{
+	push(_vm, _v);
+	SQObjectType l_type = sq_gettype(_vm, -1);
+	sq_pop(_vm, 1);
+
+	return l_type;
+}
 bool machine::is_null(const object &_v) const
 {
-	HSQUIRRELVM l_vm = (HSQUIRRELVM)m_handle;
-
-	push(l_vm, _v);
-	SQObjectType l_type = sq_gettype(l_vm, -1);
-	sq_pop(l_vm, 1);
-
-	return l_type == OT_NULL;
+	return type_of((HSQUIRRELVM)m_handle, _v) == OT_NULL;
+}
+bool machine::is_integer(const object &_v) const
+{
+	return type_of((HSQUIRRELVM)m_handle, _v) == OT_INTEGER;
+}
+bool machine::is_float(const object &_v) const
+{
+	return type_of((HSQUIRRELVM)m_handle, _v) == OT_FLOAT;
+}
+bool machine::is_bool(const object &_v) const
+{
+	return type_of((HSQUIRRELVM)m_handle, _v) == OT_BOOL;
+}
+bool machine::is_string(const object &_v) const
+{
+	return type_of((HSQUIRRELVM)m_handle, _v) == OT_STRING;
+}
+bool machine::is_table(const object &_v) const
+{
+	return type_of((HSQUIRRELVM)m_handle, _v) == OT_TABLE;
+}
+bool machine::is_array(const object &_v) const
+{
+	return type_of((HSQUIRRELVM)m_handle, _v) == OT_ARRAY;
+}
+bool machine::is_userdata(const object &_v) const
+{
+	return type_of((HSQUIRRELVM)m_handle, _v) == OT_USERDATA;
+}
+bool machine::is_closure(const object &_v) const
+{
+	return type_of((HSQUIRRELVM)m_handle, _v) == OT_CLOSURE;
+}
+bool machine::is_nativeclosure(const object &_v) const
+{
+	return type_of((HSQUIRRELVM)m_handle, _v) == OT_NATIVECLOSURE;
+}
+bool machine::is_generator(const object &_v) const
+{
+	return type_of((HSQUIRRELVM)m_handle, _v) == OT_GENERATOR;
+}
+bool machine::is_userpointer(const object &_v) const
+{
+	return type_of((HSQUIRRELVM)m_handle, _v) == OT_USERPOINTER;
+}
+bool machine::is_thread(const object &_v) const
+{
+	return type_of((HSQUIRRELVM)m_handle, _v) == OT_THREAD;
+}
+bool machine::is_class(const object &_v) const
+{
+	return type_of((HSQUIRRELVM)m_handle, _v) == OT_CLASS;
+}
+bool machine::is_instance(const object &_v) const
+{
+	return type_of((HSQUIRRELVM)m_handle, _v) == OT_INSTANCE;
+}
+bool machine::is_weakref(const object &_v) const
+{
+	return type_of((HSQUIRRELVM)m_handle, _v) == OT_WEAKREF;
 }
 
+object machine::index(const object &_array, uint _key)
+{
+	if (sg_objects.exists(_array.ID()))
+	{
+		HSQUIRRELVM l_vm = (HSQUIRRELVM)m_handle;
+
+		uint l_top = sq_gettop(l_vm);
+
+		push(l_vm, _array);
+		sq_pushinteger(l_vm, (SQInteger)_key);
+
+		if (SQ_SUCCEEDED(sq_get(l_vm, -2)))
+		{
+			object l_result(*this);
+			sq_pop(l_vm, 1);
+			return l_result;
+		}
+
+		sq_settop(l_vm, l_top);
+	}
+
+	return object();
+}
 object machine::index(const object &_table, const wchar* _key)
 {
 	if (sg_objects.exists(_table.ID()))
@@ -190,6 +275,7 @@ object machine::index(const object &_table, const wchar* _key)
 
 	return object();
 }
+
 object machine::call(const object &_closure, const values &_args)
 {
 	if (sg_objects.exists(_closure.ID()))
@@ -212,15 +298,6 @@ object machine::call(const object &_closure, const values &_args)
 
 			return l_result;
 		}
-		//else
-		//{
-		//	sq_getlasterror(l_vm);
-		//	const wchar* l_error = 0;
-		//	sq_getstring(l_vm, -1, &l_error);
-
-		//	if (l_error != 0)
-		//		wprintf(L"%s\n", l_error);
-		//}
 
 		sq_settop(l_vm, l_top);
 	}

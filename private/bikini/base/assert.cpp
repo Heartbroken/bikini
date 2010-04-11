@@ -24,13 +24,23 @@ namespace bk { /*---------------------------------------------------------------
 //	return sl_buff;
 //}
 
-bool ARI(char* _expression, char* _file, int _line, char* _function, char* _message) {
-	std::cerr << "Assertion failed ...\n";
-	std::cerr << "    Expression: " << _expression << "\n";
-	std::cerr << "    File: " << _file << ":" <<_line << "\n";
-	std::cerr << "    Function: " << _function << "\n";
-	if(_message) std::cerr << "    " << _message << "\n";
-	switch(MessageBoxA(0, format("%s\n\nFile: %s:%d\nFunction: %s\n%s\n\nHit <Retry> to debug", _expression, _file, _line, _function, _message ? _message : ""), "bikini-iii | assertion failed", MB_ABORTRETRYIGNORE|MB_ICONERROR)) {
+bool ARI(wchar* _expression, wchar* _file, int _line, wchar* _function, wchar* _message) {
+	std::wstringstream l_cerr;
+	l_cerr << "Assertion failed ...\n";
+	l_cerr << "    Expression: " << wstring(_expression) << "\n";
+	l_cerr << "    File: " << wstring(_file) << "(" <<_line << ")\n";
+	l_cerr << "    Function: " << wstring(_function) << "\n";
+	if(_message) l_cerr << "    " << wstring(_message) << "\n";
+
+	char l_oem[1024];
+	CharToOemBuffW(l_cerr.str().c_str(), l_oem, 1024);
+
+	std::cerr << l_oem;
+
+	wstring l_message = format(L"%s\n\nFile: %s(%d)\nFunction: %s\n%s\n\nHit <Retry> to debug", _expression, _file, _line, _function, _message ? _message : L"");
+
+//	switch(MessageBoxW(0, format("%s\n\nFile: %s:%d\nFunction: %s\n%s\n\nHit <Retry> to debug", _expression, _file, _line, _function, _message ? _message : ""), "bikini-iii | assertion failed", MB_ABORTRETRYIGNORE|MB_ICONERROR)) {
+	switch(MessageBoxW(0, l_message.c_str(), L"bikini-iii | assertion failed", MB_ABORTRETRYIGNORE|MB_ICONERROR)) {
 		case IDABORT : std::cerr << "... terminating\n"; Sleep(1); _exit(-1);
 		case IDRETRY : std::cerr << "... debugging\n"; return false;
 		case IDIGNORE : std::cerr << "... ignored\n"; return true;
@@ -38,14 +48,14 @@ bool ARI(char* _expression, char* _file, int _line, char* _function, char* _mess
 	return true;
 }
 
-bool ARI2(char* _expression, char* _file, int _line, char* _function, char* _message) {
-	std::cerr << "Verifying failed ...\n";
-	std::cerr << "    Expression: " << _expression << "\n";
-	std::cerr << "    File: " << _file << ":" <<_line << "\n";
-	std::cerr << "    Function: " << _function << "\n";
-	if(_message) std::cerr << "    " << _message << "\n";
-	return true;
-}
+//bool ARI2(char* _expression, char* _file, int _line, char* _function, char* _message) {
+//	std::cerr << "Verifying failed ...\n";
+//	std::cerr << "    Expression: " << _expression << "\n";
+//	std::cerr << "    File: " << _file << ":" <<_line << "\n";
+//	std::cerr << "    Function: " << _function << "\n";
+//	if(_message) std::cerr << "    " << _message << "\n";
+//	return true;
+//}
 
 #endif
 

@@ -21,13 +21,14 @@
 #	undef assert
 #endif
 
-bool ARI(char* _expression, char* _file, int _line, char* _function, char* _message = 0);
-bool ARI2(char* _expression, char* _file, int _line, char* _function, char* _message = 0);
+bool ARI(wchar* _expression, wchar* _file, int _line, wchar* _function, wchar* _message = 0);
+//bool ARI2(char* _expression, char* _file, int _line, char* _function, char* _message = 0);
 
 #define halt { Sleep(1); __debugbreak(); }
+#define __T(x) L ## x
 
 #ifdef _DEBUG
-#	define assert(E)	while(!(E)) { Sleep(1); if(bk::ARI(#E, __FILE__, __LINE__, __FUNCTION__)) break; halt; }
+#	define assert(E)	while(!(E)) { Sleep(1); if(bk::ARI(_CRT_WIDE(#E), _CRT_WIDE(__FILE__), __LINE__, _CRT_WIDE(__FUNCTION__))) break; halt; }
 #else
 #	define assert(E)
 #endif
