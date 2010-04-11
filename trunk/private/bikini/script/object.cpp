@@ -52,7 +52,73 @@ bool object::is_null() const
 {
 	return is_valid() && m_machine.is_null(*this);
 }
+bool object::is_integer() const
+{
+	return is_valid() && m_machine.is_integer(*this);
+}
+bool object::is_float() const
+{
+	return is_valid() && m_machine.is_float(*this);
+}
+bool object::is_bool() const
+{
+	return is_valid() && m_machine.is_bool(*this);
+}
+bool object::is_string() const
+{
+	return is_valid() && m_machine.is_string(*this);
+}
+bool object::is_table() const
+{
+	return is_valid() && m_machine.is_table(*this);
+}
+bool object::is_array() const
+{
+	return is_valid() && m_machine.is_array(*this);
+}
+bool object::is_userdata() const
+{
+	return is_valid() && m_machine.is_userdata(*this);
+}
+bool object::is_closure() const
+{
+	return is_valid() && m_machine.is_closure(*this);
+}
+bool object::is_nativeclosure() const
+{
+	return is_valid() && m_machine.is_nativeclosure(*this);
+}
+bool object::is_generator() const
+{
+	return is_valid() && m_machine.is_generator(*this);
+}
+bool object::is_userpointer() const
+{
+	return is_valid() && m_machine.is_userpointer(*this);
+}
+bool object::is_thread() const
+{
+	return is_valid() && m_machine.is_thread(*this);
+}
+bool object::is_class() const
+{
+	return is_valid() && m_machine.is_class(*this);
+}
+bool object::is_instance() const
+{
+	return is_valid() && m_machine.is_instance(*this);
+}
+bool object::is_weakref() const
+{
+	return is_valid() && m_machine.is_weakref(*this);
+}
 
+object object::operator [] (uint _key)
+{
+	if (!is_valid()) return object();
+
+	return m_machine.index(*this, _key);
+}
 object object::operator [] (const wchar* _key)
 {
 	if (!is_valid()) return object();

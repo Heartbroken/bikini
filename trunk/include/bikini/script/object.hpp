@@ -33,7 +33,23 @@ struct object
 
 	bool is_valid() const;
 	bool is_null() const;
+	bool is_integer() const;
+	bool is_float() const;
+	bool is_bool() const;
+	bool is_string() const;
+	bool is_table() const;
+	bool is_array() const;
+	bool is_userdata() const;
+	bool is_closure() const;
+	bool is_nativeclosure() const;
+	bool is_generator() const;
+	bool is_userpointer() const;
+	bool is_thread() const;
+	bool is_class() const;
+	bool is_instance() const;
+	bool is_weakref() const;
 
+	object operator [] (uint _key);
 	object operator [] (const wchar* _key);
 
 	object operator () (const value &_a0 = value(), const value &_a1 = value(), const value &_a2 = value(), const value &_a3 = value(), const value &_a4 = value());
