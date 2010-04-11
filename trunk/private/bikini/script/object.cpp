@@ -113,6 +113,23 @@ bool object::is_weakref() const
 	return is_valid() && m_machine.is_weakref(*this);
 }
 
+sint object::to_integer(sint _default) const
+{
+	return is_valid() ? m_machine.to_integer(*this, _default) : _default;
+}
+real object::to_float(real _default) const
+{
+	return is_valid() ? m_machine.to_float(*this, _default) : _default;
+}
+bool object::to_bool(bool _default) const
+{
+	return is_valid() ? m_machine.to_bool(*this, _default) : _default;
+}
+const wchar* object::to_string(const wchar* _default) const
+{
+	return is_valid() ? m_machine.to_string(*this, _default) : _default;
+}
+
 object object::get(uint _key) const
 {
 	return is_valid() ? m_machine.get(*this, _key) : object();

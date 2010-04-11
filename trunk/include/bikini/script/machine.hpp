@@ -50,6 +50,11 @@ private:
 	bool is_instance(const object &_v) const;
 	bool is_weakref(const object &_v) const;
 
+	sint to_integer(const object &_v, sint _default) const;
+	real to_float(const object &_v, real _default) const;
+	bool to_bool(const object &_v, bool _default) const;
+	const wchar* to_string(const object &_v, const wchar* _default) const;
+
 	void set(object &_array, uint _key, const value &_value);
 	void set(object &_table, const wchar* _key, const value &_value);
 

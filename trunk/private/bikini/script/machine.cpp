@@ -260,6 +260,35 @@ bool machine::is_weakref(const object &_v) const
 	return type_of((HSQUIRRELVM)m_handle, _v) == OT_WEAKREF;
 }
 
+sint machine::to_integer(const object &_v, sint _default) const
+{
+	if (!is_integer(_v)) return _default;
+	HSQUIRRELVM l_vm = (HSQUIRRELVM)m_handle;
+	push(l_vm, _v); SQInteger l_v; sq_getinteger(l_vm, -1, &l_v); sq_pop(l_vm, 1);
+	return l_v;
+}
+real machine::to_float(const object &_v, real _default) const
+{
+	if (!is_float(_v)) return _default;
+	HSQUIRRELVM l_vm = (HSQUIRRELVM)m_handle;
+	push(l_vm, _v); SQFloat l_v; sq_getfloat(l_vm, -1, &l_v); sq_pop(l_vm, 1);
+	return l_v;
+}
+bool machine::to_bool(const object &_v, bool _default) const
+{
+	if (!is_bool(_v)) return _default;
+	HSQUIRRELVM l_vm = (HSQUIRRELVM)m_handle;
+	push(l_vm, _v); SQBool l_v; sq_getbool(l_vm, -1, &l_v); sq_pop(l_vm, 1);
+	return l_v != 0;
+}
+const wchar* machine::to_string(const object &_v, const wchar* _default) const
+{
+	if (!is_string(_v)) return _default;
+	HSQUIRRELVM l_vm = (HSQUIRRELVM)m_handle;
+	push(l_vm, _v); const SQChar* l_v; sq_getstring(l_vm, -1, &l_v); sq_pop(l_vm, 1);
+	return l_v;
+}
+
 void machine::set(object &_array, uint _key, const value &_value)
 {
 	if (sg_objects.exists(_array.ID()))
