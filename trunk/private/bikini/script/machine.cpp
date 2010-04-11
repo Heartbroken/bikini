@@ -14,6 +14,19 @@ namespace script { /*-----------------------------------------------------------
 
 static pool_<HSQOBJECT> sg_objects;
 
+void compiler_error_handler(HSQUIRRELVM, const SQChar* _desc, const SQChar* _source, SQInteger _line, SQInteger _column)
+{
+	wprintf(L"%s(%d) : error: %s\n", _source, _line, _desc);
+}
+SQInteger runtime_error_handler(HSQUIRRELVM _vm)
+{
+	const wchar* l_desc = 0; sq_getstring(_vm, -1, &l_desc);
+	SQStackInfos l_si; sq_stackinfos(_vm, 1, &l_si);
+
+	wprintf(L"%s(%d) : error: %s\n", l_si.source, l_si.line, l_desc);
+
+	return 0;
+}
 static void print_function(HSQUIRRELVM, const SQChar* _format, ...)
 {
 	va_list l_args;
@@ -76,7 +89,16 @@ machine::machine(uint _stacksize)
 :
 	m_handle(sq_open(_stacksize))
 {
-	sq_setprintfunc((HSQUIRRELVM)m_handle, &print_function, &print_function);
+	HSQUIRRELVM l_vm = (HSQUIRRELVM)m_handle;
+
+	sq_setprintfunc(l_vm, &print_function, &print_function);
+
+	sq_notifyallexceptions(l_vm, true);
+	sq_setcompilererrorhandler(l_vm, &compiler_error_handler);
+
+	sq_newclosure(l_vm, &runtime_error_handler, 0);
+	sq_seterrorhandler(l_vm);
+
 }
 machine::~machine()
 {
@@ -85,13 +107,20 @@ machine::~machine()
 
 object machine::compile(const wchar* _code, const wchar* _name)
 {
-	struct _l { static SQInteger read(SQUserPointer _code)
-	{
-		wchar* &l_code = *(wchar**)_code;
-		return *(l_code++);
-	}};
+	//struct _l { static SQInteger read(SQUserPointer _code)
+	//{
+	//	wchar* &l_code = *(wchar**)_code;
+	//	return *(l_code++);
+	//}};
 
-	if (SQ_SUCCEEDED(sq_compile((HSQUIRRELVM)m_handle, &_l::read, &_code, _name, false)))
+	//if (SQ_SUCCEEDED(sq_compile((HSQUIRRELVM)m_handle, &_l::read, &_code, _name, true)))
+	//	return object(*this);
+
+	HSQUIRRELVM l_vm = (HSQUIRRELVM)m_handle;
+
+	sq_enabledebuginfo(l_vm, true);
+
+	if (SQ_SUCCEEDED(sq_compilebuffer((HSQUIRRELVM)m_handle, _code, wcslen(_code), _name, true)))
 		return object(*this);
 
 	return object();
@@ -138,6 +167,29 @@ bool machine::is_null(const object &_v) const
 	return l_type == OT_NULL;
 }
 
+object machine::index(const object &_table, const wchar* _key)
+{
+	if (sg_objects.exists(_table.ID()))
+	{
+		HSQUIRRELVM l_vm = (HSQUIRRELVM)m_handle;
+
+		uint l_top = sq_gettop(l_vm);
+
+		push(l_vm, _table);
+		sq_pushstring(l_vm, _key, wcslen(_key));
+
+		if (SQ_SUCCEEDED(sq_get(l_vm, -2)))
+		{
+			object l_result(*this);
+			sq_pop(l_vm, 1);
+			return l_result;
+		}
+
+		sq_settop(l_vm, l_top);
+	}
+
+	return object();
+}
 object machine::call(const object &_closure, const values &_args)
 {
 	if (sg_objects.exists(_closure.ID()))
@@ -147,7 +199,8 @@ object machine::call(const object &_closure, const values &_args)
 		uint l_top = sq_gettop(l_vm);
 
 		push(l_vm, _closure);
-		sq_pushroottable(l_vm);
+
+		sq_pushroottable(l_vm); // push 'this'
 		
 		for (uint i = 0, s = _args.size(); i < s; ++i)
 			push(l_vm, _args[i]);
@@ -159,15 +212,15 @@ object machine::call(const object &_closure, const values &_args)
 
 			return l_result;
 		}
-		else
-		{
-			sq_getlasterror(l_vm);
-			const wchar* l_error = 0;
-			sq_getstring(l_vm, -1, &l_error);
+		//else
+		//{
+		//	sq_getlasterror(l_vm);
+		//	const wchar* l_error = 0;
+		//	sq_getstring(l_vm, -1, &l_error);
 
-			if (l_error != 0)
-				wprintf(l_error);
-		}
+		//	if (l_error != 0)
+		//		wprintf(L"%s\n", l_error);
+		//}
 
 		sq_settop(l_vm, l_top);
 	}
