@@ -27,6 +27,7 @@ namespace Studio
             RightToLeftLayout = showRightToLeft.Checked;
             m_solutionExplorer = new DummySolutionExplorer();
             m_solutionExplorer.RightToLeftLayout = RightToLeftLayout;
+            m_solutionExplorer.m_treeView.Nodes["solutionNode"].Expand();
 			m_deserializeDockContent = new DeserializeDockContent(GetContentFromPersistString);
 
             //Bikini.Test(-125, "Test call");
@@ -104,7 +105,7 @@ namespace Studio
 		{
 			//DummyDoc dummyDoc = CreateNewDocument();
             //BikiniView dummyDoc = CreateNewGuiView();
-            LuaDoc dummyDoc = CreateNewLuaDoc();
+            ScriptDoc dummyDoc = CreateNewLuaDoc();
             if (dockPanel.DocumentStyle == DocumentStyle.SystemMdi)
 			{
 				dummyDoc.MdiParent = this;
@@ -114,9 +115,9 @@ namespace Studio
 				dummyDoc.Show(dockPanel);
 		}
 
-        private LuaDoc CreateNewLuaDoc()
+        private ScriptDoc CreateNewLuaDoc()
         {
-            LuaDoc l_luaDoc = new LuaDoc();
+            ScriptDoc l_luaDoc = new ScriptDoc();
 
             int l_count = 1;
             string l_text = "Document" + l_count.ToString();

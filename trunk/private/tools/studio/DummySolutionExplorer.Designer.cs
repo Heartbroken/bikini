@@ -30,36 +30,40 @@ namespace Studio
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Main.gui", 8, 8);
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Pause.gui", 8, 8);
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("GUIs", 2, 1, new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("GUIs", 2, 2, new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode2});
             System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("MainMenu.scene", 9, 9);
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Scenes", 2, 1, new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Scenes", 2, 2, new System.Windows.Forms.TreeNode[] {
             treeNode4});
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Resources", 2, 1, new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("MainMenu.script", 7, 7);
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Scripts", 2, 2, new System.Windows.Forms.TreeNode[] {
+            treeNode6});
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Resources", 2, 2, new System.Windows.Forms.TreeNode[] {
             treeNode3,
-            treeNode5});
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Main.stage", 7, 7);
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Main", 3, 3, new System.Windows.Forms.TreeNode[] {
-            treeNode6,
+            treeNode5,
             treeNode7});
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Solution \'Grrr\' (2 projects)", 5, 5, new System.Windows.Forms.TreeNode[] {
-            treeNode8});
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Main.stage", 6, 6);
+            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Main", 3, 3, new System.Windows.Forms.TreeNode[] {
+            treeNode8,
+            treeNode9});
+            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Solution \'Grrr\' (2 projects)", 5, 5, new System.Windows.Forms.TreeNode[] {
+            treeNode10});
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DummySolutionExplorer));
-            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.m_treeView = new System.Windows.Forms.TreeView();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.SuspendLayout();
             // 
-            // treeView1
+            // m_treeView
             // 
-            this.treeView1.AllowDrop = true;
-            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.ImageIndex = 0;
-            this.treeView1.ImageList = this.imageList1;
-            this.treeView1.Indent = 19;
-            this.treeView1.LabelEdit = true;
-            this.treeView1.Location = new System.Drawing.Point(0, 24);
-            this.treeView1.Name = "treeView1";
+            this.m_treeView.AllowDrop = true;
+            this.m_treeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.m_treeView.ImageIndex = 0;
+            this.m_treeView.ImageList = this.imageList1;
+            this.m_treeView.Indent = 19;
+            this.m_treeView.LabelEdit = true;
+            this.m_treeView.Location = new System.Drawing.Point(0, 24);
+            this.m_treeView.Name = "m_treeView";
             treeNode1.ImageIndex = 8;
             treeNode1.Name = "";
             treeNode1.SelectedImageIndex = 8;
@@ -70,7 +74,7 @@ namespace Studio
             treeNode2.Text = "Pause.gui";
             treeNode3.ImageIndex = 2;
             treeNode3.Name = "";
-            treeNode3.SelectedImageIndex = 1;
+            treeNode3.SelectedImageIndex = 2;
             treeNode3.Text = "GUIs";
             treeNode4.ImageIndex = 9;
             treeNode4.Name = "";
@@ -78,30 +82,41 @@ namespace Studio
             treeNode4.Text = "MainMenu.scene";
             treeNode5.ImageIndex = 2;
             treeNode5.Name = "";
-            treeNode5.SelectedImageIndex = 1;
+            treeNode5.SelectedImageIndex = 2;
             treeNode5.Text = "Scenes";
-            treeNode6.ImageIndex = 2;
+            treeNode6.ImageIndex = 7;
             treeNode6.Name = "";
-            treeNode6.SelectedImageIndex = 1;
-            treeNode6.Text = "Resources";
-            treeNode7.ImageIndex = 7;
+            treeNode6.SelectedImageIndex = 7;
+            treeNode6.Text = "MainMenu.script";
+            treeNode7.ImageIndex = 2;
             treeNode7.Name = "";
-            treeNode7.SelectedImageIndex = 7;
-            treeNode7.Text = "Main.stage";
-            treeNode8.ImageIndex = 3;
+            treeNode7.SelectedImageIndex = 2;
+            treeNode7.Text = "Scripts";
+            treeNode8.ImageIndex = 2;
             treeNode8.Name = "";
-            treeNode8.SelectedImageIndex = 3;
-            treeNode8.Text = "Main";
-            treeNode9.ImageIndex = 5;
+            treeNode8.SelectedImageIndex = 2;
+            treeNode8.Text = "Resources";
+            treeNode9.ImageIndex = 6;
             treeNode9.Name = "";
-            treeNode9.SelectedImageIndex = 5;
-            treeNode9.Text = "Solution \'Grrr\' (2 projects)";
-            this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode9});
-            this.treeView1.SelectedImageIndex = 0;
-            this.treeView1.ShowRootLines = false;
-            this.treeView1.Size = new System.Drawing.Size(245, 297);
-            this.treeView1.TabIndex = 0;
+            treeNode9.SelectedImageIndex = 6;
+            treeNode9.Text = "Main.stage";
+            treeNode10.ImageIndex = 3;
+            treeNode10.Name = "";
+            treeNode10.SelectedImageIndex = 3;
+            treeNode10.Text = "Main";
+            treeNode11.ImageIndex = 5;
+            treeNode11.Name = "solutionNode";
+            treeNode11.SelectedImageIndex = 5;
+            treeNode11.Text = "Solution \'Grrr\' (2 projects)";
+            this.m_treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode11});
+            this.m_treeView.SelectedImageIndex = 5;
+            this.m_treeView.ShowRootLines = false;
+            this.m_treeView.Size = new System.Drawing.Size(245, 297);
+            this.m_treeView.TabIndex = 0;
+            this.m_treeView.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.m_treeView_BeforeExpand);
+            this.m_treeView.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.m_treeView_BeforeCollapse);
+            this.m_treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.m_treeView_AfterSelect);
             // 
             // imageList1
             // 
@@ -122,10 +137,7 @@ namespace Studio
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.ClientSize = new System.Drawing.Size(245, 322);
-            this.Controls.Add(this.treeView1);
-            this.DockAreas = ((Studio.WinFormsUI.Docking.DockAreas)((((Studio.WinFormsUI.Docking.DockAreas.DockLeft | Studio.WinFormsUI.Docking.DockAreas.DockRight)
-                        | Studio.WinFormsUI.Docking.DockAreas.DockTop)
-                        | Studio.WinFormsUI.Docking.DockAreas.DockBottom)));
+            this.Controls.Add(this.m_treeView);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.HideOnClose = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -139,7 +151,7 @@ namespace Studio
 		}
 		#endregion
 
-        private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.ImageList imageList1;
+        public System.Windows.Forms.TreeView m_treeView;
     }
 }
