@@ -13,14 +13,14 @@ using Studio.WinFormsUI.Docking;
 
 namespace Studio
 {
-    public partial class LuaDoc : DockContent
+    public partial class ScriptDoc : DockContent
     {
-        public LuaDoc()
+        public ScriptDoc()
         {
             InitializeComponent();
 
             //
-            syntaxBoxControl1.Document.Parser.Init("Lua.syn");
+            syntaxBoxControl1.Document.Parser.Init("Squirrel.syn");
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Studio
 {
-    partial class LuaDoc
+    partial class ScriptDoc
     {
         /// <summary>
         /// Required designer variable.

@@ -283,11 +283,11 @@
     <Compile Include="BikiniView.Designer.cs">
       <DependentUpon>BikiniView.cs</DependentUpon>
     </Compile>
-    <Compile Include="LuaDoc.cs">
+    <Compile Include="ScriptDoc.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LuaDoc.Designer.cs">
-      <DependentUpon>LuaDoc.cs</DependentUpon>
+    <Compile Include="ScriptDoc.Designer.cs">
+      <DependentUpon>ScriptDoc.cs</DependentUpon>
     </Compile>
     <Compile Include="WinFormsUI\Docking\AutoHideStripBase.cs">
       <SubType>Component</SubType>
@@ -779,8 +779,8 @@
     <EmbeddedResource Include="BikiniView.resx">
       <DependentUpon>BikiniView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LuaDoc.resx">
-      <DependentUpon>LuaDoc.cs</DependentUpon>
+    <EmbeddedResource Include="ScriptDoc.resx">
+      <DependentUpon>ScriptDoc.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinFormsUI\Docking\DockPanel.bmp" />
     <EmbeddedResource Include="WinFormsUI\Docking\Resources.resx">
@@ -886,6 +886,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Alsing.SyntaxBox\MoveUpDown.cur" />
+    <None Include="Squirrel.syn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Lua.syn">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

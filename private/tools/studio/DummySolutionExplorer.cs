@@ -18,7 +18,23 @@ namespace Studio
 
         protected override void OnRightToLeftLayoutChanged(EventArgs e)
         {
-            treeView1.RightToLeftLayout = RightToLeftLayout;
+            m_treeView.RightToLeftLayout = RightToLeftLayout;
+        }
+
+        private void m_treeView_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            if (e.Node.ImageIndex == 2) e.Node.ImageIndex = 1;
+        }
+
+        private void m_treeView_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
+        {
+            if (e.Node.ImageIndex == 1) e.Node.ImageIndex = 2;
+        }
+
+        private void m_treeView_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (e.Node.IsExpanded && e.Node.ImageIndex == 2) e.Node.ImageIndex = 1;
+            if (!e.Node.IsExpanded && e.Node.ImageIndex == 1) e.Node.ImageIndex = 2;
         }
     }
 }
