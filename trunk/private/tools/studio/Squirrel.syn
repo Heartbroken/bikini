@@ -71,7 +71,8 @@
 		<ChildBlocks>
 			<Child Name="Multiline Comment" />
 			<Child Name="Singleline Comment" />
-			<Child Name="String" />
+			<Child Name="Multiline String" />
+			<Child Name="Singleline String" />
 			<Child Name="Code" />
 		</ChildBlocks>
 	</Block>	
@@ -87,12 +88,14 @@
 	<Block Name="Singleline Comment" Style="Comment"  IsMultiline="false">
 		<Scope Start="//" End="" Style="Comment" />
 	</Block>
-	<Block Name="String" Style="String" IsMultiline="true">
-		<Scope Start="&quot;" End="&quot;" EscapeChar="\" Style="String" />
-		<Scope Start="'" End="'" EscapeChar="\" Style="String" />
-		<Scope Start="\[=*\[" StartIsComplex="true" End="\]=*\]" EndIsComplex="true" Style="String" />
+	<Block Name="Multiline String" Style="String" IsMultiline="true">
+		<Scope Start="@&quot;" End="&quot;" EscapeChar="\" Style="String" />
 	</Block>"
-  
+  <Block Name="Singleline String" Style="String">
+    <Scope Start="&quot;" End="&quot;" EscapeChar="\" Style="String" />
+    <Scope Start="'" End="'" EscapeChar="\" Style="String" />
+  </Block>"
+
   <Style Name="Code" ForeColor="" BackColor="" Bold="false" Italic="false" Underline="false" />
 	<Style Name="Scope" ForeColor="" BackColor="" Bold="false" Italic="false" Underline="false" />
 	<Style Name="Comment" ForeColor="Green" BackColor="" Bold="false" Italic="false" Underline="false" />
