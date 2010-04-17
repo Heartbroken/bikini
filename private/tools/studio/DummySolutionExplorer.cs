@@ -30,11 +30,5 @@ namespace Studio
         {
             if (e.Node.ImageIndex == 1) e.Node.ImageIndex = 2;
         }
-
-        private void m_treeView_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            if (e.Node.IsExpanded && e.Node.ImageIndex == 2) e.Node.ImageIndex = 1;
-            if (!e.Node.IsExpanded && e.Node.ImageIndex == 1) e.Node.ImageIndex = 2;
-        }
     }
 }

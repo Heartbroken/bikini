@@ -30,16 +30,16 @@ namespace Studio
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Main.gui", 8, 8);
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Pause.gui", 8, 8);
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("GUIs", 2, 2, new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("GUIs", 2, 1, new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode2});
             System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("MainMenu.scene", 9, 9);
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Scenes", 2, 2, new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Scenes", 2, 1, new System.Windows.Forms.TreeNode[] {
             treeNode4});
             System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("MainMenu.script", 7, 7);
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Scripts", 2, 2, new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Scripts", 2, 1, new System.Windows.Forms.TreeNode[] {
             treeNode6});
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Resources", 2, 2, new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Resources", 2, 1, new System.Windows.Forms.TreeNode[] {
             treeNode3,
             treeNode5,
             treeNode7});
@@ -74,7 +74,7 @@ namespace Studio
             treeNode2.Text = "Pause.gui";
             treeNode3.ImageIndex = 2;
             treeNode3.Name = "";
-            treeNode3.SelectedImageIndex = 2;
+            treeNode3.SelectedImageIndex = 1;
             treeNode3.Text = "GUIs";
             treeNode4.ImageIndex = 9;
             treeNode4.Name = "";
@@ -82,7 +82,7 @@ namespace Studio
             treeNode4.Text = "MainMenu.scene";
             treeNode5.ImageIndex = 2;
             treeNode5.Name = "";
-            treeNode5.SelectedImageIndex = 2;
+            treeNode5.SelectedImageIndex = 1;
             treeNode5.Text = "Scenes";
             treeNode6.ImageIndex = 7;
             treeNode6.Name = "";
@@ -90,11 +90,11 @@ namespace Studio
             treeNode6.Text = "MainMenu.script";
             treeNode7.ImageIndex = 2;
             treeNode7.Name = "";
-            treeNode7.SelectedImageIndex = 2;
+            treeNode7.SelectedImageIndex = 1;
             treeNode7.Text = "Scripts";
             treeNode8.ImageIndex = 2;
             treeNode8.Name = "";
-            treeNode8.SelectedImageIndex = 2;
+            treeNode8.SelectedImageIndex = 1;
             treeNode8.Text = "Resources";
             treeNode9.ImageIndex = 6;
             treeNode9.Name = "";
@@ -116,7 +116,6 @@ namespace Studio
             this.m_treeView.TabIndex = 0;
             this.m_treeView.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.m_treeView_BeforeExpand);
             this.m_treeView.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.m_treeView_BeforeCollapse);
-            this.m_treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.m_treeView_AfterSelect);
             // 
             // imageList1
             // 
