@@ -104,8 +104,8 @@ namespace Studio
 		private void menuItemNew_Click(object sender, System.EventArgs e)
 		{
 			//DummyDoc dummyDoc = CreateNewDocument();
-            //BikiniView dummyDoc = CreateNewGuiView();
-            ScriptDoc dummyDoc = CreateNewLuaDoc();
+            BikiniView dummyDoc = CreateNewGuiView();
+            //ScriptDoc dummyDoc = CreateNewLuaDoc();
             if (dockPanel.DocumentStyle == DocumentStyle.SystemMdi)
 			{
 				dummyDoc.MdiParent = this;
