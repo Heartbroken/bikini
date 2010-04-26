@@ -23,12 +23,20 @@ namespace Studio
 
         private void m_treeView_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
-            if (e.Node.ImageIndex == 2) e.Node.ImageIndex = 1;
+            if (e.Node.ImageIndex == 2)
+            {
+                e.Node.ImageIndex = 1;
+                e.Node.SelectedImageIndex = 1;
+            }
         }
 
         private void m_treeView_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
         {
-            if (e.Node.ImageIndex == 1) e.Node.ImageIndex = 2;
+            if (e.Node.ImageIndex == 1)
+            {
+                e.Node.ImageIndex = 2;
+                e.Node.SelectedImageIndex = 2;
+            }
         }
     }
 }
