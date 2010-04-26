@@ -54,7 +54,7 @@ namespace Studio
             System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Substages", 4, 4, new System.Windows.Forms.TreeNode[] {
             treeNode12,
             treeNode13});
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Resources", 2, 1);
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Resources", 2, 2);
             System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Stage \'E1\'", 6, 6, new System.Windows.Forms.TreeNode[] {
             treeNode14,
             treeNode15});
@@ -136,7 +136,7 @@ namespace Studio
             treeNode14.Text = "Substages";
             treeNode15.ImageIndex = 2;
             treeNode15.Name = "";
-            treeNode15.SelectedImageIndex = 1;
+            treeNode15.SelectedImageIndex = 2;
             treeNode15.Text = "Resources";
             treeNode16.ImageIndex = 6;
             treeNode16.Name = "";
@@ -157,7 +157,10 @@ namespace Studio
             this.m_treeView.Size = new System.Drawing.Size(245, 297);
             this.m_treeView.TabIndex = 0;
             this.m_treeView.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.m_treeView_BeforeExpand);
+            this.m_treeView.DoubleClick += new System.EventHandler(this.m_treeView_DoubleClick);
             this.m_treeView.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.m_treeView_BeforeCollapse);
+            this.m_treeView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.m_treeView_MouseDown);
+            this.m_treeView.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.m_treeView_BeforeLabelEdit);
             // 
             // imageList1
             // 

@@ -21,22 +21,47 @@ namespace Studio
             m_treeView.RightToLeftLayout = RightToLeftLayout;
         }
 
+        bool m_cancelExpand = false;
+
+        private void m_treeView_MouseDown(object sender, MouseEventArgs e)
+        {
+            m_cancelExpand = e.Clicks > 1;
+        }
+
         private void m_treeView_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
-            if (e.Node.ImageIndex == 2)
+            if (m_cancelExpand) e.Cancel = true;
+            else
             {
-                e.Node.ImageIndex = 1;
-                e.Node.SelectedImageIndex = 1;
+                if (e.Node.ImageIndex == 2)
+                {
+                    e.Node.ImageIndex = 1;
+                    e.Node.SelectedImageIndex = 1;
+                }
             }
         }
 
         private void m_treeView_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
         {
-            if (e.Node.ImageIndex == 1)
+            if (m_cancelExpand) e.Cancel = true;
+            else
             {
-                e.Node.ImageIndex = 2;
-                e.Node.SelectedImageIndex = 2;
+                if (e.Node.ImageIndex == 1)
+                {
+                    e.Node.ImageIndex = 2;
+                    e.Node.SelectedImageIndex = 2;
+                }
             }
+        }
+
+        private void m_treeView_DoubleClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void m_treeView_BeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
+        {
+
         }
     }
 }
