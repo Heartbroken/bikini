@@ -41,7 +41,7 @@ namespace Studio
             System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("MainMenu.scene", 9, 9);
             System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Scenes", 2, 2, new System.Windows.Forms.TreeNode[] {
             treeNode7});
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Resources", 2, 2, new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Resources", 10, 10, new System.Windows.Forms.TreeNode[] {
             treeNode6,
             treeNode8});
             System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Stage \'Main\'", 6, 6, new System.Windows.Forms.TreeNode[] {
@@ -54,7 +54,7 @@ namespace Studio
             System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Substages", 4, 4, new System.Windows.Forms.TreeNode[] {
             treeNode12,
             treeNode13});
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Resources", 2, 2);
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Resources", 10, 10);
             System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Stage \'E1\'", 6, 6, new System.Windows.Forms.TreeNode[] {
             treeNode14,
             treeNode15});
@@ -110,9 +110,9 @@ namespace Studio
             treeNode8.Name = "";
             treeNode8.SelectedImageIndex = 2;
             treeNode8.Text = "Scenes";
-            treeNode9.ImageIndex = 2;
+            treeNode9.ImageIndex = 10;
             treeNode9.Name = "";
-            treeNode9.SelectedImageIndex = 2;
+            treeNode9.SelectedImageIndex = 10;
             treeNode9.Text = "Resources";
             treeNode10.ImageIndex = 6;
             treeNode10.Name = "";
@@ -134,9 +134,9 @@ namespace Studio
             treeNode14.Name = "";
             treeNode14.SelectedImageIndex = 4;
             treeNode14.Text = "Substages";
-            treeNode15.ImageIndex = 2;
+            treeNode15.ImageIndex = 10;
             treeNode15.Name = "";
-            treeNode15.SelectedImageIndex = 2;
+            treeNode15.SelectedImageIndex = 10;
             treeNode15.Text = "Resources";
             treeNode16.ImageIndex = 6;
             treeNode16.Name = "";
@@ -167,15 +167,17 @@ namespace Studio
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList1.Images.SetKeyName(0, "");
-            this.imageList1.Images.SetKeyName(1, "");
-            this.imageList1.Images.SetKeyName(2, "");
-            this.imageList1.Images.SetKeyName(3, "");
+            this.imageList1.Images.SetKeyName(1, "FolderOpen.bmp");
+            this.imageList1.Images.SetKeyName(2, "FolderClose.bmp");
+            this.imageList1.Images.SetKeyName(3, "Project.bmp");
             this.imageList1.Images.SetKeyName(4, "");
-            this.imageList1.Images.SetKeyName(5, "");
-            this.imageList1.Images.SetKeyName(6, "");
+            this.imageList1.Images.SetKeyName(5, "Project2.bmp");
+            this.imageList1.Images.SetKeyName(6, "Package.bmp");
             this.imageList1.Images.SetKeyName(7, "");
             this.imageList1.Images.SetKeyName(8, "");
             this.imageList1.Images.SetKeyName(9, "");
+            this.imageList1.Images.SetKeyName(10, "Resources.bmp");
+            this.imageList1.Images.SetKeyName(11, "");
             // 
             // DummySolutionExplorer
             // 
