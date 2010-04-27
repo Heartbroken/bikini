@@ -895,6 +895,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Alsing.SyntaxBox\Text\ReadMe.txt" />
+    <Content Include="Images\FolderClose.bmp" />
+    <Content Include="Images\FolderOpen.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
