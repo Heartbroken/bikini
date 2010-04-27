@@ -169,15 +169,24 @@ namespace Studio
             this.imageList1.Images.SetKeyName(0, "");
             this.imageList1.Images.SetKeyName(1, "FolderOpen.bmp");
             this.imageList1.Images.SetKeyName(2, "FolderClose.bmp");
-            this.imageList1.Images.SetKeyName(3, "Project.bmp");
-            this.imageList1.Images.SetKeyName(4, "");
+            this.imageList1.Images.SetKeyName(3, "Package2.bmp");
+            this.imageList1.Images.SetKeyName(4, "Substages.bmp");
             this.imageList1.Images.SetKeyName(5, "Project2.bmp");
-            this.imageList1.Images.SetKeyName(6, "Package.bmp");
+            this.imageList1.Images.SetKeyName(6, "Substage.bmp");
             this.imageList1.Images.SetKeyName(7, "");
-            this.imageList1.Images.SetKeyName(8, "");
-            this.imageList1.Images.SetKeyName(9, "");
+            this.imageList1.Images.SetKeyName(8, "Interface.bmp");
+            this.imageList1.Images.SetKeyName(9, "Scene.bmp");
             this.imageList1.Images.SetKeyName(10, "Resources.bmp");
             this.imageList1.Images.SetKeyName(11, "");
+            this.imageList1.Images.SetKeyName(12, "reseditui_27001.ico");
+            this.imageList1.Images.SetKeyName(13, "reseditui_26928.ico");
+            this.imageList1.Images.SetKeyName(14, "reseditui_27003.ico");
+            this.imageList1.Images.SetKeyName(15, "reseditui_27006.ico");
+            this.imageList1.Images.SetKeyName(16, "");
+            this.imageList1.Images.SetKeyName(17, "Package.bmp");
+            this.imageList1.Images.SetKeyName(18, "");
+            this.imageList1.Images.SetKeyName(19, "");
+            this.imageList1.Images.SetKeyName(20, "Project.bmp");
             // 
             // DummySolutionExplorer
             // 
