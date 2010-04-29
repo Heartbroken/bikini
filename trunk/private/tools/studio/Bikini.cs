@@ -5,6 +5,9 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Globalization;
+using System.ComponentModel;
+using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Studio
 {
@@ -204,5 +207,31 @@ namespace Studio
 #           endif
 #       endif
         public static extern IntPtr request(IntPtr _command);
+
+        // PropertyGrid objects
+
+        //[DefaultPropertyAttribute("Name")]
+        public class Project
+        {
+            // Name
+            private String m_name = "Grrr";
+            [CategoryAttribute("ID"), DescriptionAttribute("Name of project")]
+            public String Name { get { return m_name; } set
+            {
+                m_name = value;
+
+                Debug.Assert(comboBox == null || comboBox.SelectedItem == this);
+                if (comboBox != null) comboBox.Items[comboBox.SelectedIndex] = this;
+            }}
+
+            // GUID
+            private Guid m_guid = new Guid("{FFEF0CA2-8BBF-4fe6-8D7C-2FBF9FFFD2C2}");
+            [CategoryAttribute("ID"), DescriptionAttribute("ID of project")]
+            public Guid GUID { get { return m_guid; } }
+
+            public override string ToString() { return "Project '" + Name + "'"; }
+
+            public ComboBox comboBox;
+        }
     }
 }

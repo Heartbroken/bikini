@@ -50,12 +50,11 @@ namespace Studio
             // 
             this.comboBox.Dock = System.Windows.Forms.DockStyle.Top;
             this.comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox.Items.AddRange(new object[] {
-            "propertyGrid"});
             this.comboBox.Location = new System.Drawing.Point(0, 3);
             this.comboBox.Name = "comboBox";
             this.comboBox.Size = new System.Drawing.Size(208, 21);
             this.comboBox.TabIndex = 1;
+            this.comboBox.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // mainMenu1
             // 
