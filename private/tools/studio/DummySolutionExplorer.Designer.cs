@@ -66,9 +66,11 @@ namespace Studio
             treeNode18});
             System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Package \'Grrr_E1\'", 3, 3, new System.Windows.Forms.TreeNode[] {
             treeNode19});
-            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Project \'Grrr\'", 5, 5, new System.Windows.Forms.TreeNode[] {
-            treeNode14,
+            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Episodes", 2, 2, new System.Windows.Forms.TreeNode[] {
             treeNode20});
+            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Project \'Grrr\'", 5, 5, new System.Windows.Forms.TreeNode[] {
+            treeNode14,
+            treeNode21});
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DummySolutionExplorer));
             this.m_treeView = new System.Windows.Forms.TreeView();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
@@ -164,12 +166,16 @@ namespace Studio
             treeNode20.Name = "";
             treeNode20.SelectedImageIndex = 3;
             treeNode20.Text = "Package \'Grrr_E1\'";
-            treeNode21.ImageIndex = 5;
-            treeNode21.Name = "solutionNode";
-            treeNode21.SelectedImageIndex = 5;
-            treeNode21.Text = "Project \'Grrr\'";
+            treeNode21.ImageIndex = 2;
+            treeNode21.Name = "";
+            treeNode21.SelectedImageIndex = 2;
+            treeNode21.Text = "Episodes";
+            treeNode22.ImageIndex = 5;
+            treeNode22.Name = "solutionNode";
+            treeNode22.SelectedImageIndex = 5;
+            treeNode22.Text = "Project \'Grrr\'";
             this.m_treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode21});
+            treeNode22});
             this.m_treeView.SelectedImageIndex = 5;
             this.m_treeView.ShowRootLines = false;
             this.m_treeView.Size = new System.Drawing.Size(245, 297);
