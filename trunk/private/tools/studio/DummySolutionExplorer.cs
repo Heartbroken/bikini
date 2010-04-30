@@ -70,7 +70,7 @@ namespace Studio
 
         private void m_treeView_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
         {
-            if (m_cancelExpand) e.Cancel = true;
+			if (m_cancelExpand || e.Node.ImageKey == "Project") e.Cancel = true;
             else
             {
                 if (e.Node.ImageKey == "FolderOpen")
