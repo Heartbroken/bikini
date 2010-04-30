@@ -1,5 +1,5 @@
 // *
-// * Copyright (C) 2008 Roger Alsing : http://www.RogerAlsing.com
+// * Copyright (C) 2008 Roger Studio.Alsing : http://www.RogerAlsing.com
 // *
 // * This library is free software; you can redistribute it and/or modify it
 // * under the terms of the GNU Lesser General Public License 2.1 or later, as
@@ -8,9 +8,9 @@
 // *
 // *
 
-using Alsing.Drawing.GDI;
+using Studio.Alsing.Drawing.GDI;
 
-namespace Alsing.Windows.Forms.SyntaxBox
+namespace Studio.Alsing.Windows.Forms.SyntaxBox
 {
     /// <summary>
     /// Indent styles used by the control
@@ -37,7 +37,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
     }
 }
 
-namespace Alsing.Windows.Forms.SyntaxBox
+namespace Studio.Alsing.Windows.Forms.SyntaxBox
 {
     /// <summary>
     /// Text actions that can be performed by the SyntaxBoxControl
@@ -59,7 +59,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
     }
 }
 
-namespace Alsing.Windows.Forms.SyntaxBox.Painter
+namespace Studio.Alsing.Windows.Forms.SyntaxBox.Painter
 {
     /// <summary>
     /// View point struct used by the SyntaxBoxControl.

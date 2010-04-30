@@ -1,5 +1,5 @@
 // *
-// * Copyright (C) 2008 Roger Alsing : http://www.RogerAlsing.com
+// * Copyright (C) 2008 Roger Studio.Alsing : http://www.RogerAlsing.com
 // *
 // * This library is free software; you can redistribute it and/or modify it
 // * under the terms of the GNU Lesser General Public License 2.1 or later, as
@@ -12,11 +12,11 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Alsing.Drawing;
+using Studio.Alsing.Drawing;
 
 #pragma warning disable 0809, 0649
 
-namespace Alsing.Windows.Forms
+namespace Studio.Alsing.Windows.Forms
 {
     [ToolboxItem(true)]
     public class BasePanelControl : Panel

@@ -210,28 +210,49 @@ namespace Studio
 
         // PropertyGrid objects
 
-        //[DefaultPropertyAttribute("Name")]
-        public class Project
+        public class ProjectItem
         {
+            public ComboBox comboBox;
+
             // Name
             private String m_name = "Grrr";
             [CategoryAttribute("ID"), DescriptionAttribute("Name of project")]
-            public String Name { get { return m_name; } set
+            public String Name
             {
-                m_name = value;
-
-                Debug.Assert(comboBox == null || comboBox.SelectedItem == this);
-                if (comboBox != null) comboBox.Items[comboBox.SelectedIndex] = this;
-            }}
+                get { return m_name; }
+                set
+                {
+                    m_name = value;
+                    Debug.Assert(comboBox == null || comboBox.SelectedItem == this);
+                    if (comboBox != null && comboBox.SelectedItem == this) comboBox.Items[comboBox.SelectedIndex] = this;
+                }
+            }
 
             // GUID
-            private Guid m_guid = new Guid("{FFEF0CA2-8BBF-4fe6-8D7C-2FBF9FFFD2C2}");
+            private Guid m_guid = Guid.NewGuid();
             [CategoryAttribute("ID"), DescriptionAttribute("ID of project")]
             public Guid GUID { get { return m_guid; } }
+        }
 
+        // Project
+        public class Project : ProjectItem
+        {
             public override string ToString() { return "Project '" + Name + "'"; }
-
-            public ComboBox comboBox;
+        }
+        // Folder
+        public class Folder : ProjectItem
+        {
+            public override string ToString() { return "Folder '" + Name + "'"; }
+        }
+        // Package
+        public class Package : ProjectItem
+        {
+            public override string ToString() { return "Package '" + Name + "'"; }
+        }
+        // Stage
+        public class Stage : ProjectItem
+        {
+            public override string ToString() { return "Stage '" + Name + "'"; }
         }
     }
 }

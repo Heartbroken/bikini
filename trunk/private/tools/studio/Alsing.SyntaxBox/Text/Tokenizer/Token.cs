@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Alsing.Text
+namespace Studio.Alsing.Text
 {
     public sealed class Token
     {

@@ -1,5 +1,5 @@
 // *
-// * Copyright (C) 2008 Roger Alsing : http://www.RogerAlsing.com
+// * Copyright (C) 2008 Roger Studio.Alsing : http://www.RogerAlsing.com
 // *
 // * This library is free software; you can redistribute it and/or modify it
 // * under the terms of the GNU Lesser General Public License 2.1 or later, as
@@ -14,7 +14,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace Alsing.Windows.Forms.SyntaxBox
+namespace Studio.Alsing.Windows.Forms.SyntaxBox
 {
     /// <summary>
     /// Summary description for AutoListForm.
@@ -330,7 +330,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.LB = new Alsing.Windows.Forms.SyntaxBox.TabListBox();
+            this.LB = new Studio.Alsing.Windows.Forms.SyntaxBox.TabListBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 

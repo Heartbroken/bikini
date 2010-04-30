@@ -1,5 +1,5 @@
 // *
-// * Copyright (C) 2008 Roger Alsing : http://www.RogerAlsing.com
+// * Copyright (C) 2008 Roger Studio.Alsing : http://www.RogerAlsing.com
 // *
 // * This library is free software; you can redistribute it and/or modify it
 // * under the terms of the GNU Lesser General Public License 2.1 or later, as
@@ -15,7 +15,7 @@ using System.Windows.Forms;
 
 #pragma warning disable 0649
 
-namespace Alsing.Windows.Forms.CoreLib
+namespace Studio.Alsing.Windows.Forms.CoreLib
 {
     /// <summary>
     /// Summary description for SplitViewChildControl.
@@ -34,9 +34,9 @@ namespace Alsing.Windows.Forms.CoreLib
         {
             InitializeComponent();
 
-//			Alsing.Windows.NativeMethods.OpenThemeData (this.Handle,"EDIT");
-//			Alsing.Windows.NativeMethods.OpenThemeData (this.vScroll.Handle,"SCROLLBAR");
-//			Alsing.Windows.NativeMethods.OpenThemeData (this.hScroll.Handle,"SCROLLBAR");
+//			Studio.Alsing.Windows.NativeMethods.OpenThemeData (this.Handle,"EDIT");
+//			Studio.Alsing.Windows.NativeMethods.OpenThemeData (this.vScroll.Handle,"SCROLLBAR");
+//			Studio.Alsing.Windows.NativeMethods.OpenThemeData (this.hScroll.Handle,"SCROLLBAR");
         }
 
 
@@ -273,8 +273,8 @@ namespace Alsing.Windows.Forms.CoreLib
             this.hScroll = new System.Windows.Forms.HScrollBar();
             this.vScroll = new System.Windows.Forms.VScrollBar();
             this.Filler = new System.Windows.Forms.Panel();
-            this.TopThumb = new Alsing.Windows.Forms.CoreLib.ThumbControl();
-            this.LeftThumb = new Alsing.Windows.Forms.CoreLib.ThumbControl();
+            this.TopThumb = new Studio.Alsing.Windows.Forms.CoreLib.ThumbControl();
+            this.LeftThumb = new Studio.Alsing.Windows.Forms.CoreLib.ThumbControl();
 
 
             this.SuspendLayout();

@@ -1,5 +1,5 @@
 // *
-// * Copyright (C) 2008 Roger Alsing : http://www.RogerAlsing.com
+// * Copyright (C) 2008 Roger Studio.Alsing : http://www.RogerAlsing.com
 // *
 // * This library is free software; you can redistribute it and/or modify it
 // * under the terms of the GNU Lesser General Public License 2.1 or later, as
@@ -13,7 +13,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Text;
 
-namespace Alsing.SourceCode.SyntaxDocumentExporters
+namespace Studio.Alsing.SourceCode.SyntaxDocumentExporters
 {
     /// <summary>
     /// Html exporter class

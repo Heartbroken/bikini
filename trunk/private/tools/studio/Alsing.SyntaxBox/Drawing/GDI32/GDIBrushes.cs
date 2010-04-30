@@ -1,5 +1,5 @@
 // *
-// * Copyright (C) 2008 Roger Alsing : http://www.RogerAlsing.com
+// * Copyright (C) 2008 Roger Studio.Alsing : http://www.RogerAlsing.com
 // *
 // * This library is free software; you can redistribute it and/or modify it
 // * under the terms of the GNU Lesser General Public License 2.1 or later, as
@@ -10,9 +10,9 @@
 
 using System;
 using System.Drawing;
-using Alsing.Windows;
+using Studio.Alsing.Windows;
 
-namespace Alsing.Drawing.GDI
+namespace Studio.Alsing.Drawing.GDI
 {
     //wrapper class for gdi brushes
     public class GDIBrush : GDIObject
@@ -37,7 +37,7 @@ namespace Alsing.Drawing.GDI
         {
             hBrush = NativeMethods.CreatePatternBrush(hBMP_Pattern);
             //if (hBrush==(IntPtr)0)
-            //Alsing.Debug.Debugger.WriteLine ("Failed to create brush with color : {0}",color.ToString());
+            //Studio.Alsing.Debug.Debugger.WriteLine ("Failed to create brush with color : {0}",color.ToString());
 
             Create();
         }

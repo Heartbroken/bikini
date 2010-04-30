@@ -1,5 +1,5 @@
 // *
-// * Copyright (C) 2008 Roger Alsing : http://www.RogerAlsing.com
+// * Copyright (C) 2008 Roger Studio.Alsing : http://www.RogerAlsing.com
 // *
 // * This library is free software; you can redistribute it and/or modify it
 // * under the terms of the GNU Lesser General Public License 2.1 or later, as
@@ -18,16 +18,16 @@ using System.Drawing.Design;
 using System.IO;
 using System.Resources;
 using System.Windows.Forms;
-using Alsing.Drawing.GDI;
-using Alsing.SourceCode;
-using Alsing.Windows.Forms.CoreLib;
-using Alsing.Windows.Forms.SyntaxBox;
+using Studio.Alsing.Drawing.GDI;
+using Studio.Alsing.SourceCode;
+using Studio.Alsing.Windows.Forms.CoreLib;
+using Studio.Alsing.Windows.Forms.SyntaxBox;
 
 #endregion
 
 #pragma warning disable 0809
 
-namespace Alsing.Windows.Forms
+namespace Studio.Alsing.Windows.Forms
 {
     /// <summary>
     /// Syntaxbox control that can be used as a pure text editor or as a code editor when a syntaxfile is used.

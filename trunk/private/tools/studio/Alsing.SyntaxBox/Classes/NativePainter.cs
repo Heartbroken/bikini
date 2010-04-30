@@ -1,5 +1,5 @@
 // *
-// * Copyright (C) 2008 Roger Alsing : http://www.RogerAlsing.com
+// * Copyright (C) 2008 Roger Studio.Alsing : http://www.RogerAlsing.com
 // *
 // * This library is free software; you can redistribute it and/or modify it
 // * under the terms of the GNU Lesser General Public License 2.1 or later, as
@@ -14,13 +14,13 @@ using System.Drawing;
 using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
-using Alsing.Drawing.GDI;
-using Alsing.Globalization;
-using Alsing.SourceCode;
+using Studio.Alsing.Drawing.GDI;
+using Studio.Alsing.Globalization;
+using Studio.Alsing.SourceCode;
 
 #pragma warning disable 1690
 
-namespace Alsing.Windows.Forms.SyntaxBox.Painter
+namespace Studio.Alsing.Windows.Forms.SyntaxBox.Painter
 {
     /// <summary>
     /// Painter class that uses GDI32 to render the content of a SyntaxBoxControl
