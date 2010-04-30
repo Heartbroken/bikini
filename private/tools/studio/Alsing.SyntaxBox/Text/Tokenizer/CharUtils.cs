@@ -1,5 +1,5 @@
 // *
-// * Copyright (C) 2008 Roger Alsing : http://www.rogeralsing.com
+// * Copyright (C) 2008 Roger Studio.Alsing : http://www.rogeralsing.com
 // *
 // * This library is free software; you can redistribute it and/or modify it
 // * under the terms of the GNU Lesser General Public License 2.1 or later, as
@@ -10,7 +10,7 @@
 
 using System.Globalization;
 
-namespace Alsing.Text
+namespace Studio.Alsing.Text
 {
     //(c) WE WASTE MEMORY 2004
     public class CharUtils

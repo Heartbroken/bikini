@@ -231,7 +231,7 @@ pugi::xml_node CGameDoc::GetNodeByGUID(const GUID &_g)
 	struct _by_GUID
 	{
 		bk::astring s;
-		_by_GUID(const GUID &_g) : s(bk::print_GUID(_g)) {}
+		_by_GUID(const GUID &_g) : s((const bk::achar*)bk::print_GUID(_g)) {}
 		bool operator () (const pugi::xml_node &_n)
 		{
 			return s == _n.attribute("GUID").value();

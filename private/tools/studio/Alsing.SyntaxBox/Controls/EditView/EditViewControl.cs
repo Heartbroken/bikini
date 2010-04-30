@@ -1,5 +1,5 @@
 // *
-// * Copyright (C) 2008 Roger Alsing : http://www.RogerAlsing.com
+// * Copyright (C) 2008 Roger Studio.Alsing : http://www.RogerAlsing.com
 // *
 // * This library is free software; you can redistribute it and/or modify it
 // * under the terms of the GNU Lesser General Public License 2.1 or later, as
@@ -19,17 +19,17 @@ using System.IO;
 using System.Resources;
 using System.Text;
 using System.Windows.Forms;
-using Alsing.Globalization;
-using Alsing.SourceCode;
-using Alsing.Windows.Forms.CoreLib;
-using Alsing.Windows.Forms.SyntaxBox.Painter;
-using Alsing.Resouces;
+using Studio.Alsing.Globalization;
+using Studio.Alsing.SourceCode;
+using Studio.Alsing.Windows.Forms.CoreLib;
+using Studio.Alsing.Windows.Forms.SyntaxBox.Painter;
+using Studio.Alsing.SyntaxBox;
 //using Properties;
-using ScrollEventArgs=Alsing.Windows.Forms.IntelliMouse.ScrollEventArgs;
+using ScrollEventArgs=Studio.Alsing.Windows.Forms.IntelliMouse.ScrollEventArgs;
 
 #endregion
 
-namespace Alsing.Windows.Forms.SyntaxBox
+namespace Studio.Alsing.Windows.Forms.SyntaxBox
 {
     [ToolboxItem(false)]
     public class EditViewControl : SplitViewChildControl
@@ -466,7 +466,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
             SetStyle(ControlStyles.UserPaint, true);
             UpdateStyles();
 
-            //			this.IMEWindow = new Alsing.Globalization.IMEWindow (this.Handle,_SyntaxBox.FontName,_SyntaxBox.FontSize);
+            //			this.IMEWindow = new Studio.Alsing.Globalization.IMEWindow (this.Handle,_SyntaxBox.FontName,_SyntaxBox.FontSize);
         }
 
         #endregion

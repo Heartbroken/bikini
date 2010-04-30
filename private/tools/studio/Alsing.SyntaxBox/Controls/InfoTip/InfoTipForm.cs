@@ -1,5 +1,5 @@
 // *
-// * Copyright (C) 2008 Roger Alsing : http://www.RogerAlsing.com
+// * Copyright (C) 2008 Roger Studio.Alsing : http://www.RogerAlsing.com
 // *
 // * This library is free software; you can redistribute it and/or modify it
 // * under the terms of the GNU Lesser General Public License 2.1 or later, as
@@ -14,11 +14,11 @@ using System.Drawing;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Alsing.Windows.Forms.CoreLib;
+using Studio.Alsing.Windows.Forms.CoreLib;
 
 #pragma warning disable 0649
 
-namespace Alsing.Windows.Forms
+namespace Studio.Alsing.Windows.Forms
 {
     /// <summary>
     /// Summary description for InfoTip.
@@ -249,7 +249,7 @@ namespace Alsing.Windows.Forms
             this.btnPrev = new System.Windows.Forms.PictureBox();
             this.lblIndex = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.InfoText = new Alsing.Windows.Forms.CoreLib.FormatLabelControl();
+            this.InfoText = new Studio.Alsing.Windows.Forms.CoreLib.FormatLabelControl();
             this.pnlImage = new System.Windows.Forms.Panel();
             this.picIcon = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -320,7 +320,7 @@ namespace Alsing.Windows.Forms
             this.InfoText.AutoSizeVertical = true;
             this.InfoText.BackColor = System.Drawing.SystemColors.Info;
             this.InfoText.BorderColor = System.Drawing.Color.Black;
-            this.InfoText.BorderStyle = Alsing.Windows.Forms.BorderStyle.None;
+            this.InfoText.BorderStyle = Studio.Alsing.Windows.Forms.BorderStyle.None;
             this.InfoText.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular,
                                                          System.Drawing.GraphicsUnit.Point, ((System.Byte) (0)));
             this.InfoText.ImageList = null;

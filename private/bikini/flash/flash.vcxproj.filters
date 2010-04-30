@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="source\renderer">
+      <UniqueIdentifier>{5d7ebb24-b03d-4492-ade7-fe9276b7270e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\renderer\shaders">
+      <UniqueIdentifier>{23453894-d850-4c27-a782-ef5f4f91680b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="interface">
+      <UniqueIdentifier>{5944af4f-03fd-4b20-a8dc-d6412bbfd8ac}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="flash.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="line_mesh.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="sensor.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>source\renderer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\include\bikini\flash\player.inl">
+      <Filter>source</Filter>
+    </None>
+    <None Include="shape.shh">
+      <Filter>source\renderer\shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Pixel_Shader_Compiler Include="flash.ps">
+      <Filter>source\renderer\shaders</Filter>
+    </Pixel_Shader_Compiler>
+  </ItemGroup>
+  <ItemGroup>
+    <Vertex_Shader_Compiler Include="flash.vs">
+      <Filter>source\renderer\shaders</Filter>
+    </Vertex_Shader_Compiler>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="header.hpp">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\flash.hpp">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\flash\player.hpp">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\flash\renderer.hpp">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\flash\sensor.hpp">
+      <Filter>interface</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

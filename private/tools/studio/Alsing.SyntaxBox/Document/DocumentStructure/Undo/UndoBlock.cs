@@ -8,7 +8,7 @@
 // *
 // *
 
-namespace Alsing.SourceCode
+namespace Studio.Alsing.SourceCode
 {
     //what kind of undoaction is it?
     /// <summary>

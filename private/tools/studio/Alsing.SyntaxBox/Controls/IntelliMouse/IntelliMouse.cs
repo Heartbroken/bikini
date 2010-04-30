@@ -1,5 +1,5 @@
 // *
-// * Copyright (C) 2008 Roger Alsing : http://www.RogerAlsing.com
+// * Copyright (C) 2008 Roger Studio.Alsing : http://www.RogerAlsing.com
 // *
 // * This library is free software; you can redistribute it and/or modify it
 // * under the terms of the GNU Lesser General Public License 2.1 or later, as
@@ -13,12 +13,12 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Alsing.Resouces;
+using Studio.Alsing.SyntaxBox;
 //using Properties;
-using ScrollEventArgs=Alsing.Windows.Forms.IntelliMouse.ScrollEventArgs;
-using ScrollEventHandler=Alsing.Windows.Forms.IntelliMouse.ScrollEventHandler;
+using ScrollEventArgs=Studio.Alsing.Windows.Forms.IntelliMouse.ScrollEventArgs;
+using ScrollEventHandler=Studio.Alsing.Windows.Forms.IntelliMouse.ScrollEventHandler;
 
-namespace Alsing.Windows.Forms.CoreLib
+namespace Studio.Alsing.Windows.Forms.CoreLib
 {
     /// <summary>
     /// Summary description for IntelliMouseControl.
@@ -163,7 +163,7 @@ namespace Alsing.Windows.Forms.CoreLib
             var resources = new System.Resources.ResourceManager(typeof (IntelliMouseControl));
             this.tmrFeedback = new Timer();
             this.picImage = new System.Windows.Forms.PictureBox();
-            this.regionHandler1 = new Alsing.Windows.Forms.CoreLib.RegionHandler(this.components);
+            this.regionHandler1 = new Studio.Alsing.Windows.Forms.CoreLib.RegionHandler(this.components);
             // 
             // tmrFeedback
             // 

@@ -6,9 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Alsing;
-using Alsing.Windows.Forms;
-using Alsing.SourceCode;
+using Studio.Alsing;
+using Studio.Alsing.Windows.Forms;
+using Studio.Alsing.SourceCode;
 using Studio.WinFormsUI.Docking;
 
 namespace Studio

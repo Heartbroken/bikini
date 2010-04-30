@@ -12,6 +12,8 @@ namespace bk { /*---------------------------------------------------------------
 
 astring utf8(const wstring &_s)
 {
+	if (_s.empty()) return "";
+
 	uint l_wlength = _s.length();
 	uint l_alength = WideCharToMultiByte(CP_UTF8, 0, _s.c_str(), (int)l_wlength, 0, 0, 0, 0);
 
@@ -22,6 +24,8 @@ astring utf8(const wstring &_s)
 }
 wstring utf8(const astring &_s)
 {
+	if (_s.empty()) return L"";
+
 	uint l_alength = _s.length();
 	uint l_wlength = MultiByteToWideChar(CP_UTF8, 0, _s.c_str(), (int)l_alength, 0, 0);
 
@@ -56,7 +60,7 @@ _string _format(const wchar* _f, ...)
 	va_list l_args;
 	va_start(l_args, _f);
 
-	const uint l_buffer_max = 1024;
+	const uint l_buffer_max = 1024 * 10;
 	wchar l_buffer[l_buffer_max];
 
 	sint l_length = vswprintf_s(l_buffer, _f, l_args);

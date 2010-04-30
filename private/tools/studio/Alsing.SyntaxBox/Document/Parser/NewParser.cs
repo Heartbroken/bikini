@@ -1,5 +1,5 @@
 ﻿// *
-// * Copyright (C) 2008 Roger Alsing : http://www.RogerAlsing.com
+// * Copyright (C) 2008 Roger Studio.Alsing : http://www.RogerAlsing.com
 // *
 // * This library is free software; you can redistribute it and/or modify it
 // * under the terms of the GNU Lesser General Public License 2.1 or later, as
@@ -7,7 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 
-namespace Alsing.SourceCode.SyntaxDocumentParsers
+namespace Studio.Alsing.SourceCode.SyntaxDocumentParsers
 {
     public sealed class NewParser : ParserBase
     {

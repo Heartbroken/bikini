@@ -1,4 +1,4 @@
-﻿namespace Alsing.SourceCode.SyntaxDocumentParsers
+﻿namespace Studio.Alsing.SourceCode.SyntaxDocumentParsers
 {
     public class ScanResultSegment
     {

@@ -2950,7 +2950,7 @@ namespace pugi
 
 		if (!stream.good()) return MAKE_PARSE_RESULT(status_io_error);
 
-		char* s = static_cast<char*>(global_allocate(length + 1));
+		char* s = static_cast<char*>(global_allocate((size_t)length + 1));
 		if (!s) return MAKE_PARSE_RESULT(status_out_of_memory);
 
 		stream.read(s, length);
