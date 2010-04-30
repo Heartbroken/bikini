@@ -1,0 +1,1292 @@
+/*---------------------------------------------------------------------------------------------*//*
+
+	Binary Kinematics 3 - C++ Game Programming Library
+	Copyright (C) 2008-2010 Viktor Reutskyy
+	viktor.reutskyy@gmail.com
+
+*//*---------------------------------------------------------------------------------------------*/
+
+#ifdef next_c_register
+#	undef next_c_register
+#endif
+
+#ifndef next_c_register_index
+#	define next_c_register_index	0
+#	define next_c_register		   c0
+
+#elif next_c_register_index ==		0
+#	undef next_c_register_index
+#	define next_c_register_index	1
+#	define next_c_register		   c1
+
+#elif next_c_register_index ==		1
+#	undef next_c_register_index
+#	define next_c_register_index	2
+#	define next_c_register		   c2
+
+#elif next_c_register_index ==		2
+#	undef next_c_register_index
+#	define next_c_register_index	3
+#	define next_c_register		   c3
+
+#elif next_c_register_index ==		3
+#	undef next_c_register_index
+#	define next_c_register_index	4
+#	define next_c_register		   c4
+
+#elif next_c_register_index ==		4
+#	undef next_c_register_index
+#	define next_c_register_index	5
+#	define next_c_register		   c5
+
+#elif next_c_register_index ==		5
+#	undef next_c_register_index
+#	define next_c_register_index	6
+#	define next_c_register		   c6
+
+#elif next_c_register_index ==		6
+#	undef next_c_register_index
+#	define next_c_register_index	7
+#	define next_c_register		   c7
+
+#elif next_c_register_index ==		7
+#	undef next_c_register_index
+#	define next_c_register_index	8
+#	define next_c_register		   c8
+
+#elif next_c_register_index ==		8
+#	undef next_c_register_index
+#	define next_c_register_index	9
+#	define next_c_register		   c9
+
+#elif next_c_register_index ==		9
+#	undef next_c_register_index
+#	define next_c_register_index	10
+#	define next_c_register		   c10
+
+#elif next_c_register_index ==		10
+#	undef next_c_register_index
+#	define next_c_register_index	11
+#	define next_c_register		   c11
+
+#elif next_c_register_index ==		11
+#	undef next_c_register_index
+#	define next_c_register_index	12
+#	define next_c_register		   c12
+
+#elif next_c_register_index ==		12
+#	undef next_c_register_index
+#	define next_c_register_index	13
+#	define next_c_register		   c13
+
+#elif next_c_register_index ==		13
+#	undef next_c_register_index
+#	define next_c_register_index	14
+#	define next_c_register		   c14
+
+#elif next_c_register_index ==		14
+#	undef next_c_register_index
+#	define next_c_register_index	15
+#	define next_c_register		   c15
+
+#elif next_c_register_index ==		15
+#	undef next_c_register_index
+#	define next_c_register_index	16
+#	define next_c_register		   c16
+
+#elif next_c_register_index ==		16
+#	undef next_c_register_index
+#	define next_c_register_index	17
+#	define next_c_register		   c17
+
+#elif next_c_register_index ==		17
+#	undef next_c_register_index
+#	define next_c_register_index	18
+#	define next_c_register		   c18
+
+#elif next_c_register_index ==		18
+#	undef next_c_register_index
+#	define next_c_register_index	19
+#	define next_c_register		   c19
+
+#elif next_c_register_index ==		19
+#	undef next_c_register_index
+#	define next_c_register_index	20
+#	define next_c_register		   c20
+
+#elif next_c_register_index ==		20
+#	undef next_c_register_index
+#	define next_c_register_index	21
+#	define next_c_register		   c21
+
+#elif next_c_register_index ==		21
+#	undef next_c_register_index
+#	define next_c_register_index	22
+#	define next_c_register		   c22
+
+#elif next_c_register_index ==		22
+#	undef next_c_register_index
+#	define next_c_register_index	23
+#	define next_c_register		   c23
+
+#elif next_c_register_index ==		23
+#	undef next_c_register_index
+#	define next_c_register_index	24
+#	define next_c_register		   c24
+
+#elif next_c_register_index ==		24
+#	undef next_c_register_index
+#	define next_c_register_index	25
+#	define next_c_register		   c25
+
+#elif next_c_register_index ==		25
+#	undef next_c_register_index
+#	define next_c_register_index	26
+#	define next_c_register		   c26
+
+#elif next_c_register_index ==		26
+#	undef next_c_register_index
+#	define next_c_register_index	27
+#	define next_c_register		   c27
+
+#elif next_c_register_index ==		27
+#	undef next_c_register_index
+#	define next_c_register_index	28
+#	define next_c_register		   c28
+
+#elif next_c_register_index ==		28
+#	undef next_c_register_index
+#	define next_c_register_index	29
+#	define next_c_register		   c29
+
+#elif next_c_register_index ==		29
+#	undef next_c_register_index
+#	define next_c_register_index	30
+#	define next_c_register		   c30
+
+#elif next_c_register_index ==		30
+#	undef next_c_register_index
+#	define next_c_register_index	31
+#	define next_c_register		   c31
+
+#elif next_c_register_index ==		31
+#	undef next_c_register_index
+#	define next_c_register_index	32
+#	define next_c_register		   c32
+
+#elif next_c_register_index ==		32
+#	undef next_c_register_index
+#	define next_c_register_index	33
+#	define next_c_register		   c33
+
+#elif next_c_register_index ==		33
+#	undef next_c_register_index
+#	define next_c_register_index	34
+#	define next_c_register		   c34
+
+#elif next_c_register_index ==		34
+#	undef next_c_register_index
+#	define next_c_register_index	35
+#	define next_c_register		   c35
+
+#elif next_c_register_index ==		35
+#	undef next_c_register_index
+#	define next_c_register_index	36
+#	define next_c_register		   c36
+
+#elif next_c_register_index ==		36
+#	undef next_c_register_index
+#	define next_c_register_index	37
+#	define next_c_register		   c37
+
+#elif next_c_register_index ==		37
+#	undef next_c_register_index
+#	define next_c_register_index	38
+#	define next_c_register		   c38
+
+#elif next_c_register_index ==		38
+#	undef next_c_register_index
+#	define next_c_register_index	39
+#	define next_c_register		   c39
+
+#elif next_c_register_index ==		39
+#	undef next_c_register_index
+#	define next_c_register_index	40
+#	define next_c_register		   c40
+
+#elif next_c_register_index ==		40
+#	undef next_c_register_index
+#	define next_c_register_index	41
+#	define next_c_register		   c41
+
+#elif next_c_register_index ==		41
+#	undef next_c_register_index
+#	define next_c_register_index	42
+#	define next_c_register		   c42
+
+#elif next_c_register_index ==		42
+#	undef next_c_register_index
+#	define next_c_register_index	43
+#	define next_c_register		   c43
+
+#elif next_c_register_index ==		43
+#	undef next_c_register_index
+#	define next_c_register_index	44
+#	define next_c_register		   c44
+
+#elif next_c_register_index ==		44
+#	undef next_c_register_index
+#	define next_c_register_index	45
+#	define next_c_register		   c45
+
+#elif next_c_register_index ==		45
+#	undef next_c_register_index
+#	define next_c_register_index	46
+#	define next_c_register		   c46
+
+#elif next_c_register_index ==		46
+#	undef next_c_register_index
+#	define next_c_register_index	47
+#	define next_c_register		   c47
+
+#elif next_c_register_index ==		47
+#	undef next_c_register_index
+#	define next_c_register_index	48
+#	define next_c_register		   c48
+
+#elif next_c_register_index ==		48
+#	undef next_c_register_index
+#	define next_c_register_index	49
+#	define next_c_register		   c49
+
+#elif next_c_register_index ==		49
+#	undef next_c_register_index
+#	define next_c_register_index	50
+#	define next_c_register		   c50
+
+#elif next_c_register_index ==		50
+#	undef next_c_register_index
+#	define next_c_register_index	51
+#	define next_c_register		   c51
+
+#elif next_c_register_index ==		51
+#	undef next_c_register_index
+#	define next_c_register_index	52
+#	define next_c_register		   c52
+
+#elif next_c_register_index ==		52
+#	undef next_c_register_index
+#	define next_c_register_index	53
+#	define next_c_register		   c53
+
+#elif next_c_register_index ==		53
+#	undef next_c_register_index
+#	define next_c_register_index	54
+#	define next_c_register		   c54
+
+#elif next_c_register_index ==		54
+#	undef next_c_register_index
+#	define next_c_register_index	55
+#	define next_c_register		   c55
+
+#elif next_c_register_index ==		55
+#	undef next_c_register_index
+#	define next_c_register_index	56
+#	define next_c_register		   c56
+
+#elif next_c_register_index ==		56
+#	undef next_c_register_index
+#	define next_c_register_index	57
+#	define next_c_register		   c57
+
+#elif next_c_register_index ==		57
+#	undef next_c_register_index
+#	define next_c_register_index	58
+#	define next_c_register		   c58
+
+#elif next_c_register_index ==		58
+#	undef next_c_register_index
+#	define next_c_register_index	59
+#	define next_c_register		   c59
+
+#elif next_c_register_index ==		59
+#	undef next_c_register_index
+#	define next_c_register_index	60
+#	define next_c_register		   c60
+
+#elif next_c_register_index ==		60
+#	undef next_c_register_index
+#	define next_c_register_index	61
+#	define next_c_register		   c61
+
+#elif next_c_register_index ==		61
+#	undef next_c_register_index
+#	define next_c_register_index	62
+#	define next_c_register		   c62
+
+#elif next_c_register_index ==		62
+#	undef next_c_register_index
+#	define next_c_register_index	63
+#	define next_c_register		   c63
+
+#elif next_c_register_index ==		63
+#	undef next_c_register_index
+#	define next_c_register_index	64
+#	define next_c_register		   c64
+
+#elif next_c_register_index ==		64
+#	undef next_c_register_index
+#	define next_c_register_index	65
+#	define next_c_register		   c65
+
+#elif next_c_register_index ==		65
+#	undef next_c_register_index
+#	define next_c_register_index	66
+#	define next_c_register		   c66
+
+#elif next_c_register_index ==		66
+#	undef next_c_register_index
+#	define next_c_register_index	67
+#	define next_c_register		   c67
+
+#elif next_c_register_index ==		67
+#	undef next_c_register_index
+#	define next_c_register_index	68
+#	define next_c_register		   c68
+
+#elif next_c_register_index ==		68
+#	undef next_c_register_index
+#	define next_c_register_index	69
+#	define next_c_register		   c69
+
+#elif next_c_register_index ==		69
+#	undef next_c_register_index
+#	define next_c_register_index	70
+#	define next_c_register		   c70
+
+#elif next_c_register_index ==		70
+#	undef next_c_register_index
+#	define next_c_register_index	71
+#	define next_c_register		   c71
+
+#elif next_c_register_index ==		71
+#	undef next_c_register_index
+#	define next_c_register_index	72
+#	define next_c_register		   c72
+
+#elif next_c_register_index ==		72
+#	undef next_c_register_index
+#	define next_c_register_index	73
+#	define next_c_register		   c73
+
+#elif next_c_register_index ==		73
+#	undef next_c_register_index
+#	define next_c_register_index	74
+#	define next_c_register		   c74
+
+#elif next_c_register_index ==		74
+#	undef next_c_register_index
+#	define next_c_register_index	75
+#	define next_c_register		   c75
+
+#elif next_c_register_index ==		75
+#	undef next_c_register_index
+#	define next_c_register_index	76
+#	define next_c_register		   c76
+
+#elif next_c_register_index ==		76
+#	undef next_c_register_index
+#	define next_c_register_index	77
+#	define next_c_register		   c77
+
+#elif next_c_register_index ==		77
+#	undef next_c_register_index
+#	define next_c_register_index	78
+#	define next_c_register		   c78
+
+#elif next_c_register_index ==		78
+#	undef next_c_register_index
+#	define next_c_register_index	79
+#	define next_c_register		   c79
+
+#elif next_c_register_index ==		79
+#	undef next_c_register_index
+#	define next_c_register_index	80
+#	define next_c_register		   c80
+
+#elif next_c_register_index ==		80
+#	undef next_c_register_index
+#	define next_c_register_index	81
+#	define next_c_register		   c81
+
+#elif next_c_register_index ==		81
+#	undef next_c_register_index
+#	define next_c_register_index	82
+#	define next_c_register		   c82
+
+#elif next_c_register_index ==		82
+#	undef next_c_register_index
+#	define next_c_register_index	83
+#	define next_c_register		   c83
+
+#elif next_c_register_index ==		83
+#	undef next_c_register_index
+#	define next_c_register_index	84
+#	define next_c_register		   c84
+
+#elif next_c_register_index ==		84
+#	undef next_c_register_index
+#	define next_c_register_index	85
+#	define next_c_register		   c85
+
+#elif next_c_register_index ==		85
+#	undef next_c_register_index
+#	define next_c_register_index	86
+#	define next_c_register		   c86
+
+#elif next_c_register_index ==		86
+#	undef next_c_register_index
+#	define next_c_register_index	87
+#	define next_c_register		   c87
+
+#elif next_c_register_index ==		87
+#	undef next_c_register_index
+#	define next_c_register_index	88
+#	define next_c_register		   c88
+
+#elif next_c_register_index ==		88
+#	undef next_c_register_index
+#	define next_c_register_index	89
+#	define next_c_register		   c89
+
+#elif next_c_register_index ==		89
+#	undef next_c_register_index
+#	define next_c_register_index	90
+#	define next_c_register		   c90
+
+#elif next_c_register_index ==		90
+#	undef next_c_register_index
+#	define next_c_register_index	91
+#	define next_c_register		   c91
+
+#elif next_c_register_index ==		91
+#	undef next_c_register_index
+#	define next_c_register_index	92
+#	define next_c_register		   c92
+
+#elif next_c_register_index ==		92
+#	undef next_c_register_index
+#	define next_c_register_index	93
+#	define next_c_register		   c93
+
+#elif next_c_register_index ==		93
+#	undef next_c_register_index
+#	define next_c_register_index	94
+#	define next_c_register		   c94
+
+#elif next_c_register_index ==		94
+#	undef next_c_register_index
+#	define next_c_register_index	95
+#	define next_c_register		   c95
+
+#elif next_c_register_index ==		95
+#	undef next_c_register_index
+#	define next_c_register_index	96
+#	define next_c_register		   c96
+
+#elif next_c_register_index ==		96
+#	undef next_c_register_index
+#	define next_c_register_index	97
+#	define next_c_register		   c97
+
+#elif next_c_register_index ==		97
+#	undef next_c_register_index
+#	define next_c_register_index	98
+#	define next_c_register		   c98
+
+#elif next_c_register_index ==		98
+#	undef next_c_register_index
+#	define next_c_register_index	99
+#	define next_c_register		   c99
+
+#elif next_c_register_index ==		99
+#	undef next_c_register_index
+#	define next_c_register_index	100
+#	define next_c_register		   c100
+
+#elif next_c_register_index ==		100
+#	undef next_c_register_index
+#	define next_c_register_index	101
+#	define next_c_register		   c101
+
+#elif next_c_register_index ==		101
+#	undef next_c_register_index
+#	define next_c_register_index	102
+#	define next_c_register		   c102
+
+#elif next_c_register_index ==		102
+#	undef next_c_register_index
+#	define next_c_register_index	103
+#	define next_c_register		   c103
+
+#elif next_c_register_index ==		103
+#	undef next_c_register_index
+#	define next_c_register_index	104
+#	define next_c_register		   c104
+
+#elif next_c_register_index ==		104
+#	undef next_c_register_index
+#	define next_c_register_index	105
+#	define next_c_register		   c105
+
+#elif next_c_register_index ==		105
+#	undef next_c_register_index
+#	define next_c_register_index	106
+#	define next_c_register		   c106
+
+#elif next_c_register_index ==		106
+#	undef next_c_register_index
+#	define next_c_register_index	107
+#	define next_c_register		   c107
+
+#elif next_c_register_index ==		107
+#	undef next_c_register_index
+#	define next_c_register_index	108
+#	define next_c_register		   c108
+
+#elif next_c_register_index ==		108
+#	undef next_c_register_index
+#	define next_c_register_index	109
+#	define next_c_register		   c109
+
+#elif next_c_register_index ==		109
+#	undef next_c_register_index
+#	define next_c_register_index	110
+#	define next_c_register		   c110
+
+#elif next_c_register_index ==		110
+#	undef next_c_register_index
+#	define next_c_register_index	111
+#	define next_c_register		   c111
+
+#elif next_c_register_index ==		111
+#	undef next_c_register_index
+#	define next_c_register_index	112
+#	define next_c_register		   c112
+
+#elif next_c_register_index ==		112
+#	undef next_c_register_index
+#	define next_c_register_index	113
+#	define next_c_register		   c113
+
+#elif next_c_register_index ==		113
+#	undef next_c_register_index
+#	define next_c_register_index	114
+#	define next_c_register		   c114
+
+#elif next_c_register_index ==		114
+#	undef next_c_register_index
+#	define next_c_register_index	115
+#	define next_c_register		   c115
+
+#elif next_c_register_index ==		115
+#	undef next_c_register_index
+#	define next_c_register_index	116
+#	define next_c_register		   c116
+
+#elif next_c_register_index ==		116
+#	undef next_c_register_index
+#	define next_c_register_index	117
+#	define next_c_register		   c117
+
+#elif next_c_register_index ==		117
+#	undef next_c_register_index
+#	define next_c_register_index	118
+#	define next_c_register		   c118
+
+#elif next_c_register_index ==		118
+#	undef next_c_register_index
+#	define next_c_register_index	119
+#	define next_c_register		   c119
+
+#elif next_c_register_index ==		119
+#	undef next_c_register_index
+#	define next_c_register_index	120
+#	define next_c_register		   c120
+
+#elif next_c_register_index ==		120
+#	undef next_c_register_index
+#	define next_c_register_index	121
+#	define next_c_register		   c121
+
+#elif next_c_register_index ==		121
+#	undef next_c_register_index
+#	define next_c_register_index	122
+#	define next_c_register		   c122
+
+#elif next_c_register_index ==		122
+#	undef next_c_register_index
+#	define next_c_register_index	123
+#	define next_c_register		   c123
+
+#elif next_c_register_index ==		123
+#	undef next_c_register_index
+#	define next_c_register_index	124
+#	define next_c_register		   c124
+
+#elif next_c_register_index ==		124
+#	undef next_c_register_index
+#	define next_c_register_index	125
+#	define next_c_register		   c125
+
+#elif next_c_register_index ==		125
+#	undef next_c_register_index
+#	define next_c_register_index	126
+#	define next_c_register		   c126
+
+#elif next_c_register_index ==		126
+#	undef next_c_register_index
+#	define next_c_register_index	127
+#	define next_c_register		   c127
+
+#elif next_c_register_index ==		127
+#	undef next_c_register_index
+#	define next_c_register_index	128
+#	define next_c_register		   c128
+
+#elif next_c_register_index ==		128
+#	undef next_c_register_index
+#	define next_c_register_index	129
+#	define next_c_register		   c129
+
+#elif next_c_register_index ==		129
+#	undef next_c_register_index
+#	define next_c_register_index	130
+#	define next_c_register		   c130
+
+#elif next_c_register_index ==		130
+#	undef next_c_register_index
+#	define next_c_register_index	131
+#	define next_c_register		   c131
+
+#elif next_c_register_index ==		131
+#	undef next_c_register_index
+#	define next_c_register_index	132
+#	define next_c_register		   c132
+
+#elif next_c_register_index ==		132
+#	undef next_c_register_index
+#	define next_c_register_index	133
+#	define next_c_register		   c133
+
+#elif next_c_register_index ==		133
+#	undef next_c_register_index
+#	define next_c_register_index	134
+#	define next_c_register		   c134
+
+#elif next_c_register_index ==		134
+#	undef next_c_register_index
+#	define next_c_register_index	135
+#	define next_c_register		   c135
+
+#elif next_c_register_index ==		135
+#	undef next_c_register_index
+#	define next_c_register_index	136
+#	define next_c_register		   c136
+
+#elif next_c_register_index ==		136
+#	undef next_c_register_index
+#	define next_c_register_index	137
+#	define next_c_register		   c137
+
+#elif next_c_register_index ==		137
+#	undef next_c_register_index
+#	define next_c_register_index	138
+#	define next_c_register		   c138
+
+#elif next_c_register_index ==		138
+#	undef next_c_register_index
+#	define next_c_register_index	139
+#	define next_c_register		   c139
+
+#elif next_c_register_index ==		139
+#	undef next_c_register_index
+#	define next_c_register_index	140
+#	define next_c_register		   c140
+
+#elif next_c_register_index ==		140
+#	undef next_c_register_index
+#	define next_c_register_index	141
+#	define next_c_register		   c141
+
+#elif next_c_register_index ==		141
+#	undef next_c_register_index
+#	define next_c_register_index	142
+#	define next_c_register		   c142
+
+#elif next_c_register_index ==		142
+#	undef next_c_register_index
+#	define next_c_register_index	143
+#	define next_c_register		   c143
+
+#elif next_c_register_index ==		143
+#	undef next_c_register_index
+#	define next_c_register_index	144
+#	define next_c_register		   c144
+
+#elif next_c_register_index ==		144
+#	undef next_c_register_index
+#	define next_c_register_index	145
+#	define next_c_register		   c145
+
+#elif next_c_register_index ==		145
+#	undef next_c_register_index
+#	define next_c_register_index	146
+#	define next_c_register		   c146
+
+#elif next_c_register_index ==		146
+#	undef next_c_register_index
+#	define next_c_register_index	147
+#	define next_c_register		   c147
+
+#elif next_c_register_index ==		147
+#	undef next_c_register_index
+#	define next_c_register_index	148
+#	define next_c_register		   c148
+
+#elif next_c_register_index ==		148
+#	undef next_c_register_index
+#	define next_c_register_index	149
+#	define next_c_register		   c149
+
+#elif next_c_register_index ==		149
+#	undef next_c_register_index
+#	define next_c_register_index	150
+#	define next_c_register		   c150
+
+#elif next_c_register_index ==		150
+#	undef next_c_register_index
+#	define next_c_register_index	151
+#	define next_c_register		   c151
+
+#elif next_c_register_index ==		151
+#	undef next_c_register_index
+#	define next_c_register_index	152
+#	define next_c_register		   c152
+
+#elif next_c_register_index ==		152
+#	undef next_c_register_index
+#	define next_c_register_index	153
+#	define next_c_register		   c153
+
+#elif next_c_register_index ==		153
+#	undef next_c_register_index
+#	define next_c_register_index	154
+#	define next_c_register		   c154
+
+#elif next_c_register_index ==		154
+#	undef next_c_register_index
+#	define next_c_register_index	155
+#	define next_c_register		   c155
+
+#elif next_c_register_index ==		155
+#	undef next_c_register_index
+#	define next_c_register_index	156
+#	define next_c_register		   c156
+
+#elif next_c_register_index ==		156
+#	undef next_c_register_index
+#	define next_c_register_index	157
+#	define next_c_register		   c157
+
+#elif next_c_register_index ==		157
+#	undef next_c_register_index
+#	define next_c_register_index	158
+#	define next_c_register		   c158
+
+#elif next_c_register_index ==		158
+#	undef next_c_register_index
+#	define next_c_register_index	159
+#	define next_c_register		   c159
+
+#elif next_c_register_index ==		159
+#	undef next_c_register_index
+#	define next_c_register_index	160
+#	define next_c_register		   c160
+
+#elif next_c_register_index ==		160
+#	undef next_c_register_index
+#	define next_c_register_index	161
+#	define next_c_register		   c161
+
+#elif next_c_register_index ==		161
+#	undef next_c_register_index
+#	define next_c_register_index	162
+#	define next_c_register		   c162
+
+#elif next_c_register_index ==		162
+#	undef next_c_register_index
+#	define next_c_register_index	163
+#	define next_c_register		   c163
+
+#elif next_c_register_index ==		163
+#	undef next_c_register_index
+#	define next_c_register_index	164
+#	define next_c_register		   c164
+
+#elif next_c_register_index ==		164
+#	undef next_c_register_index
+#	define next_c_register_index	165
+#	define next_c_register		   c165
+
+#elif next_c_register_index ==		165
+#	undef next_c_register_index
+#	define next_c_register_index	166
+#	define next_c_register		   c166
+
+#elif next_c_register_index ==		166
+#	undef next_c_register_index
+#	define next_c_register_index	167
+#	define next_c_register		   c167
+
+#elif next_c_register_index ==		167
+#	undef next_c_register_index
+#	define next_c_register_index	168
+#	define next_c_register		   c168
+
+#elif next_c_register_index ==		168
+#	undef next_c_register_index
+#	define next_c_register_index	169
+#	define next_c_register		   c169
+
+#elif next_c_register_index ==		169
+#	undef next_c_register_index
+#	define next_c_register_index	170
+#	define next_c_register		   c170
+
+#elif next_c_register_index ==		170
+#	undef next_c_register_index
+#	define next_c_register_index	171
+#	define next_c_register		   c171
+
+#elif next_c_register_index ==		171
+#	undef next_c_register_index
+#	define next_c_register_index	172
+#	define next_c_register		   c172
+
+#elif next_c_register_index ==		172
+#	undef next_c_register_index
+#	define next_c_register_index	173
+#	define next_c_register		   c173
+
+#elif next_c_register_index ==		173
+#	undef next_c_register_index
+#	define next_c_register_index	174
+#	define next_c_register		   c174
+
+#elif next_c_register_index ==		174
+#	undef next_c_register_index
+#	define next_c_register_index	175
+#	define next_c_register		   c175
+
+#elif next_c_register_index ==		175
+#	undef next_c_register_index
+#	define next_c_register_index	176
+#	define next_c_register		   c176
+
+#elif next_c_register_index ==		176
+#	undef next_c_register_index
+#	define next_c_register_index	177
+#	define next_c_register		   c177
+
+#elif next_c_register_index ==		177
+#	undef next_c_register_index
+#	define next_c_register_index	178
+#	define next_c_register		   c178
+
+#elif next_c_register_index ==		178
+#	undef next_c_register_index
+#	define next_c_register_index	179
+#	define next_c_register		   c179
+
+#elif next_c_register_index ==		179
+#	undef next_c_register_index
+#	define next_c_register_index	180
+#	define next_c_register		   c180
+
+#elif next_c_register_index ==		180
+#	undef next_c_register_index
+#	define next_c_register_index	181
+#	define next_c_register		   c181
+
+#elif next_c_register_index ==		181
+#	undef next_c_register_index
+#	define next_c_register_index	182
+#	define next_c_register		   c182
+
+#elif next_c_register_index ==		182
+#	undef next_c_register_index
+#	define next_c_register_index	183
+#	define next_c_register		   c183
+
+#elif next_c_register_index ==		183
+#	undef next_c_register_index
+#	define next_c_register_index	184
+#	define next_c_register		   c184
+
+#elif next_c_register_index ==		184
+#	undef next_c_register_index
+#	define next_c_register_index	185
+#	define next_c_register		   c185
+
+#elif next_c_register_index ==		185
+#	undef next_c_register_index
+#	define next_c_register_index	186
+#	define next_c_register		   c186
+
+#elif next_c_register_index ==		186
+#	undef next_c_register_index
+#	define next_c_register_index	187
+#	define next_c_register		   c187
+
+#elif next_c_register_index ==		187
+#	undef next_c_register_index
+#	define next_c_register_index	188
+#	define next_c_register		   c188
+
+#elif next_c_register_index ==		188
+#	undef next_c_register_index
+#	define next_c_register_index	189
+#	define next_c_register		   c189
+
+#elif next_c_register_index ==		189
+#	undef next_c_register_index
+#	define next_c_register_index	190
+#	define next_c_register		   c190
+
+#elif next_c_register_index ==		190
+#	undef next_c_register_index
+#	define next_c_register_index	191
+#	define next_c_register		   c191
+
+#elif next_c_register_index ==		191
+#	undef next_c_register_index
+#	define next_c_register_index	192
+#	define next_c_register		   c192
+
+#elif next_c_register_index ==		192
+#	undef next_c_register_index
+#	define next_c_register_index	193
+#	define next_c_register		   c193
+
+#elif next_c_register_index ==		193
+#	undef next_c_register_index
+#	define next_c_register_index	194
+#	define next_c_register		   c194
+
+#elif next_c_register_index ==		194
+#	undef next_c_register_index
+#	define next_c_register_index	195
+#	define next_c_register		   c195
+
+#elif next_c_register_index ==		195
+#	undef next_c_register_index
+#	define next_c_register_index	196
+#	define next_c_register		   c196
+
+#elif next_c_register_index ==		196
+#	undef next_c_register_index
+#	define next_c_register_index	197
+#	define next_c_register		   c197
+
+#elif next_c_register_index ==		197
+#	undef next_c_register_index
+#	define next_c_register_index	198
+#	define next_c_register		   c198
+
+#elif next_c_register_index ==		198
+#	undef next_c_register_index
+#	define next_c_register_index	199
+#	define next_c_register		   c199
+
+#elif next_c_register_index ==		199
+#	undef next_c_register_index
+#	define next_c_register_index	200
+#	define next_c_register		   c200
+
+#elif next_c_register_index ==		200
+#	undef next_c_register_index
+#	define next_c_register_index	201
+#	define next_c_register		   c201
+
+#elif next_c_register_index ==		201
+#	undef next_c_register_index
+#	define next_c_register_index	202
+#	define next_c_register		   c202
+
+#elif next_c_register_index ==		202
+#	undef next_c_register_index
+#	define next_c_register_index	203
+#	define next_c_register		   c203
+
+#elif next_c_register_index ==		203
+#	undef next_c_register_index
+#	define next_c_register_index	204
+#	define next_c_register		   c204
+
+#elif next_c_register_index ==		204
+#	undef next_c_register_index
+#	define next_c_register_index	205
+#	define next_c_register		   c205
+
+#elif next_c_register_index ==		205
+#	undef next_c_register_index
+#	define next_c_register_index	206
+#	define next_c_register		   c206
+
+#elif next_c_register_index ==		206
+#	undef next_c_register_index
+#	define next_c_register_index	207
+#	define next_c_register		   c207
+
+#elif next_c_register_index ==		207
+#	undef next_c_register_index
+#	define next_c_register_index	208
+#	define next_c_register		   c208
+
+#elif next_c_register_index ==		208
+#	undef next_c_register_index
+#	define next_c_register_index	209
+#	define next_c_register		   c209
+
+#elif next_c_register_index ==		209
+#	undef next_c_register_index
+#	define next_c_register_index	210
+#	define next_c_register		   c210
+
+#elif next_c_register_index ==		210
+#	undef next_c_register_index
+#	define next_c_register_index	211
+#	define next_c_register		   c211
+
+#elif next_c_register_index ==		211
+#	undef next_c_register_index
+#	define next_c_register_index	212
+#	define next_c_register		   c212
+
+#elif next_c_register_index ==		212
+#	undef next_c_register_index
+#	define next_c_register_index	213
+#	define next_c_register		   c213
+
+#elif next_c_register_index ==		213
+#	undef next_c_register_index
+#	define next_c_register_index	214
+#	define next_c_register		   c214
+
+#elif next_c_register_index ==		214
+#	undef next_c_register_index
+#	define next_c_register_index	215
+#	define next_c_register		   c215
+
+#elif next_c_register_index ==		215
+#	undef next_c_register_index
+#	define next_c_register_index	216
+#	define next_c_register		   c216
+
+#elif next_c_register_index ==		216
+#	undef next_c_register_index
+#	define next_c_register_index	217
+#	define next_c_register		   c217
+
+#elif next_c_register_index ==		217
+#	undef next_c_register_index
+#	define next_c_register_index	218
+#	define next_c_register		   c218
+
+#elif next_c_register_index ==		218
+#	undef next_c_register_index
+#	define next_c_register_index	219
+#	define next_c_register		   c219
+
+#elif next_c_register_index ==		219
+#	undef next_c_register_index
+#	define next_c_register_index	220
+#	define next_c_register		   c220
+
+#elif next_c_register_index ==		220
+#	undef next_c_register_index
+#	define next_c_register_index	221
+#	define next_c_register		   c221
+
+#elif next_c_register_index ==		221
+#	undef next_c_register_index
+#	define next_c_register_index	222
+#	define next_c_register		   c222
+
+#elif next_c_register_index ==		222
+#	undef next_c_register_index
+#	define next_c_register_index	223
+#	define next_c_register		   c223
+
+#elif next_c_register_index ==		223
+#	undef next_c_register_index
+#	define next_c_register_index	224
+#	define next_c_register		   c224
+
+#elif next_c_register_index ==		224
+#	undef next_c_register_index
+#	define next_c_register_index	225
+#	define next_c_register		   c225
+
+#elif next_c_register_index ==		225
+#	undef next_c_register_index
+#	define next_c_register_index	226
+#	define next_c_register		   c226
+
+#elif next_c_register_index ==		226
+#	undef next_c_register_index
+#	define next_c_register_index	227
+#	define next_c_register		   c227
+
+#elif next_c_register_index ==		227
+#	undef next_c_register_index
+#	define next_c_register_index	228
+#	define next_c_register		   c228
+
+#elif next_c_register_index ==		228
+#	undef next_c_register_index
+#	define next_c_register_index	229
+#	define next_c_register		   c229
+
+#elif next_c_register_index ==		229
+#	undef next_c_register_index
+#	define next_c_register_index	230
+#	define next_c_register		   c230
+
+#elif next_c_register_index ==		230
+#	undef next_c_register_index
+#	define next_c_register_index	231
+#	define next_c_register		   c231
+
+#elif next_c_register_index ==		231
+#	undef next_c_register_index
+#	define next_c_register_index	232
+#	define next_c_register		   c232
+
+#elif next_c_register_index ==		232
+#	undef next_c_register_index
+#	define next_c_register_index	233
+#	define next_c_register		   c233
+
+#elif next_c_register_index ==		233
+#	undef next_c_register_index
+#	define next_c_register_index	234
+#	define next_c_register		   c234
+
+#elif next_c_register_index ==		234
+#	undef next_c_register_index
+#	define next_c_register_index	235
+#	define next_c_register		   c235
+
+#elif next_c_register_index ==		235
+#	undef next_c_register_index
+#	define next_c_register_index	236
+#	define next_c_register		   c236
+
+#elif next_c_register_index ==		236
+#	undef next_c_register_index
+#	define next_c_register_index	237
+#	define next_c_register		   c237
+
+#elif next_c_register_index ==		237
+#	undef next_c_register_index
+#	define next_c_register_index	238
+#	define next_c_register		   c238
+
+#elif next_c_register_index ==		238
+#	undef next_c_register_index
+#	define next_c_register_index	239
+#	define next_c_register		   c239
+
+#elif next_c_register_index ==		239
+#	undef next_c_register_index
+#	define next_c_register_index	240
+#	define next_c_register		   c240
+
+#elif next_c_register_index ==		240
+#	undef next_c_register_index
+#	define next_c_register_index	241
+#	define next_c_register		   c241
+
+#elif next_c_register_index ==		241
+#	undef next_c_register_index
+#	define next_c_register_index	242
+#	define next_c_register		   c242
+
+#elif next_c_register_index ==		242
+#	undef next_c_register_index
+#	define next_c_register_index	243
+#	define next_c_register		   c243
+
+#elif next_c_register_index ==		243
+#	undef next_c_register_index
+#	define next_c_register_index	244
+#	define next_c_register		   c244
+
+#elif next_c_register_index ==		244
+#	undef next_c_register_index
+#	define next_c_register_index	245
+#	define next_c_register		   c245
+
+#elif next_c_register_index ==		245
+#	undef next_c_register_index
+#	define next_c_register_index	246
+#	define next_c_register		   c246
+
+#elif next_c_register_index ==		246
+#	undef next_c_register_index
+#	define next_c_register_index	247
+#	define next_c_register		   c247
+
+#elif next_c_register_index ==		247
+#	undef next_c_register_index
+#	define next_c_register_index	248
+#	define next_c_register		   c248
+
+#elif next_c_register_index ==		248
+#	undef next_c_register_index
+#	define next_c_register_index	249
+#	define next_c_register		   c249
+
+#elif next_c_register_index ==		249
+#	undef next_c_register_index
+#	define next_c_register_index	250
+#	define next_c_register		   c250
+
+#elif next_c_register_index ==		250
+#	undef next_c_register_index
+#	define next_c_register_index	251
+#	define next_c_register		   c251
+
+#elif next_c_register_index ==		251
+#	undef next_c_register_index
+#	define next_c_register_index	252
+#	define next_c_register		   c252
+
+#elif next_c_register_index ==		252
+#	undef next_c_register_index
+#	define next_c_register_index	253
+#	define next_c_register		   c253
+
+#elif next_c_register_index ==		253
+#	undef next_c_register_index
+#	define next_c_register_index	254
+#	define next_c_register		   c254
+
+#elif next_c_register_index ==		254
+#	undef next_c_register_index
+#	define next_c_register_index	255
+#	define next_c_register		   c255
+
+#endif

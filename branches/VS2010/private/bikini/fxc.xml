@@ -1,0 +1,391 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ProjectSchemaDefinitions xmlns="clr-namespace:Microsoft.Build.Framework.XamlTypes;assembly=Microsoft.Build.Framework" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:transformCallback="Microsoft.Cpp.Dev10.ConvertPropertyCallback">
+  <Rule
+    Name="Vertex_Shader_Compiler"
+    PageTemplate="tool"
+    DisplayName="Vertex Shader"
+    Order="200">
+    <Rule.DataSource>
+      <DataSource
+        Persistence="ProjectFile"
+        ItemType="Vertex_Shader_Compiler" />
+    </Rule.DataSource>
+    <Rule.Categories>
+      <Category
+        Name="General">
+        <Category.DisplayName>
+          <sys:String>General</sys:String>
+        </Category.DisplayName>
+      </Category>
+      <Category
+        Name="Command Line"
+        Subtype="CommandLine">
+        <Category.DisplayName>
+          <sys:String>Command Line</sys:String>
+        </Category.DisplayName>
+      </Category>
+    </Rule.Categories>
+    <StringListProperty
+      Name="Inputs"
+      Category="Command Line"
+      IsRequired="true"
+      Switch=" ">
+      <StringListProperty.DataSource>
+        <DataSource
+          Persistence="ProjectFile"
+          ItemType="Vertex_Shader_Compiler"
+          SourceType="Item" />
+      </StringListProperty.DataSource>
+    </StringListProperty>
+    <StringProperty
+      Name="E"
+      Subcategory="Shader"
+      HelpContext="0"
+      DisplayName="Shader entrypoint"
+      Description="Shader entrypoint (/E &lt;name&gt;)"
+      Switch="/E [value]" />
+    <StringListProperty
+      Name="D"
+      Subcategory="Input"
+      HelpContext="0"
+      DisplayName="Define macro"
+      Description="Define macro (/D &lt;id&gt;=&lt;text&gt;)"
+      Separator=";"
+      Switch="/D [value]" />
+    <StringProperty
+      Name="Fh"
+      Subcategory="Output"
+      HelpContext="0"
+      DisplayName="Output header file containing object code"
+      Description="Output header file containing object code (/Fh &lt;file&gt;)"
+      Switch="/Fh &quot;[value]&quot;" />
+    <StringProperty
+      Name="Vn"
+      Subcategory="Output"
+      HelpContext="0"
+      DisplayName="Use name as variable name in header file"
+      Description="Use name as variable name in header file (/Vn &lt;name&gt;)"
+      Switch="/Vn [value]" />
+    <StringProperty
+      Name="Fc"
+      Subcategory="Output"
+      HelpContext="0"
+      DisplayName="Output assembly code listing file"
+      Description="Output assembly code listing file (/Fc &lt;file&gt;)"
+      Switch="/Fc &quot;[value]&quot;" />
+    <StringProperty
+      Name="Fx"
+      Subcategory="Output"
+      HelpContext="0"
+      DisplayName="Output assembly code and hex listing file"
+      Description="Output assembly code and hex listing file (/Fx &lt;file&gt;)"
+      Switch="/Fx &quot;[value]&quot;" />
+    <StringListProperty
+      Name="I"
+      Subcategory="Input"
+      HelpContext="0"
+      DisplayName="Additional include path"
+      Description="Additional include path (/I &lt;include&gt;)"
+      Separator=";"
+      Switch="/I &quot;[value]&quot;" />
+    <EnumProperty
+      Name="T"
+      Subcategory="Shader"
+      HelpContext="0"
+      DisplayName="Shader model"
+      Description="Shader model (/T&lt;target&gt;)">
+      <EnumValue
+        Name="0"
+        DisplayName="vs_2_0"
+        Switch="/T vs_2_0" />
+      <EnumValue
+        Name="1"
+        DisplayName="vs_3_0"
+        Switch="/T vs_3_0" />
+      <EnumValue
+        Name="2"
+        DisplayName="vs_4_0"
+        Switch="/T vs_4_0" />
+    </EnumProperty>
+    <StringProperty
+      Name="CommandLineTemplate"
+      DisplayName="Command Line"
+      Visible="False"
+      IncludeInCommandLine="False" />
+    <DynamicEnumProperty
+      Name="Vertex_Shader_CompilerBeforeTargets"
+      Category="General"
+      EnumProvider="Targets"
+      IncludeInCommandLine="False">
+      <DynamicEnumProperty.DisplayName>
+        <sys:String>Execute Before</sys:String>
+      </DynamicEnumProperty.DisplayName>
+      <DynamicEnumProperty.Description>
+        <sys:String>Specifies the targets for the build customization to run before.</sys:String>
+      </DynamicEnumProperty.Description>
+      <DynamicEnumProperty.ProviderSettings>
+        <NameValuePair
+          Name="Exclude"
+          Value="^Vertex_Shader_CompilerBeforeTargets|^Compute" />
+      </DynamicEnumProperty.ProviderSettings>
+      <DynamicEnumProperty.DataSource>
+        <DataSource
+          Persistence="ProjectFile"
+          HasConfigurationCondition="true" />
+      </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+    <DynamicEnumProperty
+      Name="Vertex_Shader_CompilerAfterTargets"
+      Category="General"
+      EnumProvider="Targets"
+      IncludeInCommandLine="False">
+      <DynamicEnumProperty.DisplayName>
+        <sys:String>Execute After</sys:String>
+      </DynamicEnumProperty.DisplayName>
+      <DynamicEnumProperty.Description>
+        <sys:String>Specifies the targets for the build customization to run after.</sys:String>
+      </DynamicEnumProperty.Description>
+      <DynamicEnumProperty.ProviderSettings>
+        <NameValuePair
+          Name="Exclude"
+          Value="^Vertex_Shader_CompilerAfterTargets|^Compute" />
+      </DynamicEnumProperty.ProviderSettings>
+      <DynamicEnumProperty.DataSource>
+        <DataSource
+          Persistence="ProjectFile"
+          ItemType=""
+          HasConfigurationCondition="true" />
+      </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+    <StringListProperty
+      Name="Outputs"
+      DisplayName="Outputs"
+      Visible="False"
+      IncludeInCommandLine="False" />
+    <StringProperty
+      Name="ExecutionDescription"
+      DisplayName="Execution Description"
+      Visible="False"
+      IncludeInCommandLine="False" />
+    <StringListProperty
+      Name="AdditionalDependencies"
+      DisplayName="Additional Dependencies"
+      IncludeInCommandLine="False"
+      Visible="false" />
+    <StringProperty
+      Subtype="AdditionalOptions"
+      Name="AdditionalOptions"
+      Category="Command Line">
+      <StringProperty.DisplayName>
+        <sys:String>Additional Options</sys:String>
+      </StringProperty.DisplayName>
+      <StringProperty.Description>
+        <sys:String>Additional Options</sys:String>
+      </StringProperty.Description>
+    </StringProperty>
+  </Rule>
+  <ItemType
+    Name="Vertex_Shader_Compiler"
+    DisplayName="Vertex Shader" />
+  <FileExtension
+    Name="*.vs"
+    ContentType="Vertex_Shader_Compiler" />
+  <ContentType
+    Name="Vertex_Shader_Compiler"
+    DisplayName="Vertex Shader"
+    ItemType="Vertex_Shader_Compiler" />
+  <Rule
+    Name="Pixel_Shader_Compiler"
+    PageTemplate="tool"
+    DisplayName="Pixel Shader"
+    Order="200">
+    <Rule.DataSource>
+      <DataSource
+        Persistence="ProjectFile"
+        ItemType="Pixel_Shader_Compiler" />
+    </Rule.DataSource>
+    <Rule.Categories>
+      <Category
+        Name="General">
+        <Category.DisplayName>
+          <sys:String>General</sys:String>
+        </Category.DisplayName>
+      </Category>
+      <Category
+        Name="Command Line"
+        Subtype="CommandLine">
+        <Category.DisplayName>
+          <sys:String>Command Line</sys:String>
+        </Category.DisplayName>
+      </Category>
+    </Rule.Categories>
+    <StringListProperty
+      Name="Inputs"
+      Category="Command Line"
+      IsRequired="true"
+      Switch=" ">
+      <StringListProperty.DataSource>
+        <DataSource
+          Persistence="ProjectFile"
+          ItemType="Pixel_Shader_Compiler"
+          SourceType="Item" />
+      </StringListProperty.DataSource>
+    </StringListProperty>
+    <StringProperty
+      Name="E"
+      Subcategory="Shader"
+      HelpContext="0"
+      DisplayName="Shader entrypoint"
+      Description="Shader entrypoint (/E &lt;name&gt;)"
+      Switch="/E [value]" />
+    <StringListProperty
+      Name="D"
+      Subcategory="Input"
+      HelpContext="0"
+      DisplayName="Define macro"
+      Description="Define macro (/D &lt;id&gt;=&lt;text&gt;)"
+      Separator=";"
+      Switch="/D [value]" />
+    <StringProperty
+      Name="Fh"
+      Subcategory="Output"
+      HelpContext="0"
+      DisplayName="Output header file containing object code"
+      Description="Output header file containing object code (/Fh &lt;file&gt;)"
+      Switch="/Fh &quot;[value]&quot;" />
+    <StringProperty
+      Name="Vn"
+      Subcategory="Output"
+      HelpContext="0"
+      DisplayName="Use name as variable name in header file"
+      Description="Use name as variable name in header file (/Vn &lt;name&gt;)"
+      Switch="/Vn [value]" />
+    <StringProperty
+      Name="Fc"
+      Subcategory="Output"
+      HelpContext="0"
+      DisplayName="Output assembly code listing file"
+      Description="Output assembly code listing file (/Fc &lt;file&gt;)"
+      Switch="/Fc &quot;[value]&quot;" />
+    <StringProperty
+      Name="Fx"
+      Subcategory="Output"
+      HelpContext="0"
+      DisplayName="Output assembly code and hex listing file"
+      Description="Output assembly code and hex listing file (/Fx &lt;file&gt;)"
+      Switch="/Fx &quot;[value]&quot;" />
+    <StringListProperty
+      Name="I"
+      Subcategory="Input"
+      HelpContext="0"
+      DisplayName="Additional include path"
+      Description="Additional include path (/I &lt;include&gt;)"
+      Separator=";"
+      Switch="/I &quot;[value]&quot;" />
+    <EnumProperty
+      Name="T"
+      Subcategory="Shader"
+      HelpContext="0"
+      DisplayName="Shader model"
+      Description="Shader model (/T&lt;target&gt;)">
+      <EnumValue
+        Name="0"
+        DisplayName="ps_2_0"
+        Switch="/T ps_2_0" />
+      <EnumValue
+        Name="1"
+        DisplayName="ps_3_0"
+        Switch="/T ps_3_0" />
+      <EnumValue
+        Name="2"
+        DisplayName="ps_4_0"
+        Switch="/T ps_4_0" />
+    </EnumProperty>
+    <StringProperty
+      Name="CommandLineTemplate"
+      DisplayName="Command Line"
+      Visible="False"
+      IncludeInCommandLine="False" />
+    <DynamicEnumProperty
+      Name="Pixel_Shader_CompilerBeforeTargets"
+      Category="General"
+      EnumProvider="Targets"
+      IncludeInCommandLine="False">
+      <DynamicEnumProperty.DisplayName>
+        <sys:String>Execute Before</sys:String>
+      </DynamicEnumProperty.DisplayName>
+      <DynamicEnumProperty.Description>
+        <sys:String>Specifies the targets for the build customization to run before.</sys:String>
+      </DynamicEnumProperty.Description>
+      <DynamicEnumProperty.ProviderSettings>
+        <NameValuePair
+          Name="Exclude"
+          Value="^Pixel_Shader_CompilerBeforeTargets|^Compute" />
+      </DynamicEnumProperty.ProviderSettings>
+      <DynamicEnumProperty.DataSource>
+        <DataSource
+          Persistence="ProjectFile"
+          HasConfigurationCondition="true" />
+      </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+    <DynamicEnumProperty
+      Name="Pixel_Shader_CompilerAfterTargets"
+      Category="General"
+      EnumProvider="Targets"
+      IncludeInCommandLine="False">
+      <DynamicEnumProperty.DisplayName>
+        <sys:String>Execute After</sys:String>
+      </DynamicEnumProperty.DisplayName>
+      <DynamicEnumProperty.Description>
+        <sys:String>Specifies the targets for the build customization to run after.</sys:String>
+      </DynamicEnumProperty.Description>
+      <DynamicEnumProperty.ProviderSettings>
+        <NameValuePair
+          Name="Exclude"
+          Value="^Pixel_Shader_CompilerAfterTargets|^Compute" />
+      </DynamicEnumProperty.ProviderSettings>
+      <DynamicEnumProperty.DataSource>
+        <DataSource
+          Persistence="ProjectFile"
+          ItemType=""
+          HasConfigurationCondition="true" />
+      </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+    <StringListProperty
+      Name="Outputs"
+      DisplayName="Outputs"
+      Visible="False"
+      IncludeInCommandLine="False" />
+    <StringProperty
+      Name="ExecutionDescription"
+      DisplayName="Execution Description"
+      Visible="False"
+      IncludeInCommandLine="False" />
+    <StringListProperty
+      Name="AdditionalDependencies"
+      DisplayName="Additional Dependencies"
+      IncludeInCommandLine="False"
+      Visible="false" />
+    <StringProperty
+      Subtype="AdditionalOptions"
+      Name="AdditionalOptions"
+      Category="Command Line">
+      <StringProperty.DisplayName>
+        <sys:String>Additional Options</sys:String>
+      </StringProperty.DisplayName>
+      <StringProperty.Description>
+        <sys:String>Additional Options</sys:String>
+      </StringProperty.Description>
+    </StringProperty>
+  </Rule>
+  <ItemType
+    Name="Pixel_Shader_Compiler"
+    DisplayName="Pixel Shader" />
+  <FileExtension
+    Name="*.ps"
+    ContentType="Pixel_Shader_Compiler" />
+  <ContentType
+    Name="Pixel_Shader_Compiler"
+    DisplayName="Pixel Shader"
+    ItemType="Pixel_Shader_Compiler" />
+</ProjectSchemaDefinitions>

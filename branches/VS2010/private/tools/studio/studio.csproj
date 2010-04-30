@@ -1,0 +1,921 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{40793A27-478B-4357-B4C3-FC8943131F3D}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Studio</RootNamespace>
+    <AssemblyName>studio</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NoWin32Manifest>true</NoWin32Manifest>
+    <ApplicationIcon>Images\TaskListWindow.ico</ApplicationIcon>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;AnyCPU</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Win32' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;Win32</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Win32' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;Win32;RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;x64</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;x64;RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AboutDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutDialog.Designer.cs">
+      <DependentUpon>AboutDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Classes\Caret.cs" />
+    <Compile Include="Alsing.SyntaxBox\Classes\KeyboadActionList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Classes\KeyboardAction.cs" />
+    <Compile Include="Alsing.SyntaxBox\Classes\NativePainter.cs" />
+    <Compile Include="Alsing.SyntaxBox\Classes\Selection.cs" />
+    <Compile Include="Alsing.SyntaxBox\Classes\Structs.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\Autolist\AutoListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\Autolist\TabListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\BaseControls\BaseControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\BaseControls\BaseListBoxControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\BaseControls\BasePanelControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\BaseControls\BorderControl.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\EditView\EditViewControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\FormatLabel\Element.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\FormatLabel\Events.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\FormatLabel\FormatLabelControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\FormatLabel\Row.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\FormatLabel\Word.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\InfoTip\InfoTipForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\IntelliMouse\Events.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\IntelliMouse\IntelliMouse.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\RegionHandler\RegionHandler.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\SplitView\SplitViewChildControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\SplitView\SplitViewControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\SplitView\SplitViewParentControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\Syntaxbox\Dialogs\FindReplace.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\Syntaxbox\Dialogs\GotoLine.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\Syntaxbox\Dialogs\Settings.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\Syntaxbox\Events.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\Syntaxbox\SyntaxBoxControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\Syntaxbox\SyntaxBoxDesigner.cs" />
+    <Compile Include="Alsing.SyntaxBox\Controls\ThumbControl\ThumbControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Controls\ThumbControl\ThumbControl.Designer.cs">
+      <DependentUpon>ThumbControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Design\CollectionEditorGui.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Design\ComponaCollectionEditor.cs" />
+    <Compile Include="Alsing.SyntaxBox\Design\FilteredTypeConverter.cs" />
+    <Compile Include="Alsing.SyntaxBox\Design\Int32AutoConverter.cs" />
+    <Compile Include="Alsing.SyntaxBox\Design\Int32DefaultConverter.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Row\Row.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Row\RowEventArgs.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Row\RowEventHandler.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Row\RowList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Span\Span.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Span\SpanList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Structs\BracketType.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Structs\TextPoint.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Structs\TextRange.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Undo\UndoBlock.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Undo\UndoBlockCollection.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Undo\UndoBuffer.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Word\Word.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\DocumentStructure\Word\WordList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Export\CollapsingHTMLExporter.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Export\SimpleHTMLExporter.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\ImageIndexList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Parser\DefaultParser.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Parser\IParser.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Parser\NewParser.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Parser\ParserBase.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Parser\ParserEventHandler.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Parser\ParseTools.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Parser\ScanResultSegment.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Parser\ScanResultWord.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\Print\SourceCodePrintDocument.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\Pattern\Pattern.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\Pattern\PatternCollection.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\Pattern\PatternExtensions.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\Pattern\PatternList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\Pattern\PatternListList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\Pattern\PatternScanResult.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\Scope\Scope.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\Scope\ScopeList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\SpanDefinition\SpanDefinition.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\SpanDefinition\SpanDefinitionList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\SyntaxDefinition.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\SyntaxDefinitionList.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\SyntaxDefinitionLoader.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\TextStyle\TextStyle.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\TextStyle\TextStyleDesignerDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDefinition\TextStyle\TextStyleUIEditor.cs" />
+    <Compile Include="Alsing.SyntaxBox\Document\SyntaxDocument.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Drawing\DesktopGraphics.cs" />
+    <Compile Include="Alsing.SyntaxBox\Drawing\DrawingTools.cs" />
+    <Compile Include="Alsing.SyntaxBox\Drawing\Enums.cs" />
+    <Compile Include="Alsing.SyntaxBox\Drawing\GDI32\FontEnum.cs" />
+    <Compile Include="Alsing.SyntaxBox\Drawing\GDI32\GDIBrushes.cs" />
+    <Compile Include="Alsing.SyntaxBox\Drawing\GDI32\GDIFont.cs" />
+    <Compile Include="Alsing.SyntaxBox\Drawing\GDI32\GDIObject.cs" />
+    <Compile Include="Alsing.SyntaxBox\Drawing\GDI32\GDIPens.cs" />
+    <Compile Include="Alsing.SyntaxBox\Drawing\GDI32\GDISurface.cs" />
+    <Compile Include="Alsing.SyntaxBox\Globalization\IMEWindow.cs" />
+    <Compile Include="Alsing.SyntaxBox\Interfaces\IPainter.cs" />
+    <Compile Include="Alsing.SyntaxBox\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Alsing.SyntaxBox\Text\PatternMatchers\BinPatternMatcher.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\PatternMatchers\DecPatternMatcher.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\PatternMatchers\HexPatternMatcher.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\PatternMatchers\IntPatternMatcher.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\PatternMatchers\IPatternMatcher.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\PatternMatchers\PatternMatcherBase.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\PatternMatchers\PropertyPathPatternMatcher.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\PatternMatchers\RegexPatternMatcher.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\PatternMatchers\RegionPatternMatcher.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\Tokenizer\CharUtils.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\Tokenizer\MatchResult.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\Tokenizer\PatternMatchReference.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\Tokenizer\Token.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\Tokenizer\Tokenizer.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\Tokenizer\TokenTree-API.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\Tokenizer\TokenTree-Util.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\Tokenizer\TokenTree.cs" />
+    <Compile Include="Alsing.SyntaxBox\Text\Tokenizer\TokenTreeNode.cs" />
+    <Compile Include="Alsing.SyntaxBox\Win32\Enums.cs" />
+    <Compile Include="Alsing.SyntaxBox\Win32\NativeMethods.cs" />
+    <Compile Include="Alsing.SyntaxBox\Win32\NativeSubclasser.cs" />
+    <Compile Include="Bikini.cs" />
+    <Compile Include="BikiniView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BikiniView.Designer.cs">
+      <DependentUpon>BikiniView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ScriptDoc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScriptDoc.Designer.cs">
+      <DependentUpon>ScriptDoc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\AutoHideStripBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\DockAreasEditor.cs" />
+    <Compile Include="WinFormsUI\Docking\DockContent.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\DockContentCollection.cs" />
+    <Compile Include="WinFormsUI\Docking\DockContentEventArgs.cs" />
+    <Compile Include="WinFormsUI\Docking\DockContentHandler.cs" />
+    <Compile Include="WinFormsUI\Docking\DockOutlineBase.cs" />
+    <Compile Include="WinFormsUI\Docking\DockPane.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\DockPane.SplitterControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\DockPaneCaptionBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\DockPaneCollection.cs" />
+    <Compile Include="WinFormsUI\Docking\DockPanel.AutoHideWindow.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\DockPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\DockPanel.DockDragHandler.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\DockPanel.DragHandler.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\DockPanel.FocusManager.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\DockPanel.MdiClientController.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\DockPanel.Persistor.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\DockPanel.SplitterDragHandler.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\DockPanelExtender.cs" />
+    <Compile Include="WinFormsUI\Docking\DockPanelSkin.cs" />
+    <Compile Include="WinFormsUI\Docking\DockPaneStripBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\DockWindow.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\DockWindow.SplitterControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\DockWindowCollection.cs" />
+    <Compile Include="WinFormsUI\Docking\DragForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\DummyControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\Enums.cs" />
+    <Compile Include="WinFormsUI\Docking\FloatWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\FloatWindowCollection.cs" />
+    <Compile Include="WinFormsUI\Docking\Helpers\DockHelper.cs" />
+    <Compile Include="WinFormsUI\Docking\Helpers\DrawHelper.cs" />
+    <Compile Include="WinFormsUI\Docking\Helpers\ResourceHelper.cs" />
+    <Compile Include="WinFormsUI\Docking\Helpers\Win32Helper.cs" />
+    <Compile Include="WinFormsUI\Docking\InertButtonBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\Interfaces.cs" />
+    <Compile Include="WinFormsUI\Docking\Localization.cs" />
+    <Compile Include="WinFormsUI\Docking\Measures.cs" />
+    <Compile Include="WinFormsUI\Docking\NestedDockingStatus.cs" />
+    <Compile Include="WinFormsUI\Docking\NestedPaneCollection.cs" />
+    <Compile Include="WinFormsUI\Docking\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\SplitterBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\Strings.Designer.cs">
+      <DependentUpon>Strings.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\VisibleNestedPaneCollection.cs" />
+    <Compile Include="WinFormsUI\Docking\VS2005AutoHideStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\VS2005DockPaneCaption.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\VS2005DockPaneStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinFormsUI\Docking\Win32\Enums.cs" />
+    <Compile Include="WinFormsUI\Docking\Win32\NativeMethods.cs" />
+    <Compile Include="MainForm2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm2.Designer.cs">
+      <DependentUpon>MainForm2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DummyDoc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DummyDoc.Designer.cs">
+      <DependentUpon>DummyDoc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DummyOutputWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DummyOutputWindow.Designer.cs">
+      <DependentUpon>DummyOutputWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DummyPropertyWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DummyPropertyWindow.Designer.cs">
+      <DependentUpon>DummyPropertyWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DummySolutionExplorer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DummySolutionExplorer.Designer.cs">
+      <DependentUpon>DummySolutionExplorer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DummyTaskList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DummyTaskList.Designer.cs">
+      <DependentUpon>DummyTaskList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DummyToolbox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DummyToolbox.Designer.cs">
+      <DependentUpon>DummyToolbox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Customization\DockHelper.cs" />
+    <Compile Include="Customization\Extender.cs" />
+    <Compile Include="Customization\InertButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Customization\VS2003AutoHideStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Customization\VS2003DockPaneCaption.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Customization\VS2003DockPaneStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AboutDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>AboutDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DummyDoc.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>DummyDoc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DummyOutputWindow.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>DummyOutputWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DummyPropertyWindow.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>DummyPropertyWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DummySolutionExplorer.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>DummySolutionExplorer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DummyTaskList.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>DummyTaskList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DummyToolbox.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>DummyToolbox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Customization\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Customization\Strings.Designer.cs">
+      <DependentUpon>Strings.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="ToolWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ToolWindow.Designer.cs">
+      <DependentUpon>ToolWindow.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\ArrowDown.bmp" />
+    <None Include="Images\ArrowUp.bmp" />
+    <None Include="Images\Bitmap.ico" />
+    <None Include="Images\BlankIcon.ico" />
+    <None Include="Images\ClosedFolder.ICO" />
+    <None Include="Images\CSFile.ico" />
+    <None Include="Images\CSProject.ico" />
+    <None Include="Images\File.ico" />
+    <None Include="Images\Form.ico" />
+    <None Include="Images\Mouse.bmp" />
+    <None Include="Images\msenv22.ico" />
+    <None Include="Images\New.ico" />
+    <None Include="Images\Open.ico" />
+    <None Include="Images\OpenFolder.ICO" />
+    <None Include="Images\OutputWindow.ico" />
+    <None Include="Images\PropertyWindow.ico" />
+    <None Include="Images\Reference.ico" />
+    <None Include="Images\References.ico" />
+    <None Include="Images\SolutionExplorer.ico" />
+    <None Include="Images\TaskListWindow.ico" />
+    <None Include="Images\ToolboxWindow.ico" />
+    <None Include="Images\XmlFile.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MainForm2.resx">
+      <DependentUpon>MainForm2.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Customization\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\DockPanel.xml" />
+    <EmbeddedResource Include="Customization\Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolWindow.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ToolWindow.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockIndicator_PaneDiamond.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockPaneStrip_ScrollRightEnabled.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockIndicator_PaneDiamond_Bottom.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\Dockindicator_PaneDiamond_Fill.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockIndicator_PaneDiamond_Hotspot.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockIndicator_PaneDiamond_HotspotIndex.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockIndicator_PaneDiamond_Left.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockIndicator_PaneDiamond_Right.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockIndicator_PaneDiamond_Top.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockIndicator_PanelBottom.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockIndicator_PanelBottom_Active.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockIndicator_PanelFill.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockIndicator_PanelFill_Active.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockIndicator_PanelLeft.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockIndicator_PanelLeft_Active.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockIndicator_PanelRight.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockIndicator_PanelRight_Active.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockIndicator_PanelTop.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockIndicator_PanelTop_Active.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockPaneCaption_AutoHideNo.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockPaneCaption_AutoHideYes.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockPaneCaption_CloseDisabled.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockPaneCaption_CloseEnabled.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockPaneStrip_CloseDisabled.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockPaneStrip_CloseEnabled.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockPaneStrip_ScrollLeftDisabled.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockPaneStrip_ScrollLeftEnabled.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Customization\Resources\DockPaneStrip_ScrollRightDisabled.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="license.txt">
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\Autolist\AutoListForm.resx">
+      <DependentUpon>AutoListForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\Autolist\TabListBox.resx">
+      <DependentUpon>TabListBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\BaseControls\BaseControl.resx">
+      <DependentUpon>BaseControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\BaseControls\BaseListBoxControl.resx">
+      <DependentUpon>BaseListBoxControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\BaseControls\BasePanelControl.resx">
+      <DependentUpon>BasePanelControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\EditView\EditViewControl.resx">
+      <DependentUpon>EditViewControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\FormatLabel\FormatLabelControl.resx">
+      <DependentUpon>FormatLabelControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\InfoTip\InfoTipForm.resx">
+      <DependentUpon>InfoTipForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\IntelliMouse\IntelliMouse.resx">
+      <DependentUpon>IntelliMouse.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\RegionHandler\RegionHandler.resx">
+      <DependentUpon>RegionHandler.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\SplitView\SplitViewChildControl.resx">
+      <DependentUpon>SplitViewChildControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\SplitView\SplitViewControl.resx">
+      <DependentUpon>SplitViewControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\SplitView\SplitViewParentControl.resx">
+      <DependentUpon>SplitViewParentControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\Syntaxbox\Dialogs\FindReplace.resx">
+      <DependentUpon>FindReplace.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\Syntaxbox\Dialogs\GotoLine.resx">
+      <DependentUpon>GotoLine.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\Syntaxbox\Dialogs\Settings.resx">
+      <DependentUpon>Settings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Controls\Syntaxbox\SyntaxBoxControl.resx">
+      <DependentUpon>SyntaxBoxControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Design\CollectionEditorGui.resx">
+      <DependentUpon>CollectionEditorGui.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Document\Print\SourceCodePrintDocument.resx">
+      <DependentUpon>SourceCodePrintDocument.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Document\SyntaxDefinition\TextStyle\TextStyleDesignerDialog.resx">
+      <DependentUpon>TextStyleDesignerDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Document\SyntaxDocument.resx">
+      <DependentUpon>SyntaxDocument.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Alsing.SyntaxBox\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BikiniView.resx">
+      <DependentUpon>BikiniView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScriptDoc.resx">
+      <DependentUpon>ScriptDoc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinFormsUI\Docking\DockPanel.bmp" />
+    <EmbeddedResource Include="WinFormsUI\Docking\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinFormsUI\Docking\Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockIndicator_PaneDiamond.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockIndicator_PaneDiamond_Bottom.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\Dockindicator_PaneDiamond_Fill.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockIndicator_PaneDiamond_Hotspot.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockIndicator_PaneDiamond_HotspotIndex.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockIndicator_PaneDiamond_Left.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockIndicator_PaneDiamond_Right.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockIndicator_PaneDiamond_Top.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockIndicator_PanelBottom.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockIndicator_PanelBottom_Active.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockIndicator_PanelFill.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockIndicator_PanelFill_Active.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockIndicator_PanelLeft.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockIndicator_PanelLeft_Active.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockIndicator_PanelRight.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockIndicator_PanelRight_Active.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockIndicator_PanelTop.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockIndicator_PanelTop_Active.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockPane_AutoHide.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockPane_Close.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockPane_Dock.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockPane_Option.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinFormsUI\Docking\Resources\DockPane_OptionOverflow.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Alsing.SyntaxBox\Alsing.SourceCode.SourceCodePrintDocument.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Alsing.SyntaxBox\Alsing.SourceCode.SyntaxDocument.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Alsing.SyntaxBox\Alsing.Windows.Forms.SyntaxBoxControl.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Alsing.SyntaxBox\FlippedCursor.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Alsing.SyntaxBox\MoveDown.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Alsing.SyntaxBox\MoveUp.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Alsing.SyntaxBox\MoveUpDown.cur" />
+    <None Include="Squirrel.syn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Lua.syn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Alsing.SyntaxBox\Text\ReadMe.txt" />
+    <Content Include="Images\FolderClose.bmp" />
+    <Content Include="Images\FolderOpen.bmp" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(SolutionDir)..\..\tools\bikini\bikini ($(PlatformName)!$(ConfigurationName)).dll" "$(TargetDir)*.dll" /S /Y /A
+xcopy "$(TargetPath)" "$(SolutionDir)..\..\tools\$(ProjectName)\$(ProjectName) ($(PlatformName)!$(ConfigurationName)).*" /S /Y /A
+xcopy "$(TargetDir)*.dll" "$(SolutionDir)..\..\tools\$(ProjectName)\*.dll" /S /Y /A</PostBuildEvent>
+  </PropertyGroup>
+</Project>

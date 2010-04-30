@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="bikini">
+      <UniqueIdentifier>{216087ff-4b3c-4f07-9b71-8c4866041164}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bikini\solution">
+      <UniqueIdentifier>{f5718ec5-1c22-43da-823d-8430c13a507a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header">
+      <UniqueIdentifier>{f0503e30-55f6-4368-8ad6-4d4e52465464}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="commands">
+      <UniqueIdentifier>{c40011b6-d317-4c4e-8225-a32f68903b25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="main">
+      <UniqueIdentifier>{3260c852-b36d-42d5-9232-5495f591e603}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="bikini.cpp">
+      <Filter>bikini</Filter>
+    </ClCompile>
+    <ClCompile Include="solution.cpp">
+      <Filter>bikini\solution</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>header</Filter>
+    </ClCompile>
+    <ClCompile Include="commands.cpp">
+      <Filter>commands</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bikini.h">
+      <Filter>bikini</Filter>
+    </ClInclude>
+    <ClInclude Include="solution.h">
+      <Filter>bikini\solution</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="commands.h">
+      <Filter>commands</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="commands.inl">
+      <Filter>commands</Filter>
+    </None>
+  </ItemGroup>
+</Project>

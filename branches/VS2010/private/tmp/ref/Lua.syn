@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language Name="Lua" Startblock="Code">
+	<FileTypes>
+		<FileType Extension=".lua" Name="Lua file"/>
+	</FileTypes>
+	<Block Name="Code" Style="Code" IsMultiline="true">
+		<Scope Start="" End="" Style="Scope" Text="..."/>
+		
+		<!-- Keywords that can exist inside this block -->
+		<Keywords>
+			<PatternGroup Name="C1" Style="C1" CaseSensitive="true">
+				<Patterns>
+					and break do else elseif end false for function if
+					in local nil not or repeat return then true until while
+				</Patterns>
+			</PatternGroup>
+			<PatternGroup Name="C2" Style="C2" CaseSensitive="true">
+        <Patterns>
+          _G _VERSION assert collectgarbage dofile error getfenv getmetatable ipairs load loadfile loadstring module
+          next pairs pcall print rawequal rawget rawset require select setfenv setmetatable tonumber tostring type
+          unpack xpcall
+          coroutine.create coroutine.resume coroutine.running coroutine.status coroutine.wrap coroutine.yield
+          debug.debug debug.getfenv debug.gethook debug.getinfo debug.getlocal debug.getmetatable debug.getregistry
+          debug.getupvalue debug.setfenv debug.sethook debug.setlocal debug.setmetatable debug.setupvalue debug.traceback
+          io.close io.flush io.input io.lines io.open io.output io.popen io.read io.stderr io.stdin io.stdout io.tmpfile
+          io.type io.write
+          math.abs math.acos math.asin math.atan math.atan2 math.ceil math.cos math.cosh math.deg math.exp math.floor
+          math.fmod math.frexp math.huge math.ldexp math.log math.log10 math.max math.min math.modf math.pi math.pow
+          math.rad math.random math.randomseed math.sin math.sinh math.sqrt math.tan math.tanh
+          os.clock os.date os.difftime os.execute os.exit os.getenv os.remove os.rename os.setlocale os.time os.tmpname
+          package.cpath package.loaded package.loaders package.loadlib package.path package.preload package.seeall
+          string.byte string.char string.dump string.find string.format string.gmatch string.gsub
+          string.len string.lower string.match string.rep string.reverse string.sub string.upper
+          table.concat table.insert table.maxn table.remove table.sort
+        </Patterns>
+        <!-- File methods -->
+        <Pattern Text=".+:(close)|(flush)|(lines)|(read)|(seek)|(setvbuf)|(write)" IsComplex="true"/>
+			</PatternGroup>
+			<PatternGroup Name="C3" Style="C3" CaseSensitive="true">
+				
+			</PatternGroup>
+			<PatternGroup Name="C4" Style="C4" CaseSensitive="true">
+				<Patterns>
+					! % &amp; * + - // / : &lt; = &gt; ? [ ] " | ~ is  new sizeof  typeof unchecked
+				</Patterns>
+			</PatternGroup>
+			<PatternGroup Name="C5" Style="C5" CaseSensitive="true">
+				<Patterns>
+					(     )     {     }     [     ]
+				     ;     :     ,     .     ..    ...
+				</Patterns>
+			</PatternGroup>
+			<PatternGroup Name="Numbers" Style="Number">
+				<Pattern Text="(-?(0x[0-9a-fA-F]+)|([0-9]+\.?[0-9]*)((e|E)-?[0-9]+)?)" IsComplex="true" />
+			</PatternGroup>
+		</Keywords>
+		<!-- Operators that can exist inside this block -->
+		<Operators>
+			<PatternGroup Name="Operators" Style="Operator">
+				<Patterns>
+			 		 +     -     *     /     %     ^     #
+				     ==    ~=    &lt;=    &gt;=    &lt;     &gt;     =
+				</Patterns>
+			</PatternGroup>
+		</Operators>
+		<!-- Blocks that can exist inside this block -->
+		<ChildBlocks>
+			<Child Name="Multiline Comment" />
+			<Child Name="Singleline Comment" />
+			<Child Name="String" />
+			<Child Name="Code" />
+		</ChildBlocks>
+	</Block>	
+	<Block Name="Multiline Comment" Style="Comment"  IsMultiline="true">
+		<Scope Start="--\[\**\[" StartIsComplex="true" End="\]\**\]--" Style="Comment" Text="/*...*/"/>
+	</Block>
+	<Block Name="Singleline Comment" Style="Comment"  IsMultiline="false">
+		<Scope Start="--" End="" Style="Comment" />
+	</Block>
+	<Block Name="String" Style="String" IsMultiline="true">
+		<Scope Start="&quot;" End="&quot;" EscapeChar="\" Style="String" />
+		<Scope Start="'" End="'" EscapeChar="\" Style="String" />
+		<Scope Start="\[=*\[" StartIsComplex="true" End="\]=*\]" EndIsComplex="true" Style="String" />
+	</Block>"
+<Style Name="Code" ForeColor="" BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="Scope" ForeColor="" BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="Comment" ForeColor="Green" BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="String" ForeColor="SteelBlue" BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="Number" ForeColor="Teal" BackColor="" Bold="true" Italic="false" Underline="false" />
+	<Style Name="Keyword" ForeColor="Blue" BackColor="" Bold="true" Italic="false" Underline="false" />
+	<Style Name="Operator" ForeColor="Red" BackColor="" Bold="false" Italic="false" Underline="false" />
+
+	<!-- ULTRAEDIT WORD GROUPS -->
+	<Style Name="C1" ForeColor="Blue" 	BackColor="" Bold="true" Italic="false" Underline="false" />
+	<Style Name="C2" ForeColor="DarkBlue" 	BackColor="" Bold="true" Italic="false" Underline="false" />
+	<Style Name="C3" ForeColor="Magenta" 	BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="C4" ForeColor="Red" 	BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="C5" ForeColor="DarkRed" 	BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="C6" ForeColor="Gold" 	BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="C7" ForeColor="Green" 	BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="C8" ForeColor="Silver" 	BackColor="" Bold="false" Italic="false" Underline="false" />
+</Language>

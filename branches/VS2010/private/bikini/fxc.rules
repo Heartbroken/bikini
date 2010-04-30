@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VisualStudioToolFile
+	Name="Shader Compiler"
+	Version="8,00"
+	>
+	<Rules>
+		<CustomBuildRule
+			Name="Vertex Shader Compiler"
+			DisplayName="Vertex Shader"
+			CommandLine="fxc.exe [T] [E] [D] [I] [Fc] [Fh] [Vn] /Fo &quot;$(IntDir)\$(InputFileName).o&quot; &quot;$(InputFileName)&quot;"
+			Outputs="$(IntDir)\$(InputFileName).o"
+			FileExtensions="*.vs"
+			ExecutionDescription="Compiling vertex shader ..."
+			>
+			<Properties>
+				<EnumProperty
+					Name="T"
+					DisplayName="Shader model"
+					Category="Shader"
+					Description="Shader model (/T&lt;target&gt;)"
+					DefaultValue="1"
+					>
+					<Values>
+						<EnumValue
+							Value="0"
+							Switch="/T vs_2_0"
+							DisplayName="vs_2_0"
+						/>
+						<EnumValue
+							Value="1"
+							Switch="/T vs_3_0"
+							DisplayName="vs_3_0"
+						/>
+						<EnumValue
+							Value="2"
+							Switch="/T vs_4_0"
+							DisplayName="vs_4_0"
+						/>
+					</Values>
+				</EnumProperty>
+				<StringProperty
+					Name="E"
+					DisplayName="Shader entrypoint"
+					Category="Shader"
+					Description="Shader entrypoint (/E &lt;name&gt;)"
+					Switch="/E [value]"
+					DefaultValue="main"
+				/>
+				<StringProperty
+					Name="D"
+					DisplayName="Define macro"
+					Category="Input"
+					Description="Define macro (/D &lt;id&gt;=&lt;text&gt;)"
+					Switch="/D [value]"
+					Delimited="true"
+				/>
+				<StringProperty
+					Name="Fh"
+					DisplayName="Output header file containing object code"
+					Category="Output"
+					Description="Output header file containing object code (/Fh &lt;file&gt;)"
+					Switch="/Fh &quot;[value]&quot;"
+					DefaultValue="$(InputPath).h"
+				/>
+				<StringProperty
+					Name="Vn"
+					DisplayName="Use name as variable name in header file"
+					Category="Output"
+					Description="Use name as variable name in header file (/Vn &lt;name&gt;)"
+					Switch="/Vn [value]"
+					DefaultValue="$(InputName)_vs"
+				/>
+				<StringProperty
+					Name="Fc"
+					DisplayName="Output assembly code listing file"
+					Category="Output"
+					Description="Output assembly code listing file (/Fc &lt;file&gt;)"
+					Switch="/Fc &quot;[value]&quot;"
+				/>
+				<StringProperty
+					Name="Fx"
+					DisplayName="Output assembly code and hex listing file"
+					Category="Output"
+					Description="Output assembly code and hex listing file (/Fx &lt;file&gt;)"
+					Switch="/Fx &quot;[value]&quot;"
+				/>
+				<StringProperty
+					Name="I"
+					DisplayName="Additional include path"
+					Category="Input"
+					Description="Additional include path (/I &lt;include&gt;)"
+					Switch="/I &quot;[value]&quot;"
+					Delimited="true"
+				/>
+			</Properties>
+		</CustomBuildRule>
+		<CustomBuildRule
+			Name="Pixel Shader Compiler"
+			DisplayName="Pixel Shader"
+			CommandLine="fxc.exe [T] [E] [D] [I] [Fc] [Fh] [Vn] /Fo &quot;$(IntDir)\$(InputFileName).o&quot; &quot;$(InputFileName)&quot;"
+			Outputs="$(IntDir)\$(InputFileName).o"
+			FileExtensions="*.ps"
+			ExecutionDescription="Compiling pixel shader ..."
+			>
+			<Properties>
+				<EnumProperty
+					Name="T"
+					DisplayName="Shader model"
+					Category="Shader"
+					Description="Shader model (/T&lt;target&gt;)"
+					DefaultValue="1"
+					>
+					<Values>
+						<EnumValue
+							Value="0"
+							Switch="/T ps_2_0"
+							DisplayName="ps_2_0"
+						/>
+						<EnumValue
+							Value="1"
+							Switch="/T ps_3_0"
+							DisplayName="ps_3_0"
+						/>
+						<EnumValue
+							Value="2"
+							Switch="/T ps_4_0"
+							DisplayName="ps_4_0"
+						/>
+					</Values>
+				</EnumProperty>
+				<StringProperty
+					Name="E"
+					DisplayName="Shader entrypoint"
+					Category="Shader"
+					Description="Shader entrypoint (/E &lt;name&gt;)"
+					Switch="/E [value]"
+					DefaultValue="main"
+				/>
+				<StringProperty
+					Name="D"
+					DisplayName="Define macro"
+					Category="Input"
+					Description="Define macro (/D &lt;id&gt;=&lt;text&gt;)"
+					Switch="/D [value]"
+					Delimited="true"
+				/>
+				<StringProperty
+					Name="Fh"
+					DisplayName="Output header file containing object code"
+					Category="Output"
+					Description="Output header file containing object code (/Fh &lt;file&gt;)"
+					Switch="/Fh &quot;[value]&quot;"
+					DefaultValue="$(InputPath).h"
+				/>
+				<StringProperty
+					Name="Vn"
+					DisplayName="Use name as variable name in header file"
+					Category="Output"
+					Description="Use name as variable name in header file (/Vn &lt;name&gt;)"
+					Switch="/Vn [value]"
+					DefaultValue="$(InputName)_ps"
+				/>
+				<StringProperty
+					Name="Fc"
+					DisplayName="Output assembly code listing file"
+					Category="Output"
+					Description="Output assembly code listing file (/Fc &lt;file&gt;)"
+					Switch="/Fc &quot;[value]&quot;"
+				/>
+				<StringProperty
+					Name="Fx"
+					DisplayName="Output assembly code and hex listing file"
+					Category="Output"
+					Description="Output assembly code and hex listing file (/Fx &lt;file&gt;)"
+					Switch="/Fx &quot;[value]&quot;"
+				/>
+				<StringProperty
+					Name="I"
+					DisplayName="Additional include path"
+					Category="Input"
+					Description="Additional include path (/I &lt;include&gt;)"
+					Switch="/I &quot;[value]&quot;"
+					Delimited="true"
+				/>
+			</Properties>
+		</CustomBuildRule>
+	</Rules>
+</VisualStudioToolFile>

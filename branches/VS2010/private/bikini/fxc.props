@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup
+    Condition="'$(Vertex_Shader_CompilerBeforeTargets)' == '' and '$(Vertex_Shader_CompilerAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <Vertex_Shader_CompilerBeforeTargets>Midl</Vertex_Shader_CompilerBeforeTargets>
+    <Vertex_Shader_CompilerAfterTargets>CustomBuild</Vertex_Shader_CompilerAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Vertex_Shader_CompilerDependsOn
+      Condition="'$(ConfigurationType)' != 'Makefile'">_SelectedFiles;$(Vertex_Shader_CompilerDependsOn)</Vertex_Shader_CompilerDependsOn>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <Vertex_Shader_Compiler>
+      <E>main</E>
+      <Fh>%(FullPath).h</Fh>
+      <Vn>%(Filename)_vs</Vn>
+      <T>1</T>
+      <CommandLineTemplate>fxc.exe [T] [E] [D] [I] [Fc] [Fh] [Vn] /Fo "$(IntDir)%(Filename)%(Extension).o" "%(Filename)%(Extension)"</CommandLineTemplate>
+      <Outputs>$(IntDir)%(Filename)%(Extension).o</Outputs>
+      <ExecutionDescription>Compiling vertex shader ...</ExecutionDescription>
+    </Vertex_Shader_Compiler>
+  </ItemDefinitionGroup>
+  <PropertyGroup
+    Condition="'$(Pixel_Shader_CompilerBeforeTargets)' == '' and '$(Pixel_Shader_CompilerAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <Pixel_Shader_CompilerBeforeTargets>Midl</Pixel_Shader_CompilerBeforeTargets>
+    <Pixel_Shader_CompilerAfterTargets>CustomBuild</Pixel_Shader_CompilerAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Pixel_Shader_CompilerDependsOn
+      Condition="'$(ConfigurationType)' != 'Makefile'">_SelectedFiles;$(Pixel_Shader_CompilerDependsOn)</Pixel_Shader_CompilerDependsOn>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <Pixel_Shader_Compiler>
+      <E>main</E>
+      <Fh>%(FullPath).h</Fh>
+      <Vn>%(Filename)_ps</Vn>
+      <T>1</T>
+      <CommandLineTemplate>fxc.exe [T] [E] [D] [I] [Fc] [Fh] [Vn] /Fo "$(IntDir)%(Filename)%(Extension).o" "%(Filename)%(Extension)"</CommandLineTemplate>
+      <Outputs>$(IntDir)%(Filename)%(Extension).o</Outputs>
+      <ExecutionDescription>Compiling pixel shader ...</ExecutionDescription>
+    </Pixel_Shader_Compiler>
+  </ItemDefinitionGroup>
+</Project>
