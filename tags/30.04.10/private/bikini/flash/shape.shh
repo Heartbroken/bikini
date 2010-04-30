@@ -1,0 +1,25 @@
+/*---------------------------------------------------------------------------------------------*//*
+
+	Binary Kinematics 3 - C++ Game Programming Library
+	Copyright (C) 2008-2010 Viktor Reutskyy
+	viktor.reutskyy@gmail.com
+
+*//*---------------------------------------------------------------------------------------------*/
+
+#include <bikini/system/next_c_register.shh>
+#define used_c_registers 6
+
+struct shape_consts
+{
+	float3x2 xform;
+	float3x2 txform;
+	float2 tex_scale;
+	float4 color;
+};
+static const uint shape_offset = next_c_register_index;
+
+#if !defined(__cplusplus) /*---------------------------------------------------------------------*/
+
+shape_consts shape : register(next_c_register);
+
+#endif /* !defined(__cplusplus) -----------------------------------------------------------------*/
