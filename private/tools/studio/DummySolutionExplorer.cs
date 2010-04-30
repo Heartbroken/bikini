@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,6 +15,35 @@ namespace Studio
         public DummySolutionExplorer()
         {
             InitializeComponent();
+
+            // test
+			Queue l_queue = new Queue();
+			l_queue.Enqueue(m_treeView.Nodes[0]);
+
+			while (l_queue.Count > 0)
+            {
+				TreeNode l_node = (TreeNode)l_queue.Dequeue();
+
+                switch (l_node.ImageKey)
+                {
+                    case "Project" :
+                        l_node.Tag = new Bikini.Project();
+                        break;
+					case "Package":
+						l_node.Tag = new Bikini.Package();
+						break;
+					case "Stage":
+						l_node.Tag = new Bikini.Stage();
+						break;
+					case "Folder":
+					case "FolderOpen":
+						l_node.Tag = new Bikini.Folder();
+						break;
+				}
+
+				foreach (TreeNode l_child in l_node.Nodes) l_queue.Enqueue(l_child);
+            }
+            // test
         }
 
         protected override void OnRightToLeftLayoutChanged(EventArgs e)
@@ -33,11 +63,8 @@ namespace Studio
             if (m_cancelExpand) e.Cancel = true;
             else
             {
-                if (e.Node.ImageIndex == 2)
-                {
-                    e.Node.ImageIndex = 1;
-                    e.Node.SelectedImageIndex = 1;
-                }
+                if (e.Node.ImageKey == "Folder")
+					e.Node.ImageKey = e.Node.SelectedImageKey = "FolderOpen";
             }
         }
 
@@ -46,11 +73,8 @@ namespace Studio
             if (m_cancelExpand) e.Cancel = true;
             else
             {
-                if (e.Node.ImageIndex == 1)
-                {
-                    e.Node.ImageIndex = 2;
-                    e.Node.SelectedImageIndex = 2;
-                }
+                if (e.Node.ImageKey == "FolderOpen")
+                    e.Node.ImageKey = e.Node.SelectedImageKey = "Folder";
             }
         }
 
@@ -63,5 +87,10 @@ namespace Studio
         {
 
         }
+
+		private void m_treeView_AfterSelect(object sender, TreeViewEventArgs e)
+		{
+			Program.MainWindow.PropertyWindow.SelectedObject = e.Node.Tag;
+		}
     }
 }

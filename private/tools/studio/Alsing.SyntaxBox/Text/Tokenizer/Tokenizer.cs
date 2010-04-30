@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Alsing.Text.PatternMatchers;
+using Studio.Alsing.Text.PatternMatchers;
 
-namespace Alsing.Text
+namespace Studio.Alsing.Text
 {
     public class Tokenizer
     {

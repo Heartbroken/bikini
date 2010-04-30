@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Alsing.SourceCode
+namespace Studio.Alsing.SourceCode
 {
     /// <summary>
     /// 

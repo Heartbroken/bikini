@@ -20,6 +20,8 @@ namespace Studio
 		private DummyOutputWindow m_outputWindow = new DummyOutputWindow();
 		private DummyTaskList m_taskList = new DummyTaskList();
 
+		public DummyPropertyWindow PropertyWindow { get { return m_propertyWindow; } }
+
         public MainForm()
         {
             InitializeComponent();

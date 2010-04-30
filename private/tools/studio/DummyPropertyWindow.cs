@@ -11,6 +11,21 @@ namespace Studio
 {
     public partial class DummyPropertyWindow : ToolWindow
     {
+		public Object SelectedObject { set
+		{
+			comboBox.Items.Clear();
+			propertyGrid.SelectedObject = null;
+
+			if (value is Bikini.ProjectItem)
+			{
+				Bikini.ProjectItem l_item = (Bikini.ProjectItem)value;
+				l_item.comboBox = comboBox;
+
+				comboBox.Items.Add(l_item);
+				comboBox.SelectedIndex = 0;
+			}
+		}}
+
         public DummyPropertyWindow()
         {
             InitializeComponent();

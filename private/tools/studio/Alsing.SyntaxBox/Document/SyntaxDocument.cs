@@ -1,5 +1,5 @@
 // *
-// * Copyright (C) 2008 Roger Alsing : http://www.RogerAlsing.com
+// * Copyright (C) 2008 Roger Studio.Alsing : http://www.RogerAlsing.com
 // *
 // * This library is free software; you can redistribute it and/or modify it
 // * under the terms of the GNU Lesser General Public License 2.1 or later, as
@@ -14,9 +14,9 @@ using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using Alsing.SourceCode.SyntaxDocumentParsers;
+using Studio.Alsing.SourceCode.SyntaxDocumentParsers;
 
-namespace Alsing.SourceCode
+namespace Studio.Alsing.SourceCode
 {
     /// <summary>
     /// The SyntaxDocument is a component that is responsible for Parsing , Folding , Undo / Redo actions and various text actions.

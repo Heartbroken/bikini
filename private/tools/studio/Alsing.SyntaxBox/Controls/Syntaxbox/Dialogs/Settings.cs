@@ -3,9 +3,9 @@
 //using System.Collections;
 //using System.ComponentModel;
 //using System.Windows.Forms;
-//using Alsing.SourceCode;
+//using Studio.Alsing.SourceCode;
 //
-//namespace Alsing.Windows.Forms.SyntaxBox
+//namespace Studio.Alsing.Windows.Forms.SyntaxBox
 //{
 //	/// <summary>
 //	/// Summary description for Settings.

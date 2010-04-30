@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Text;
 
-namespace Alsing.SourceCode.SyntaxDocumentExporters
+namespace Studio.Alsing.SourceCode.SyntaxDocumentExporters
 {
     public class SimpleHTMLExporter
     {

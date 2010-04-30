@@ -1,5 +1,5 @@
 // *
-// * Copyright (C) 2008 Roger Alsing : http://www.RogerAlsing.com
+// * Copyright (C) 2008 Roger Studio.Alsing : http://www.RogerAlsing.com
 // *
 // * This library is free software; you can redistribute it and/or modify it
 // * under the terms of the GNU Lesser General Public License 2.1 or later, as
@@ -15,9 +15,9 @@ using System.Drawing;
 using System.Drawing.Design;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
-using Alsing.Windows;
+using Studio.Alsing.Windows;
 
-namespace Alsing.Drawing.GDI
+namespace Studio.Alsing.Drawing.GDI
 {
     public class FontList : UITypeEditor
     {

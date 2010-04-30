@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using Alsing.Windows;
+using Studio.Alsing.Windows;
 
-namespace Alsing.Drawing
+namespace Studio.Alsing.Drawing
 {
     public class DesktopGraphics : IDisposable
     {
