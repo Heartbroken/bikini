@@ -27,61 +27,61 @@ namespace Studio
 		/// </summary>
 		private void InitializeComponent()
 		{
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DummyPropertyWindow));
-            this.propertyGrid = new System.Windows.Forms.PropertyGrid();
-            this.comboBox = new System.Windows.Forms.ComboBox();
-            this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
-            this.SuspendLayout();
-            // 
-            // propertyGrid
-            // 
-            this.propertyGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.propertyGrid.LineColor = System.Drawing.SystemColors.ScrollBar;
-            this.propertyGrid.Location = new System.Drawing.Point(0, 30);
-            this.propertyGrid.Name = "propertyGrid";
-            this.propertyGrid.Size = new System.Drawing.Size(208, 256);
-            this.propertyGrid.TabIndex = 0;
-            // 
-            // comboBox
-            // 
-            this.comboBox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox.Location = new System.Drawing.Point(0, 3);
-            this.comboBox.Name = "comboBox";
-            this.comboBox.Size = new System.Drawing.Size(208, 21);
-            this.comboBox.TabIndex = 1;
-            this.comboBox.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
-            // 
-            // mainMenu1
-            // 
-            this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DummyPropertyWindow));
+			this.propertyGrid = new System.Windows.Forms.PropertyGrid();
+			this.comboBox = new System.Windows.Forms.ComboBox();
+			this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
+			this.menuItem1 = new System.Windows.Forms.MenuItem();
+			this.SuspendLayout();
+			// 
+			// propertyGrid
+			// 
+			this.propertyGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.propertyGrid.LineColor = System.Drawing.SystemColors.ScrollBar;
+			this.propertyGrid.Location = new System.Drawing.Point(0, 30);
+			this.propertyGrid.Name = "propertyGrid";
+			this.propertyGrid.Size = new System.Drawing.Size(208, 256);
+			this.propertyGrid.TabIndex = 0;
+			// 
+			// comboBox
+			// 
+			this.comboBox.Dock = System.Windows.Forms.DockStyle.Top;
+			this.comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBox.Location = new System.Drawing.Point(0, 3);
+			this.comboBox.Name = "comboBox";
+			this.comboBox.Size = new System.Drawing.Size(208, 21);
+			this.comboBox.TabIndex = 1;
+			this.comboBox.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
+			// 
+			// mainMenu1
+			// 
+			this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem1});
-            // 
-            // menuItem1
-            // 
-            this.menuItem1.Index = 0;
-            this.menuItem1.Text = "File";
-            // 
-            // DummyPropertyWindow
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.ClientSize = new System.Drawing.Size(208, 289);
-            this.Controls.Add(this.comboBox);
-            this.Controls.Add(this.propertyGrid);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.HideOnClose = true;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Menu = this.mainMenu1;
-            this.Name = "DummyPropertyWindow";
-            this.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.ShowHint = Studio.WinFormsUI.Docking.DockState.DockRight;
-            this.TabText = "Properties";
-            this.Text = "Properties";
-            this.ResumeLayout(false);
+			// 
+			// menuItem1
+			// 
+			this.menuItem1.Index = 0;
+			this.menuItem1.Text = "File";
+			// 
+			// DummyPropertyWindow
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.ClientSize = new System.Drawing.Size(208, 289);
+			this.Controls.Add(this.comboBox);
+			this.Controls.Add(this.propertyGrid);
+			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.HideOnClose = true;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.Menu = this.mainMenu1;
+			this.Name = "DummyPropertyWindow";
+			this.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.ShowHint = Studio.WinFormsUI.Docking.DockState.DockRight;
+			this.TabText = "Properties";
+			this.Text = "Properties";
+			this.ResumeLayout(false);
 
 		}
 		#endregion
