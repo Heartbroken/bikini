@@ -11,6 +11,16 @@ namespace Studio
 {
     public partial class DummyPropertyWindow : ToolWindow
     {
+        public DummyPropertyWindow()
+        {
+            InitializeComponent();
+        }
+
+        private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            propertyGrid.SelectedObject = comboBox.SelectedItem;
+        }
+
 		public Object SelectedObject { set
 		{
 			comboBox.Items.Clear();
@@ -25,19 +35,5 @@ namespace Studio
 				comboBox.SelectedIndex = 0;
 			}
 		}}
-
-        public DummyPropertyWindow()
-        {
-            InitializeComponent();
-            Bikini.Project l_project = new Bikini.Project();
-            comboBox.Items.Add(l_project); l_project.comboBox = comboBox;
-
-            comboBox.SelectedIndex = 0;
-        }
-
-        private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            propertyGrid.SelectedObject = comboBox.SelectedItem;
-        }
     }
 }

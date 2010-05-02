@@ -29,7 +29,7 @@ namespace Studio
             RightToLeftLayout = showRightToLeft.Checked;
             m_solutionExplorer = new DummySolutionExplorer();
             m_solutionExplorer.RightToLeftLayout = RightToLeftLayout;
-            m_solutionExplorer.m_treeView.Nodes["solutionNode"].Expand();
+            //m_solutionExplorer.m_treeView.Nodes["solutionNode"].Expand();
 			m_deserializeDockContent = new DeserializeDockContent(GetContentFromPersistString);
 
             //Bikini.Test(-125, "Test call");
