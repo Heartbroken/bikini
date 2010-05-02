@@ -219,30 +219,32 @@ namespace Studio
 
             // GUID
             private Guid m_guid = Guid.NewGuid();
-            [CategoryAttribute("ID"), DescriptionAttribute("Object's identity")]
+            [CategoryAttribute("Object ID"), DescriptionAttribute("Object's identity")]
             public Guid GUID { get { return m_guid; } }
 
             // Name
             private String m_name = "Grrr";
-			[CategoryAttribute("ID"), DescriptionAttribute("You always can change the name. All references to the object are made by its GUID")]
+			[CategoryAttribute("Object ID"), DescriptionAttribute("You always can change the name. All references to the object are made by its GUID")]
             public String Name
             {
                 get { return m_name; }
                 set
                 {
                     m_name = value;
-					if (treeNode != null) treeNode.Text = this.ToString();
+					if (treeNode != null) treeNode.Text = this.FullName();
 					Debug.Assert(comboBox == null || comboBox.SelectedItem == this);
 					if (comboBox != null && comboBox.SelectedItem == this) comboBox.Items[comboBox.SelectedIndex] = this;
                 }
             }
 
 			// Type
-            [CategoryAttribute("ID"), DescriptionAttribute("Object's type")]
+			[CategoryAttribute("Object ID"), DescriptionAttribute("Object's type")]
 			public abstract String Type { get; }
 
 			// To string
 			public override string ToString() { return Type + " '" + Name + "'"; }
+
+			public virtual String FullName() { return Name; }
         }
 
         // Project
@@ -250,13 +252,13 @@ namespace Studio
         {
 			public Project(String _name) : base(_name) {}
 			public override String Type { get { return "Project"; } }
+			public override String FullName() { return ToString(); }
         }
         // Folder
         public class Folder : ProjectItem
         {
 			public Folder(String _name) : base(_name) { }
 			public override String Type { get { return "Folder"; } }
-			public override string ToString() { return Name; }
 		}
         // Package
         public class Package : ProjectItem
