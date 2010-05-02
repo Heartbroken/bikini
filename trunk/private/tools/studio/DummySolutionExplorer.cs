@@ -123,5 +123,33 @@ namespace Studio
 		{
 			Program.MainWindow.PropertyWindow.SelectedObject = e.Node.Tag;
 		}
+
+		private void m_treeView_MouseUp(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				TreeNode l_node = m_treeView.GetNodeAt(e.Location);
+				if (l_node != null)
+				{
+					m_treeView.SelectedNode = l_node;
+					if (l_node.Tag is Bikini.Project)
+						m_projectContextMenu.Show(m_treeView.PointToScreen(e.Location));
+				}
+			}
+		}
+
+		private void newPackageToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (m_treeView.SelectedNode.Tag is Bikini.Project)
+			{
+				TreeNode l_projectNode = m_treeView.SelectedNode;
+				TreeNode l_packageNode = AddNode(new Bikini.Package("New"), l_projectNode.Nodes);
+			}
+		}
+
+		private void buildToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
+		}
     }
 }
