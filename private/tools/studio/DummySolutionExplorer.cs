@@ -92,25 +92,14 @@ namespace Studio
 
 		private void m_treeView_MouseUp(object sender, MouseEventArgs e)
 		{
-			if (e.Button == MouseButtons.Right)
-			{
-				TreeNode l_node = m_treeView.GetNodeAt(e.Location);
-				if (l_node != null)
-				{
-					m_treeView.SelectedNode = l_node;
-					if (l_node.Tag is Bikini.Project)
-						m_projectContextMenu.Show(m_treeView.PointToScreen(e.Location));
-				}
-			}
-			//else if (e.Button == MouseButtons.Left)
+			//if (e.Button == MouseButtons.Right)
 			//{
 			//    TreeNode l_node = m_treeView.GetNodeAt(e.Location);
-			//    if (l_node != null && l_node == m_treeView.SelectedNode)
+			//    if (l_node != null)
 			//    {
-			//        Bikini.ProjectItem l_item = (Bikini.ProjectItem)l_node.Tag;
-			//        l_node.Text = l_item.Name;
-			//        m_treeView.LabelEdit = true;
-			//        if (l_node.IsEditing) l_node.BeginEdit();
+			//        m_treeView.SelectedNode = l_node;
+			//        if (l_node.Tag is Bikini.Project)
+			//            m_projectContextMenu.Show(m_treeView.PointToScreen(e.Location));
 			//    }
 			//}
 		}
@@ -207,6 +196,59 @@ namespace Studio
 		private void buildToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 
+		}
+
+		private void m_projectContextMenu_Opening(object sender, CancelEventArgs e)
+		{
+			TreeNode l_node = m_treeView.GetNodeAt(m_treeView.PointToClient(Control.MousePosition));
+
+			if (l_node == null || !(l_node.Tag is Bikini.ProjectItem))
+			{
+				e.Cancel = true;
+				return;
+			}
+
+			Bikini.ProjectItem l_item = (Bikini.ProjectItem)l_node.Tag;
+
+			SetMenuVisibleItems(m_projectContextMenu, l_item);
+
+			m_treeView.SelectedNode = l_node;
+		}
+
+		private void SetMenuVisibleItems(ToolStrip _menu, Bikini.ProjectItem _projectItem)
+		{
+			foreach (ToolStripItem l_stripItem in _menu.Items)
+			{
+				if (l_stripItem.Tag is String)
+				{
+					String l_tag = (String)l_stripItem.Tag;
+					if (l_tag.IndexOf(_projectItem.Type) > -1)
+					{
+						l_stripItem.Visible = true;
+					}
+					else
+					{
+						l_stripItem.Visible = false;
+					}
+				}
+				else
+				{
+					l_stripItem.Visible = true;
+				}
+
+				if (l_stripItem.Visible)
+				{
+					if (l_stripItem is ToolStripMenuItem)
+					{
+						ToolStripMenuItem l_stripMenuItem = (ToolStripMenuItem)l_stripItem;
+
+						if (l_stripMenuItem.DropDown != null)
+						{
+							SetMenuVisibleItems(l_stripMenuItem.DropDown, _projectItem);
+						}
+					}
+				}
+			}
 		}
     }
 }
