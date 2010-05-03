@@ -34,7 +34,7 @@ namespace Studio
 			this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newPackageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.newStageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.buildToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.m_treeViewImageList = new System.Windows.Forms.ImageList(this.components);
 			this.m_projectContextMenu.SuspendLayout();
@@ -71,17 +71,17 @@ namespace Studio
 			// 
 			this.m_projectContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addToolStripMenuItem,
-            this.toolStripSeparator1,
             this.buildToolStripMenuItem});
 			this.m_projectContextMenu.Name = "treeViewContextMenu";
-			this.m_projectContextMenu.Size = new System.Drawing.Size(153, 76);
+			this.m_projectContextMenu.Size = new System.Drawing.Size(153, 70);
 			this.m_projectContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.m_projectContextMenu_Opening);
 			// 
 			// addToolStripMenuItem
 			// 
 			this.addToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newPackageToolStripMenuItem,
-            this.newFolderToolStripMenuItem});
+            this.newFolderToolStripMenuItem,
+            this.newStageToolStripMenuItem});
 			this.addToolStripMenuItem.Name = "addToolStripMenuItem";
 			this.addToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.addToolStripMenuItem.Text = "Add";
@@ -89,21 +89,26 @@ namespace Studio
 			// newPackageToolStripMenuItem
 			// 
 			this.newPackageToolStripMenuItem.Name = "newPackageToolStripMenuItem";
-			this.newPackageToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+			this.newPackageToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.newPackageToolStripMenuItem.Tag = "Project|Folder";
 			this.newPackageToolStripMenuItem.Text = "New Package";
 			this.newPackageToolStripMenuItem.Click += new System.EventHandler(this.newPackageToolStripMenuItem_Click);
 			// 
 			// newFolderToolStripMenuItem
 			// 
 			this.newFolderToolStripMenuItem.Name = "newFolderToolStripMenuItem";
-			this.newFolderToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+			this.newFolderToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.newFolderToolStripMenuItem.Tag = "Project|Folder";
 			this.newFolderToolStripMenuItem.Text = "New Folder";
 			this.newFolderToolStripMenuItem.Click += new System.EventHandler(this.newFolderToolStripMenuItem_Click);
 			// 
-			// toolStripSeparator1
+			// newStageToolStripMenuItem
 			// 
-			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+			this.newStageToolStripMenuItem.Name = "newStageToolStripMenuItem";
+			this.newStageToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.newStageToolStripMenuItem.Tag = "Package|Stage";
+			this.newStageToolStripMenuItem.Text = "New Stage";
+			this.newStageToolStripMenuItem.Click += new System.EventHandler(this.newStageToolStripMenuItem_Click);
 			// 
 			// buildToolStripMenuItem
 			// 
@@ -164,7 +169,7 @@ namespace Studio
 		private System.Windows.Forms.ToolStripMenuItem addToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem newPackageToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem newFolderToolStripMenuItem;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripMenuItem buildToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem newStageToolStripMenuItem;
     }
 }

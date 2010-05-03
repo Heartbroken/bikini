@@ -173,7 +173,8 @@ namespace Studio
 
 		private void newPackageToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (m_treeView.SelectedNode.Tag is Bikini.Project)
+			if (m_treeView.SelectedNode.Tag is Bikini.Project ||
+				m_treeView.SelectedNode.Tag is Bikini.Folder)
 			{
 				TreeNode l_parentNode = m_treeView.SelectedNode;
 				TreeNode l_newNode = AddNode(new Bikini.Package("New"), l_parentNode.Nodes);
@@ -184,10 +185,23 @@ namespace Studio
 
 		private void newFolderToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (m_treeView.SelectedNode.Tag is Bikini.Project)
+			if (m_treeView.SelectedNode.Tag is Bikini.Project ||
+				m_treeView.SelectedNode.Tag is Bikini.Folder)
 			{
 				TreeNode l_parentNode = m_treeView.SelectedNode;
 				TreeNode l_newNode = AddNode(new Bikini.Folder("New"), l_parentNode.Nodes);
+				m_treeView.SelectedNode = l_newNode;
+				l_newNode.BeginEdit();
+			}
+		}
+
+		private void newStageToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (m_treeView.SelectedNode.Tag is Bikini.Package ||
+				m_treeView.SelectedNode.Tag is Bikini.Stage)
+			{
+				TreeNode l_parentNode = m_treeView.SelectedNode;
+				TreeNode l_newNode = AddNode(new Bikini.Stage("New"), l_parentNode.Nodes);
 				m_treeView.SelectedNode = l_newNode;
 				l_newNode.BeginEdit();
 			}
@@ -219,24 +233,20 @@ namespace Studio
 		{
 			foreach (ToolStripItem l_stripItem in _menu.Items)
 			{
+				Boolean l_showStripItem = true;
+
 				if (l_stripItem.Tag is String)
 				{
 					String l_tag = (String)l_stripItem.Tag;
-					if (l_tag.IndexOf(_projectItem.Type) > -1)
+					if (l_tag.IndexOf(_projectItem.Type) == -1)
 					{
-						l_stripItem.Visible = true;
+						l_showStripItem = false;
 					}
-					else
-					{
-						l_stripItem.Visible = false;
-					}
-				}
-				else
-				{
-					l_stripItem.Visible = true;
 				}
 
-				if (l_stripItem.Visible)
+				l_stripItem.Visible = l_showStripItem;
+
+				if (l_showStripItem)
 				{
 					if (l_stripItem is ToolStripMenuItem)
 					{
