@@ -186,8 +186,10 @@ namespace Studio
 		{
 			if (m_treeView.SelectedNode.Tag is Bikini.Project)
 			{
-				TreeNode l_projectNode = m_treeView.SelectedNode;
-				TreeNode l_packageNode = AddNode(new Bikini.Package("New"), l_projectNode.Nodes);
+				TreeNode l_parentNode = m_treeView.SelectedNode;
+				TreeNode l_newNode = AddNode(new Bikini.Package("New"), l_parentNode.Nodes);
+				m_treeView.SelectedNode = l_newNode;
+				l_newNode.BeginEdit();
 			}
 		}
 
@@ -195,8 +197,10 @@ namespace Studio
 		{
 			if (m_treeView.SelectedNode.Tag is Bikini.Project)
 			{
-				TreeNode l_projectNode = m_treeView.SelectedNode;
-				TreeNode l_folderNode = AddNode(new Bikini.Folder("New"), l_projectNode.Nodes);
+				TreeNode l_parentNode = m_treeView.SelectedNode;
+				TreeNode l_newNode = AddNode(new Bikini.Folder("New"), l_parentNode.Nodes);
+				m_treeView.SelectedNode = l_newNode;
+				l_newNode.BeginEdit();
 			}
 		}
 
