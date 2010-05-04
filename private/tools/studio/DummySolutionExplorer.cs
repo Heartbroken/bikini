@@ -171,6 +171,11 @@ namespace Studio
 			Program.MainWindow.PropertyWindow.SelectedObject = e.Node.Tag;
 		}
 
+		private void buildToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
+		}
+
 		private void newPackageToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (m_treeView.SelectedNode.Tag is Bikini.Project ||
@@ -207,9 +212,9 @@ namespace Studio
 			}
 		}
 
-		private void buildToolStripMenuItem_Click(object sender, EventArgs e)
+		private void removeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-
+			m_treeView.SelectedNode.Remove();
 		}
 
 		private void m_projectContextMenu_Opening(object sender, CancelEventArgs e)

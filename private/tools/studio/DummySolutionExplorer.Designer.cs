@@ -37,6 +37,7 @@ namespace Studio
 			this.newStageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.buildToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.m_treeViewImageList = new System.Windows.Forms.ImageList(this.components);
+			this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.m_projectContextMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -70,10 +71,11 @@ namespace Studio
 			// m_projectContextMenu
 			// 
 			this.m_projectContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.buildToolStripMenuItem,
             this.addToolStripMenuItem,
-            this.buildToolStripMenuItem});
+            this.removeToolStripMenuItem});
 			this.m_projectContextMenu.Name = "treeViewContextMenu";
-			this.m_projectContextMenu.Size = new System.Drawing.Size(153, 70);
+			this.m_projectContextMenu.Size = new System.Drawing.Size(153, 92);
 			this.m_projectContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.m_projectContextMenu_Opening);
 			// 
 			// addToolStripMenuItem
@@ -144,6 +146,13 @@ namespace Studio
 			this.m_treeViewImageList.Images.SetKeyName(19, "");
 			this.m_treeViewImageList.Images.SetKeyName(20, "Project.bmp");
 			// 
+			// removeToolStripMenuItem
+			// 
+			this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+			this.removeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.removeToolStripMenuItem.Text = "Remove";
+			this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
+			// 
 			// DummySolutionExplorer
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -171,5 +180,6 @@ namespace Studio
 		private System.Windows.Forms.ToolStripMenuItem newFolderToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem buildToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem newStageToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
     }
 }
