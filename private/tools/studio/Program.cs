@@ -7,6 +7,7 @@ namespace Studio
     static class Program
     {
         static private MainForm m_mainForm = null;
+		static public MainForm MainWindow { get { return m_mainForm; } }
 
         /// <summary>
         /// The main entry point for the application.

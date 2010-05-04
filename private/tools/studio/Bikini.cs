@@ -210,28 +210,67 @@ namespace Studio
 
         // PropertyGrid objects
 
-        //[DefaultPropertyAttribute("Name")]
-        public class Project
+		public abstract class ProjectItem
         {
-            // Name
-            private String m_name = "Grrr";
-            [CategoryAttribute("ID"), DescriptionAttribute("Name of project")]
-            public String Name { get { return m_name; } set
-            {
-                m_name = value;
+			public TreeNode treeNode;
+            public ComboBox comboBox;
 
-                Debug.Assert(comboBox == null || comboBox.SelectedItem == this);
-                if (comboBox != null) comboBox.Items[comboBox.SelectedIndex] = this;
-            }}
+			public ProjectItem(String _name) { m_name = _name; }
 
             // GUID
-            private Guid m_guid = new Guid("{FFEF0CA2-8BBF-4fe6-8D7C-2FBF9FFFD2C2}");
-            [CategoryAttribute("ID"), DescriptionAttribute("ID of project")]
+            private Guid m_guid = Guid.NewGuid();
+            [CategoryAttribute("Object ID"), DescriptionAttribute("Object's identity")]
             public Guid GUID { get { return m_guid; } }
 
-            public override string ToString() { return "Project '" + Name + "'"; }
+            // Name
+            private String m_name = "Grrr";
+			[CategoryAttribute("Object ID"), DescriptionAttribute("You always can change the name. All references to the object are made by its GUID")]
+            public String Name
+            {
+                get { return m_name; }
+                set
+                {
+                    m_name = value;
+					if (treeNode != null) treeNode.Text = this.FullName();
+					Debug.Assert(comboBox == null || comboBox.SelectedItem == this);
+					if (comboBox != null && comboBox.SelectedItem == this) comboBox.Items[comboBox.SelectedIndex] = this;
+                }
+            }
 
-            public ComboBox comboBox;
+			// Type
+			[CategoryAttribute("Object ID"), DescriptionAttribute("Object's type")]
+			public abstract String Type { get; }
+
+			// To string
+			public override string ToString() { return Type + " '" + Name + "'"; }
+
+			public virtual String FullName() { return Name; }
         }
+
+        // Project
+        public class Project : ProjectItem
+        {
+			public Project(String _name) : base(_name) {}
+			public override String Type { get { return "Project"; } }
+			public override String FullName() { return ToString(); }
+        }
+        // Folder
+        public class Folder : ProjectItem
+        {
+			public Folder(String _name) : base(_name) { }
+			public override String Type { get { return "Folder"; } }
+		}
+        // Package
+        public class Package : ProjectItem
+        {
+			public Package(String _name) : base(_name) {}
+			public override String Type { get { return "Package"; } }
+		}
+        // Stage
+        public class Stage : ProjectItem
+        {
+			public Stage(String _name) : base(_name) {}
+			public override String Type { get { return "Stage"; } }
+		}
     }
 }

@@ -14,15 +14,26 @@ namespace Studio
         public DummyPropertyWindow()
         {
             InitializeComponent();
-            Bikini.Project l_project = new Bikini.Project();
-            comboBox.Items.Add(l_project); l_project.comboBox = comboBox;
-
-            comboBox.SelectedIndex = 0;
         }
 
         private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             propertyGrid.SelectedObject = comboBox.SelectedItem;
         }
+
+		public Object SelectedObject { set
+		{
+			comboBox.Items.Clear();
+			propertyGrid.SelectedObject = null;
+
+			if (value is Bikini.ProjectItem)
+			{
+				Bikini.ProjectItem l_item = (Bikini.ProjectItem)value;
+				l_item.comboBox = comboBox;
+
+				comboBox.Items.Add(l_item);
+				comboBox.SelectedIndex = 0;
+			}
+		}}
     }
 }

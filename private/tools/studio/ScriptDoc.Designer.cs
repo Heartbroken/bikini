@@ -29,18 +29,18 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.syntaxBoxControl1 = new Alsing.Windows.Forms.SyntaxBoxControl();
-            this.syntaxDocument1 = new Alsing.SourceCode.SyntaxDocument(this.components);
+            this.syntaxBoxControl1 = new Studio.Alsing.Windows.Forms.SyntaxBoxControl();
+            this.syntaxDocument1 = new Studio.Alsing.SourceCode.SyntaxDocument(this.components);
             this.SuspendLayout();
             // 
             // syntaxBoxControl1
             // 
-            this.syntaxBoxControl1.ActiveView = Alsing.Windows.Forms.ActiveView.BottomRight;
+            this.syntaxBoxControl1.ActiveView = Studio.Alsing.Windows.Forms.ActiveView.BottomRight;
             this.syntaxBoxControl1.AutoListPosition = null;
             this.syntaxBoxControl1.AutoListSelectedText = "a123";
             this.syntaxBoxControl1.AutoListVisible = false;
             this.syntaxBoxControl1.BackColor = System.Drawing.Color.White;
-            this.syntaxBoxControl1.BorderStyle = Alsing.Windows.Forms.BorderStyle.None;
+            this.syntaxBoxControl1.BorderStyle = Studio.Alsing.Windows.Forms.BorderStyle.None;
             this.syntaxBoxControl1.BracketBackColor = System.Drawing.Color.Gainsboro;
             this.syntaxBoxControl1.BracketBorderColor = System.Drawing.Color.Transparent;
             this.syntaxBoxControl1.CopyAsRTF = false;
@@ -91,8 +91,8 @@
 
         #endregion
 
-        private Alsing.Windows.Forms.SyntaxBoxControl syntaxBoxControl1;
-        private Alsing.SourceCode.SyntaxDocument syntaxDocument1;
+        private Studio.Alsing.Windows.Forms.SyntaxBoxControl syntaxBoxControl1;
+        private Studio.Alsing.SourceCode.SyntaxDocument syntaxDocument1;
 
     }
 }
