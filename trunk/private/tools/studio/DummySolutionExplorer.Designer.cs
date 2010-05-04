@@ -68,7 +68,6 @@ namespace Studio
 			this.m_treeView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.m_treeView_MouseDown);
 			this.m_treeView.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.m_treeView_BeforeLabelEdit);
 			this.m_treeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.m_treeView_BeforeSelect);
-			this.m_treeView.MouseHover += new System.EventHandler(this.m_treeView_MouseHover);
 			this.m_treeView.DragOver += new System.Windows.Forms.DragEventHandler(this.m_treeView_DragOver);
 			this.m_treeView.Click += new System.EventHandler(this.m_treeView_Click);
 			// 
