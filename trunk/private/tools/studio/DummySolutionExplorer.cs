@@ -84,24 +84,68 @@ namespace Studio
         }
 
         bool m_cancelExpand = false;
+		TreeNode m_pickedNode = null;
 
         private void m_treeView_MouseDown(object sender, MouseEventArgs e)
         {
             m_cancelExpand = e.Clicks > 1;
+
+			TreeNode l_node = m_treeView.GetNodeAt(e.Location);
+
+			if (l_node != null && e.Button == MouseButtons.Left)
+			{
+				m_pickedNode = l_node;
+			}
         }
 
 		private void m_treeView_MouseUp(object sender, MouseEventArgs e)
 		{
-			//if (e.Button == MouseButtons.Right)
-			//{
-			//    TreeNode l_node = m_treeView.GetNodeAt(e.Location);
-			//    if (l_node != null)
-			//    {
-			//        m_treeView.SelectedNode = l_node;
-			//        if (l_node.Tag is Bikini.Project)
-			//            m_projectContextMenu.Show(m_treeView.PointToScreen(e.Location));
-			//    }
-			//}
+			if (m_pickedNode != null && e.Button == MouseButtons.Left)
+			{
+				m_pickedNode = null;
+			}
+		}
+
+		private void m_treeView_MouseMove(object sender, MouseEventArgs e)
+		{
+			if (m_pickedNode != null)
+			{
+				m_treeView.DoDragDrop(m_pickedNode, DragDropEffects.Move);
+			}
+		}
+
+		private void m_treeView_DragOver(object sender, DragEventArgs e)
+		{
+			e.Effect = DragDropEffects.None;
+
+			TreeNode l_node = m_treeView.GetNodeAt(m_treeView.PointToClient(Control.MousePosition));
+
+			if (l_node == null) return;
+
+			m_treeView.SelectedNode = l_node;
+			e.Effect = DragDropEffects.Move;
+		}
+
+		private void m_treeView_MouseHover(object sender, EventArgs e)
+		{
+			if (m_pickedNode != null)
+			{
+				TreeNode l_node = m_treeView.GetNodeAt(m_treeView.PointToClient(Control.MousePosition));
+				if (!l_node.IsExpanded) l_node.Expand();
+			}
+		}
+
+		private void m_treeView_DragDrop(object sender, DragEventArgs e)
+		{
+			e.Effect = DragDropEffects.None;
+
+			TreeNode l_node = m_treeView.GetNodeAt(m_treeView.PointToClient(Control.MousePosition));
+
+			if (l_node == null) return;
+
+			l_node.Nodes.Add(m_pickedNode);
+			m_pickedNode = null;
+			e.Effect = DragDropEffects.Move;
 		}
 
         private void m_treeView_BeforeExpand(object sender, TreeViewCancelEventArgs e)
