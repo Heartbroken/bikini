@@ -118,12 +118,15 @@ namespace Studio
 		{
 			e.Effect = DragDropEffects.None;
 
-			TreeNode l_node = m_treeView.GetNodeAt(m_treeView.PointToClient(Control.MousePosition));
+			if (m_pickedNode != null)
+			{
+				TreeNode l_node = m_treeView.GetNodeAt(m_treeView.PointToClient(Control.MousePosition));
 
-			if (l_node == null) return;
+				if (l_node == null) return;
 
-			m_treeView.SelectedNode = l_node;
-			e.Effect = DragDropEffects.Move;
+				m_treeView.SelectedNode = l_node;
+				e.Effect = DragDropEffects.Move;
+			}
 		}
 
 		private void m_treeView_MouseHover(object sender, EventArgs e)
@@ -141,11 +144,17 @@ namespace Studio
 
 			TreeNode l_node = m_treeView.GetNodeAt(m_treeView.PointToClient(Control.MousePosition));
 
-			if (l_node == null) return;
+			if (l_node != null && l_node != m_pickedNode)
+			{
+				m_pickedNode.Remove();
+				l_node.Nodes.Add(m_pickedNode);
+				m_treeView.SelectedNode = m_pickedNode;
+				m_pickedNode.EnsureVisible();
 
-			l_node.Nodes.Add(m_pickedNode);
+				e.Effect = DragDropEffects.Move;
+			}
+
 			m_pickedNode = null;
-			e.Effect = DragDropEffects.Move;
 		}
 
         private void m_treeView_BeforeExpand(object sender, TreeViewCancelEventArgs e)
