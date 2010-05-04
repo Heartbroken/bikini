@@ -36,6 +36,8 @@ namespace Studio
 			this.newPackageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newStageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.newResourceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.newMenuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.m_treeViewImageList = new System.Windows.Forms.ImageList(this.components);
 			this.m_projectContextMenu.SuspendLayout();
@@ -94,7 +96,8 @@ namespace Studio
 			this.addToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newPackageToolStripMenuItem,
             this.newFolderToolStripMenuItem,
-            this.newStageToolStripMenuItem});
+            this.newStageToolStripMenuItem,
+            this.newResourceToolStripMenuItem});
 			this.addToolStripMenuItem.Name = "addToolStripMenuItem";
 			this.addToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
 			this.addToolStripMenuItem.Text = "Add";
@@ -102,7 +105,7 @@ namespace Studio
 			// newPackageToolStripMenuItem
 			// 
 			this.newPackageToolStripMenuItem.Name = "newPackageToolStripMenuItem";
-			this.newPackageToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+			this.newPackageToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
 			this.newPackageToolStripMenuItem.Tag = "Project|Folder";
 			this.newPackageToolStripMenuItem.Text = "New Package";
 			this.newPackageToolStripMenuItem.Click += new System.EventHandler(this.newPackageToolStripMenuItem_Click);
@@ -110,7 +113,7 @@ namespace Studio
 			// newFolderToolStripMenuItem
 			// 
 			this.newFolderToolStripMenuItem.Name = "newFolderToolStripMenuItem";
-			this.newFolderToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+			this.newFolderToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
 			this.newFolderToolStripMenuItem.Tag = "Project|Folder";
 			this.newFolderToolStripMenuItem.Text = "New Folder";
 			this.newFolderToolStripMenuItem.Click += new System.EventHandler(this.newFolderToolStripMenuItem_Click);
@@ -118,10 +121,26 @@ namespace Studio
 			// newStageToolStripMenuItem
 			// 
 			this.newStageToolStripMenuItem.Name = "newStageToolStripMenuItem";
-			this.newStageToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+			this.newStageToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
 			this.newStageToolStripMenuItem.Tag = "Package|Stage";
 			this.newStageToolStripMenuItem.Text = "New Stage";
 			this.newStageToolStripMenuItem.Click += new System.EventHandler(this.newStageToolStripMenuItem_Click);
+			// 
+			// newResourceToolStripMenuItem
+			// 
+			this.newResourceToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newMenuToolStripMenuItem});
+			this.newResourceToolStripMenuItem.Name = "newResourceToolStripMenuItem";
+			this.newResourceToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+			this.newResourceToolStripMenuItem.Tag = "Stage";
+			this.newResourceToolStripMenuItem.Text = "New Resource";
+			// 
+			// newMenuToolStripMenuItem
+			// 
+			this.newMenuToolStripMenuItem.Name = "newMenuToolStripMenuItem";
+			this.newMenuToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.newMenuToolStripMenuItem.Text = "New Menu";
+			this.newMenuToolStripMenuItem.Click += new System.EventHandler(this.newMenuToolStripMenuItem_Click);
 			// 
 			// removeToolStripMenuItem
 			// 
@@ -184,5 +203,7 @@ namespace Studio
 		private System.Windows.Forms.ToolStripMenuItem buildToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem newStageToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem newResourceToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem newMenuToolStripMenuItem;
     }
 }
