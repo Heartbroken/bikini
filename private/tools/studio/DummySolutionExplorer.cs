@@ -80,8 +80,8 @@ namespace Studio
 
 		private void m_treeView_MouseMove(object sender, MouseEventArgs e)
 		{
-			Size l_dist = Size.Subtract(new Size(e.Location), new Size(m_pickPoint));
-			if (m_pickedNode != null && (l_dist.Height > 2 || l_dist.Width > 2))
+            Point l_dist = Point.Subtract(e.Location, new Size(m_pickPoint));
+			if (m_pickedNode != null && (Math.Abs(l_dist.X) > 2 || Math.Abs(l_dist.Y) > 2))
 			{
 				m_treeView.DoDragDrop(m_pickedNode, DragDropEffects.Move);
 			}
@@ -208,7 +208,8 @@ namespace Studio
 		private void newFolderToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (m_treeView.SelectedNode.Tag is Bikini.Project ||
-				m_treeView.SelectedNode.Tag is Bikini.Folder)
+                m_treeView.SelectedNode.Tag is Bikini.Folder ||
+                m_treeView.SelectedNode.Tag is Bikini.Resources)
 			{
 				TreeNode l_parentNode = m_treeView.SelectedNode;
 				TreeNode l_newNode = AddNode(new Bikini.Folder("New"), l_parentNode.Nodes);
@@ -241,6 +242,7 @@ namespace Studio
 					if (l_resourcesNode == null)
 					{
 						l_resourcesNode = AddNode(new Bikini.Resources("Resources"), l_parentNode.Nodes);
+                        l_resourcesNode.Name = "Resources";
 					}
 					l_parentNode = l_resourcesNode;
 				}
