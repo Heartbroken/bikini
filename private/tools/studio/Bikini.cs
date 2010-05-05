@@ -215,15 +215,26 @@ namespace Studio
 			public TreeNode treeNode;
             public ComboBox comboBox;
 
-			public ProjectItem(String _name) { m_name = _name; }
-
             // GUID
             private Guid m_guid = Guid.NewGuid();
             [CategoryAttribute("Object ID"), DescriptionAttribute("Object's identity")]
             public Guid GUID { get { return m_guid; } }
 
+			// Type
+			[CategoryAttribute("Object ID"), DescriptionAttribute("Object's type")]
+			public abstract String Type { get; }
+
+			public override string ToString() { return Type; }
+			public virtual String FullName() { return Type; }
+			public virtual String ItemType() { return Type; }
+			public virtual String SubItems() { return ""; }
+		}
+		public abstract class NamedProjectItem : ProjectItem
+		{
+			public NamedProjectItem(String _name) { m_name = _name; }
+
             // Name
-            private String m_name = "Grrr";
+            private String m_name;
 			[CategoryAttribute("Object ID"), DescriptionAttribute("You always can change the name. All references to the object are made by its GUID")]
 			public virtual String Name
             {
@@ -237,59 +248,59 @@ namespace Studio
                 }
             }
 
-			// Type
-			[CategoryAttribute("Object ID"), DescriptionAttribute("Object's type")]
-			public abstract String Type { get; }
-
-			// To string
 			public override string ToString() { return Type + " '" + Name + "'"; }
-
-			public virtual String FullName() { return Name; }
-        }
+			public override String FullName() { return Name; }
+		}
 
         // Project
-        public class Project : ProjectItem
+		public class Project : NamedProjectItem
         {
 			public Project(String _name) : base(_name) {}
 			public override String Type { get { return "Project"; } }
 			public override String FullName() { return ToString(); }
-        }
+			public override String SubItems() { return "PFolder|Package"; }
+		}
         // Folder
-        public class Folder : ProjectItem
+		public class Folder : NamedProjectItem
         {
-			public Folder(String _name) : base(_name) { }
+			Boolean m_projectFolder;
+			public Folder(String _name, Boolean _projectFolder) : base(_name) { m_projectFolder = _projectFolder; }
 			public override String Type { get { return "Folder"; } }
+			public override String ItemType() { return m_projectFolder ? "PFolder" : "RFolder"; }
+			public override String SubItems() { return m_projectFolder ? "PFolder|Package" : "RFolder|Menu"; }
 		}
         // Package
-        public class Package : ProjectItem
+		public class Package : NamedProjectItem
         {
 			public Package(String _name) : base(_name) {}
 			public override String Type { get { return "Package"; } }
+			public override String SubItems() { return "Stage"; }
 		}
         // Stage
-        public class Stage : ProjectItem
+		public class Stage : NamedProjectItem
         {
 			public Stage(String _name) : base(_name) {}
 			public override String Type { get { return "Stage"; } }
+			public override String SubItems() { return "Stage|Resources"; }
 		}
 		// Resources
 		public class Resources : ProjectItem
 		{
-			public Resources(String _name) : base(_name) { }
+			public Resources() { }
 			public override String Type { get { return "Resources"; } }
-			//public override String Name { get { return "wqwq"; } private set { } }
+			public override String SubItems() { return "Menu|RFolder"; }
 		}
 
 		// Resource item
-		public abstract class ResourceItem : ProjectItem
+		public abstract class ResourceItem : NamedProjectItem
 		{
-			public ResourceItem(String _name) : base(_name) { }
+			public ResourceItem(String _name) : base(_name) {}
 			public override String FullName() { return Name + "." + Type.ToLower(); }
 		}
 		// Menu
 		public class Menu : ResourceItem
 		{
-			public Menu(String _name) : base(_name) { }
+			public Menu(String _name) : base(_name) {}
 			public override String Type { get { return "Menu"; } }
 		}
 	}
