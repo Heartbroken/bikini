@@ -31,11 +31,14 @@ namespace Studio
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DummySolutionExplorer));
 			this.m_treeView = new System.Windows.Forms.TreeView();
 			this.m_projectContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.buildToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newPackageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newStageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.buildToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.newResourceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.newMenuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.m_treeViewImageList = new System.Windows.Forms.ImageList(this.components);
 			this.m_projectContextMenu.SuspendLayout();
 			this.SuspendLayout();
@@ -61,35 +64,48 @@ namespace Studio
 			this.m_treeView.DoubleClick += new System.EventHandler(this.m_treeView_DoubleClick);
 			this.m_treeView.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.m_treeView_BeforeCollapse);
 			this.m_treeView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.m_treeView_MouseUp);
+			this.m_treeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.m_treeView_DragDrop);
 			this.m_treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.m_treeView_AfterSelect);
+			this.m_treeView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.m_treeView_MouseMove);
 			this.m_treeView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.m_treeView_MouseDown);
 			this.m_treeView.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.m_treeView_BeforeLabelEdit);
 			this.m_treeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.m_treeView_BeforeSelect);
+			this.m_treeView.DragOver += new System.Windows.Forms.DragEventHandler(this.m_treeView_DragOver);
 			this.m_treeView.Click += new System.EventHandler(this.m_treeView_Click);
 			// 
 			// m_projectContextMenu
 			// 
 			this.m_projectContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.buildToolStripMenuItem,
             this.addToolStripMenuItem,
-            this.buildToolStripMenuItem});
+            this.removeToolStripMenuItem});
 			this.m_projectContextMenu.Name = "treeViewContextMenu";
-			this.m_projectContextMenu.Size = new System.Drawing.Size(153, 70);
+			this.m_projectContextMenu.Size = new System.Drawing.Size(125, 70);
 			this.m_projectContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.m_projectContextMenu_Opening);
+			// 
+			// buildToolStripMenuItem
+			// 
+			this.buildToolStripMenuItem.Name = "buildToolStripMenuItem";
+			this.buildToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+			this.buildToolStripMenuItem.Tag = "Project";
+			this.buildToolStripMenuItem.Text = "Build";
+			this.buildToolStripMenuItem.Click += new System.EventHandler(this.buildToolStripMenuItem_Click);
 			// 
 			// addToolStripMenuItem
 			// 
 			this.addToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newPackageToolStripMenuItem,
             this.newFolderToolStripMenuItem,
-            this.newStageToolStripMenuItem});
+            this.newStageToolStripMenuItem,
+            this.newResourceToolStripMenuItem});
 			this.addToolStripMenuItem.Name = "addToolStripMenuItem";
-			this.addToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.addToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
 			this.addToolStripMenuItem.Text = "Add";
 			// 
 			// newPackageToolStripMenuItem
 			// 
 			this.newPackageToolStripMenuItem.Name = "newPackageToolStripMenuItem";
-			this.newPackageToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.newPackageToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
 			this.newPackageToolStripMenuItem.Tag = "Project|Folder";
 			this.newPackageToolStripMenuItem.Text = "New Package";
 			this.newPackageToolStripMenuItem.Click += new System.EventHandler(this.newPackageToolStripMenuItem_Click);
@@ -97,7 +113,7 @@ namespace Studio
 			// newFolderToolStripMenuItem
 			// 
 			this.newFolderToolStripMenuItem.Name = "newFolderToolStripMenuItem";
-			this.newFolderToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.newFolderToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
 			this.newFolderToolStripMenuItem.Tag = "Project|Folder";
 			this.newFolderToolStripMenuItem.Text = "New Folder";
 			this.newFolderToolStripMenuItem.Click += new System.EventHandler(this.newFolderToolStripMenuItem_Click);
@@ -105,18 +121,33 @@ namespace Studio
 			// newStageToolStripMenuItem
 			// 
 			this.newStageToolStripMenuItem.Name = "newStageToolStripMenuItem";
-			this.newStageToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.newStageToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
 			this.newStageToolStripMenuItem.Tag = "Package|Stage";
 			this.newStageToolStripMenuItem.Text = "New Stage";
 			this.newStageToolStripMenuItem.Click += new System.EventHandler(this.newStageToolStripMenuItem_Click);
 			// 
-			// buildToolStripMenuItem
+			// newResourceToolStripMenuItem
 			// 
-			this.buildToolStripMenuItem.Name = "buildToolStripMenuItem";
-			this.buildToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.buildToolStripMenuItem.Tag = "Project";
-			this.buildToolStripMenuItem.Text = "Build";
-			this.buildToolStripMenuItem.Click += new System.EventHandler(this.buildToolStripMenuItem_Click);
+			this.newResourceToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newMenuToolStripMenuItem});
+			this.newResourceToolStripMenuItem.Name = "newResourceToolStripMenuItem";
+			this.newResourceToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+			this.newResourceToolStripMenuItem.Tag = "Stage";
+			this.newResourceToolStripMenuItem.Text = "New Resource";
+			// 
+			// newMenuToolStripMenuItem
+			// 
+			this.newMenuToolStripMenuItem.Name = "newMenuToolStripMenuItem";
+			this.newMenuToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.newMenuToolStripMenuItem.Text = "New Menu";
+			this.newMenuToolStripMenuItem.Click += new System.EventHandler(this.newMenuToolStripMenuItem_Click);
+			// 
+			// removeToolStripMenuItem
+			// 
+			this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+			this.removeToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+			this.removeToolStripMenuItem.Text = "Remove";
+			this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
 			// 
 			// m_treeViewImageList
 			// 
@@ -171,5 +202,8 @@ namespace Studio
 		private System.Windows.Forms.ToolStripMenuItem newFolderToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem buildToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem newStageToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem newResourceToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem newMenuToolStripMenuItem;
     }
 }

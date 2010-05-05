@@ -225,7 +225,7 @@ namespace Studio
             // Name
             private String m_name = "Grrr";
 			[CategoryAttribute("Object ID"), DescriptionAttribute("You always can change the name. All references to the object are made by its GUID")]
-            public String Name
+			public virtual String Name
             {
                 get { return m_name; }
                 set
@@ -272,5 +272,25 @@ namespace Studio
 			public Stage(String _name) : base(_name) {}
 			public override String Type { get { return "Stage"; } }
 		}
-    }
+		// Resources
+		public class Resources : ProjectItem
+		{
+			public Resources(String _name) : base(_name) { }
+			public override String Type { get { return "Resources"; } }
+			//public override String Name { get { return "wqwq"; } private set { } }
+		}
+
+		// Resource item
+		public abstract class ResourceItem : ProjectItem
+		{
+			public ResourceItem(String _name) : base(_name) { }
+			public override String FullName() { return Name + "." + Type.ToLower(); }
+		}
+		// Menu
+		public class Menu : ResourceItem
+		{
+			public Menu(String _name) : base(_name) { }
+			public override String Type { get { return "Menu"; } }
+		}
+	}
 }
