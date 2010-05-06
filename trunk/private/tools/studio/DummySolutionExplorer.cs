@@ -19,27 +19,27 @@ namespace Studio
 		{
 			InitializeComponent();
 
-			// test
-			{
-				TreeNode l_projectNode = AddNode(new Bikini.Project("Grrr"), m_treeView.Nodes);
-				l_projectNode.Expand();
-				{
-					TreeNode l_packageNode = AddNode(new Bikini.Package("main"), l_projectNode.Nodes);
-					{
-						TreeNode l_stageNode = AddNode(new Bikini.Stage("main"), l_packageNode.Nodes);
-					}
-				}
-				{
-					TreeNode l_folderNode = AddNode(new Bikini.Folder("episodes", true), l_projectNode.Nodes);
-					{
-						TreeNode l_packageNode = AddNode(new Bikini.Package("e1"), l_folderNode.Nodes);
-						{
-							TreeNode l_stageNode = AddNode(new Bikini.Stage("e1s1"), l_packageNode.Nodes);
-						}
-					}
-				}
-			}
-			// test
+			//// test
+			//{
+			//    TreeNode l_projectNode = AddNode(new Bikini.Project("Grrr"), m_treeView.Nodes);
+			//    l_projectNode.Expand();
+			//    {
+			//        TreeNode l_packageNode = AddNode(new Bikini.Package("main"), l_projectNode.Nodes);
+			//        {
+			//            TreeNode l_stageNode = AddNode(new Bikini.Stage("main"), l_packageNode.Nodes);
+			//        }
+			//    }
+			//    {
+			//        TreeNode l_folderNode = AddNode(new Bikini.Folder("episodes", true), l_projectNode.Nodes);
+			//        {
+			//            TreeNode l_packageNode = AddNode(new Bikini.Package("e1"), l_folderNode.Nodes);
+			//            {
+			//                TreeNode l_stageNode = AddNode(new Bikini.Stage("e1s1"), l_packageNode.Nodes);
+			//            }
+			//        }
+			//    }
+			//}
+			//// test
 		}
 
 		private TreeNode AddNode(Bikini.ProjectItem _item, TreeNodeCollection _nodes)
