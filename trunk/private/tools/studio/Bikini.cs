@@ -34,10 +34,10 @@ namespace Studio
             return false;
         }
 
-        public static Boolean CreateSolution()
+        public static Boolean CreateProject(String _path)
         {
-            XmlTextWriter l_xml = StartWriteRequest("CreateSolution");
-            WriteRequestArgument(l_xml, "Русские буквы");
+			XmlTextWriter l_xml = StartWriteRequest("CreateProject");
+			WriteRequestArgument(l_xml, _path);
             String l_request = EndWriteRequest(l_xml);
 
             Object l_result = ReadResult(request(l_request));
