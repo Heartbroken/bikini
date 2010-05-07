@@ -342,14 +342,14 @@
 				>
 			</File>
 			<Filter
-				Name="solution"
+				Name="project"
 				>
 				<File
-					RelativePath=".\solution.cpp"
+					RelativePath=".\project.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\solution.h"
+					RelativePath=".\project.h"
 					>
 				</File>
 			</Filter>

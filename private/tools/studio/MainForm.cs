@@ -105,16 +105,23 @@ namespace Studio
 
 		private void menuItemNew_Click(object sender, System.EventArgs e)
 		{
-			//DummyDoc dummyDoc = CreateNewDocument();
-            BikiniView dummyDoc = CreateNewGuiView();
-            //ScriptDoc dummyDoc = CreateNewLuaDoc();
-            if (dockPanel.DocumentStyle == DocumentStyle.SystemMdi)
+			if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
 			{
-				dummyDoc.MdiParent = this;
-				dummyDoc.Show();
+				Bikini.CreateProject(folderBrowserDialog.SelectedPath);
 			}
-			else
-				dummyDoc.Show(dockPanel);
+
+			/////////
+
+			////DummyDoc dummyDoc = CreateNewDocument();
+			//BikiniView dummyDoc = CreateNewGuiView();
+			////ScriptDoc dummyDoc = CreateNewLuaDoc();
+			//if (dockPanel.DocumentStyle == DocumentStyle.SystemMdi)
+			//{
+			//    dummyDoc.MdiParent = this;
+			//    dummyDoc.Show();
+			//}
+			//else
+			//    dummyDoc.Show(dockPanel);
 		}
 
         private ScriptDoc CreateNewLuaDoc()

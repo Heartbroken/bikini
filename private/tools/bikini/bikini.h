@@ -1,7 +1,7 @@
 #pragma once
 
 #include "commands.h"
-#include "solution.h"
+#include "project.h"
 
 struct bikini
 {
@@ -10,7 +10,7 @@ struct bikini
 	bool update();
 	void destroy();
 
-	bool create_solution(const bk::wstring &_path);
+	bool create_project(const bk::wstring &_path);
 
 	// test
 	bk::uint create_window(bk::handle _handle);
@@ -20,7 +20,7 @@ struct bikini
 private:
 	bk::video m_video;
 	bk::ticker m_ticker;
-	solution m_solution;
+	project m_project;
 };
 
 bikini& get_bikini();
