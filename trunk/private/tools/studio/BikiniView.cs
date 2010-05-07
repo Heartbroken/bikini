@@ -22,7 +22,7 @@ namespace Studio
             m_handle = panel1.Handle;
 
             // test
-			Bikini.CreateProject();
+			//Bikini.CreateProject();
         }
         ~BikiniView()
         {
