@@ -99,8 +99,8 @@ namespace Studio
 			this.toolBarButtonSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolBarButtonLayoutByCode = new System.Windows.Forms.ToolStripButton();
 			this.toolBarButtonLayoutByXml = new System.Windows.Forms.ToolStripButton();
-			this.dockPanel = new Studio.WinFormsUI.Docking.DockPanel();
 			this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+			this.dockPanel = new Studio.WinFormsUI.Docking.DockPanel();
 			this.mainMenu.SuspendLayout();
 			this.toolBar.SuspendLayout();
 			this.SuspendLayout();
@@ -557,6 +557,10 @@ namespace Studio
 			this.toolBarButtonLayoutByXml.Name = "toolBarButtonLayoutByXml";
 			this.toolBarButtonLayoutByXml.Size = new System.Drawing.Size(23, 22);
 			this.toolBarButtonLayoutByXml.ToolTipText = "Show layout by predefined XML file";
+			// 
+			// folderBrowserDialog
+			// 
+			this.folderBrowserDialog.Description = "Select a location of the new project";
 			// 
 			// dockPanel
 			// 
