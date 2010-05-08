@@ -56,7 +56,7 @@ void bikini::destroy()
 
 bool bikini::create_project(const bk::wstring &_path, const bk::wstring &_name)
 {
-	return true;
+	return m_project.create(_path, _name);
 }
 
 
