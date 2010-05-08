@@ -10,7 +10,7 @@ struct bikini
 	bool update();
 	void destroy();
 
-	bool create_project(const bk::wstring &_path);
+	bool create_project(const bk::wstring &_path, const bk::wstring &_name);
 
 	// test
 	bk::uint create_window(bk::handle _handle);
