@@ -51,6 +51,8 @@ void bikini::destroy()
 
 	commands::remove("Destroy");
 	commands::remove("Update");
+
+	m_project.destroy();
 	m_video.destroy();
 }
 

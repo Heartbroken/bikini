@@ -35,16 +35,17 @@ struct project : bk::manager
 	};};
 
 	inline const bk::wstring& name() const { return m_name; }
-	//inline void set_name(const bk::wstring &_name) { m_name = _name; }
 	inline const bk::wstring& path() const { return m_path; }
-	//inline void set_path(const bk::wstring &_path) { m_path = _path; }
 
 	project();
 
 	bool create(const bk::wstring &_path, const bk::wstring &_name);
 	void destroy();
 
+	bool save();
+
 private:
+	GUID m_GUID;
 	bk::wstring m_name;
 	bk::wstring m_path;
 };
