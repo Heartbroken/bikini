@@ -106,14 +106,12 @@ namespace Studio
 		private void menuItemNew_Click(object sender, System.EventArgs e)
 		{
 			NewProjectDialog l_newProjectDlg = new NewProjectDialog();
-			//folderBrowserDialog.SelectedPath = Directory.GetCurrentDirectory();
+			l_newProjectDlg.ProjectLocation = Directory.GetCurrentDirectory();
 
-			l_newProjectDlg.ShowDialog(this);
-
-			//if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
-			//{
-			//    Bikini.CreateProject(folderBrowserDialog.SelectedPath, "");
-			//}
+			if (l_newProjectDlg.ShowDialog(this) == DialogResult.OK)
+			{
+				Bikini.CreateProject(l_newProjectDlg.ProjectLocation, l_newProjectDlg.ProjectName);
+			}
 
 			/////////
 

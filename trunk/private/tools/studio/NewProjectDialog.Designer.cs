@@ -31,12 +31,13 @@
 			this.buttonOk = new System.Windows.Forms.Button();
 			this.buttonCancel = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
-			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
-			this.textBox2 = new System.Windows.Forms.TextBox();
+			this.m_projectName = new System.Windows.Forms.TextBox();
 			this.textBox3 = new System.Windows.Forms.TextBox();
 			this.buttonBrowse = new System.Windows.Forms.Button();
+			this.m_projectLocation = new System.Windows.Forms.ComboBox();
+			this.m_folderBrowser = new System.Windows.Forms.FolderBrowserDialog();
 			this.SuspendLayout();
 			// 
 			// buttonOk
@@ -52,7 +53,7 @@
 			// buttonCancel
 			// 
 			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.buttonCancel.Location = new System.Drawing.Point(410, 130);
+			this.buttonCancel.Location = new System.Drawing.Point(410, 131);
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.Size = new System.Drawing.Size(75, 23);
 			this.buttonCancel.TabIndex = 1;
@@ -66,13 +67,6 @@
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(472, 2);
 			this.label1.TabIndex = 2;
-			// 
-			// textBox1
-			// 
-			this.textBox1.Location = new System.Drawing.Point(82, 76);
-			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(322, 20);
-			this.textBox1.TabIndex = 3;
 			// 
 			// label2
 			// 
@@ -92,12 +86,12 @@
 			this.label3.TabIndex = 4;
 			this.label3.Text = "Name:";
 			// 
-			// textBox2
+			// m_projectName
 			// 
-			this.textBox2.Location = new System.Drawing.Point(82, 50);
-			this.textBox2.Name = "textBox2";
-			this.textBox2.Size = new System.Drawing.Size(322, 20);
-			this.textBox2.TabIndex = 3;
+			this.m_projectName.Location = new System.Drawing.Point(82, 50);
+			this.m_projectName.Name = "m_projectName";
+			this.m_projectName.Size = new System.Drawing.Size(322, 20);
+			this.m_projectName.TabIndex = 3;
 			// 
 			// textBox3
 			// 
@@ -110,23 +104,36 @@
 			// 
 			// buttonBrowse
 			// 
-			this.buttonBrowse.Location = new System.Drawing.Point(410, 74);
+			this.buttonBrowse.Location = new System.Drawing.Point(410, 76);
 			this.buttonBrowse.Name = "buttonBrowse";
 			this.buttonBrowse.Size = new System.Drawing.Size(75, 23);
 			this.buttonBrowse.TabIndex = 1;
 			this.buttonBrowse.Text = "Browse...";
 			this.buttonBrowse.UseVisualStyleBackColor = true;
+			this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
+			// 
+			// m_projectLocation
+			// 
+			this.m_projectLocation.FormattingEnabled = true;
+			this.m_projectLocation.Location = new System.Drawing.Point(82, 77);
+			this.m_projectLocation.Name = "m_projectLocation";
+			this.m_projectLocation.Size = new System.Drawing.Size(322, 21);
+			this.m_projectLocation.TabIndex = 7;
+			// 
+			// m_folderBrowser
+			// 
+			this.m_folderBrowser.Description = "Browse for the new project\'s location";
 			// 
 			// NewProjectDialog
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(496, 166);
+			this.Controls.Add(this.m_projectLocation);
 			this.Controls.Add(this.textBox3);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
-			this.Controls.Add(this.textBox2);
-			this.Controls.Add(this.textBox1);
+			this.Controls.Add(this.m_projectName);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.buttonBrowse);
 			this.Controls.Add(this.buttonCancel);
@@ -149,11 +156,12 @@
 		private System.Windows.Forms.Button buttonOk;
 		private System.Windows.Forms.Button buttonCancel;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.TextBox textBox1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.TextBox textBox2;
+		private System.Windows.Forms.TextBox m_projectName;
 		private System.Windows.Forms.TextBox textBox3;
 		private System.Windows.Forms.Button buttonBrowse;
+		private System.Windows.Forms.ComboBox m_projectLocation;
+		private System.Windows.Forms.FolderBrowserDialog m_folderBrowser;
 	}
 }
