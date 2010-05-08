@@ -283,6 +283,12 @@
     <Compile Include="BikiniView.Designer.cs">
       <DependentUpon>BikiniView.cs</DependentUpon>
     </Compile>
+    <Compile Include="NewProjectDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewProjectDialog.Designer.cs">
+      <DependentUpon>NewProjectDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="ScriptDoc.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -778,6 +784,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="BikiniView.resx">
       <DependentUpon>BikiniView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewProjectDialog.resx">
+      <DependentUpon>NewProjectDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ScriptDoc.resx">
       <DependentUpon>ScriptDoc.cs</DependentUpon>
