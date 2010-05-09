@@ -458,24 +458,12 @@
 	</References>
 	<Files>
 		<Filter
-			Name="source"
-			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx;vs;ps"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			Name="header"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\application.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\audio.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\device.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\input.cpp"
+				RelativePath=".\header.hpp"
 				>
 			</File>
 			<File
@@ -531,66 +519,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\include\bikini\system\thread.inl"
-				>
-			</File>
-			<File
-				RelativePath=".\ticker.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\time.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\window.cpp"
-				>
-			</File>
-			<Filter
-				Name="video"
-				>
-				<File
-					RelativePath=".\video.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\video_rendering_D3D9.cpp"
-					>
-				</File>
-			</Filter>
-		</Filter>
-		<Filter
-			Name="header"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			>
-			<File
-				RelativePath=".\header.hpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="interface"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
-			>
-			<File
-				RelativePath="..\..\..\include\bikini\system\application.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\bikini\system\audio.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\bikini\system\device.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\bikini\system\input.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\include\bikini\system.hpp"
 				>
 			</File>
@@ -598,22 +526,66 @@
 				RelativePath="..\..\..\include\bikini\system\system_win32.hpp"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="application"
+			>
 			<File
-				RelativePath="..\..\..\include\bikini\system\thread.hpp"
+				RelativePath=".\application.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\bikini\system\ticker.hpp"
+				RelativePath="..\..\..\include\bikini\system\application.hpp"
+				>
+			</File>
+			<Filter
+				Name="window"
+				>
+				<File
+					RelativePath=".\window.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\bikini\system\window.hpp"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="device"
+			>
+			<File
+				RelativePath=".\device.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\bikini\system\time.hpp"
+				RelativePath="..\..\..\include\bikini\system\device.hpp"
 				>
 			</File>
-			<File
-				RelativePath="..\..\..\include\bikini\system\window.hpp"
+			<Filter
+				Name="audio"
 				>
-			</File>
+				<File
+					RelativePath=".\audio.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\bikini\system\audio.hpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="input"
+				>
+				<File
+					RelativePath=".\input.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\bikini\system\input.hpp"
+					>
+				</File>
+			</Filter>
 			<Filter
 				Name="video"
 				>
@@ -622,7 +594,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\video.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\include\bikini\system\video.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\video_rendering_D3D9.cpp"
 					>
 				</File>
 				<Filter
@@ -645,6 +625,42 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="thread"
+			>
+			<File
+				RelativePath="..\..\..\include\bikini\system\thread.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\bikini\system\thread.inl"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="time"
+			>
+			<File
+				RelativePath=".\time.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\bikini\system\time.hpp"
+				>
+			</File>
+			<Filter
+				Name="ticker"
+				>
+				<File
+					RelativePath=".\ticker.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\bikini\system\ticker.hpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>
