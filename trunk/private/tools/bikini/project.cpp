@@ -32,14 +32,16 @@ bool project::create(const bk::wstring &_location, const bk::wstring &_name)
 	if (!save()) return false;
 
 	commands::add("GetProjectStructure", bk::functor_<bk::astring>(*this, &project::get_structure));
+	commands::add("NewPackage", bk::functor_<GUID, GUID, const bk::wstring&>(*this, &project::new_package));
 	commands::add("RenameObject", bk::functor_<bool, GUID, const bk::wstring&>(*this, &project::rename_object));
 
 	return true;
 }
 void project::destroy()
 {
-	commands::remove("GetProjectStructure");
 	commands::remove("RenameObject");
+	commands::remove("NewPackage");
+	commands::remove("GetProjectStructure");
 
 	m_folder = bk::bad_folder;
 	m_name = L"";
@@ -48,9 +50,55 @@ void project::destroy()
 	clear();
 }
 
-bool project::rename_object(GUID _GUID, const bk::wstring &_name)
+bk::uint project::find_object(GUID _ID) const
 {
-	if (_GUID == m_GUID)
+	for (bk::uint l_ID = get_first_ID(); l_ID != bk::bad_ID; l_ID = get_next_ID(l_ID))
+	{
+		if (get_<object>(l_ID).unique_ID() == _ID)
+			return l_ID;
+	}
+	return bk::bad_ID;
+}
+bk::uint project::find_child(GUID _ID) const
+{
+	for (bk::uint l_ID = m_children.first_ID(); l_ID != bk::bad_ID; l_ID = m_children.next_ID(l_ID))
+	{
+		if (get_<object>(m_children.get(l_ID)).unique_ID() == _ID)
+			return m_children.get(l_ID);
+	}
+	return bk::bad_ID;
+}
+void project::remove_child(GUID _ID)
+{
+	for (bk::uint l_ID = m_children.first_ID(); l_ID != bk::bad_ID; l_ID = m_children.next_ID(l_ID))
+	{
+		if (get_<object>(m_children.get(l_ID)).unique_ID() == _ID)
+			return m_children.remove(l_ID);
+	}
+}
+static po::package::info sg_package;
+GUID project::new_package(GUID _parent, const bk::wstring &_name)
+{
+	bk::uint l_ID = spawn(sg_package);
+	get_<object>(l_ID).set_name(_name);
+
+	if (_parent == m_GUID)
+	{
+		m_children.add(l_ID);
+	}
+	else
+	{
+		std::wcerr << "ERROR: Can't add new package. Parent object not found\n";
+		return bk::bad_GUID;
+	}
+
+	save();
+
+	return get_<object>(l_ID).unique_ID();
+}
+bool project::rename_object(GUID _object, const bk::wstring &_name)
+{
+	if (_object == m_GUID)
 	{
 		if (!m_folder.rename(_name))
 		{
@@ -73,7 +121,19 @@ bool project::rename_object(GUID _GUID, const bk::wstring &_name)
 		save();
 	}
 	else
-		return false;
+	{
+		bk::uint l_ID = find_object(_object);
+
+		if (l_ID == bk::bad_ID)
+		{
+			std::wcerr << "ERROR: Can't rename object. Object not found";
+			return false;
+		}
+
+		get_<object>(l_ID).set_name(_name);
+
+		save();
+	}
 
 	return true;
 }
@@ -85,15 +145,20 @@ void project::write_structure(pugi::xml_node &_root) const
 	l_project.append_attribute("Name") = bk::utf8(m_name).c_str();
 	l_project.append_attribute("GUID") = bk::print_GUID(m_GUID);
 	{
-		pugi::xml_node l_package = l_project.append_child();
-		l_package.set_name("package");
-		l_package.append_attribute("Name") = "Fake Package";
-		l_package.append_attribute("GUID") = bk::print_GUID(bk::random_GUID(sg_GUID_random));
+		for (bk::uint l_ID = m_children.first_ID(); l_ID != bk::bad_ID; l_ID = m_children.next_ID(l_ID))
 		{
-			pugi::xml_node l_stage = l_package.append_child();
-			l_stage.set_name("stage");
-			l_stage.append_attribute("Name") = "Fake Stage";
-			l_stage.append_attribute("GUID") = bk::print_GUID(bk::random_GUID(sg_GUID_random));
+			object &l_object = get_<object>(m_children.get(l_ID));
+			switch (l_object.type())
+			{
+				case ot::package :
+				{
+					pugi::xml_node l_package = l_project.append_child();
+					l_package.set_name("package");
+					l_package.append_attribute("Name") = bk::utf8(l_object.name()).c_str();
+					l_package.append_attribute("GUID") = bk::print_GUID(l_object.unique_ID());
+				}
+				break;
+			}
 		}
 	}
 }

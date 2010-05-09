@@ -34,7 +34,7 @@ namespace Studio
             return false;
         }
 
-		public static Boolean CreateProject(String _path, String _name)
+		public static Guid CreateProject(String _path, String _name)
         {
 			XmlTextWriter l_xml = StartWriteRequest("CreateProject");
 			WriteRequestArgument(l_xml, _path);
@@ -43,8 +43,8 @@ namespace Studio
 
             Object l_result = ReadResult(request(l_request));
 
-            if (l_result is bool && Convert.ToBoolean(l_result)) return true;
-            return false;
+			if (l_result is Guid) return (Guid)l_result;
+			return Guid.Empty;
         }
 		public static String GetProjectStructure()
 		{
@@ -55,10 +55,22 @@ namespace Studio
 			if (l_result is String) return Convert.ToString(l_result);
 			return "";
 		}
-		public static Boolean RenameObject(Guid _guid, String _name)
+		public static Guid NewPackage(Guid _parent, String _name)
+		{
+			XmlTextWriter l_xml = StartWriteRequest("NewPackage");
+			WriteRequestArgument(l_xml, _parent);
+			WriteRequestArgument(l_xml, _name);
+			String l_request = EndWriteRequest(l_xml);
+
+			Object l_result = ReadResult(request(l_request));
+
+			if (l_result is Guid) return (Guid)l_result;
+			return Guid.Empty;
+		}
+		public static Boolean RenameObject(Guid _object, String _name)
 		{
 			XmlTextWriter l_xml = StartWriteRequest("RenameObject");
-			WriteRequestArgument(l_xml, _guid);
+			WriteRequestArgument(l_xml, _object);
 			WriteRequestArgument(l_xml, _name);
 			String l_request = EndWriteRequest(l_xml);
 
@@ -194,6 +206,8 @@ namespace Studio
                         l_result = Convert.ToDouble(l_xmlIn.ReadString(), CultureInfo.InvariantCulture);
                     else if (l_xmlIn.Name == "string")
                         l_result = l_xmlIn.ReadString();
+                    else if (l_xmlIn.Name == "GUID")
+                        l_result = new Guid(l_xmlIn.ReadString());
 
                     l_xmlIn.ReadEndElement();
                     l_xmlIn.ReadEndElement();
@@ -298,7 +312,7 @@ namespace Studio
         // Package
 		public class Package : NamedProjectItem
         {
-			public Package(String _name) : base(_name) {}
+			public Package(String _name, Guid _guid) : base(_name, _guid) { }
 			public override String Type { get { return "Package"; } }
 			public override String SubItems() { return "Stage"; }
 		}
