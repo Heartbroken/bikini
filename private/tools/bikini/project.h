@@ -35,11 +35,11 @@ struct project : bk::manager
 	};};
 
 	inline const bk::wstring& name() const { return m_name; }
-	inline const bk::wstring& path() const { return m_path; }
+	inline const bk::wstring path() const { return m_folder.path(); }
 
 	project();
 
-	bool create(const bk::wstring &_path, const bk::wstring &_name);
+	bool create(const bk::wstring &_location, const bk::wstring &_name);
 	void destroy();
 
 	bool save();
@@ -47,7 +47,7 @@ struct project : bk::manager
 private:
 	GUID m_GUID;
 	bk::wstring m_name;
-	bk::wstring m_path;
+	bk::folder m_folder;
 };
 
 namespace po { // project objects -----------------------------------------------------------------

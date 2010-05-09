@@ -8,24 +8,25 @@ static bk::random sg_GUID_random(GetTickCount());
 project::project()
 {}
 
-bool project::create(const bk::wstring &_path, const bk::wstring &_name)
+bool project::create(const bk::wstring &_location, const bk::wstring &_name)
 {
 	destroy();
 
-	m_name = _name;
-	m_path = _path;
+	m_folder = bk::folder(_location + L"/" + _name);
 
-	if (!m_path.empty())
+	if (m_folder.exists())
 	{
-		while (m_path[m_path.size() - 1] == L'\\' || m_path[m_path.size() - 1] == L'/')
+		if (!m_folder.empty())
 		{
-			m_path.resize(m_path.size() - 1);
+			std::wcerr << "ERROR: Can't create project. Folder '" << m_folder.path() << "' already exists and isn't empty\n";
+			m_folder = bk::bad_folder;
+			return false;
 		}
-
-		m_path += L"\\";
 	}
-	m_path += m_name;
+	else
+		m_folder.create();
 
+	m_name = _name;
 	m_GUID = bk::random_GUID(sg_GUID_random);
 
 	return save();
@@ -37,14 +38,13 @@ void project::destroy()
 
 bool project::save()
 {
-	struct _stat64 l_st;
-	if (_wstat64(m_path.c_str(), &l_st) != 0 && _wmkdir(m_path.c_str()) != 0)
+	if (!m_folder.exists())
 	{
-		std::cerr << "ERROR: Cant save project. Can't create folder";
+		std::wcerr << "ERROR: Can't save project. Folder '" << m_folder.path() << "' doesn't exist\n";
 		return false;
 	}
 
-	bk::wstring l_path = m_path + L"\\" + m_name + L".bkproj";
+	bk::wstring l_path = m_folder.path() + L"/" + m_name + L".bkproj";
 
 	std::fstream l_stream(l_path.c_str(), std::ios_base::out);
 
