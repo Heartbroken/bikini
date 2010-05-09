@@ -31,7 +31,7 @@ struct project : bk::manager
 
 	struct ot { enum object_type
 	{
-		package
+		package, folder, stage, resources
 	};};
 
 	inline const bk::wstring& name() const { return m_name; }
@@ -65,6 +65,24 @@ struct package : project::object
 	};
 
 	inline package(const info &_info, project &_project)
+	:
+		project::object(_info, _project)
+	{}
+};
+
+struct folder : project::object
+{
+	struct info : project::object::info
+	{
+		typedef folder object;
+
+		inline info()
+		:
+			project::object::info(project::ot::folder)
+		{}
+	};
+
+	inline folder(const info &_info, project &_project)
 	:
 		project::object(_info, _project)
 	{}
