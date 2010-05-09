@@ -42,7 +42,9 @@ struct project : bk::manager
 	bool create(const bk::wstring &_location, const bk::wstring &_name);
 	void destroy();
 
-	bool save();
+	void write_structure(pugi::xml_node &_root) const;
+	bk::astring get_structure() const;
+	bool save() const;
 
 private:
 	GUID m_GUID;

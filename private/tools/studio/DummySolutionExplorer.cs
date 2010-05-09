@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using Studio.WinFormsUI.Docking;
 using System.Runtime.InteropServices;
+using System.IO;
+using System.Xml;
 
 namespace Studio
 {
@@ -40,6 +42,42 @@ namespace Studio
 			//    }
 			//}
 			//// test
+		}
+
+		public void Update()
+		{
+			m_treeView.Nodes.Clear();
+
+			String l_projectStructure = Bikini.GetProjectStructure();
+
+			if (l_projectStructure.Length > 0)
+			{
+				byte[] l_byteArray = Encoding.ASCII.GetBytes(l_projectStructure);
+				MemoryStream l_streamIn = new MemoryStream(l_byteArray);
+				XmlTextReader l_xmlIn = new XmlTextReader(l_streamIn);
+				l_xmlIn.WhitespaceHandling = WhitespaceHandling.None;
+				l_xmlIn.MoveToContent();
+
+				if (l_xmlIn.Name == "project" && l_xmlIn.IsStartElement())
+				{
+					String l_name = l_xmlIn.GetAttribute("Name");
+					TreeNode l_projectNode = AddNode(new Bikini.Project(l_name), m_treeView.Nodes);
+					l_projectNode.Expand();
+					l_xmlIn.ReadStartElement();
+					//if (l_xmlIn.IsStartElement())
+					//{
+					//    if (l_xmlIn.Name == "packge")
+					//        l_result = Convert.ToBoolean(l_xmlIn.ReadString());
+					//    else if (l_xmlIn.Name == "number")
+					//        l_result = Convert.ToDouble(l_xmlIn.ReadString(), CultureInfo.InvariantCulture);
+					//    else if (l_xmlIn.Name == "string")
+					//        l_result = l_xmlIn.ReadString();
+
+					//    l_xmlIn.ReadEndElement();
+					//    l_xmlIn.ReadEndElement();
+					//}
+				}
+			}
 		}
 
 		private TreeNode AddNode(Bikini.ProjectItem _item, TreeNodeCollection _nodes)

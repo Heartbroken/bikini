@@ -138,7 +138,7 @@ namespace Studio
 			// newMenuToolStripMenuItem
 			// 
 			this.newMenuToolStripMenuItem.Name = "newMenuToolStripMenuItem";
-			this.newMenuToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.newMenuToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
 			this.newMenuToolStripMenuItem.Text = "New Menu";
 			this.newMenuToolStripMenuItem.Click += new System.EventHandler(this.newMenuToolStripMenuItem_Click);
 			// 
@@ -146,6 +146,7 @@ namespace Studio
 			// 
 			this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
 			this.removeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.removeToolStripMenuItem.Tag = "Package|PFolder|Stage|Resources|RFolder|Menu";
 			this.removeToolStripMenuItem.Text = "Remove";
 			this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
 			// 
