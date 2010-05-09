@@ -262,9 +262,14 @@ namespace Studio
 				m_treeView.SelectedNode.Tag is Bikini.Folder)
 			{
 				TreeNode l_parentNode = m_treeView.SelectedNode;
-				TreeNode l_newNode = AddNode(new Bikini.Package("New"), l_parentNode.Nodes);
-				m_treeView.SelectedNode = l_newNode;
-				l_newNode.BeginEdit();
+				Bikini.ProjectItem l_parentItem = (Bikini.ProjectItem)l_parentNode.Tag;
+				Guid l_guid = Bikini.NewPackage(l_parentItem.GUID, "NewPackage");
+				if (l_guid != Guid.Empty)
+				{
+					TreeNode l_newNode = AddNode(new Bikini.Package("NewPackage", l_guid), l_parentNode.Nodes);
+					m_treeView.SelectedNode = l_newNode;
+					l_newNode.BeginEdit();
+				}
 			}
 		}
 

@@ -17,6 +17,7 @@ struct project : bk::manager
 		inline project& get_project() const { return get_manager_<project>(); }
 		inline const bk::wstring& name() const { return m_name; }
 		inline void set_name(const bk::wstring &_name) { m_name = _name; }
+		inline const GUID& unique_ID() const { return m_GUID; }
 
 		inline object(const info &_info, project &_project)
 		:
@@ -36,13 +37,15 @@ struct project : bk::manager
 
 	inline const bk::wstring& name() const { return m_name; }
 	inline const bk::wstring path() const { return m_folder.path(); }
+	inline const GUID& unique_ID() const { return m_GUID; }
 
 	project();
 
 	bool create(const bk::wstring &_location, const bk::wstring &_name);
 	void destroy();
 
-	bool rename_object(GUID _GUID, const bk::wstring &_name);
+	GUID new_package(GUID _parent, const bk::wstring &_name);
+	bool rename_object(GUID _object, const bk::wstring &_name);
 
 	void write_structure(pugi::xml_node &_root) const;
 	bk::astring get_structure() const;
@@ -52,6 +55,10 @@ private:
 	GUID m_GUID;
 	bk::wstring m_name;
 	bk::folder m_folder;
+	bk::uint find_object(GUID _ID) const;
+	bk::pool_<bk::uint> m_children;
+	bk::uint find_child(GUID _ID) const;
+	void remove_child(GUID _ID);
 };
 
 namespace po { // project objects -----------------------------------------------------------------

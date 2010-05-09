@@ -19,7 +19,7 @@ bool bikini::create()
 		commands::add("Update", bk::functor_<bool>(*this, &bikini::update));
 		commands::add("Destroy", bk::functor(*this, &bikini::destroy));
 
-		commands::add("CreateProject", bk::functor_<bool, const bk::wstring&, const bk::wstring&>(*this, &bikini::create_project));
+		commands::add("CreateProject", bk::functor_<GUID, const bk::wstring&, const bk::wstring&>(*this, &bikini::create_project));
 
 		// test
 		commands::add("CreateView", bk::functor_<bk::uint, bk::handle>(*this, &bikini::create_window));
@@ -56,9 +56,10 @@ void bikini::destroy()
 	m_video.destroy();
 }
 
-bool bikini::create_project(const bk::wstring &_path, const bk::wstring &_name)
+GUID bikini::create_project(const bk::wstring &_path, const bk::wstring &_name)
 {
-	return m_project.create(_path, _name);
+	if (!m_project.create(_path, _name)) return bk::bad_GUID;
+	return m_project.unique_ID();
 }
 
 
