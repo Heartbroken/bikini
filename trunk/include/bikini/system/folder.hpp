@@ -10,11 +10,33 @@
 
 struct folder
 {
-	static folder find(const wstring &_path, bool _create = true);
+	struct file
+	{
+		file();
+
+	private:
+		wstring m_name;
+		folder &m_parent;
+	};
 
 	folder();
+	folder(const folder &_folder);
+	folder(const wstring &_path);
+	~folder();
+
+	folder& operator = (const folder &_folder);
+
+	const wstring& name() const;
+	bool is_root() const;
+	const folder& parent() const;
+	wstring path() const;
+	bool exists() const;
+	bool create() const;
+	bool empty() const;
 
 private:
-	folder(const wstring &_path);
-	wstring m_path;
+	wstring m_name;
+	folder &m_parent;
 };
+
+extern folder bad_folder;
