@@ -46,6 +46,15 @@ namespace Studio
             if (l_result is bool && Convert.ToBoolean(l_result)) return true;
             return false;
         }
+		public static String GetProjectStructure()
+		{
+			String l_request = WriteRequest("GetProjectStructure");
+
+			Object l_result = ReadResult(request(l_request));
+
+			if (l_result is String) return Convert.ToString(l_result);
+			return "";
+		}
 
         // test
         public static UInt64 CreateView(IntPtr _handle)
