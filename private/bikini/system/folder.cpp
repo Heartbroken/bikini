@@ -123,6 +123,19 @@ bool folder::empty() const
 
 	return true;
 }
+bool folder::rename(const wstring &_name)
+{
+	if (!exists()) return false;
+
+	wstring l_oldpath = path();
+	wstring l_newpath = is_root() ? _name : parent().path() + L"/" + _name;
+
+	if (_wrename(l_oldpath.c_str(), l_newpath.c_str()) != 0) return false;
+
+	m_name = _name;
+
+	return true;
+}
 
 // file
 

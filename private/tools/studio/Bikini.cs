@@ -55,6 +55,18 @@ namespace Studio
 			if (l_result is String) return Convert.ToString(l_result);
 			return "";
 		}
+		public static Boolean RenameObject(Guid _guid, String _name)
+		{
+			XmlTextWriter l_xml = StartWriteRequest("RenameObject");
+			WriteRequestArgument(l_xml, _guid);
+			WriteRequestArgument(l_xml, _name);
+			String l_request = EndWriteRequest(l_xml);
+
+			Object l_result = ReadResult(request(l_request));
+
+			if (l_result is bool && Convert.ToBoolean(l_result)) return true;
+			return false;
+		}
 
         // test
         public static UInt64 CreateView(IntPtr _handle)

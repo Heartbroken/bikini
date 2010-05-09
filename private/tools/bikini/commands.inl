@@ -83,6 +83,10 @@ template <> struct pop<const bk::wstring&> { static inline bk::wstring a(const p
 {
 	return bk::utf8(child(_n, _i).child_value());
 }};
+template <> struct pop<GUID> { static inline GUID a(const pugi::xml_node &_n, bk::uint _i)
+{
+	return bk::scan_GUID(child(_n, _i).child_value());
+}};
 
 //
 

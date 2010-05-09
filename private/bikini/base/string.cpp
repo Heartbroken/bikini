@@ -90,7 +90,8 @@ _string print_GUID(const GUID &_g)
 GUID scan_GUID(const _string &_s)
 {
 	byte l_buff[18]; GUID &l_g = *(GUID*)l_buff;
-	if (swscanf_s(_s.wstr.c_str(), L"{%lx-%hx-%hx-%hx-%llx}", &l_g.Data1, &l_g.Data2, &l_g.Data3, &l_g.Data4[0], &l_g.Data4[2]) != 5) return bad_GUID;
+	if (swscanf_s(_s.wstr.c_str(), L"{%lx-%hx-%hx-%hx-%llx}", &l_g.Data1, &l_g.Data2, &l_g.Data3, &l_g.Data4[0], &l_g.Data4[2]) != 5 &&
+		swscanf_s(_s.wstr.c_str(), L"%lx-%hx-%hx-%hx-%llx", &l_g.Data1, &l_g.Data2, &l_g.Data3, &l_g.Data4[0], &l_g.Data4[2]) != 5) return bad_GUID;
 	swap(l_g.Data4[0], l_g.Data4[1]);
 	swap(l_g.Data4[2], l_g.Data4[7]);
 	swap(l_g.Data4[3], l_g.Data4[6]);
