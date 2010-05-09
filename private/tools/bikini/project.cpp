@@ -61,6 +61,12 @@ bool project::save()
 			l_package.set_name("package");
 			l_package.append_attribute("Name") = "Fake Package";
 			l_package.append_attribute("GUID") = bk::print_GUID(bk::random_GUID(sg_GUID_random));
+			{
+				pugi::xml_node l_stage = l_package.append_child();
+				l_stage.set_name("stage");
+				l_stage.append_attribute("Name") = "Fake Stage";
+				l_stage.append_attribute("GUID") = bk::print_GUID(bk::random_GUID(sg_GUID_random));
+			}
 		}
 
 		pugi::xml_writer_stream l_writer(l_stream);
