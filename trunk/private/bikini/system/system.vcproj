@@ -458,6 +458,18 @@
 	</References>
 	<Files>
 		<Filter
+			Name="folder"
+			>
+			<File
+				RelativePath=".\folder.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\bikini\system\folder.hpp"
+				>
+			</File>
+		</Filter>
+		<Filter
 			Name="header"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
