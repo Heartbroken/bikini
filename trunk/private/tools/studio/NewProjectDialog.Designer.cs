@@ -46,7 +46,7 @@
 			this.buttonOk.Location = new System.Drawing.Point(329, 131);
 			this.buttonOk.Name = "buttonOk";
 			this.buttonOk.Size = new System.Drawing.Size(75, 23);
-			this.buttonOk.TabIndex = 0;
+			this.buttonOk.TabIndex = 3;
 			this.buttonOk.Text = "Ok";
 			this.buttonOk.UseVisualStyleBackColor = true;
 			// 
@@ -56,7 +56,7 @@
 			this.buttonCancel.Location = new System.Drawing.Point(410, 131);
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-			this.buttonCancel.TabIndex = 1;
+			this.buttonCancel.TabIndex = 4;
 			this.buttonCancel.Text = "Cancel";
 			this.buttonCancel.UseVisualStyleBackColor = true;
 			// 
@@ -91,7 +91,7 @@
 			this.m_projectName.Location = new System.Drawing.Point(82, 50);
 			this.m_projectName.Name = "m_projectName";
 			this.m_projectName.Size = new System.Drawing.Size(322, 20);
-			this.m_projectName.TabIndex = 3;
+			this.m_projectName.TabIndex = 0;
 			// 
 			// textBox3
 			// 
@@ -100,6 +100,7 @@
 			this.textBox3.ReadOnly = true;
 			this.textBox3.Size = new System.Drawing.Size(469, 20);
 			this.textBox3.TabIndex = 6;
+			this.textBox3.TabStop = false;
 			this.textBox3.Text = "Choose the new project\'s name and location";
 			// 
 			// buttonBrowse
@@ -107,7 +108,7 @@
 			this.buttonBrowse.Location = new System.Drawing.Point(410, 76);
 			this.buttonBrowse.Name = "buttonBrowse";
 			this.buttonBrowse.Size = new System.Drawing.Size(75, 23);
-			this.buttonBrowse.TabIndex = 1;
+			this.buttonBrowse.TabIndex = 2;
 			this.buttonBrowse.Text = "Browse...";
 			this.buttonBrowse.UseVisualStyleBackColor = true;
 			this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
@@ -118,7 +119,7 @@
 			this.m_projectLocation.Location = new System.Drawing.Point(82, 77);
 			this.m_projectLocation.Name = "m_projectLocation";
 			this.m_projectLocation.Size = new System.Drawing.Size(322, 21);
-			this.m_projectLocation.TabIndex = 7;
+			this.m_projectLocation.TabIndex = 1;
 			// 
 			// m_folderBrowser
 			// 
@@ -126,8 +127,10 @@
 			// 
 			// NewProjectDialog
 			// 
+			this.AcceptButton = this.buttonOk;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.CancelButton = this.buttonCancel;
 			this.ClientSize = new System.Drawing.Size(496, 166);
 			this.Controls.Add(this.m_projectLocation);
 			this.Controls.Add(this.textBox3);
