@@ -44,7 +44,7 @@ namespace Studio
 			//// test
 		}
 
-		public void Update()
+		public void UpdateTreeView()
 		{
 			m_treeView.Nodes.Clear();
 
@@ -53,30 +53,35 @@ namespace Studio
 			if (l_projectStructure.Length > 0)
 			{
 				byte[] l_byteArray = Encoding.ASCII.GetBytes(l_projectStructure);
-				MemoryStream l_streamIn = new MemoryStream(l_byteArray);
-				XmlTextReader l_xmlIn = new XmlTextReader(l_streamIn);
-				l_xmlIn.WhitespaceHandling = WhitespaceHandling.None;
-				l_xmlIn.MoveToContent();
+				MemoryStream l_stream = new MemoryStream(l_byteArray);
+				XmlTextReader l_xml = new XmlTextReader(l_stream);
+				l_xml.WhitespaceHandling = WhitespaceHandling.None;
+				l_xml.MoveToContent();
 
-				if (l_xmlIn.Name == "project" && l_xmlIn.IsStartElement())
-				{
-					String l_name = l_xmlIn.GetAttribute("Name");
-					TreeNode l_projectNode = AddNode(new Bikini.Project(l_name), m_treeView.Nodes);
-					l_projectNode.Expand();
-					l_xmlIn.ReadStartElement();
-					//if (l_xmlIn.IsStartElement())
-					//{
-					//    if (l_xmlIn.Name == "packge")
-					//        l_result = Convert.ToBoolean(l_xmlIn.ReadString());
-					//    else if (l_xmlIn.Name == "number")
-					//        l_result = Convert.ToDouble(l_xmlIn.ReadString(), CultureInfo.InvariantCulture);
-					//    else if (l_xmlIn.Name == "string")
-					//        l_result = l_xmlIn.ReadString();
+				ParseProjectStructure(l_xml);
+			}
+		}
+		private void ParseProjectStructure(XmlTextReader _xml)
+		{
+			if (_xml.Name == "project" && _xml.IsStartElement())
+			{
+				String l_name = _xml.GetAttribute("Name");
+				Guid l_guid = new Guid(_xml.GetAttribute("GUID"));
+				TreeNode l_projectNode = AddNode(new Bikini.Project(l_name, l_guid), m_treeView.Nodes);
+				l_projectNode.Expand();
+				_xml.ReadStartElement();
+				//if (l_xmlIn.IsStartElement())
+				//{
+				//    if (l_xmlIn.Name == "packge")
+				//        l_result = Convert.ToBoolean(l_xmlIn.ReadString());
+				//    else if (l_xmlIn.Name == "number")
+				//        l_result = Convert.ToDouble(l_xmlIn.ReadString(), CultureInfo.InvariantCulture);
+				//    else if (l_xmlIn.Name == "string")
+				//        l_result = l_xmlIn.ReadString();
 
-					//    l_xmlIn.ReadEndElement();
-					//    l_xmlIn.ReadEndElement();
-					//}
-				}
+				//    l_xmlIn.ReadEndElement();
+				//    l_xmlIn.ReadEndElement();
+				//}
 			}
 		}
 

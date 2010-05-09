@@ -225,8 +225,11 @@ namespace Studio
 			public TreeNode treeNode;
             public ComboBox comboBox;
 
+			public ProjectItem() { m_guid = Guid.NewGuid(); }
+			public ProjectItem(Guid _guid) { m_guid = _guid; }
+
             // GUID
-            private Guid m_guid = Guid.NewGuid();
+            private Guid m_guid;
             [CategoryAttribute("Object ID"), DescriptionAttribute("Object's identity")]
             public Guid GUID { get { return m_guid; } }
 
@@ -242,6 +245,7 @@ namespace Studio
 		public abstract class NamedProjectItem : ProjectItem
 		{
 			public NamedProjectItem(String _name) { m_name = _name; }
+			public NamedProjectItem(String _name, Guid _guid) : base(_guid) { m_name = _name; }
 
             // Name
             private String m_name;
@@ -265,7 +269,7 @@ namespace Studio
         // Project
 		public class Project : NamedProjectItem
         {
-			public Project(String _name) : base(_name) {}
+			public Project(String _name, Guid _guid) : base(_name, _guid) { }
 			public override String Type { get { return "Project"; } }
 			public override String FullName() { return ToString(); }
 			public override String SubItems() { return "PFolder|Package"; }
