@@ -231,10 +231,13 @@ namespace Studio
 			e.CancelEdit = true;
 			e.Node.EndEdit(true);
 
-			if (e.Node.Tag is Bikini.NamedProjectItem)
+			if (e.Node.Tag is Bikini.NamedProjectItem && e.Label != null && e.Label.Length > 0)
 			{
 				Bikini.NamedProjectItem l_item = (Bikini.NamedProjectItem)e.Node.Tag;
-				l_item.Name = (e.Label != null && e.Label.Length > 0) ? e.Label : l_item.Name;
+				if (Bikini.RenameObject(l_item.GUID, e.Label))
+				{
+					l_item.Name = e.Label;
+				}
 			}
 		}
 

@@ -32,17 +32,50 @@ bool project::create(const bk::wstring &_location, const bk::wstring &_name)
 	if (!save()) return false;
 
 	commands::add("GetProjectStructure", bk::functor_<bk::astring>(*this, &project::get_structure));
+	commands::add("RenameObject", bk::functor_<bool, GUID, const bk::wstring&>(*this, &project::rename_object));
 
 	return true;
 }
 void project::destroy()
 {
 	commands::remove("GetProjectStructure");
+	commands::remove("RenameObject");
+
 	m_folder = bk::bad_folder;
 	m_name = L"";
 	m_GUID = bk::bad_GUID;
 
 	clear();
+}
+
+bool project::rename_object(GUID _GUID, const bk::wstring &_name)
+{
+	if (_GUID == m_GUID)
+	{
+		if (!m_folder.rename(_name))
+		{
+			std::wcerr << "ERROR: Can't rename project folder\n";
+			return false;
+		}
+
+		bk::wstring l_oldpath = m_folder.path() + L"/" + m_name + L".bkproj";
+		bk::wstring l_newpath = m_folder.path() + L"/" + _name + L".bkproj";
+
+		if (_wrename(l_oldpath.c_str(), l_newpath.c_str()) != 0)
+		{
+			std::wcerr << "ERROR: Can't rename project file\n";
+			m_folder.rename(m_name);
+			return false;
+		}
+
+		m_name = _name;
+
+		save();
+	}
+	else
+		return false;
+
+	return true;
 }
 
 void project::write_structure(pugi::xml_node &_root) const
@@ -85,13 +118,16 @@ bool project::save() const
 
 	std::fstream l_stream(l_path.c_str(), std::ios_base::out);
 
-	if (l_stream.good())
+	if (!l_stream.good())
 	{
-		pugi::xml_writer_stream l_writer(l_stream);
-
-		pugi::xml_document l_document; write_structure(l_document);
-		l_document.save(l_writer, "    ", pugi::format_default|pugi::format_write_bom_utf8);
+		std::wcerr << "ERROR: Can't save project. Can't open file '" << l_path << "'\n";
+		return false;
 	}
+
+	pugi::xml_writer_stream l_writer(l_stream);
+
+	pugi::xml_document l_document; write_structure(l_document);
+	l_document.save(l_writer, "    ", pugi::format_default|pugi::format_write_bom_utf8);
 
 	return true;
 }

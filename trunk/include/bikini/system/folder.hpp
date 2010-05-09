@@ -33,6 +33,7 @@ struct folder
 	bool exists() const;
 	bool create() const;
 	bool empty() const;
+	bool rename(const wstring &_name);
 
 private:
 	wstring m_name;
