@@ -44,11 +44,11 @@ namespace Studio
 			//// test
 		}
 
-		public void UpdateTreeView()
+		public void UpdateTreeView(Guid _project)
 		{
 			m_treeView.Nodes.Clear();
 
-			String l_projectStructure = Bikini.GetProjectStructure();
+			String l_projectStructure = Bikini.ObjectStructure(_project);
 
 			if (l_projectStructure.Length > 0)
 			{

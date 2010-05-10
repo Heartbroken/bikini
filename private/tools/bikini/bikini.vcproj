@@ -342,14 +342,14 @@
 				>
 			</File>
 			<Filter
-				Name="project"
+				Name="workspace"
 				>
 				<File
-					RelativePath=".\project.cpp"
+					RelativePath=".\workspace.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\project.h"
+					RelativePath=".\workspace.h"
 					>
 				</File>
 			</Filter>

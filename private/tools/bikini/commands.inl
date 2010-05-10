@@ -87,6 +87,10 @@ template <> struct pop<GUID> { static inline GUID a(const pugi::xml_node &_n, bk
 {
 	return bk::scan_GUID(child(_n, _i).child_value());
 }};
+template <> struct pop<const GUID&> { static inline GUID a(const pugi::xml_node &_n, bk::uint _i)
+{
+	return bk::scan_GUID(child(_n, _i).child_value());
+}};
 
 //
 

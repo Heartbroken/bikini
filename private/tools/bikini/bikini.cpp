@@ -19,13 +19,13 @@ bool bikini::create()
 		commands::add("Update", bk::functor_<bool>(*this, &bikini::update));
 		commands::add("Destroy", bk::functor(*this, &bikini::destroy));
 
-		commands::add("CreateProject", bk::functor_<GUID, const bk::wstring&, const bk::wstring&>(*this, &bikini::create_project));
-
 		// test
 		commands::add("CreateView", bk::functor_<bk::uint, bk::handle>(*this, &bikini::create_window));
 		commands::add("ResetView", bk::functor_<void, bk::uint, bk::handle>(*this, &bikini::reset_window));
 		commands::add("DestroyView", bk::functor_<void, bk::uint>(*this, &bikini::destroy_window));
-		return true;
+		// test
+
+		return m_workspace.create();
 	}
 	return false;
 }
@@ -35,31 +35,25 @@ bool bikini::update()
 
 	static bk::rbig sl_time = bk::sys_time();
 
-	bk::rbig l_newtime = bk::sys_time();
-	bk::rbig l_dt = l_newtime - sl_time;
-	sl_time = l_newtime;
+	bk::rbig l_time = bk::sys_time();
+	bk::rbig l_dt = l_time - sl_time;
+	sl_time = l_time;
 
 	return m_video.update((bk::real)l_dt);
 }
 void bikini::destroy()
 {
+	// test
 	commands::remove("DestroyView");
 	commands::remove("ResetView");
 	commands::remove("CreateView");
-
-	commands::remove("CreateProject");
+	// test
 
 	commands::remove("Destroy");
 	commands::remove("Update");
 
-	m_project.destroy();
+	m_workspace.destroy();
 	m_video.destroy();
-}
-
-GUID bikini::create_project(const bk::wstring &_path, const bk::wstring &_name)
-{
-	if (!m_project.create(_path, _name)) return bk::bad_GUID;
-	return m_project.unique_ID();
 }
 
 
@@ -81,3 +75,4 @@ void bikini::destroy_window(bk::uint _ID)
 {
 	m_video.kill(_ID);
 }
+// test
