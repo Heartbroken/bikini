@@ -34,9 +34,9 @@ namespace Studio
             return false;
         }
 
-		public static Guid CreateProject(String _path, String _name)
+		public static Guid NewProject(String _path, String _name)
         {
-			XmlTextWriter l_xml = StartWriteRequest("CreateProject");
+			XmlTextWriter l_xml = StartWriteRequest("NewProject");
 			WriteRequestArgument(l_xml, _path);
 			WriteRequestArgument(l_xml, _name);
 			String l_request = EndWriteRequest(l_xml);
@@ -46,15 +46,6 @@ namespace Studio
 			if (l_result is Guid) return (Guid)l_result;
 			return Guid.Empty;
         }
-		public static String GetProjectStructure()
-		{
-			String l_request = WriteRequest("GetProjectStructure");
-
-			Object l_result = ReadResult(request(l_request));
-
-			if (l_result is String) return Convert.ToString(l_result);
-			return "";
-		}
 		public static Guid NewPackage(Guid _parent, String _name)
 		{
 			XmlTextWriter l_xml = StartWriteRequest("NewPackage");
@@ -67,11 +58,33 @@ namespace Studio
 			if (l_result is Guid) return (Guid)l_result;
 			return Guid.Empty;
 		}
+		public static String ObjectStructure(Guid _object)
+		{
+			XmlTextWriter l_xml = StartWriteRequest("ObjectStructure");
+			WriteRequestArgument(l_xml, _object);
+			String l_request = EndWriteRequest(l_xml);
+
+			Object l_result = ReadResult(request(l_request));
+
+			if (l_result is String) return Convert.ToString(l_result);
+			return "";
+		}
 		public static Boolean RenameObject(Guid _object, String _name)
 		{
 			XmlTextWriter l_xml = StartWriteRequest("RenameObject");
 			WriteRequestArgument(l_xml, _object);
 			WriteRequestArgument(l_xml, _name);
+			String l_request = EndWriteRequest(l_xml);
+
+			Object l_result = ReadResult(request(l_request));
+
+			if (l_result is bool && Convert.ToBoolean(l_result)) return true;
+			return false;
+		}
+		public static Boolean RemoveObject(Guid _object)
+		{
+			XmlTextWriter l_xml = StartWriteRequest("RemoveObject");
+			WriteRequestArgument(l_xml, _object);
 			String l_request = EndWriteRequest(l_xml);
 
 			Object l_result = ReadResult(request(l_request));

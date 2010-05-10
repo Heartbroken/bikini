@@ -110,8 +110,8 @@ namespace Studio
 
 			if (l_newProjectDlg.ShowDialog(this) == DialogResult.OK)
 			{
-				Bikini.CreateProject(l_newProjectDlg.ProjectLocation, l_newProjectDlg.ProjectName);
-				m_solutionExplorer.UpdateTreeView();
+				Guid l_project = Bikini.NewProject(l_newProjectDlg.ProjectLocation, l_newProjectDlg.ProjectName);
+				m_solutionExplorer.UpdateTreeView(l_project);
 			}
 
 			/////////

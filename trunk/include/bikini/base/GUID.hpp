@@ -8,6 +8,8 @@
 
 #pragma once
 
+typedef ::GUID GUID;
+
 /// create random GUID
 inline GUID random_GUID(random &_random = random_0);
 
