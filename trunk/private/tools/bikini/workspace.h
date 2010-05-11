@@ -29,6 +29,7 @@ struct workspace : bk::manager
 		virtual bool rename(const bk::wstring &_name) { set_name(_name); return true; }
 		virtual bk::astring structure() const { return ""; }
 		virtual bool save() const { return true; }
+		virtual bk::wstring path() const { return L""; }
 
 	protected:
 		inline void set_name(const bk::wstring &_name) { m_name = _name; }
@@ -53,9 +54,11 @@ struct workspace : bk::manager
 
 	const bk::GUID& new_project(const bk::wstring &_location, const bk::wstring &_name);
 	const bk::GUID& new_package(const bk::GUID& _parent, const bk::wstring &_name);
+	const bk::GUID& new_folder(const bk::GUID& _parent, const bk::wstring &_name);
 	bk::astring object_structure(const bk::GUID& _object);
 	bool rename_object(const bk::GUID& _object, const bk::wstring &_name);
 	bool remove_object(const bk::GUID& _object);
+	bool save_all();
 
 private:
 	bk::uint find_object(const bk::GUID &_object) const;
@@ -76,12 +79,14 @@ struct project : workspace::object
 		{}
 	};
 
+
 	project(const info &_info, workspace &_workspace, const bk::wstring &_location, const bk::wstring &_name);
 
 	virtual bool add_child(bk::uint _child);
 	virtual bool rename(const bk::wstring &_name);
 	virtual bk::astring structure() const;
 	virtual bool save() const;
+	virtual bk::wstring path() const;
 
 private:
 	bk::folder m_folder;
@@ -101,6 +106,16 @@ struct package : workspace::object
 	};
 
 	package(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name);
+
+	virtual bool add_child(bk::uint _child);
+	virtual bool rename(const bk::wstring &_name);
+	virtual bk::astring structure() const;
+	virtual bool save() const;
+	virtual bk::wstring path() const;
+
+
+private:
+	void write_structure(pugi::xml_node &_root) const;
 };
 
 struct folder : workspace::object
@@ -115,10 +130,11 @@ struct folder : workspace::object
 		{}
 	};
 
-	inline folder(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name)
-	:
-		workspace::object(_info, _workspace, _parent_ID, _name)
-	{}
+	folder(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name);
+
+	virtual bool add_child(bk::uint _child);
+	virtual bool rename(const bk::wstring &_name);
+	virtual bk::wstring path() const;
 };
 
 } // namespace wo ---------------------------------------------------------------------------------

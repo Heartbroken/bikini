@@ -293,9 +293,15 @@ namespace Studio
 			{
 				TreeNode l_parentNode = m_treeView.SelectedNode;
 				Boolean l_projectFolder = !FindResourcesItem(l_parentNode);
-				TreeNode l_newNode = AddNode(new Bikini.Folder("New", l_projectFolder), l_parentNode.Nodes);
-				m_treeView.SelectedNode = l_newNode;
-				l_newNode.BeginEdit();
+				Bikini.ProjectItem l_parentItem = (Bikini.ProjectItem)l_parentNode.Tag;
+
+				Guid l_guid = Bikini.NewFolder(l_parentItem.GUID, "NewFolder");
+				if (l_guid != Guid.Empty)
+				{
+					TreeNode l_newNode = AddNode(new Bikini.Folder("NewFolder", l_projectFolder, l_guid), l_parentNode.Nodes);
+					m_treeView.SelectedNode = l_newNode;
+					l_newNode.BeginEdit();
+				}
 			}
 		}
 

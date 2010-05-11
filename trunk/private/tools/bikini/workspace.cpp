@@ -14,17 +14,21 @@ bool workspace::create()
 
 	commands::add("NewProject", bk::functor_<const bk::GUID&, const bk::wstring&, const bk::wstring&>(*this, &workspace::new_project));
 	commands::add("NewPackage", bk::functor_<const bk::GUID&, const bk::GUID&, const bk::wstring&>(*this, &workspace::new_package));
+	commands::add("NewFolder", bk::functor_<const bk::GUID&, const bk::GUID&, const bk::wstring&>(*this, &workspace::new_folder));
 	commands::add("ObjectStructure", bk::functor_<bk::astring, const bk::GUID&>(*this, &workspace::object_structure));
 	commands::add("RenameObject", bk::functor_<bool, const bk::GUID&, const bk::wstring&>(*this, &workspace::rename_object));
 	commands::add("RemoveObject", bk::functor_<bool, const bk::GUID&>(*this, &workspace::remove_object));
+	commands::add("SaveAll", bk::functor_<bool>(*this, &workspace::save_all));
 
 	return true;
 }
 void workspace::destroy()
 {
+	commands::remove("SaveAll");
 	commands::remove("RemoveObject");
 	commands::remove("RenameObject");
 	commands::remove("ObjectStructure");
+	commands::remove("NewFolder");
 	commands::remove("NewPackage");
 	commands::remove("NewProject");
 
@@ -58,6 +62,28 @@ const bk::GUID& workspace::new_package(const bk::GUID &_parent, const bk::wstrin
 	}
 
 	bk::uint l_ID = spawn(sl_package, l_parent_ID, _name);
+
+	if (!get_<object>(l_ID).valid())
+	{
+		kill(l_ID);
+		return bk::bad_GUID;
+	}
+
+	return get_<object>(l_ID).GUID();
+}
+const bk::GUID& workspace::new_folder(const bk::GUID &_parent, const bk::wstring &_name)
+{
+	static wo::folder::info sl_folder;
+
+	bk::uint l_parent_ID = find_object(_parent);
+
+	if (l_parent_ID == bk::bad_ID)
+	{
+		std::wcerr << "ERROR: Can't add new package. Parent object not found\n";
+		return bk::bad_GUID;
+	}
+
+	bk::uint l_ID = spawn(sl_folder, l_parent_ID, _name);
 
 	if (!get_<object>(l_ID).valid())
 	{
@@ -104,6 +130,17 @@ bool workspace::remove_object(const bk::GUID &_object)
 	kill(l_ID);
 
 	return true;
+}
+bool workspace::save_all()
+{
+	bool l_result = true;
+
+	for (bk::uint l_ID = get_first_ID(); l_ID != bk::bad_ID; l_ID = get_next_ID(l_ID))
+	{
+		l_result = get_<object>(l_ID).save() && l_result;
+	}
+
+	return l_result;
 }
 
 bk::uint workspace::find_object(const bk::GUID &_object) const
@@ -164,7 +201,8 @@ project::project(const info &_info, workspace &_workspace, const bk::wstring& _l
 
 bool project::add_child(bk::uint _child)
 {
-	if (get_workspace().get(_child).type() != workspace::ot::package)
+	if (get_workspace().get(_child).type() != workspace::ot::package &&
+		get_workspace().get(_child).type() != workspace::ot::folder)
 		return false;
 
 	return super::add_child(_child);
@@ -212,7 +250,7 @@ bool project::save() const
 
 	if (!l_stream.good())
 	{
-		std::wcerr << "ERROR: Can't save workspace. Can't open file '" << l_path << "'\n";
+		std::wcerr << "ERROR: Can't save project. Can't open file '" << l_path << "'\n";
 		return false;
 	}
 
@@ -222,6 +260,10 @@ bool project::save() const
 	l_document.save(l_writer, "    ", pugi::format_default|pugi::format_write_bom_utf8);
 
 	return true;
+}
+bk::wstring project::path() const
+{
+	return m_folder.path();
 }
 
 void project::write_structure(pugi::xml_node &_root) const
@@ -246,6 +288,14 @@ void project::write_structure(pugi::xml_node &_root) const
 					l_package.append_attribute("GUID") = bk::print_GUID(l_object.GUID());
 				}
 				break;
+				case workspace::ot::folder :
+				{
+					pugi::xml_node l_package = l_project.append_child();
+					l_package.set_name("folder");
+					l_package.append_attribute("Name") = bk::utf8(l_object.name()).c_str();
+					l_package.append_attribute("GUID") = bk::print_GUID(l_object.GUID());
+				}
+				break;
 			}
 		}
 	}
@@ -258,14 +308,207 @@ package::package(const info &_info, workspace &_workspace, bk::uint _parent_ID, 
 	workspace::object(_info, _workspace, _parent_ID, _name)
 {
 	if (!get_workspace().exists(_parent_ID) ||
-		get_workspace().get(_parent_ID).type() != workspace::ot::project)
+		(get_workspace().get(_parent_ID).type() != workspace::ot::project &&
+		 get_workspace().get(_parent_ID).type() != workspace::ot::folder))
 	{
 		std::wcerr << "ERROR: Can't create package. Bad parent ID\n";
 		return;
 	}
 
-	get_workspace().get_<object>(_parent_ID).add_child(ID());
+	bk::folder l_folder = bk::folder(path());
+
+	if (l_folder.exists())
+	{
+		if (!l_folder.empty())
+		{
+			std::wcerr << "ERROR: Can't create package. Folder '" << l_folder.path() << "' already exists and isn't empty\n";
+			return;
+		}
+	}
+	else
+	{
+		if(!l_folder.create())
+		{
+			std::wcerr << "ERROR: Can't create package. Can't create folder '" << l_folder.path() << "'\n";
+			return;
+		}
+	}
+
+	if (!save()) return;
+
+	if(!get_workspace().get_<object>(_parent_ID).add_child(ID())) return;
+
 	set_valid();
+}
+
+bool package::add_child(bk::uint _child)
+{
+	if (get_workspace().get(_child).type() != workspace::ot::stage)
+		return false;
+
+	return super::add_child(_child);
+}
+bool package::rename(const bk::wstring &_name)
+{
+	bk::folder l_folder(path());
+
+	if (!l_folder.rename(_name))
+	{
+		std::wcerr << "ERROR: Can't rename package folder\n";
+		return false;
+	}
+
+	bk::wstring l_oldpath = l_folder.path() + L"/" + name() + L".bkpack";
+	bk::wstring l_newpath = l_folder.path() + L"/" + _name + L".bkpack";
+
+	if (_wrename(l_oldpath.c_str(), l_newpath.c_str()) != 0)
+	{
+		std::wcerr << "ERROR: Can't rename package file\n";
+		l_folder.rename(name());
+		return false;
+	}
+
+	return super::rename(_name);
+}
+bk::astring package::structure() const
+{
+	std::ostringstream l_stream;
+	pugi::xml_writer_stream l_writer(l_stream);
+	pugi::xml_document l_document; write_structure(l_document);
+	l_document.save(l_writer, "    ", pugi::format_default|pugi::format_no_declaration);
+
+	return l_stream.str();
+}
+bool package::save() const
+{
+	bk::folder l_folder(path());
+
+	if (!l_folder.exists())
+	{
+		std::wcerr << "ERROR: Can't save package. Folder '" << l_folder.path() << "' doesn't exist\n";
+		return false;
+	}
+
+	bk::wstring l_path = l_folder.path() + L"/" + name() + L".bkpack";
+
+	std::fstream l_stream(l_path.c_str(), std::ios_base::out);
+
+	if (!l_stream.good())
+	{
+		std::wcerr << "ERROR: Can't save package. Can't open file '" << l_path << "'\n";
+		return false;
+	}
+
+	pugi::xml_writer_stream l_writer(l_stream);
+
+	pugi::xml_document l_document; write_structure(l_document);
+	l_document.save(l_writer, "    ", pugi::format_default|pugi::format_write_bom_utf8);
+
+	return true;
+}
+bk::wstring package::path() const
+{
+	if (get_workspace().exists(parent_ID()))
+	{
+		return get_workspace().get_<object>(parent_ID()).path() + L"/" + name();
+	}
+
+	return L"";
+}
+
+void package::write_structure(pugi::xml_node &_root) const
+{
+	pugi::xml_node l_package = _root.append_child();
+	l_package.set_name("package");
+	l_package.append_attribute("Name") = bk::utf8(name()).c_str();
+	l_package.append_attribute("GUID") = bk::print_GUID(GUID());
+	{
+		for (bk::uint l_ID = first_relation(); l_ID != bk::bad_ID; l_ID = next_relation(l_ID))
+		{
+			if (!get_workspace().exists(get_relation(l_ID))) continue;
+
+			object &l_object = get_workspace().get_<object>(get_relation(l_ID));
+			switch (l_object.type())
+			{
+				case workspace::ot::stage :
+				{
+					pugi::xml_node l_stage = l_package.append_child();
+					l_package.set_name("stage");
+					l_package.append_attribute("Name") = bk::utf8(l_object.name()).c_str();
+					l_package.append_attribute("GUID") = bk::print_GUID(l_object.GUID());
+				}
+				break;
+			}
+		}
+	}
+}
+
+// folder
+
+folder::folder(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name)
+:
+	workspace::object(_info, _workspace, _parent_ID, _name)
+{
+	if (!get_workspace().exists(_parent_ID) ||
+		(get_workspace().get(_parent_ID).type() != workspace::ot::project &&
+		 get_workspace().get(_parent_ID).type() != workspace::ot::folder))
+	{
+		std::wcerr << "ERROR: Can't create folder. Bad parent ID\n";
+		return;
+	}
+
+	bk::folder l_folder = bk::folder(path());
+
+	if (l_folder.exists())
+	{
+		if (!l_folder.empty())
+		{
+			std::wcerr << "ERROR: Can't create folder. Folder '" << l_folder.path() << "' already exists and isn't empty\n";
+			return;
+		}
+	}
+	else
+	{
+		if(!l_folder.create())
+		{
+			std::wcerr << "ERROR: Can't create folder. Can't create folder '" << l_folder.path() << "'\n";
+			return;
+		}
+	}
+
+	if(!get_workspace().get_<object>(_parent_ID).add_child(ID())) return;
+
+	set_valid();
+}
+
+bool folder::add_child(bk::uint _child)
+{
+	if (get_workspace().get(_child).type() != workspace::ot::package &&
+		get_workspace().get(_child).type() != workspace::ot::folder)
+		return false;
+
+	return super::add_child(_child);
+}
+bool folder::rename(const bk::wstring &_name)
+{
+	bk::folder l_folder(path());
+
+	if (!l_folder.rename(_name))
+	{
+		std::wcerr << "ERROR: Can't rename package folder\n";
+		return false;
+	}
+
+	return super::rename(_name);
+}
+bk::wstring folder::path() const
+{
+	if (get_workspace().exists(parent_ID()))
+	{
+		return get_workspace().get_<object>(parent_ID()).path() + L"/" + name();
+	}
+
+	return L"";
 }
 
 } // namespace wo ---------------------------------------------------------------------------------

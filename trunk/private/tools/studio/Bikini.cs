@@ -58,6 +58,18 @@ namespace Studio
 			if (l_result is Guid) return (Guid)l_result;
 			return Guid.Empty;
 		}
+		public static Guid NewFolder(Guid _parent, String _name)
+		{
+			XmlTextWriter l_xml = StartWriteRequest("NewFolder");
+			WriteRequestArgument(l_xml, _parent);
+			WriteRequestArgument(l_xml, _name);
+			String l_request = EndWriteRequest(l_xml);
+
+			Object l_result = ReadResult(request(l_request));
+
+			if (l_result is Guid) return (Guid)l_result;
+			return Guid.Empty;
+		}
 		public static String ObjectStructure(Guid _object)
 		{
 			XmlTextWriter l_xml = StartWriteRequest("ObjectStructure");
@@ -86,6 +98,15 @@ namespace Studio
 			XmlTextWriter l_xml = StartWriteRequest("RemoveObject");
 			WriteRequestArgument(l_xml, _object);
 			String l_request = EndWriteRequest(l_xml);
+
+			Object l_result = ReadResult(request(l_request));
+
+			if (l_result is bool && Convert.ToBoolean(l_result)) return true;
+			return false;
+		}
+		public static Boolean SaveAll()
+		{
+			String l_request = WriteRequest("SaveAll");
 
 			Object l_result = ReadResult(request(l_request));
 
@@ -317,7 +338,7 @@ namespace Studio
 		public class Folder : NamedProjectItem
         {
 			Boolean m_projectFolder;
-			public Folder(String _name, Boolean _projectFolder) : base(_name) { m_projectFolder = _projectFolder; }
+			public Folder(String _name, Boolean _projectFolder, Guid _guid) : base(_name, _guid) { m_projectFolder = _projectFolder; }
 			public override String Type { get { return "Folder"; } }
 			public override String ItemType() { return m_projectFolder ? "PFolder" : "RFolder"; }
 			public override String SubItems() { return m_projectFolder ? "PFolder|Package" : "RFolder|Menu"; }
