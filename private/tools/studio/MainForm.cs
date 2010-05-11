@@ -513,5 +513,10 @@ namespace Studio
             Close();
             m_bSaveLayout = true;
         }
+
+		private void toolStripButtonSaveAll_Click(object sender, EventArgs e)
+		{
+			Bikini.SaveAll();
+		}
     }
 }

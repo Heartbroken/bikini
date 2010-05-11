@@ -498,6 +498,7 @@ namespace Studio
 			this.toolStripButtonSaveAll.Name = "toolStripButtonSaveAll";
 			this.toolStripButtonSaveAll.Size = new System.Drawing.Size(23, 22);
 			this.toolStripButtonSaveAll.Text = "toolStripButton1";
+			this.toolStripButtonSaveAll.Click += new System.EventHandler(this.toolStripButtonSaveAll_Click);
 			// 
 			// toolBarButtonSeparator1
 			// 
