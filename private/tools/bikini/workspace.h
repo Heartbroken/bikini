@@ -79,6 +79,7 @@ struct project : workspace::object
 		{}
 	};
 
+	static const bk::wchar* extension;
 
 	project(const info &_info, workspace &_workspace, const bk::wstring &_location, const bk::wstring &_name);
 
@@ -104,6 +105,8 @@ struct package : workspace::object
 			workspace::object::info(workspace::ot::package)
 		{}
 	};
+
+	static const bk::wchar* extension;
 
 	package(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name);
 
