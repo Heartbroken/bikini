@@ -65,7 +65,7 @@ namespace Studio
 		{
 			if (_xml.Name == "project" && _xml.IsStartElement())
 			{
-				String l_name = _xml.GetAttribute("Name");
+				String l_name = _xml.GetAttribute("name");
 				Guid l_guid = new Guid(_xml.GetAttribute("GUID"));
 				TreeNode l_projectNode = AddNode(new Bikini.Project(l_name, l_guid), m_treeView.Nodes);
 				l_projectNode.Expand();

@@ -49,6 +49,9 @@ const bk::GUID& workspace::new_project(const bk::wstring &_location, const bk::w
 
 	return get_<object>(l_ID).GUID();
 }
+const bk::GUID& workspace::open_project(const bk::wstring &_path)
+{
+}
 const bk::GUID& workspace::new_package(const bk::GUID &_parent, const bk::wstring &_name)
 {
 	static wo::package::info sl_package;
@@ -270,37 +273,70 @@ bk::wstring project::path() const
 
 void project::write_structure(pugi::xml_node &_root) const
 {
-	pugi::xml_node l_project = _root.append_child();
-	l_project.set_name("project");
-	l_project.append_attribute("Name") = bk::utf8(name()).c_str();
-	l_project.append_attribute("GUID") = bk::print_GUID(GUID());
+	struct _l { static void write_childs(pugi::xml_node &_parent, const workspace::object &_object)
 	{
-		for (bk::uint l_ID = first_relation(); l_ID != bk::bad_ID; l_ID = next_relation(l_ID))
+		for (bk::uint l_ID = _object.first_relation(); l_ID != bk::bad_ID; l_ID = _object.next_relation(l_ID))
 		{
-			if (!get_workspace().exists(get_relation(l_ID))) continue;
+			if (!_object.get_workspace().exists(_object.get_relation(l_ID))) continue;
 
-			object &l_object = get_workspace().get_<object>(get_relation(l_ID));
-			switch (l_object.type())
+			const object &l_child = _object.get_workspace().get_<object>(_object.get_relation(l_ID));
+			switch (l_child.type())
 			{
 				case workspace::ot::package :
 				{
-					pugi::xml_node l_package = l_project.append_child();
+					pugi::xml_node l_package = _parent.append_child();
 					l_package.set_name("package");
-					l_package.append_attribute("Name") = bk::utf8(l_object.name()).c_str();
-					l_package.append_attribute("GUID") = bk::print_GUID(l_object.GUID());
+					l_package.append_attribute("name") = bk::utf8(l_child.name()).c_str();
+					l_package.append_attribute("GUID") = bk::print_GUID(l_child.GUID());
 				}
 				break;
 				case workspace::ot::folder :
 				{
-					pugi::xml_node l_package = l_project.append_child();
-					l_package.set_name("folder");
-					l_package.append_attribute("Name") = bk::utf8(l_object.name()).c_str();
-					l_package.append_attribute("GUID") = bk::print_GUID(l_object.GUID());
+					pugi::xml_node l_folder = _parent.append_child();
+					l_folder.set_name("folder");
+					l_folder.append_attribute("name") = bk::utf8(l_child.name()).c_str();
+					l_folder.append_attribute("GUID") = bk::print_GUID(l_child.GUID());
+					write_childs(l_folder, l_child);
 				}
 				break;
 			}
 		}
-	}
+	}};
+
+	pugi::xml_node l_project = _root.append_child();
+	l_project.set_name("project");
+	l_project.append_attribute("name") = bk::utf8(name()).c_str();
+	l_project.append_attribute("GUID") = bk::print_GUID(GUID());
+
+	_l::write_childs(l_project, *this);
+
+	//{
+	//	for (bk::uint l_ID = first_relation(); l_ID != bk::bad_ID; l_ID = next_relation(l_ID))
+	//	{
+	//		if (!get_workspace().exists(get_relation(l_ID))) continue;
+
+	//		object &l_object = get_workspace().get_<object>(get_relation(l_ID));
+	//		switch (l_object.type())
+	//		{
+	//			case workspace::ot::package :
+	//			{
+	//				pugi::xml_node l_package = l_project.append_child();
+	//				l_package.set_name("package");
+	//				l_package.append_attribute("Name") = bk::utf8(l_object.name()).c_str();
+	//				l_package.append_attribute("GUID") = bk::print_GUID(l_object.GUID());
+	//			}
+	//			break;
+	//			case workspace::ot::folder :
+	//			{
+	//				pugi::xml_node l_package = l_project.append_child();
+	//				l_package.set_name("folder");
+	//				l_package.append_attribute("Name") = bk::utf8(l_object.name()).c_str();
+	//				l_package.append_attribute("GUID") = bk::print_GUID(l_object.GUID());
+	//			}
+	//			break;
+	//		}
+	//	}
+	//}
 }
 
 // package
@@ -424,7 +460,7 @@ void package::write_structure(pugi::xml_node &_root) const
 {
 	pugi::xml_node l_package = _root.append_child();
 	l_package.set_name("package");
-	l_package.append_attribute("Name") = bk::utf8(name()).c_str();
+	l_package.append_attribute("name") = bk::utf8(name()).c_str();
 	l_package.append_attribute("GUID") = bk::print_GUID(GUID());
 	{
 		for (bk::uint l_ID = first_relation(); l_ID != bk::bad_ID; l_ID = next_relation(l_ID))
@@ -438,7 +474,7 @@ void package::write_structure(pugi::xml_node &_root) const
 				{
 					pugi::xml_node l_stage = l_package.append_child();
 					l_package.set_name("stage");
-					l_package.append_attribute("Name") = bk::utf8(l_object.name()).c_str();
+					l_package.append_attribute("name") = bk::utf8(l_object.name()).c_str();
 					l_package.append_attribute("GUID") = bk::print_GUID(l_object.GUID());
 				}
 				break;

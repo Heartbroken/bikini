@@ -55,6 +55,7 @@ struct workspace : bk::manager
 	const bk::GUID& new_project(const bk::wstring &_location, const bk::wstring &_name);
 	const bk::GUID& new_package(const bk::GUID& _parent, const bk::wstring &_name);
 	const bk::GUID& new_folder(const bk::GUID& _parent, const bk::wstring &_name);
+	const bk::GUID& open_project(const bk::wstring &_path);
 	bk::astring object_structure(const bk::GUID& _object);
 	bool rename_object(const bk::GUID& _object, const bk::wstring &_name);
 	bool remove_object(const bk::GUID& _object);

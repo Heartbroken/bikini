@@ -99,7 +99,7 @@ namespace Studio
 			this.toolBarButtonSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolBarButtonLayoutByCode = new System.Windows.Forms.ToolStripButton();
 			this.toolBarButtonLayoutByXml = new System.Windows.Forms.ToolStripButton();
-			this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+			this.openProjectDialog = new System.Windows.Forms.OpenFileDialog();
 			this.dockPanel = new Studio.WinFormsUI.Docking.DockPanel();
 			this.mainMenu.SuspendLayout();
 			this.toolBar.SuspendLayout();
@@ -559,9 +559,10 @@ namespace Studio
 			this.toolBarButtonLayoutByXml.Size = new System.Drawing.Size(23, 22);
 			this.toolBarButtonLayoutByXml.ToolTipText = "Show layout by predefined XML file";
 			// 
-			// folderBrowserDialog
+			// openProjectDialog
 			// 
-			this.folderBrowserDialog.Description = "Select a location of the new project";
+			this.openProjectDialog.DefaultExt = "bkproj";
+			this.openProjectDialog.Filter = "Bikini Project|*.bkproj";
 			// 
 			// dockPanel
 			// 
@@ -703,7 +704,7 @@ namespace Studio
         private System.Windows.Forms.ToolStripMenuItem showRightToLeft;
         private System.Windows.Forms.ToolStripMenuItem exitWithoutSavingLayout;
         private System.Windows.Forms.ToolStripButton toolStripButtonSave;
-        private System.Windows.Forms.ToolStripButton toolStripButtonSaveAll;
-		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
+		private System.Windows.Forms.ToolStripButton toolStripButtonSaveAll;
+		private System.Windows.Forms.OpenFileDialog openProjectDialog;
     }
 }

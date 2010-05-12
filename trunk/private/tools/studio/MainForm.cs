@@ -184,44 +184,48 @@ namespace Studio
 
 		private void menuItemOpen_Click(object sender, System.EventArgs e)
 		{
-			OpenFileDialog openFile = new OpenFileDialog();
-
-			openFile.InitialDirectory = Application.ExecutablePath;
-			openFile.Filter = "rtf files (*.rtf)|*.rtf|txt files (*.txt)|*.txt|All files (*.*)|*.*" ;
-			openFile.FilterIndex = 1;
-			openFile.RestoreDirectory = true ;
-
-			if(openFile.ShowDialog() == DialogResult.OK)
+			if (openProjectDialog.ShowDialog() == DialogResult.OK)
 			{
-				string fullName = openFile.FileName;
-				string fileName = Path.GetFileName(fullName);
-
-				if (FindDocument(fileName) != null)
-				{
-					MessageBox.Show("The document: " + fileName + " has already opened!");
-					return;
-				}
-
-				DummyDoc dummyDoc = new DummyDoc();
-				dummyDoc.Text = fileName;
-				if (dockPanel.DocumentStyle == DocumentStyle.SystemMdi)
-				{
-					dummyDoc.MdiParent = this;
-					dummyDoc.Show();
-				}
-				else
-					dummyDoc.Show(dockPanel);
-				try
-				{
-					dummyDoc.FileName = fullName;
-				}
-				catch (Exception exception)
-				{
-					dummyDoc.Close();
-					MessageBox.Show(exception.Message);
-				}
-
 			}
+
+			//OpenFileDialog openFile = new OpenFileDialog();
+
+			//openFile.InitialDirectory = Application.ExecutablePath;
+			//openFile.Filter = "rtf files (*.rtf)|*.rtf|txt files (*.txt)|*.txt|All files (*.*)|*.*" ;
+			//openFile.FilterIndex = 1;
+			//openFile.RestoreDirectory = true ;
+
+			//if(openFile.ShowDialog() == DialogResult.OK)
+			//{
+			//    string fullName = openFile.FileName;
+			//    string fileName = Path.GetFileName(fullName);
+
+			//    if (FindDocument(fileName) != null)
+			//    {
+			//        MessageBox.Show("The document: " + fileName + " has already opened!");
+			//        return;
+			//    }
+
+			//    DummyDoc dummyDoc = new DummyDoc();
+			//    dummyDoc.Text = fileName;
+			//    if (dockPanel.DocumentStyle == DocumentStyle.SystemMdi)
+			//    {
+			//        dummyDoc.MdiParent = this;
+			//        dummyDoc.Show();
+			//    }
+			//    else
+			//        dummyDoc.Show(dockPanel);
+			//    try
+			//    {
+			//        dummyDoc.FileName = fullName;
+			//    }
+			//    catch (Exception exception)
+			//    {
+			//        dummyDoc.Close();
+			//        MessageBox.Show(exception.Message);
+			//    }
+
+			//}
 		}
 
 		private void menuItemFile_Popup(object sender, System.EventArgs e)
