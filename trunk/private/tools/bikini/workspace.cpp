@@ -51,6 +51,17 @@ const bk::GUID& workspace::new_project(const bk::wstring &_location, const bk::w
 }
 const bk::GUID& workspace::open_project(const bk::wstring &_path)
 {
+	static wo::project::info sl_project;
+
+	bk::uint l_ID = spawn(sl_project, _path, L"");
+
+	if (!get_<object>(l_ID).valid())
+	{
+		kill(l_ID);
+		return bk::bad_GUID;
+	}
+
+	return get_<object>(l_ID).GUID();
 }
 const bk::GUID& workspace::new_package(const bk::GUID &_parent, const bk::wstring &_name)
 {
