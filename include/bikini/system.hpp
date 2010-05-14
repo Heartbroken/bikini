@@ -28,5 +28,6 @@ namespace bk { /*---------------------------------------------------------------
 #include "system/audio.hpp"
 #include "system/input.hpp"
 #include "system/window.hpp"
+#include "system/folder.hpp"
 
 } /* namespace bk -------------------------------------------------------------------------------*/
