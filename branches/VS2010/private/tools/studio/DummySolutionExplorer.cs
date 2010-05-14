@@ -8,36 +8,81 @@ using System.Text;
 using System.Windows.Forms;
 using Studio.WinFormsUI.Docking;
 using System.Runtime.InteropServices;
+using System.IO;
+using System.Xml;
 
 namespace Studio
 {
 	public partial class DummySolutionExplorer : ToolWindow
 	{
+		const Int32 StartDragDist = 3;
+
 		public DummySolutionExplorer()
 		{
 			InitializeComponent();
 
-			// test
+			//// test
+			//{
+			//    TreeNode l_projectNode = AddNode(new Bikini.Project("Grrr"), m_treeView.Nodes);
+			//    l_projectNode.Expand();
+			//    {
+			//        TreeNode l_packageNode = AddNode(new Bikini.Package("main"), l_projectNode.Nodes);
+			//        {
+			//            TreeNode l_stageNode = AddNode(new Bikini.Stage("main"), l_packageNode.Nodes);
+			//        }
+			//    }
+			//    {
+			//        TreeNode l_folderNode = AddNode(new Bikini.Folder("episodes", true), l_projectNode.Nodes);
+			//        {
+			//            TreeNode l_packageNode = AddNode(new Bikini.Package("e1"), l_folderNode.Nodes);
+			//            {
+			//                TreeNode l_stageNode = AddNode(new Bikini.Stage("e1s1"), l_packageNode.Nodes);
+			//            }
+			//        }
+			//    }
+			//}
+			//// test
+		}
+
+		public void UpdateTreeView(Guid _project)
+		{
+			m_treeView.Nodes.Clear();
+
+			String l_projectStructure = Bikini.ObjectStructure(_project);
+
+			if (l_projectStructure.Length > 0)
 			{
-				TreeNode l_projectNode = AddNode(new Bikini.Project("Grrr"), m_treeView.Nodes);
-				l_projectNode.Expand();
-				{
-					TreeNode l_packageNode = AddNode(new Bikini.Package("main"), l_projectNode.Nodes);
-					{
-						TreeNode l_stageNode = AddNode(new Bikini.Stage("main"), l_packageNode.Nodes);
-					}
-				}
-				{
-					TreeNode l_folderNode = AddNode(new Bikini.Folder("episodes"), l_projectNode.Nodes);
-					{
-						TreeNode l_packageNode = AddNode(new Bikini.Package("e1"), l_folderNode.Nodes);
-						{
-							TreeNode l_stageNode = AddNode(new Bikini.Stage("e1s1"), l_packageNode.Nodes);
-						}
-					}
-				}
+				byte[] l_byteArray = Encoding.ASCII.GetBytes(l_projectStructure);
+				MemoryStream l_stream = new MemoryStream(l_byteArray);
+				XmlTextReader l_xml = new XmlTextReader(l_stream);
+				l_xml.WhitespaceHandling = WhitespaceHandling.None;
+				l_xml.MoveToContent();
+
+				ParseProjectStructure(l_xml);
 			}
-			// test
+		}
+		private void ParseProjectStructure(XmlTextReader _xml)
+		{
+			if (_xml.Name == "project" && _xml.IsStartElement())
+			{
+				String l_name = _xml.GetAttribute("name");
+				Guid l_guid = new Guid(_xml.GetAttribute("GUID"));
+				TreeNode l_projectNode = AddNode(new Bikini.Project(l_name, l_guid), m_treeView.Nodes);
+				l_projectNode.Expand();
+				_xml.ReadStartElement();
+				//if (l_xmlIn.IsStartElement())
+				//{
+				//    if (l_xmlIn.Name == "packge")
+				//        l_result = Convert.ToBoolean(l_xmlIn.ReadString());
+				//    else if (l_xmlIn.Name == "number")
+				//        l_result = Convert.ToDouble(l_xmlIn.ReadString(), CultureInfo.InvariantCulture);
+				//    else if (l_xmlIn.Name == "string")
+				//        l_result = l_xmlIn.ReadString();
+
+				//    l_xmlIn.ReadEndElement();
+				//    l_xmlIn.ReadEndElement();
+				//}
+			}
 		}
 
 		private TreeNode AddNode(Bikini.ProjectItem _item, TreeNodeCollection _nodes)
@@ -81,7 +126,11 @@ namespace Studio
 		private void m_treeView_MouseMove(object sender, MouseEventArgs e)
 		{
             Point l_dist = Point.Subtract(e.Location, new Size(m_pickPoint));
-			if (m_pickedNode != null && (Math.Abs(l_dist.X) > 2 || Math.Abs(l_dist.Y) > 2))
+
+			if (m_pickedNode != null &&
+				!(m_pickedNode.Tag is Bikini.Project) &&
+				e.Button == MouseButtons.Left &&
+				(Math.Abs(l_dist.X) > StartDragDist || Math.Abs(l_dist.Y) > StartDragDist))
 			{
 				m_treeView.DoDragDrop(m_pickedNode, DragDropEffects.Move);
 			}
@@ -98,7 +147,14 @@ namespace Studio
 				if (l_node == null) return;
 
 				m_treeView.SelectedNode = l_node;
-				e.Effect = DragDropEffects.Move;
+
+				Bikini.ProjectItem l_draggedItem = (Bikini.ProjectItem)m_pickedNode.Tag;
+				Bikini.ProjectItem l_targetItem = (Bikini.ProjectItem)l_node.Tag;
+
+				if (l_targetItem.SubItems().IndexOf(l_draggedItem.ItemType()) > -1)
+				{
+					e.Effect = DragDropEffects.Move;
+				}
 			}
 		}
 
@@ -158,11 +214,15 @@ namespace Studio
 		private const int WM_SETTEXT = 0x000C;
 		private void m_treeView_BeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
 		{
-			if (e.Node.Tag is Bikini.ProjectItem)
+			if (e.Node.Tag is Bikini.NamedProjectItem)
 			{
-				Bikini.ProjectItem l_item = (Bikini.ProjectItem)e.Node.Tag;
+				Bikini.NamedProjectItem l_item = (Bikini.NamedProjectItem)e.Node.Tag;
 				IntPtr l_editBoxHandle = SendMessage(m_treeView.Handle, TVM_GETEDITCONTROL, IntPtr.Zero, IntPtr.Zero);
 				SendMessage(l_editBoxHandle, WM_SETTEXT, IntPtr.Zero, Marshal.UnsafeAddrOfPinnedArrayElement(Encoding.Unicode.GetBytes(l_item.Name), 0));
+			}
+			else
+			{
+				e.CancelEdit = true;
 			}
 		}
 
@@ -171,10 +231,13 @@ namespace Studio
 			e.CancelEdit = true;
 			e.Node.EndEdit(true);
 
-			if (e.Node.Tag is Bikini.ProjectItem)
+			if (e.Node.Tag is Bikini.NamedProjectItem && e.Label != null && e.Label.Length > 0)
 			{
-				Bikini.ProjectItem l_item = (Bikini.ProjectItem)e.Node.Tag;
-				l_item.Name = (e.Label != null && e.Label.Length > 0) ? e.Label : l_item.Name;
+				Bikini.NamedProjectItem l_item = (Bikini.NamedProjectItem)e.Node.Tag;
+				if (Bikini.RenameObject(l_item.GUID, e.Label))
+				{
+					l_item.Name = e.Label;
+				}
 			}
 		}
 
@@ -199,12 +262,29 @@ namespace Studio
 				m_treeView.SelectedNode.Tag is Bikini.Folder)
 			{
 				TreeNode l_parentNode = m_treeView.SelectedNode;
-				TreeNode l_newNode = AddNode(new Bikini.Package("New"), l_parentNode.Nodes);
-				m_treeView.SelectedNode = l_newNode;
-				l_newNode.BeginEdit();
+				Bikini.ProjectItem l_parentItem = (Bikini.ProjectItem)l_parentNode.Tag;
+				Guid l_guid = Bikini.NewPackage(l_parentItem.GUID, "NewPackage");
+				if (l_guid != Guid.Empty)
+				{
+					TreeNode l_newNode = AddNode(new Bikini.Package("NewPackage", l_guid), l_parentNode.Nodes);
+					m_treeView.SelectedNode = l_newNode;
+					l_newNode.BeginEdit();
+				}
 			}
 		}
 
+		private Boolean FindResourcesItem(TreeNode _node)
+		{
+			TreeNode l_node = _node;
+
+			while (l_node.Parent != null)
+			{
+				if (l_node.Tag is Bikini.Resources) return true;
+				l_node = l_node.Parent;
+			}
+
+			return false;
+		}
 		private void newFolderToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (m_treeView.SelectedNode.Tag is Bikini.Project ||
@@ -212,9 +292,16 @@ namespace Studio
                 m_treeView.SelectedNode.Tag is Bikini.Resources)
 			{
 				TreeNode l_parentNode = m_treeView.SelectedNode;
-				TreeNode l_newNode = AddNode(new Bikini.Folder("New"), l_parentNode.Nodes);
-				m_treeView.SelectedNode = l_newNode;
-				l_newNode.BeginEdit();
+				Boolean l_projectFolder = !FindResourcesItem(l_parentNode);
+				Bikini.ProjectItem l_parentItem = (Bikini.ProjectItem)l_parentNode.Tag;
+
+				Guid l_guid = Bikini.NewFolder(l_parentItem.GUID, "NewFolder");
+				if (l_guid != Guid.Empty)
+				{
+					TreeNode l_newNode = AddNode(new Bikini.Folder("NewFolder", l_projectFolder, l_guid), l_parentNode.Nodes);
+					m_treeView.SelectedNode = l_newNode;
+					l_newNode.BeginEdit();
+				}
 			}
 		}
 
@@ -233,7 +320,8 @@ namespace Studio
 		private void newMenuToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (m_treeView.SelectedNode.Tag is Bikini.Stage ||
-				m_treeView.SelectedNode.Tag is Bikini.Resources)
+				m_treeView.SelectedNode.Tag is Bikini.Resources ||
+				m_treeView.SelectedNode.Tag is Bikini.Folder)
 			{
 				TreeNode l_parentNode = m_treeView.SelectedNode;
 				if (m_treeView.SelectedNode.Tag is Bikini.Stage)
@@ -241,7 +329,7 @@ namespace Studio
 					TreeNode l_resourcesNode = l_parentNode.Nodes["Resources"];
 					if (l_resourcesNode == null)
 					{
-						l_resourcesNode = AddNode(new Bikini.Resources("Resources"), l_parentNode.Nodes);
+						l_resourcesNode = AddNode(new Bikini.Resources(), l_parentNode.Nodes);
                         l_resourcesNode.Name = "Resources";
 					}
 					l_parentNode = l_resourcesNode;
@@ -274,8 +362,10 @@ namespace Studio
 			m_treeView.SelectedNode = l_node;
 		}
 
-		private void SetMenuVisibleItems(ToolStrip _menu, Bikini.ProjectItem _projectItem)
+		private Int32 SetMenuVisibleItems(ToolStrip _menu, Bikini.ProjectItem _projectItem)
 		{
+			Int32 l_hiddenCount = 0;
+
 			foreach (ToolStripItem l_stripItem in _menu.Items)
 			{
 				Boolean l_showStripItem = true;
@@ -283,9 +373,10 @@ namespace Studio
 				if (l_stripItem.Tag is String)
 				{
 					String l_tag = (String)l_stripItem.Tag;
-					if (l_tag.IndexOf(_projectItem.Type) == -1)
+					if (l_tag.IndexOf(_projectItem.ItemType()) == -1)
 					{
 						l_showStripItem = false;
+						++l_hiddenCount;
 					}
 				}
 
@@ -297,13 +388,19 @@ namespace Studio
 					{
 						ToolStripMenuItem l_stripMenuItem = (ToolStripMenuItem)l_stripItem;
 
-						if (l_stripMenuItem.DropDown != null)
+						if (l_stripMenuItem.DropDown != null && l_stripMenuItem.DropDown.Items.Count > 0)
 						{
-							SetMenuVisibleItems(l_stripMenuItem.DropDown, _projectItem);
+							if (SetMenuVisibleItems(l_stripMenuItem.DropDown, _projectItem) == 0)
+							{
+								l_stripItem.Visible = false;
+								++l_hiddenCount;
+							}
 						}
 					}
 				}
 			}
+
+			return _menu.Items.Count - l_hiddenCount;
 		}
 	}
 }

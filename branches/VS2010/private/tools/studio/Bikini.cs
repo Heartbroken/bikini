@@ -34,17 +34,85 @@ namespace Studio
             return false;
         }
 
-        public static Boolean CreateSolution()
+		public static Guid NewProject(String _path, String _name)
         {
-            XmlTextWriter l_xml = StartWriteRequest("CreateSolution");
-            WriteRequestArgument(l_xml, "Русские буквы");
-            String l_request = EndWriteRequest(l_xml);
+			XmlTextWriter l_xml = StartWriteRequest("NewProject");
+			WriteRequestArgument(l_xml, _path);
+			WriteRequestArgument(l_xml, _name);
+			String l_request = EndWriteRequest(l_xml);
 
             Object l_result = ReadResult(request(l_request));
 
-            if (l_result is bool && Convert.ToBoolean(l_result)) return true;
-            return false;
+			if (l_result is Guid) return (Guid)l_result;
+			return Guid.Empty;
         }
+		public static Guid NewPackage(Guid _parent, String _name)
+		{
+			XmlTextWriter l_xml = StartWriteRequest("NewPackage");
+			WriteRequestArgument(l_xml, _parent);
+			WriteRequestArgument(l_xml, _name);
+			String l_request = EndWriteRequest(l_xml);
+
+			Object l_result = ReadResult(request(l_request));
+
+			if (l_result is Guid) return (Guid)l_result;
+			return Guid.Empty;
+		}
+		public static Guid NewFolder(Guid _parent, String _name)
+		{
+			XmlTextWriter l_xml = StartWriteRequest("NewFolder");
+			WriteRequestArgument(l_xml, _parent);
+			WriteRequestArgument(l_xml, _name);
+			String l_request = EndWriteRequest(l_xml);
+
+			Object l_result = ReadResult(request(l_request));
+
+			if (l_result is Guid) return (Guid)l_result;
+			return Guid.Empty;
+		}
+		public static String ObjectStructure(Guid _object)
+		{
+			XmlTextWriter l_xml = StartWriteRequest("ObjectStructure");
+			WriteRequestArgument(l_xml, _object);
+			String l_request = EndWriteRequest(l_xml);
+
+			Object l_result = ReadResult(request(l_request));
+
+			if (l_result is String) return Convert.ToString(l_result);
+			return "";
+		}
+		public static Boolean RenameObject(Guid _object, String _name)
+		{
+			XmlTextWriter l_xml = StartWriteRequest("RenameObject");
+			WriteRequestArgument(l_xml, _object);
+			WriteRequestArgument(l_xml, _name);
+			String l_request = EndWriteRequest(l_xml);
+
+			Object l_result = ReadResult(request(l_request));
+
+			if (l_result is bool && Convert.ToBoolean(l_result)) return true;
+			return false;
+		}
+		public static Boolean RemoveObject(Guid _object)
+		{
+			XmlTextWriter l_xml = StartWriteRequest("RemoveObject");
+			WriteRequestArgument(l_xml, _object);
+			String l_request = EndWriteRequest(l_xml);
+
+			Object l_result = ReadResult(request(l_request));
+
+			if (l_result is bool && Convert.ToBoolean(l_result)) return true;
+			return false;
+		}
+		public static Boolean SaveAll()
+		{
+			String l_request = WriteRequest("SaveAll");
+
+			Object l_result = ReadResult(request(l_request));
+
+			if (l_result is bool && Convert.ToBoolean(l_result)) return true;
+			return false;
+		}
 
         // test
         public static UInt64 CreateView(IntPtr _handle)
@@ -172,6 +240,8 @@ namespace Studio
                         l_result = Convert.ToDouble(l_xmlIn.ReadString(), CultureInfo.InvariantCulture);
                     else if (l_xmlIn.Name == "string")
                         l_result = l_xmlIn.ReadString();
+                    else if (l_xmlIn.Name == "GUID")
+                        l_result = new Guid(l_xmlIn.ReadString());
 
                     l_xmlIn.ReadEndElement();
                     l_xmlIn.ReadEndElement();
@@ -215,15 +285,30 @@ namespace Studio
 			public TreeNode treeNode;
             public ComboBox comboBox;
 
-			public ProjectItem(String _name) { m_name = _name; }
+			public ProjectItem() { m_guid = Guid.NewGuid(); }
+			public ProjectItem(Guid _guid) { m_guid = _guid; }
 
             // GUID
-            private Guid m_guid = Guid.NewGuid();
+            private Guid m_guid;
             [CategoryAttribute("Object ID"), DescriptionAttribute("Object's identity")]
             public Guid GUID { get { return m_guid; } }
 
+			// Type
+			[CategoryAttribute("Object ID"), DescriptionAttribute("Object's type")]
+			public abstract String Type { get; }
+
+			public override string ToString() { return Type; }
+			public virtual String FullName() { return Type; }
+			public virtual String ItemType() { return Type; }
+			public virtual String SubItems() { return ""; }
+		}
+		public abstract class NamedProjectItem : ProjectItem
+		{
+			public NamedProjectItem(String _name) { m_name = _name; }
+			public NamedProjectItem(String _name, Guid _guid) : base(_guid) { m_name = _name; }
+
             // Name
-            private String m_name = "Grrr";
+            private String m_name;
 			[CategoryAttribute("Object ID"), DescriptionAttribute("You always can change the name. All references to the object are made by its GUID")]
 			public virtual String Name
             {
@@ -237,59 +322,59 @@ namespace Studio
                 }
             }
 
-			// Type
-			[CategoryAttribute("Object ID"), DescriptionAttribute("Object's type")]
-			public abstract String Type { get; }
-
-			// To string
 			public override string ToString() { return Type + " '" + Name + "'"; }
-
-			public virtual String FullName() { return Name; }
-        }
+			public override String FullName() { return Name; }
+		}
 
         // Project
-        public class Project : ProjectItem
+		public class Project : NamedProjectItem
         {
-			public Project(String _name) : base(_name) {}
+			public Project(String _name, Guid _guid) : base(_name, _guid) { }
 			public override String Type { get { return "Project"; } }
 			public override String FullName() { return ToString(); }
-        }
+			public override String SubItems() { return "PFolder|Package"; }
+		}
         // Folder
-        public class Folder : ProjectItem
+		public class Folder : NamedProjectItem
         {
-			public Folder(String _name) : base(_name) { }
+			Boolean m_projectFolder;
+			public Folder(String _name, Boolean _projectFolder, Guid _guid) : base(_name, _guid) { m_projectFolder = _projectFolder; }
 			public override String Type { get { return "Folder"; } }
+			public override String ItemType() { return m_projectFolder ? "PFolder" : "RFolder"; }
+			public override String SubItems() { return m_projectFolder ? "PFolder|Package" : "RFolder|Menu"; }
 		}
         // Package
-        public class Package : ProjectItem
+		public class Package : NamedProjectItem
         {
-			public Package(String _name) : base(_name) {}
+			public Package(String _name, Guid _guid) : base(_name, _guid) { }
 			public override String Type { get { return "Package"; } }
+			public override String SubItems() { return "Stage"; }
 		}
         // Stage
-        public class Stage : ProjectItem
+		public class Stage : NamedProjectItem
         {
 			public Stage(String _name) : base(_name) {}
 			public override String Type { get { return "Stage"; } }
+			public override String SubItems() { return "Stage|Resources"; }
 		}
 		// Resources
 		public class Resources : ProjectItem
 		{
-			public Resources(String _name) : base(_name) { }
+			public Resources() { }
 			public override String Type { get { return "Resources"; } }
-			//public override String Name { get { return "wqwq"; } private set { } }
+			public override String SubItems() { return "Menu|RFolder"; }
 		}
 
 		// Resource item
-		public abstract class ResourceItem : ProjectItem
+		public abstract class ResourceItem : NamedProjectItem
 		{
-			public ResourceItem(String _name) : base(_name) { }
+			public ResourceItem(String _name) : base(_name) {}
 			public override String FullName() { return Name + "." + Type.ToLower(); }
 		}
 		// Menu
 		public class Menu : ResourceItem
 		{
-			public Menu(String _name) : base(_name) { }
+			public Menu(String _name) : base(_name) {}
 			public override String Type { get { return "Menu"; } }
 		}
 	}

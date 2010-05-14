@@ -83,6 +83,14 @@ template <> struct pop<const bk::wstring&> { static inline bk::wstring a(const p
 {
 	return bk::utf8(child(_n, _i).child_value());
 }};
+template <> struct pop<GUID> { static inline GUID a(const pugi::xml_node &_n, bk::uint _i)
+{
+	return bk::scan_GUID(child(_n, _i).child_value());
+}};
+template <> struct pop<const GUID&> { static inline GUID a(const pugi::xml_node &_n, bk::uint _i)
+{
+	return bk::scan_GUID(child(_n, _i).child_value());
+}};
 
 //
 
@@ -130,6 +138,11 @@ inline void push(pugi::xml_node &_n, const bk::astring &_v)
 {
 	pugi::xml_node l_n = _n.append_child(); l_n.set_name("string");
 	l_n.append_child(pugi::node_pcdata).set_value(_v.c_str());
+}
+inline void push(pugi::xml_node &_n, const GUID &_v)
+{
+	pugi::xml_node l_n = _n.append_child(); l_n.set_name("GUID");
+	l_n.append_child(pugi::node_pcdata).set_value(bk::print_GUID(_v));
 }
 
 //
