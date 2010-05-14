@@ -54,6 +54,9 @@
     <ClCompile Include="video_rendering_D3D9.cpp">
       <Filter>source\video</Filter>
     </ClCompile>
+    <ClCompile Include="folder.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\include\bikini\system\thread.inl">
@@ -111,6 +114,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\bikini\system\video.hpp">
       <Filter>interface\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\system\folder.hpp">
+      <Filter>interface</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
