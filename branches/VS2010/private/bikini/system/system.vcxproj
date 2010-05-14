@@ -164,6 +164,7 @@
     <ClCompile Include="application.cpp" />
     <ClCompile Include="audio.cpp" />
     <ClCompile Include="device.cpp" />
+    <ClCompile Include="folder.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="system.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -185,6 +186,7 @@
     <None Include="..\..\..\include\bikini\system\viewport.shh" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\bikini\system\folder.hpp" />
     <ClInclude Include="header.hpp" />
     <ClInclude Include="..\..\..\include\bikini\system\application.hpp" />
     <ClInclude Include="..\..\..\include\bikini\system\audio.hpp" />
