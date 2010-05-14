@@ -342,14 +342,14 @@
 				>
 			</File>
 			<Filter
-				Name="solution"
+				Name="workspace"
 				>
 				<File
-					RelativePath=".\solution.cpp"
+					RelativePath=".\workspace.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\solution.h"
+					RelativePath=".\workspace.h"
 					>
 				</File>
 			</Filter>
