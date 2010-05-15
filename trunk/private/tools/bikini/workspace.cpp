@@ -13,6 +13,7 @@ bool workspace::create()
 	destroy();
 
 	commands::add("NewProject", bk::functor_<const bk::GUID&, const bk::wstring&, const bk::wstring&>(*this, &workspace::new_project));
+	commands::add("OpenProject", bk::functor_<const bk::GUID&, const bk::wstring&>(*this, &workspace::open_project));
 	commands::add("NewPackage", bk::functor_<const bk::GUID&, const bk::GUID&, const bk::wstring&>(*this, &workspace::new_package));
 	commands::add("NewFolder", bk::functor_<const bk::GUID&, const bk::GUID&, const bk::wstring&>(*this, &workspace::new_folder));
 	commands::add("ObjectStructure", bk::functor_<bk::astring, const bk::GUID&>(*this, &workspace::object_structure));
@@ -30,6 +31,7 @@ void workspace::destroy()
 	commands::remove("ObjectStructure");
 	commands::remove("NewFolder");
 	commands::remove("NewPackage");
+	commands::remove("OpenProject");
 	commands::remove("NewProject");
 
 	clear();
@@ -185,32 +187,45 @@ namespace wo { // workspace objects --------------------------------------------
 
 const bk::wchar* project::extension = L".bkproj";
 
-project::project(const info &_info, workspace &_workspace, const bk::wstring& _location, const bk::wstring& _name)
+project::project(const info &_info, workspace &_workspace, const bk::wstring &_path, const bk::wstring &_name)
 :
 	workspace::object(_info, _workspace, bk::bad_ID, _name)
 {
-	m_folder = bk::folder(_location + L"/" + name());
+	if (name() != L"")	// Create new project
+	{
+		m_folder = bk::folder(_path + L"/" + name());
 
-	if (m_folder.exists())
-	{
-		if (!m_folder.empty())
+		if (m_folder.exists())
 		{
-			std::wcerr << "ERROR: Can't create project. Folder '" << m_folder.path() << "' already exists and isn't empty\n";
-			m_folder = bk::bad_folder;
-			return;
+			if (!m_folder.empty())
+			{
+				std::wcerr << "ERROR: Can't create project. Folder '" << m_folder.path() << "' already exists and isn't empty\n";
+				m_folder = bk::bad_folder;
+				return;
+			}
 		}
-	}
-	else
-	{
-		if(!m_folder.create())
+		else if(!m_folder.create())
 		{
 			std::wcerr << "ERROR: Can't create project. Can't create folder '" << m_folder.path() << "'\n";
 			m_folder = bk::bad_folder;
 			return;
 		}
-	}
 
-	if (!save()) return;
+		if (!save()) return;
+	}
+	else				// Load existing project
+	{
+		bk::wchar l_drive[MAX_PATH], l_dir[MAX_PATH], l_fname[MAX_PATH], l_ext[MAX_PATH];
+		_wsplitpath_s(_path.c_str(), l_drive, l_dir, l_fname, l_ext);
+
+		bk::wstring l_path = bk::format(L"%s%s", l_drive, l_dir);
+		bk::wstring l_name = bk::format(L"%s%s", l_fname, l_ext);
+
+		m_folder = bk::folder(l_path);
+		set_name(l_fname);
+
+		if (!load()) return;
+	}
 
 	set_valid();
 }
@@ -274,6 +289,26 @@ bool project::save() const
 
 	pugi::xml_document l_document; write_structure(l_document);
 	l_document.save(l_writer, "    ", pugi::format_default|pugi::format_write_bom_utf8);
+
+	return true;
+}
+bool project::load()
+{
+	bk::wstring l_path = m_folder.path() + L"/" + name() + extension;
+
+	std::fstream l_stream(l_path.c_str(), std::ios_base::in);
+
+	if (!l_stream.good())
+	{
+		std::wcerr << "ERROR: Can't load project. Can't open file '" << l_path << "'\n";
+		return false;
+	}
+
+	pugi::xml_document l_document;
+	l_document.load(l_stream);
+
+	pugi::xml_node l_project = l_document.child("project");
+	if (bk::astring("project") != l_project.name()) return false;
 
 	return true;
 }

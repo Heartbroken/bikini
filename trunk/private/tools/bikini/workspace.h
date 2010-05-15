@@ -29,6 +29,7 @@ struct workspace : bk::manager
 		virtual bool rename(const bk::wstring &_name) { set_name(_name); return true; }
 		virtual bk::astring structure() const { return ""; }
 		virtual bool save() const { return true; }
+		virtual bool load() { return true; }
 		virtual bk::wstring path() const { return L""; }
 
 	protected:
@@ -53,9 +54,9 @@ struct workspace : bk::manager
 	void destroy();
 
 	const bk::GUID& new_project(const bk::wstring &_location, const bk::wstring &_name);
+	const bk::GUID& open_project(const bk::wstring &_path);
 	const bk::GUID& new_package(const bk::GUID& _parent, const bk::wstring &_name);
 	const bk::GUID& new_folder(const bk::GUID& _parent, const bk::wstring &_name);
-	const bk::GUID& open_project(const bk::wstring &_path);
 	bk::astring object_structure(const bk::GUID& _object);
 	bool rename_object(const bk::GUID& _object, const bk::wstring &_name);
 	bool remove_object(const bk::GUID& _object);
@@ -82,12 +83,13 @@ struct project : workspace::object
 
 	static const bk::wchar* extension;
 
-	project(const info &_info, workspace &_workspace, const bk::wstring &_location, const bk::wstring &_name);
+	project(const info &_info, workspace &_workspace, const bk::wstring &_path, const bk::wstring &_name);
 
 	virtual bool add_child(bk::uint _child);
 	virtual bool rename(const bk::wstring &_name);
 	virtual bk::astring structure() const;
 	virtual bool save() const;
+	virtual bool load();
 	virtual bk::wstring path() const;
 
 private:

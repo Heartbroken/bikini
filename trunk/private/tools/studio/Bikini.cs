@@ -34,10 +34,10 @@ namespace Studio
             return false;
         }
 
-		public static Guid NewProject(String _path, String _name)
+		public static Guid NewProject(String _location, String _name)
         {
 			XmlTextWriter l_xml = StartWriteRequest("NewProject");
-			WriteRequestArgument(l_xml, _path);
+			WriteRequestArgument(l_xml, _location);
 			WriteRequestArgument(l_xml, _name);
 			String l_request = EndWriteRequest(l_xml);
 
@@ -46,6 +46,17 @@ namespace Studio
 			if (l_result is Guid) return (Guid)l_result;
 			return Guid.Empty;
         }
+		public static Guid OpenProject(String _path)
+		{
+			XmlTextWriter l_xml = StartWriteRequest("OpenProject");
+			WriteRequestArgument(l_xml, _path);
+			String l_request = EndWriteRequest(l_xml);
+
+			Object l_result = ReadResult(request(l_request));
+
+			if (l_result is Guid) return (Guid)l_result;
+			return Guid.Empty;
+		}
 		public static Guid NewPackage(Guid _parent, String _name)
 		{
 			XmlTextWriter l_xml = StartWriteRequest("NewPackage");
