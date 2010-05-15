@@ -186,6 +186,7 @@ namespace Studio
 		{
 			if (openProjectDialog.ShowDialog() == DialogResult.OK)
 			{
+				Bikini.OpenProject(openProjectDialog.FileName);
 			}
 
 			//OpenFileDialog openFile = new OpenFileDialog();
