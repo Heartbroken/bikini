@@ -22,17 +22,37 @@ struct rendering_D3D11 : video::rendering
 	void finalize();
 	bool execute(const command &_command);
 
+private:
+	ID3D11Device *m_D3D11Device_p;
 };
 
 rendering_D3D11::rendering_D3D11(video &_video)
 :
-	video::rendering(_video)
+	video::rendering(_video),
+	m_D3D11Device_p(0)
 {}
 rendering_D3D11::~rendering_D3D11()
 {
 }
 bool rendering_D3D11::initialize()
 {
+	if (FAILED(D3D11CreateDevice
+	(
+		NULL,
+		D3D_DRIVER_TYPE_HARDWARE,
+		NULL,
+		D3D11_CREATE_DEVICE_SINGLETHREADED,
+		NULL,
+		0,
+		D3D11_SDK_VERSION,
+		&m_D3D11Device_p,
+		NULL,
+		NULL
+	)))
+	{
+		return false;
+	}
+	
 	return true;
 }
 void rendering_D3D11::finalize()
@@ -68,7 +88,8 @@ bool rendering_D3D11::execute(const command &_command)
 
 video::rendering* new_rendering_D3D11(video &_video)
 {
-	return 0;//new rendering_D3D11(_video);
+	//return 0;
+	return new rendering_D3D11(_video);
 }
 
 } /* namespace bk -------------------------------------------------------------------------------*/
