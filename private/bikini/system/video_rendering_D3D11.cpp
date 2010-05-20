@@ -8,7 +8,7 @@
 
 #include "header.hpp"
 
-//#pragma comment(lib, "d3d9")
+#pragma comment(lib, "d3d11")
 
 namespace bk { /*--------------------------------------------------------------------------------*/
 
