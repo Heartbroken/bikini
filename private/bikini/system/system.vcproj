@@ -614,7 +614,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\video_rendering_D3D11.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\video_rendering_D3D9.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\video_rendering_WIN.cpp"
 					>
 				</File>
 				<Filter
