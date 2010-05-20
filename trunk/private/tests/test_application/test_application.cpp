@@ -57,7 +57,7 @@ struct task0 : bk::application::task
 			if (!l_window.update(l_dt)) break;
 
 			l_player.update(l_dt);
-			l_player.render();
+			//l_player.render();
 
 			l_video.update(l_dt);
 

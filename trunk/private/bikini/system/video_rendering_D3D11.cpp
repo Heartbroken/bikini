@@ -25,11 +25,30 @@ struct rendering_D3D11 : video::rendering
 
 private:
 	ID3D11Device *m_pD3D11Device;
+	ID3D11DeviceContext *m_pD3D11DeviceContext;
 
 	ID3D11Device& get_device() const;
 	IDXGIFactory& get_factory() const;
 
 	bool execute(const create_schain &_command);
+	//bool execute(const create_viewport &_command);
+	//bool execute(const create_vformat &_command);
+	//bool execute(const create_vbuffer &_command);
+	//bool execute(const write_vbuffer &_command);
+	//bool execute(const create_vshader &_command);
+	//bool execute(const create_pshader &_command);
+	//bool execute(const create_vbufset &_command);
+	//bool execute(const create_states &_command);
+	//bool execute(const create_consts &_command);s
+	//bool execute(const write_consts &_command);
+	//bool execute(const create_texture &_command);
+	//bool execute(const write_texture &_command);
+	//bool execute(const create_texset &_command);
+	//bool execute(const destroy_resource &_command);
+	bool execute(const begin_scene &_command);
+	bool execute(const clear_viewport &_command);
+	//bool execute(const draw_primitive &_command);
+	bool execute(const end_scene &_command);
 	bool execute(const present_schain &_command);
 
 	struct _resource { uint ID; };
@@ -47,12 +66,13 @@ private:
 
 	void m_create_resource(const resource &_r);
 	void m_destroy_resource(uint _ID);
+	bool m_set_target(uint _ID);
 };
 
 rendering_D3D11::rendering_D3D11(video &_video)
 :
 	video::rendering(_video),
-	m_pD3D11Device(0)
+	m_pD3D11Device(0), m_pD3D11DeviceContext(0)
 {}
 rendering_D3D11::~rendering_D3D11()
 {
@@ -64,13 +84,13 @@ bool rendering_D3D11::initialize()
 		NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
-		D3D11_CREATE_DEVICE_SINGLETHREADED,
+		D3D11_CREATE_DEVICE_SINGLETHREADED|D3D11_CREATE_DEVICE_DEBUG,
 		NULL,
 		0,
 		D3D11_SDK_VERSION,
 		&m_pD3D11Device,
 		NULL,
-		NULL
+		&m_pD3D11DeviceContext
 	)))
 	{
 		return false;
@@ -191,6 +211,34 @@ void rendering_D3D11::m_destroy_resource(uint _ID)
 		}
 	}
 }
+bool rendering_D3D11::m_set_target(uint _ID)
+{
+	uint_ID l_ID(_ID);
+	if (l_ID.index < m_resources.size())
+	{
+		resource &l_resource = m_resources[l_ID.index];
+		if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _ID)
+		{
+			switch (l_resource.type())
+			{
+				case resource_types::type_<schain>::index :
+				{
+					schain &l_schain = l_resource.get_<schain>();
+					ID3D11Texture2D *l_surface_p;
+					l_schain.pDXGISChain->GetBuffer(0, __uuidof(l_surface_p), reinterpret_cast<void**>(&l_surface_p));
+
+					ID3D11RenderTargetView *l_rtarget_p = 0;
+					m_pD3D11Device->CreateRenderTargetView(l_surface_p, NULL, &l_rtarget_p);
+					m_pD3D11DeviceContext->OMSetRenderTargets(1, &l_rtarget_p, NULL);
+					l_surface_p->Release();
+
+					break;
+				}
+			}
+		}
+	}
+	return true;
+}
 bool rendering_D3D11::execute(const command &_command)
 {
 	switch (_command.type())
@@ -210,10 +258,10 @@ bool rendering_D3D11::execute(const command &_command)
 		//case command_types::type_<write_texture>::index : return execute(_command.get_<write_texture>());
 		//case command_types::type_<create_texset>::index : return execute(_command.get_<create_texset>());
 		//case command_types::type_<destroy_resource>::index : return execute(_command.get_<destroy_resource>());
-		//case command_types::type_<begin_scene>::index : return execute(_command.get_<begin_scene>());
-		//case command_types::type_<clear_viewport>::index : return execute(_command.get_<clear_viewport>());
+		case command_types::type_<begin_scene>::index : return execute(_command.get_<begin_scene>());
+		case command_types::type_<clear_viewport>::index : return execute(_command.get_<clear_viewport>());
 		//case command_types::type_<draw_primitive>::index : return execute(_command.get_<draw_primitive>());
-		//case command_types::type_<end_scene>::index : return execute(_command.get_<end_scene>());
+		case command_types::type_<end_scene>::index : return execute(_command.get_<end_scene>());
 		case command_types::type_<present_schain>::index : return execute(_command.get_<present_schain>());
 	}
 	return false;
@@ -257,11 +305,43 @@ bool rendering_D3D11::execute(const create_schain &_command)
 
 	return true;
 }
-//bool rendering_D3D11::execute(const end_scene &_command)
-//{
-//	if (FAILED(m_pD3D11Device->EndScene())) return false;
-//	return true;
-//}
+bool rendering_D3D11::execute(const begin_scene &_command)
+{
+	//if (FAILED(m_D3DDevice9_p->BeginScene())) return false;
+	return true;
+}
+bool rendering_D3D11::execute(const clear_viewport &_command)
+{
+	if (!m_set_target(_command.target_ID)) return false;
+	//if (!m_set_viewport(_command.viewport_ID)) return false;
+
+	DWORD l_flags = 0;
+	if (_command.clear.f & cf::color) l_flags |= D3DCLEAR_TARGET;
+	if (_command.clear.f & cf::depth) l_flags |= D3DCLEAR_ZBUFFER;
+	if (_command.clear.f & cf::stencil) l_flags |= D3DCLEAR_STENCIL;
+
+	if (l_flags != 0)
+	{
+		D3DCOLOR l_color = (D3DCOLOR)_command.clear.c;
+		float l_z = (float)_command.clear.z;
+		DWORD l_stencil = (DWORD)_command.clear.s;
+
+		ID3D11RenderTargetView *l_rtarget_p;
+		m_pD3D11DeviceContext->OMGetRenderTargets(1, &l_rtarget_p, NULL);
+		FLOAT l_c[] = { 1.f, 0, 0, 1.f };
+		m_pD3D11DeviceContext->ClearRenderTargetView(l_rtarget_p, l_c);
+		l_rtarget_p->Release();
+
+		//if (FAILED(m_D3DDevice9_p->Clear(0, 0, l_flags, l_color, l_z, l_stencil))) return false;
+	}
+
+	return true;
+}
+bool rendering_D3D11::execute(const end_scene &_command)
+{
+	//if (FAILED(m_pD3D11Device->EndScene())) return false;
+	return true;
+}
 bool rendering_D3D11::execute(const present_schain &_command)
 {
 	uint_ID l_command_ID(_command.ID);
