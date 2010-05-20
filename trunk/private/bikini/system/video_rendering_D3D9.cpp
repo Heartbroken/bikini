@@ -980,12 +980,9 @@ bool rendering_D3D9::execute(const present_schain &_command)
 	return true;
 }
 
-// video
-
-video::rendering& video::new_rendering(video &_video)
+video::rendering* new_rendering_D3D9(video &_video)
 {
-	return * new rendering_D3D9(_video);
+	return new rendering_D3D9(_video);
 }
-
 
 } /* namespace bk -------------------------------------------------------------------------------*/
