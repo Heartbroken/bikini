@@ -235,7 +235,10 @@ video::~video()
 }
 bool video::create()
 {
-	m_rendering.create();
+	if (&m_rendering == 0) return false;
+
+	if (!m_rendering.create()) return false;
+
 	return true;
 }
 bool video::update(real _dt)
