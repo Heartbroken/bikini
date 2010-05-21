@@ -26,6 +26,7 @@ struct rendering_D3D11 : video::rendering
 private:
 	ID3D11Device *m_pD3D11Device;
 	ID3D11DeviceContext *m_pD3D11DeviceContext;
+	IDXGIFactory *m_pDXGIFactory;
 
 	ID3D11Device& get_device() const;
 	IDXGIFactory& get_factory() const;
@@ -53,7 +54,7 @@ private:
 
 	struct _resource { uint ID; };
 
-	struct schain : _resource { IDXGISwapChain *pDXGISChain; };
+	struct schain : _resource { IDXGISwapChain *pDXGISChain; ID3D11RenderTargetView *pD3D11RenderTargetView; };
 
 	typedef make_typelist_<
 		schain//, viewport, vformat, vbuffer, vshader, pshader, vbufset, states, consts, texture, texset
@@ -72,7 +73,8 @@ private:
 rendering_D3D11::rendering_D3D11(video &_video)
 :
 	video::rendering(_video),
-	m_pD3D11Device(0), m_pD3D11DeviceContext(0)
+	m_pD3D11Device(0), m_pD3D11DeviceContext(0),
+	m_pDXGIFactory(0)
 {}
 rendering_D3D11::~rendering_D3D11()
 {
@@ -95,15 +97,50 @@ bool rendering_D3D11::initialize()
 	{
 		return false;
 	}
-	
+
+	IDXGIDevice *l_pDXGIDevice;
+	if (FAILED(m_pD3D11Device->QueryInterface(__uuidof(IDXGIDevice), (void**)&l_pDXGIDevice)))
+	{
+		m_pD3D11Device->Release(); m_pD3D11Device = 0;
+		return false;
+	}
+
+	IDXGIAdapter *l_pDXGIAdapter;
+	if (FAILED(l_pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&l_pDXGIAdapter)))
+	{
+		l_pDXGIDevice->Release();
+		m_pD3D11Device->Release(); m_pD3D11Device = 0;
+		return false;
+	}
+
+	if (FAILED(l_pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&m_pDXGIFactory)))
+	{
+		l_pDXGIAdapter->Release();
+		l_pDXGIDevice->Release();
+		m_pD3D11Device->Release(); m_pD3D11Device = 0;
+		return false;
+	}
+
+	l_pDXGIAdapter->Release();
+	l_pDXGIDevice->Release();
+
 	return true;
 }
 void rendering_D3D11::finalize()
 {
-	if (m_pD3D11Device != 0)
+	while (!m_resources.empty())
 	{
-		m_pD3D11Device->Release();
+		resource &l_resource = m_resources.back();
+		if (!l_resource.is_nothing())
+		{
+			m_destroy_resource(l_resource.get_<_resource>().ID);
+		}
+		m_resources.pop_back();
 	}
+
+	if (m_pDXGIFactory != 0) m_pDXGIFactory->Release();
+	if (m_pD3D11DeviceContext != 0) m_pD3D11DeviceContext->Release();
+	if (m_pD3D11Device != 0) m_pD3D11Device->Release();
 }
 ID3D11Device& rendering_D3D11::get_device() const
 {
@@ -111,20 +148,7 @@ ID3D11Device& rendering_D3D11::get_device() const
 }
 IDXGIFactory& rendering_D3D11::get_factory() const
 {
-	IDXGIDevice *l_pDXGIDevice;
-	if (SUCCEEDED(m_pD3D11Device->QueryInterface(__uuidof(IDXGIDevice), (void**)&l_pDXGIDevice)))
-	{
-		IDXGIAdapter *l_pDXGIAdapter;
-		if (SUCCEEDED(l_pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&l_pDXGIAdapter)))
-		{
-			IDXGIFactory *l_pIDXGIFactory;
-			l_pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&l_pIDXGIFactory);
-
-			return *l_pIDXGIFactory;
-		}
-	}
-	      
-	return *(IDXGIFactory*)0;
+	return *m_pDXGIFactory;
 }
 void rendering_D3D11::m_create_resource(const resource &_r)
 {
@@ -154,6 +178,7 @@ void rendering_D3D11::m_destroy_resource(uint _ID)
 				case resource_types::type_<schain>::index :
 				{
 					schain &l_schain = l_resource.get_<schain>();
+					l_schain.pD3D11RenderTargetView->Release();
 					l_schain.pDXGISChain->Release();
 					break;
 				}
@@ -224,14 +249,8 @@ bool rendering_D3D11::m_set_target(uint _ID)
 				case resource_types::type_<schain>::index :
 				{
 					schain &l_schain = l_resource.get_<schain>();
-					ID3D11Texture2D *l_surface_p;
-					l_schain.pDXGISChain->GetBuffer(0, __uuidof(l_surface_p), reinterpret_cast<void**>(&l_surface_p));
-
-					ID3D11RenderTargetView *l_rtarget_p = 0;
-					m_pD3D11Device->CreateRenderTargetView(l_surface_p, NULL, &l_rtarget_p);
+					ID3D11RenderTargetView *l_rtarget_p = l_schain.pD3D11RenderTargetView;
 					m_pD3D11DeviceContext->OMSetRenderTargets(1, &l_rtarget_p, NULL);
-					l_surface_p->Release();
-
 					break;
 				}
 			}
@@ -271,22 +290,6 @@ bool rendering_D3D11::execute(const create_schain &_command)
 	schain l_schain;
 	l_schain.ID = _command.ID;
 
-	//D3DPRESENT_PARAMETERS l_D3DPP = {0};
-	//l_D3DPP.hDeviceWindow = (HWND)_command.window;
-	//l_D3DPP.Windowed = TRUE;
-	//l_D3DPP.BackBufferCount = 1;
-	//l_D3DPP.BackBufferWidth = 0;
-	//l_D3DPP.BackBufferHeight = 0;
-	//l_D3DPP.BackBufferFormat = D3DFMT_X8R8G8B8;
-	//l_D3DPP.FullScreen_RefreshRateInHz = 0;
-	//l_D3DPP.MultiSampleType = (D3DMULTISAMPLE_TYPE)4;
-	//l_D3DPP.MultiSampleQuality = 0;
-	//l_D3DPP.EnableAutoDepthStencil = FALSE;
-	//l_D3DPP.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	//l_D3DPP.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
-
-	//if (FAILED(m_D3DDevice9_p->CreateAdditionalSwapChain(&l_D3DPP, &l_schain.D3DSChain9_p))) return false;
-
 	DXGI_SWAP_CHAIN_DESC l_desc = {0};
 	l_desc.OutputWindow = (HWND)_command.window;
 	l_desc.Windowed = TRUE;
@@ -298,8 +301,25 @@ bool rendering_D3D11::execute(const create_schain &_command)
 	l_desc.BufferDesc.RefreshRate.Denominator = 1;
 	l_desc.SampleDesc.Count = 1;
 	l_desc.SampleDesc.Quality = 0;
+	l_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
 	if (FAILED(get_factory().CreateSwapChain(m_pD3D11Device, &l_desc, &l_schain.pDXGISChain))) return false;
+
+	ID3D11Texture2D *l_pD3D11Texture2D;
+	if (FAILED(l_schain.pDXGISChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&l_pD3D11Texture2D))))
+	{
+		l_schain.pDXGISChain->Release();
+		return false;
+	}
+
+	if (FAILED(m_pD3D11Device->CreateRenderTargetView(l_pD3D11Texture2D, NULL, &l_schain.pD3D11RenderTargetView)))
+	{
+		l_pD3D11Texture2D->Release();
+		l_schain.pDXGISChain->Release();
+		return false;
+	}
+
+	l_pD3D11Texture2D->Release();
 
 	m_create_resource(l_schain);
 
@@ -307,7 +327,6 @@ bool rendering_D3D11::execute(const create_schain &_command)
 }
 bool rendering_D3D11::execute(const begin_scene &_command)
 {
-	//if (FAILED(m_D3DDevice9_p->BeginScene())) return false;
 	return true;
 }
 bool rendering_D3D11::execute(const clear_viewport &_command)
@@ -315,31 +334,29 @@ bool rendering_D3D11::execute(const clear_viewport &_command)
 	if (!m_set_target(_command.target_ID)) return false;
 	//if (!m_set_viewport(_command.viewport_ID)) return false;
 
-	DWORD l_flags = 0;
-	if (_command.clear.f & cf::color) l_flags |= D3DCLEAR_TARGET;
-	if (_command.clear.f & cf::depth) l_flags |= D3DCLEAR_ZBUFFER;
-	if (_command.clear.f & cf::stencil) l_flags |= D3DCLEAR_STENCIL;
-
-	if (l_flags != 0)
+	if (_command.clear.f & cf::color)
 	{
-		D3DCOLOR l_color = (D3DCOLOR)_command.clear.c;
-		float l_z = (float)_command.clear.z;
-		DWORD l_stencil = (DWORD)_command.clear.s;
-
-		ID3D11RenderTargetView *l_rtarget_p;
-		m_pD3D11DeviceContext->OMGetRenderTargets(1, &l_rtarget_p, NULL);
-		FLOAT l_c[] = { 1.f, 0, 0, 1.f };
-		m_pD3D11DeviceContext->ClearRenderTargetView(l_rtarget_p, l_c);
-		l_rtarget_p->Release();
-
-		//if (FAILED(m_D3DDevice9_p->Clear(0, 0, l_flags, l_color, l_z, l_stencil))) return false;
+		FLOAT l_c[] = { _command.clear.c.r, _command.clear.c.g, _command.clear.c.b, _command.clear.c.a };
+		ID3D11RenderTargetView *l_pD3D11RenderTargetView;
+		m_pD3D11DeviceContext->OMGetRenderTargets(1, &l_pD3D11RenderTargetView, NULL);
+		m_pD3D11DeviceContext->ClearRenderTargetView(l_pD3D11RenderTargetView, l_c);
+		l_pD3D11RenderTargetView->Release();
 	}
+	//if (_command.clear.f & (cf::depth | cf::stencil))
+	//{
+	//	//float l_z = (float)_command.clear.z;
+	//	//DWORD l_stencil = (DWORD)_command.clear.s;
+	//	ID3D11RenderTargetView *l_rtarget_p;
+	//	m_pD3D11DeviceContext->OMGetRenderTargets(1, &l_rtarget_p, NULL);
+	//	FLOAT l_c[] = { _command.clear.c.r, _command.clear.c.g, _command.clear.c.b, _command.clear.c.a };
+	//	m_pD3D11DeviceContext->ClearDepthStencilView(l_rtarget_p, l_c);
+	//	l_rtarget_p->Release();
+	//}
 
 	return true;
 }
 bool rendering_D3D11::execute(const end_scene &_command)
 {
-	//if (FAILED(m_pD3D11Device->EndScene())) return false;
 	return true;
 }
 bool rendering_D3D11::execute(const present_schain &_command)
