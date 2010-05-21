@@ -32,32 +32,35 @@ private:
 	IDXGIFactory& get_factory() const;
 
 	bool execute(const create_schain &_command);
-	//bool execute(const create_viewport &_command);
-	//bool execute(const create_vformat &_command);
-	//bool execute(const create_vbuffer &_command);
-	//bool execute(const write_vbuffer &_command);
+	bool execute(const create_viewport &_command);
+	bool execute(const create_vformat &_command);
+	bool execute(const create_vbuffer &_command);
+	bool execute(const write_vbuffer &_command);
 	//bool execute(const create_vshader &_command);
 	//bool execute(const create_pshader &_command);
 	//bool execute(const create_vbufset &_command);
 	//bool execute(const create_states &_command);
-	//bool execute(const create_consts &_command);s
+	//bool execute(const create_consts &_command);
 	//bool execute(const write_consts &_command);
 	//bool execute(const create_texture &_command);
 	//bool execute(const write_texture &_command);
 	//bool execute(const create_texset &_command);
-	//bool execute(const destroy_resource &_command);
+	bool execute(const destroy_resource &_command);
 	bool execute(const begin_scene &_command);
 	bool execute(const clear_viewport &_command);
-	//bool execute(const draw_primitive &_command);
+	bool execute(const draw_primitive &_command);
 	bool execute(const end_scene &_command);
 	bool execute(const present_schain &_command);
 
 	struct _resource { uint ID; };
 
 	struct schain : _resource { IDXGISwapChain *pDXGISChain; ID3D11RenderTargetView *pD3D11RenderTargetView; };
+	struct viewport : _resource { D3D11_VIEWPORT D3D11Viewport; };
+	struct vformat : _resource {  };
+	struct vbuffer : _resource { ID3D11Buffer *pD3D11Buffer; uint size, used; };
 
 	typedef make_typelist_<
-		schain//, viewport, vformat, vbuffer, vshader, pshader, vbufset, states, consts, texture, texset
+		schain, viewport, vformat, vbuffer//, vshader, pshader, vbufset, states, consts, texture, texset
 	>::type resource_types;
 
 	typedef variant_<resource_types, false> resource;
@@ -68,6 +71,7 @@ private:
 	void m_create_resource(const resource &_r);
 	void m_destroy_resource(uint _ID);
 	bool m_set_target(uint _ID);
+	bool m_set_viewport(uint _ID);
 };
 
 rendering_D3D11::rendering_D3D11(video &_video)
@@ -182,16 +186,16 @@ void rendering_D3D11::m_destroy_resource(uint _ID)
 					l_schain.pDXGISChain->Release();
 					break;
 				}
-				//case resource_types::type_<viewport>::index :
-				//{
-				//	break;
-				//}
-				//case resource_types::type_<vformat>::index :
-				//{
-				//	vformat &l_vformat = l_resource.get_<vformat>();
-				//	l_vformat.D3DVDecl9_p->Release();
-				//	break;
-				//}
+				case resource_types::type_<viewport>::index :
+				{
+					break;
+				}
+				case resource_types::type_<vformat>::index :
+				{
+					vformat &l_vformat = l_resource.get_<vformat>();
+					//l_vformat.D3DVDecl9_p->Release();
+					break;
+				}
 				//case resource_types::type_<vbuffer>::index :
 				//{
 				//	vbuffer &l_vbuffer = l_resource.get_<vbuffer>();
@@ -258,15 +262,36 @@ bool rendering_D3D11::m_set_target(uint _ID)
 	}
 	return true;
 }
+bool rendering_D3D11::m_set_viewport(uint _ID)
+{
+	uint_ID l_ID(_ID);
+	if (l_ID.index < m_resources.size())
+	{
+		resource &l_resource = m_resources[l_ID.index];
+		if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _ID)
+		{
+			switch (l_resource.type())
+			{
+				case resource_types::type_<viewport>::index :
+				{
+					viewport &l_viewport = l_resource.get_<viewport>();
+					m_pD3D11DeviceContext->RSSetViewports(1, &l_viewport.D3D11Viewport);
+					break;
+				}
+			}
+		}
+	}
+	return true;
+}
 bool rendering_D3D11::execute(const command &_command)
 {
 	switch (_command.type())
 	{
 		case command_types::type_<create_schain>::index : return execute(_command.get_<create_schain>());
-		//case command_types::type_<create_viewport>::index : return execute(_command.get_<create_viewport>());
-		//case command_types::type_<create_vformat>::index : return execute(_command.get_<create_vformat>());
-		//case command_types::type_<create_vbuffer>::index : return execute(_command.get_<create_vbuffer>());
-		//case command_types::type_<write_vbuffer>::index : return execute(_command.get_<write_vbuffer>());
+		case command_types::type_<create_viewport>::index : return execute(_command.get_<create_viewport>());
+		case command_types::type_<create_vformat>::index : return execute(_command.get_<create_vformat>());
+		case command_types::type_<create_vbuffer>::index : return execute(_command.get_<create_vbuffer>());
+		case command_types::type_<write_vbuffer>::index : return execute(_command.get_<write_vbuffer>());
 		//case command_types::type_<create_vshader>::index : return execute(_command.get_<create_vshader>());
 		//case command_types::type_<create_pshader>::index : return execute(_command.get_<create_pshader>());
 		//case command_types::type_<create_vbufset>::index : return execute(_command.get_<create_vbufset>());
@@ -276,10 +301,10 @@ bool rendering_D3D11::execute(const command &_command)
 		//case command_types::type_<create_texture>::index : return execute(_command.get_<create_texture>());
 		//case command_types::type_<write_texture>::index : return execute(_command.get_<write_texture>());
 		//case command_types::type_<create_texset>::index : return execute(_command.get_<create_texset>());
-		//case command_types::type_<destroy_resource>::index : return execute(_command.get_<destroy_resource>());
+		case command_types::type_<destroy_resource>::index : return execute(_command.get_<destroy_resource>());
 		case command_types::type_<begin_scene>::index : return execute(_command.get_<begin_scene>());
 		case command_types::type_<clear_viewport>::index : return execute(_command.get_<clear_viewport>());
-		//case command_types::type_<draw_primitive>::index : return execute(_command.get_<draw_primitive>());
+		case command_types::type_<draw_primitive>::index : return execute(_command.get_<draw_primitive>());
 		case command_types::type_<end_scene>::index : return execute(_command.get_<end_scene>());
 		case command_types::type_<present_schain>::index : return execute(_command.get_<present_schain>());
 	}
@@ -325,6 +350,92 @@ bool rendering_D3D11::execute(const create_schain &_command)
 
 	return true;
 }
+bool rendering_D3D11::execute(const create_viewport &_command)
+{
+	viewport l_viewport;
+	l_viewport.ID = _command.ID;
+
+	D3D11_VIEWPORT l_D3D11Viewport =
+	{
+		(FLOAT)_command.area.min().x, (FLOAT)_command.area.min().y,
+		(FLOAT)_command.area.size().x, (FLOAT)_command.area.size().y,
+		(FLOAT)_command.depth.x, (FLOAT)_command.depth.y
+	};
+	l_viewport.D3D11Viewport = l_D3D11Viewport;
+
+	m_create_resource(l_viewport);
+
+	return true;
+}
+bool rendering_D3D11::execute(const create_vformat &_command)
+{
+	vformat l_vformat;
+	l_vformat.ID = _command.ID;
+
+	//if (FAILED(m_D3DDevice9_p->CreateVertexDeclaration((CONST D3DVERTEXELEMENT9*)_command.data, &l_vformat.D3DVDecl9_p))) return false;
+
+	m_create_resource(l_vformat);
+
+	return true;
+}
+bool rendering_D3D11::execute(const create_vbuffer &_command)
+{
+	vbuffer l_vbuffer;
+	l_vbuffer.ID = _command.ID;
+	l_vbuffer.size = _command.size;
+	l_vbuffer.used = 0;
+
+	D3D11_BUFFER_DESC l_desc = {0};
+	l_desc.ByteWidth = l_vbuffer.size;
+	l_desc.Usage = D3D11_USAGE_DYNAMIC;
+	l_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	l_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+	if (FAILED(m_pD3D11Device->CreateBuffer(&l_desc, NULL, &l_vbuffer.pD3D11Buffer))) return false;
+
+	m_create_resource(l_vbuffer);
+
+	return true;
+}
+bool rendering_D3D11::execute(const write_vbuffer &_command)
+{
+	uint_ID l_ID(_command.ID);
+
+	resource &l_resource = m_resources[l_ID.index];
+	if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _command.ID)
+	{
+		if (l_resource.type() == resource_types::type_<vbuffer>::index)
+		{
+			vbuffer &l_vbuffer = l_resource.get_<vbuffer>();
+
+			if (_command.reset) l_vbuffer.used = 0;
+
+			if (_command.size <= l_vbuffer.size - l_vbuffer.used)
+			{
+				D3D11_MAPPED_SUBRESOURCE l_resource;
+				if (FAILED(m_pD3D11DeviceContext->Map(l_vbuffer.pD3D11Buffer, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &l_resource))) return false;
+
+				get_data((u8*)l_resource.pData + l_vbuffer.used, _command.size);
+
+				m_pD3D11DeviceContext->Unmap(l_vbuffer.pD3D11Buffer, 0);
+
+				l_vbuffer.used += _command.size;
+
+				return true;
+			}
+		}
+	}
+
+	throw_data(_command.size);
+
+	return true;
+}
+bool rendering_D3D11::execute(const destroy_resource &_command)
+{
+	m_destroy_resource(_command.ID);
+
+	return true;
+}
 bool rendering_D3D11::execute(const begin_scene &_command)
 {
 	return true;
@@ -332,7 +443,7 @@ bool rendering_D3D11::execute(const begin_scene &_command)
 bool rendering_D3D11::execute(const clear_viewport &_command)
 {
 	if (!m_set_target(_command.target_ID)) return false;
-	//if (!m_set_viewport(_command.viewport_ID)) return false;
+	if (!m_set_viewport(_command.viewport_ID)) return false;
 
 	if (_command.clear.f & cf::color)
 	{
@@ -352,6 +463,21 @@ bool rendering_D3D11::execute(const clear_viewport &_command)
 	//	m_pD3D11DeviceContext->ClearDepthStencilView(l_rtarget_p, l_c);
 	//	l_rtarget_p->Release();
 	//}
+
+	return true;
+}
+bool rendering_D3D11::execute(const draw_primitive &_command)
+{
+	if (!m_set_target(_command.target_ID)) return false;
+	if (!m_set_viewport(_command.viewport_ID)) return false;
+	//if (!m_set_vbuffers(_command.vbufset_ID)) return false;
+	//if (!m_set_vshader(_command.vshader_ID)) return false;
+	//if (!m_set_pshader(_command.pshader_ID)) return false;
+	//if (!m_set_states(_command.states_ID)) return false;
+	//if (!m_set_consts(_command.consts_ID)) return false;
+	//if (!m_set_textures(_command.texset_ID)) return false;
+
+	//if (FAILED(m_D3DDevice9_p->DrawPrimitive((D3DPRIMITIVETYPE)_command.type, (UINT)_command.start, (UINT)_command.size))) return false;
 
 	return true;
 }
