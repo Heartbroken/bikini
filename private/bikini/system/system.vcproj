@@ -613,18 +613,6 @@
 					RelativePath="..\..\..\include\bikini\system\video.hpp"
 					>
 				</File>
-				<File
-					RelativePath=".\video_rendering_D3D11.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\video_rendering_D3D9.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\video_rendering_WIN.cpp"
-					>
-				</File>
 				<Filter
 					Name="shaders"
 					>
@@ -642,6 +630,22 @@
 					</File>
 					<File
 						RelativePath="..\..\..\include\bikini\system\viewport.shh"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="rendering"
+					>
+					<File
+						RelativePath=".\video_rendering_D3D11.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\video_rendering_D3D9.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\video_rendering_WIN.cpp"
 						>
 					</File>
 				</Filter>
