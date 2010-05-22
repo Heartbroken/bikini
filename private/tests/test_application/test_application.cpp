@@ -65,7 +65,7 @@ struct task0 : bk::application::task
 			//
 			l_video.get_<bk::vo::viewport>(l_vo_viewport_ID).clear();
 			//
-			//l_player.render();
+			l_player.render();
 
 			l_video.update(l_dt);
 

@@ -209,7 +209,11 @@ void video::rendering::m_proc()
 			{
 				m_has_command.wait(0);
 
-				execute(m_cbuffer.front());
+				if (!execute(m_cbuffer.front()))
+				{
+					throw_data(m_cbuffer.front().get_<_command>().extra);
+				}
+
 				m_cbuffer.pop();
 			}
 			else
@@ -294,7 +298,10 @@ bool video::update(real _dt)
 				while (!m_rendering.add_command(i->second)) sleep(0);
 			}
 #else
-			m_rendering.execute(i->second);
+			if (!m_rendering.execute(i->second))
+			{
+				m_rendering.throw_data(i->second.get_<_command>().extra);
+			}
 #endif
 		}
 
@@ -478,7 +485,7 @@ bool texture::update(real _dt)
 
 						video::rendering::write_texture l_write_texture;
 						l_write_texture.ID = m_resource_ID;
-						l_write_texture.size = l_reader.size();
+						l_write_texture.extra = l_reader.size();
 						add_command(l_write_texture);
 
 						add_data(l_reader.data(), l_reader.size());
@@ -545,7 +552,7 @@ bool consts::update(real _dt)
 		video::rendering::write_consts l_write_consts;
 		l_write_consts.ID = m_resource_ID;
 		add_data(&m_data[0], m_data.size());
-		l_write_consts.size = m_data.size();
+		l_write_consts.extra = m_data.size();
 		l_write_consts.reset = true;
 		add_command(l_write_consts);
 	}
@@ -828,7 +835,7 @@ bool vbuffer::update(real _dt)
 
 							video::rendering::write_vbuffer l_write_vbuffer;
 							l_write_vbuffer.ID = m_resource_ID;
-							l_write_vbuffer.size = l_reader.size();
+							l_write_vbuffer.extra = l_reader.size();
 							l_write_vbuffer.reset = true;
 							add_command(l_write_vbuffer);
 						}

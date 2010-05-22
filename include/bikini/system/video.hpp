@@ -21,26 +21,28 @@ struct video : device
 	{
 		/* rendering commands -------------------------------------------------------------------*/
 
-		struct create_schain { uint ID; handle window; };
-		struct create_viewport { uint ID; rect area; real2 depth; };
-		struct create_vformat { uint ID; pointer data; };
-		struct create_vbuffer { uint ID; uint size; };
-		struct write_vbuffer { uint ID, size; bool reset; };
-		struct create_vshader { uint ID; pointer data; };
-		struct create_pshader { uint ID; pointer data; };
-		struct create_vbufset { uint ID, vformat_ID, vbuffer_IDs[8], offsets[8], strides[8]; };
-		struct create_states { uint ID; pointer data; };
-		struct create_consts { uint ID; };
-		struct write_consts { uint ID, size; bool reset; };
-		struct create_texture { uint ID; sint2 size; uint format; };
-		struct write_texture { uint ID; uint size; };
-		struct create_texset { uint ID, texture_IDs[8]; };
-		struct destroy_resource { uint ID; };
-		struct begin_scene {};
-		struct clear_viewport { uint target_ID, viewport_ID; struct { uint f; color c; real z; uint s; } clear; };
-		struct draw_primitive { uint target_ID, viewport_ID, vbufset_ID, vshader_ID, pshader_ID, states_ID, consts_ID, texset_ID, type, start, size; };
-		struct end_scene {};
-		struct present_schain { uint ID; };
+		struct _command { uint extra; inline _command() : extra(0) {} };
+
+		struct create_schain : _command { uint ID; handle window; };
+		struct create_viewport : _command { uint ID; rect area; real2 depth; };
+		struct create_vformat : _command { uint ID; pointer data; };
+		struct create_vbuffer : _command { uint ID; uint size; };
+		struct write_vbuffer : _command { uint ID; bool reset; };
+		struct create_vshader : _command { uint ID; pointer data; };
+		struct create_pshader : _command { uint ID; pointer data; };
+		struct create_vbufset : _command { uint ID, vformat_ID, vbuffer_IDs[8], offsets[8], strides[8]; };
+		struct create_states : _command { uint ID; pointer data; };
+		struct create_consts : _command { uint ID; };
+		struct write_consts : _command { uint ID; bool reset; };
+		struct create_texture : _command { uint ID; sint2 size; uint format; };
+		struct write_texture : _command { uint ID; };
+		struct create_texset : _command { uint ID, texture_IDs[8]; };
+		struct destroy_resource : _command { uint ID; };
+		struct begin_scene : _command {};
+		struct clear_viewport : _command { uint target_ID, viewport_ID; struct { uint f; color c; real z; uint s; } clear; };
+		struct draw_primitive : _command { uint target_ID, viewport_ID, vbufset_ID, vshader_ID, pshader_ID, states_ID, consts_ID, texset_ID, type, start, size; };
+		struct end_scene : _command {};
+		struct present_schain : _command { uint ID; };
 
 		typedef make_typelist_<
 			create_schain, create_viewport, create_vformat, create_vbuffer, write_vbuffer,
