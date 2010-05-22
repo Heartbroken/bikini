@@ -196,12 +196,12 @@ void rendering_D3D11::m_destroy_resource(uint _ID)
 					//l_vformat.D3DVDecl9_p->Release();
 					break;
 				}
-				//case resource_types::type_<vbuffer>::index :
-				//{
-				//	vbuffer &l_vbuffer = l_resource.get_<vbuffer>();
-				//	l_vbuffer.D3DVBuffer9_p->Release();
-				//	break;
-				//}
+				case resource_types::type_<vbuffer>::index :
+				{
+					vbuffer &l_vbuffer = l_resource.get_<vbuffer>();
+					l_vbuffer.pD3D11Buffer->Release();
+					break;
+				}
 				//case resource_types::type_<vshader>::index :
 				//{
 				//	vshader &l_vshader = l_resource.get_<vshader>();
@@ -410,23 +410,23 @@ bool rendering_D3D11::execute(const write_vbuffer &_command)
 
 			if (_command.reset) l_vbuffer.used = 0;
 
-			if (_command.size <= l_vbuffer.size - l_vbuffer.used)
+			if (_command.extra <= l_vbuffer.size - l_vbuffer.used)
 			{
 				D3D11_MAPPED_SUBRESOURCE l_resource;
 				if (FAILED(m_pD3D11DeviceContext->Map(l_vbuffer.pD3D11Buffer, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &l_resource))) return false;
 
-				get_data((u8*)l_resource.pData + l_vbuffer.used, _command.size);
+				get_data((u8*)l_resource.pData + l_vbuffer.used, _command.extra);
 
 				m_pD3D11DeviceContext->Unmap(l_vbuffer.pD3D11Buffer, 0);
 
-				l_vbuffer.used += _command.size;
+				l_vbuffer.used += _command.extra;
 
 				return true;
 			}
 		}
 	}
 
-	throw_data(_command.size);
+	throw_data(_command.extra);
 
 	return true;
 }

@@ -647,23 +647,23 @@ bool rendering_D3D9::execute(const write_vbuffer &_command)
 
 			if (_command.reset) l_vbuffer.used = 0;
 
-			if (_command.size <= l_vbuffer.size - l_vbuffer.used)
+			if (_command.extra <= l_vbuffer.size - l_vbuffer.used)
 			{
 				handle l_data;
-				l_vbuffer.D3DVBuffer9_p->Lock((UINT)l_vbuffer.used, (UINT)_command.size, &l_data, 0);
+				l_vbuffer.D3DVBuffer9_p->Lock((UINT)l_vbuffer.used, (UINT)_command.extra, &l_data, 0);
 
-				get_data(l_data, _command.size);
+				get_data(l_data, _command.extra);
 
 				l_vbuffer.D3DVBuffer9_p->Unlock();
 
-				l_vbuffer.used += _command.size;
+				l_vbuffer.used += _command.extra;
 
 				return true;
 			}
 		}
 	}
 
-	throw_data(_command.size);
+	throw_data(_command.extra);
 
 	return true;
 }
@@ -750,15 +750,15 @@ bool rendering_D3D9::execute(const write_consts &_command)
 			if (_command.reset) l_consts.data.resize(0);
 
 			uint l_oldsize = l_consts.data.size();
-			l_consts.data.resize(l_oldsize + _command.size);
+			l_consts.data.resize(l_oldsize + _command.extra);
 
-			get_data(&l_consts.data[l_oldsize], _command.size);
+			get_data(&l_consts.data[l_oldsize], _command.extra);
 
 			return true;
 		}
 	}
 
-	throw_data(_command.size);
+	throw_data(_command.extra);
 
 	return true;
 }
@@ -895,7 +895,7 @@ bool rendering_D3D9::execute(const write_texture &_command)
 		}
 	}
 
-	throw_data(_command.size);
+	throw_data(_command.extra);
 
 	return true;
 }
