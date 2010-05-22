@@ -511,9 +511,9 @@
 	</References>
 	<Files>
 		<Filter
-			Name="source"
-			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			Name="header"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
 				RelativePath=".\flash.cpp"
@@ -568,125 +568,19 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\line_mesh.cpp"
+				RelativePath="..\..\..\include\bikini\flash.hpp"
 				>
 			</File>
-			<File
-				RelativePath=".\player.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\bikini\flash\player.inl"
-				>
-			</File>
-			<File
-				RelativePath=".\sensor.cpp"
-				>
-			</File>
-			<Filter
-				Name="renderer"
-				>
-				<File
-					RelativePath=".\renderer.cpp"
-					>
-				</File>
-				<Filter
-					Name="shaders"
-					>
-					<File
-						RelativePath=".\flash.ps"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							>
-							<Tool
-								Name="Pixel Shader Compiler"
-								Fh="$(InputPath).$(PlatformName).h"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							>
-							<Tool
-								Name="Pixel Shader Compiler"
-								Fh="$(InputPath).$(PlatformName).h"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Debug|Xbox 360"
-							>
-							<Tool
-								Name="Pixel Shader Compiler"
-								Fh="$(InputPath).$(PlatformName).h"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Xbox 360"
-							>
-							<Tool
-								Name="Pixel Shader Compiler"
-								Fh="$(InputPath).$(PlatformName).h"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
-						RelativePath=".\flash.vs"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							>
-							<Tool
-								Name="Vertex Shader Compiler"
-								Fh="$(InputPath).$(PlatformName).h"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							>
-							<Tool
-								Name="Vertex Shader Compiler"
-								Fh="$(InputPath).$(PlatformName).h"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Debug|Xbox 360"
-							>
-							<Tool
-								Name="Vertex Shader Compiler"
-								Fh="$(InputPath).$(PlatformName).h"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Xbox 360"
-							>
-							<Tool
-								Name="Vertex Shader Compiler"
-								Fh="$(InputPath).$(PlatformName).h"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
-						RelativePath=".\shape.shh"
-						>
-					</File>
-				</Filter>
-			</Filter>
-		</Filter>
-		<Filter
-			Name="header"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			>
 			<File
 				RelativePath=".\header.hpp"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="interface"
+			Name="player"
 			>
 			<File
-				RelativePath="..\..\..\include\bikini\flash.hpp"
+				RelativePath=".\player.cpp"
 				>
 			</File>
 			<File
@@ -694,7 +588,111 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\bikini\flash\player.inl"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="renderer"
+			>
+			<File
+				RelativePath=".\line_mesh.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\renderer.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\bikini\flash\renderer.hpp"
+				>
+			</File>
+			<Filter
+				Name="shaders"
+				>
+				<File
+					RelativePath=".\flash.ps"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="Pixel Shader Compiler"
+							Fh="$(InputPath).$(PlatformName).h"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="Pixel Shader Compiler"
+							Fh="$(InputPath).$(PlatformName).h"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Xbox 360"
+						>
+						<Tool
+							Name="Pixel Shader Compiler"
+							Fh="$(InputPath).$(PlatformName).h"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Xbox 360"
+						>
+						<Tool
+							Name="Pixel Shader Compiler"
+							Fh="$(InputPath).$(PlatformName).h"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\flash.vs"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="Vertex Shader Compiler"
+							Fh="$(InputPath).$(PlatformName).h"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="Vertex Shader Compiler"
+							Fh="$(InputPath).$(PlatformName).h"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Xbox 360"
+						>
+						<Tool
+							Name="Vertex Shader Compiler"
+							Fh="$(InputPath).$(PlatformName).h"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Xbox 360"
+						>
+						<Tool
+							Name="Vertex Shader Compiler"
+							Fh="$(InputPath).$(PlatformName).h"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\shape.shh"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="sensor"
+			>
+			<File
+				RelativePath=".\sensor.cpp"
 				>
 			</File>
 			<File
