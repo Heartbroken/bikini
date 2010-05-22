@@ -160,9 +160,9 @@ bool renderer::begin_render(const color &_background, const rect &_viewport)
 	{
 		vo::viewport &l_viewport = m_video.get_<vo::viewport>(m_viewport_ID);
 
-		//l_viewport.set_clear_flags(cf::color);
-		//l_viewport.set_clear_color(_background);
-		//l_viewport.clear();
+		l_viewport.set_clear_flags(cf::color);
+		l_viewport.set_clear_color(_background);
+		l_viewport.clear();
 
 		flash_vs::viewport.area = float4((float)_viewport.min().x, (float)_viewport.min().y, (float)_viewport.size().x, (float)_viewport.size().y);
 
