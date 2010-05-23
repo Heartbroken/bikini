@@ -40,7 +40,7 @@ private:
 	bool execute(const create_vshader &_command);
 	bool execute(const create_pshader &_command);
 	bool execute(const create_vbufset &_command);
-	//bool execute(const create_states &_command);
+	bool execute(const create_states &_command);
 	//bool execute(const create_consts &_command);
 	//bool execute(const write_consts &_command);
 	//bool execute(const create_texture &_command);
@@ -62,9 +62,10 @@ private:
 	struct vshader : _resource { ID3D11VertexShader *pD3D11VertexShader; };
 	struct pshader : _resource { ID3D11PixelShader *pD3D11PixelShader; };
 	struct vbufset : _resource { uint vformat_ID, vbuffer_IDs[8], offsets[8], strides[8]; };
+	struct states : _resource { ID3D11RasterizerState *pD3D11RasterizerState; ID3D11DepthStencilState *pD3D11DepthStencilState; };
 
 	typedef make_typelist_<
-		schain, viewport, vformat, vbuffer, vshader, pshader, vbufset//, states, consts, texture, texset
+		schain, viewport, vformat, vbuffer, vshader, pshader, vbufset, states//, consts, texture, texset
 	>::type resource_types;
 
 	typedef variant_<resource_types, false> resource;
@@ -81,6 +82,7 @@ private:
 	bool m_set_vbuffers(uint _ID);
 	bool m_set_vshader(uint _ID);
 	bool m_set_pshader(uint _ID);
+	bool m_set_states(uint _ID);
 };
 
 rendering_D3D11::rendering_D3D11(video &_video)
@@ -223,16 +225,17 @@ void rendering_D3D11::m_destroy_resource(uint _ID)
 					l_pshader.pD3D11PixelShader->Release();
 					break;
 				}
-				//case resource_types::type_<vbufset>::index :
-				//{
-				//	break;
-				//}
-				//case resource_types::type_<states>::index :
-				//{
-				//	states &l_states = l_resource.get_<states>();
-				//	l_states.D3DSBlock9_p->Release();
-				//	break;
-				//}
+				case resource_types::type_<vbufset>::index :
+				{
+					break;
+				}
+				case resource_types::type_<states>::index :
+				{
+					states &l_states = l_resource.get_<states>();
+					//l_states.pD3D11RasterizerState->Release();
+					l_states.pD3D11DepthStencilState->Release();
+					break;
+				}
 				//case resource_types::type_<consts>::index :
 				//{
 				//	break;
@@ -407,6 +410,29 @@ bool rendering_D3D11::m_set_pshader(uint _ID)
 	}
 	return true;
 }
+bool rendering_D3D11::m_set_states(uint _ID)
+{
+	uint_ID l_ID(_ID);
+	if (l_ID.index < m_resources.size())
+	{
+		resource &l_resource = m_resources[l_ID.index];
+		if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _ID)
+		{
+			switch (l_resource.type())
+			{
+				case resource_types::type_<states>::index :
+				{
+					states &l_states = l_resource.get_<states>();
+					m_pD3D11DeviceContext->OMSetDepthStencilState(l_states.pD3D11DepthStencilState, 0);
+					//m_pD3D11DeviceContext->RSSetState(l_states.pD3D11RasterizerState);
+					break;
+				}
+			}
+			return true;
+		}
+	}
+	return true;
+}
 bool rendering_D3D11::execute(const command &_command)
 {
 	switch (_command.type())
@@ -419,7 +445,7 @@ bool rendering_D3D11::execute(const command &_command)
 		case command_types::type_<create_vshader>::index : return execute(_command.get_<create_vshader>());
 		case command_types::type_<create_pshader>::index : return execute(_command.get_<create_pshader>());
 		case command_types::type_<create_vbufset>::index : return execute(_command.get_<create_vbufset>());
-		//case command_types::type_<create_states>::index : return execute(_command.get_<create_states>());
+		case command_types::type_<create_states>::index : return execute(_command.get_<create_states>());
 		//case command_types::type_<create_consts>::index : return execute(_command.get_<create_consts>());
 		//case command_types::type_<write_consts>::index : return execute(_command.get_<write_consts>());
 		//case command_types::type_<create_texture>::index : return execute(_command.get_<create_texture>());
@@ -548,7 +574,7 @@ bool rendering_D3D11::execute(const create_vformat &_command)
 
 	l_code +=
 		"};\n"
-		"float4 main(input _in) : POSITION\n"
+		"float4 main(input _in) : SV_POSITION\n"
 		"{\n"
 		"	return float4(0, 0, 0, 0);\n"
 		"}\n"
@@ -672,6 +698,29 @@ bool rendering_D3D11::execute(const create_vbufset &_command)
 
 	return true;
 }
+bool rendering_D3D11::execute(const create_states &_command)
+{
+	states l_states;
+	l_states.ID = _command.ID;
+
+	//{
+	//	D3D11_RASTERIZER_DESC l_desc =
+	//	{
+	//		D3D11_FILL_SOLID, D3D11_CULL_BACK
+	//	};
+
+	//	if (FAILED(m_pD3D11Device->CreateRasterizerState(&l_desc, l_states.pD3D11RasterizerState))) return false;
+	//}
+	{
+		D3D11_DEPTH_STENCIL_DESC l_desc = {0};
+
+		if (FAILED(m_pD3D11Device->CreateDepthStencilState(&l_desc, &l_states.pD3D11DepthStencilState))) return false;
+	}
+
+	m_create_resource(l_states);
+
+	return true;
+}
 bool rendering_D3D11::execute(const destroy_resource &_command)
 {
 	m_destroy_resource(_command.ID);
@@ -715,7 +764,7 @@ bool rendering_D3D11::execute(const draw_primitive &_command)
 	if (!m_set_vbuffers(_command.vbufset_ID)) return false;
 	if (!m_set_vshader(_command.vshader_ID)) return false;
 	if (!m_set_pshader(_command.pshader_ID)) return false;
-	//if (!m_set_states(_command.states_ID)) return false;
+	if (!m_set_states(_command.states_ID)) return false;
 	//if (!m_set_consts(_command.consts_ID)) return false;
 	//if (!m_set_textures(_command.texset_ID)) return false;
 

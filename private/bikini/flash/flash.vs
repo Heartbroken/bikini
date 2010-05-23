@@ -20,9 +20,9 @@ struct input
 
 struct output
 {
-	float4 hpos : POSITION;
 	float2 tex0 : TEXCOORD0;
 	float4 c : COLOR0;
+	float4 hpos : SV_POSITION;
 };
 
 output main(input _in)
