@@ -37,7 +37,7 @@ private:
 	bool execute(const create_vformat &_command);
 	bool execute(const create_vbuffer &_command);
 	bool execute(const write_vbuffer &_command);
-	//bool execute(const create_vshader &_command);
+	bool execute(const create_vshader &_command);
 	//bool execute(const create_pshader &_command);
 	bool execute(const create_vbufset &_command);
 	//bool execute(const create_states &_command);
@@ -59,10 +59,11 @@ private:
 	struct viewport : _resource { D3D11_VIEWPORT D3D11Viewport; };
 	struct vformat : _resource { ID3D11InputLayout *pD3D11InputLayout; };
 	struct vbuffer : _resource { ID3D11Buffer *pD3D11Buffer; uint size, used; };
+	struct vshader : _resource { ID3D11VertexShader *pD3D11VertexShader; };
 	struct vbufset : _resource { uint vformat_ID, vbuffer_IDs[8], offsets[8], strides[8]; };
 
 	typedef make_typelist_<
-		schain, viewport, vformat, vbuffer/*, vshader, pshader*/, vbufset//, states, consts, texture, texset
+		schain, viewport, vformat, vbuffer, vshader/*, pshader*/, vbufset//, states, consts, texture, texset
 	>::type resource_types;
 
 	typedef variant_<resource_types, false> resource;
@@ -207,12 +208,12 @@ void rendering_D3D11::m_destroy_resource(uint _ID)
 					l_vbuffer.pD3D11Buffer->Release();
 					break;
 				}
-				//case resource_types::type_<vshader>::index :
-				//{
-				//	vshader &l_vshader = l_resource.get_<vshader>();
-				//	l_vshader.D3DVShader9_p->Release();
-				//	break;
-				//}
+				case resource_types::type_<vshader>::index :
+				{
+					vshader &l_vshader = l_resource.get_<vshader>();
+					l_vshader.pD3D11VertexShader->Release();
+					break;
+				}
 				//case resource_types::type_<pshader>::index :
 				//{
 				//	pshader &l_pshader = l_resource.get_<pshader>();
@@ -368,7 +369,7 @@ bool rendering_D3D11::execute(const command &_command)
 		case command_types::type_<create_vformat>::index : return execute(_command.get_<create_vformat>());
 		case command_types::type_<create_vbuffer>::index : return execute(_command.get_<create_vbuffer>());
 		case command_types::type_<write_vbuffer>::index : return execute(_command.get_<write_vbuffer>());
-		//case command_types::type_<create_vshader>::index : return execute(_command.get_<create_vshader>());
+		case command_types::type_<create_vshader>::index : return execute(_command.get_<create_vshader>());
 		//case command_types::type_<create_pshader>::index : return execute(_command.get_<create_pshader>());
 		case command_types::type_<create_vbufset>::index : return execute(_command.get_<create_vbufset>());
 		//case command_types::type_<create_states>::index : return execute(_command.get_<create_states>());
@@ -585,6 +586,17 @@ bool rendering_D3D11::execute(const write_vbuffer &_command)
 	}
 
 	throw_data(_command.extra);
+
+	return true;
+}
+bool rendering_D3D11::execute(const create_vshader &_command)
+{
+	vshader l_vshader;
+	l_vshader.ID = _command.ID;
+
+	if (FAILED(m_pD3D11Device->CreateVertexShader(_command.data, _command.size, NULL, &l_vshader.pD3D11VertexShader))) return false;
+
+	m_create_resource(l_vshader);
 
 	return true;
 }
