@@ -26,11 +26,16 @@ namespace flash_ps
 #	include compiled_shader(flash.ps)
 }
 
-namespace flash_vf { static const D3DVERTEXELEMENT9 data[] = 
+namespace flash_vf { static const video::vf::element data[] = 
 {
-	{ 0, 0, D3DDECLTYPE_SHORT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
-	{ 0xff, 0, D3DDECLTYPE_UNUSED, 0, 0, 0 }
+	{ "POSITION", 0, bk::video::vf::short2, 0, 0 },
+	video::vf::last_element
 };}
+//namespace flash_vf { static const D3DVERTEXELEMENT9 data[] = 
+//{
+//	{ 0, 0, D3DDECLTYPE_SHORT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+//	{ 0xff, 0, D3DDECLTYPE_UNUSED, 0, 0, 0 }
+//};}
 
 namespace flash_rs { static const DWORD data[] =
 {

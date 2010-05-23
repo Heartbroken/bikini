@@ -17,7 +17,7 @@ extern video::rendering* new_rendering_D3D9(video &_video);
 
 video::rendering& video::new_rendering(video &_video)
 {
-	video::rendering *l_rendering_p = 0;//new_rendering_D3D11(_video);
+	video::rendering *l_rendering_p = new_rendering_D3D11(_video);
 	if (l_rendering_p == 0) l_rendering_p = new_rendering_D3D9(_video);
 
 	return *l_rendering_p;

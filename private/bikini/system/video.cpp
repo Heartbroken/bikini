@@ -229,6 +229,8 @@ void video::rendering::m_proc()
 
 // video
 
+const video::vf::element video::vf::last_element = { 0, 0, video::vf::none, 0, 0 };
+
 video::video()
 :
 	m_rendering(new_rendering(*this))

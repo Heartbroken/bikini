@@ -144,10 +144,32 @@ struct video : device
 
 	/* video ------------------------------------------------------------------------------------*/
 
+	// texture formats
+
 	struct tf { enum texture_format
 	{
 		a8, b8g8r8, a8b8g8r8, a8r8g8b8
 	};};
+
+	// vertex format
+
+	struct vf
+	{
+		enum element_type
+		{
+			none,
+			short2
+		};
+
+		struct element
+		{
+			const achar* semantic; uint index;
+			element_type type;
+			uint slot, offset;
+		};
+
+		static const element last_element;
+	};
 
 	video();
 	~video();
