@@ -22,6 +22,7 @@ struct output
 {
 	float2 tex0 : TEXCOORD0;
 	float4 c : COLOR0;
+	
 	float4 hpos : SV_POSITION;
 };
 
