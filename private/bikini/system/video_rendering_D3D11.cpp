@@ -39,7 +39,7 @@ private:
 	bool execute(const write_vbuffer &_command);
 	//bool execute(const create_vshader &_command);
 	//bool execute(const create_pshader &_command);
-	//bool execute(const create_vbufset &_command);
+	bool execute(const create_vbufset &_command);
 	//bool execute(const create_states &_command);
 	//bool execute(const create_consts &_command);
 	//bool execute(const write_consts &_command);
@@ -59,9 +59,10 @@ private:
 	struct viewport : _resource { D3D11_VIEWPORT D3D11Viewport; };
 	struct vformat : _resource { ID3D11InputLayout *pD3D11InputLayout; };
 	struct vbuffer : _resource { ID3D11Buffer *pD3D11Buffer; uint size, used; };
+	struct vbufset : _resource { uint vformat_ID, vbuffer_IDs[8], offsets[8], strides[8]; };
 
 	typedef make_typelist_<
-		schain, viewport, vformat, vbuffer//, vshader, pshader, vbufset, states, consts, texture, texset
+		schain, viewport, vformat, vbuffer/*, vshader, pshader*/, vbufset//, states, consts, texture, texset
 	>::type resource_types;
 
 	typedef variant_<resource_types, false> resource;
@@ -73,6 +74,9 @@ private:
 	void m_destroy_resource(uint _ID);
 	bool m_set_target(uint _ID);
 	bool m_set_viewport(uint _ID);
+	bool m_set_vformat(uint _ID);
+	bool m_set_vbuffer(uint _i, uint _ID, uint _offset, uint _stride);
+	bool m_set_vbuffers(uint _ID);
 };
 
 rendering_D3D11::rendering_D3D11(video &_video)
@@ -284,6 +288,77 @@ bool rendering_D3D11::m_set_viewport(uint _ID)
 	}
 	return true;
 }
+bool rendering_D3D11::m_set_vformat(uint _ID)
+{
+	uint_ID l_ID(_ID);
+	if (l_ID.index < m_resources.size())
+	{
+		resource &l_resource = m_resources[l_ID.index];
+		if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _ID)
+		{
+			switch (l_resource.type())
+			{
+				case resource_types::type_<vformat>::index :
+				{
+					vformat &l_vformat = l_resource.get_<vformat>();
+					m_pD3D11DeviceContext->IASetInputLayout(l_vformat.pD3D11InputLayout);
+					break;
+				}
+			}
+			return true;
+		}
+	}
+	return true;
+}
+bool rendering_D3D11::m_set_vbuffer(uint _i, uint _ID, uint _offset, uint _stride)
+{
+	uint_ID l_ID(_ID);
+	if (l_ID.index < m_resources.size())
+	{
+		resource &l_resource = m_resources[l_ID.index];
+		if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _ID)
+		{
+			switch (l_resource.type())
+			{
+				case resource_types::type_<vbuffer>::index :
+				{
+					vbuffer &l_vbuffer = l_resource.get_<vbuffer>();
+					m_pD3D11DeviceContext->IASetVertexBuffers((UINT)_i, 1, &l_vbuffer.pD3D11Buffer, (UINT*)&_stride, (UINT*)&_offset);
+					break;
+				}
+			}
+			return true;
+		}
+
+		m_pD3D11DeviceContext->IASetVertexBuffers((UINT)_i, 1, NULL, NULL, NULL);
+	}
+	return true;
+}
+bool rendering_D3D11::m_set_vbuffers(uint _ID)
+{
+	uint_ID l_ID(_ID);
+	if (l_ID.index < m_resources.size())
+	{
+		resource &l_resource = m_resources[l_ID.index];
+		if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _ID)
+		{
+			switch (l_resource.type())
+			{
+				case resource_types::type_<vbufset>::index :
+				{
+					vbufset &l_vbufset = l_resource.get_<vbufset>();
+					m_set_vformat(l_vbufset.vformat_ID);
+					for (uint i = 0; i < 8; ++i)
+					{
+						m_set_vbuffer(i, l_vbufset.vbuffer_IDs[i], l_vbufset.offsets[i], l_vbufset.strides[i]);
+					}
+					break;
+				}
+			}
+		}
+	}
+	return true;
+}
 bool rendering_D3D11::execute(const command &_command)
 {
 	switch (_command.type())
@@ -295,7 +370,7 @@ bool rendering_D3D11::execute(const command &_command)
 		case command_types::type_<write_vbuffer>::index : return execute(_command.get_<write_vbuffer>());
 		//case command_types::type_<create_vshader>::index : return execute(_command.get_<create_vshader>());
 		//case command_types::type_<create_pshader>::index : return execute(_command.get_<create_pshader>());
-		//case command_types::type_<create_vbufset>::index : return execute(_command.get_<create_vbufset>());
+		case command_types::type_<create_vbufset>::index : return execute(_command.get_<create_vbufset>());
 		//case command_types::type_<create_states>::index : return execute(_command.get_<create_states>());
 		//case command_types::type_<create_consts>::index : return execute(_command.get_<create_consts>());
 		//case command_types::type_<write_consts>::index : return execute(_command.get_<write_consts>());
@@ -513,6 +588,20 @@ bool rendering_D3D11::execute(const write_vbuffer &_command)
 
 	return true;
 }
+bool rendering_D3D11::execute(const create_vbufset &_command)
+{
+	vbufset l_vbufset;
+	l_vbufset.ID = _command.ID;
+
+	l_vbufset.vformat_ID = _command.vformat_ID;
+	memcpy(l_vbufset.vbuffer_IDs, _command.vbuffer_IDs, sizeof(l_vbufset.vbuffer_IDs));
+	memcpy(l_vbufset.offsets, _command.offsets, sizeof(l_vbufset.offsets));
+	memcpy(l_vbufset.strides, _command.strides, sizeof(l_vbufset.strides));
+
+	m_create_resource(l_vbufset);
+
+	return true;
+}
 bool rendering_D3D11::execute(const destroy_resource &_command)
 {
 	m_destroy_resource(_command.ID);
@@ -553,7 +642,7 @@ bool rendering_D3D11::execute(const draw_primitive &_command)
 {
 	if (!m_set_target(_command.target_ID)) return false;
 	if (!m_set_viewport(_command.viewport_ID)) return false;
-	//if (!m_set_vbuffers(_command.vbufset_ID)) return false;
+	if (!m_set_vbuffers(_command.vbufset_ID)) return false;
 	//if (!m_set_vshader(_command.vshader_ID)) return false;
 	//if (!m_set_pshader(_command.pshader_ID)) return false;
 	//if (!m_set_states(_command.states_ID)) return false;
