@@ -40,6 +40,7 @@
 			/>
 			<Tool
 				Name="Vertex Shader Compiler"
+				T="2"
 				Fh="$(InputPath).$(PlatformName).h"
 				Vn="data"
 				I="..\..\..\include"
@@ -654,7 +655,6 @@
 						>
 						<Tool
 							Name="Vertex Shader Compiler"
-							T="2"
 							Fh="$(InputPath).$(PlatformName).h"
 						/>
 					</FileConfiguration>
