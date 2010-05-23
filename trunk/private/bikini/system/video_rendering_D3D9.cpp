@@ -610,12 +610,51 @@ bool rendering_D3D9::execute(const create_viewport &_command)
 
 	return true;
 }
+static D3DDECLTYPE get_DX9_element_type(video::vf::element_type _type)
+{
+	switch (_type)
+	{
+		case video::vf::short2 : return D3DDECLTYPE_SHORT2;
+	}
+
+	return D3DDECLTYPE_UNUSED;
+}
+static D3DDECLUSAGE get_DX9_element_usage(const achar* _semantic)
+{
+	if (strcmp(_semantic, "POSITION") == 0) return D3DDECLUSAGE_POSITION;
+	if (strcmp(_semantic, "NORMAL") == 0) return D3DDECLUSAGE_NORMAL;
+
+	return (D3DDECLUSAGE)-1;
+}
 bool rendering_D3D9::execute(const create_vformat &_command)
 {
 	vformat l_vformat;
 	l_vformat.ID = _command.ID;
 
-	if (FAILED(m_D3DDevice9_p->CreateVertexDeclaration((CONST D3DVERTEXELEMENT9*)_command.data, &l_vformat.D3DVDecl9_p))) return false;
+	uint l_element_count = 0;
+	D3DVERTEXELEMENT9 l_DX9_elements[64];
+	video::vf::element* l_elements = (video::vf::element*)_command.data;
+
+	while (true)
+	{
+		video::vf::element &l_element = l_elements[l_element_count];
+		if (l_element.semantic == 0) break;
+
+		D3DVERTEXELEMENT9 &l_DX9_element = l_DX9_elements[l_element_count];
+		l_DX9_element.Stream = l_element.slot;
+		l_DX9_element.Offset = l_element.offset;
+		l_DX9_element.Type = get_DX9_element_type(l_element.type);
+		l_DX9_element.Method = D3DDECLMETHOD_DEFAULT;
+		l_DX9_element.Usage = get_DX9_element_usage(l_element.semantic);
+		l_DX9_element.UsageIndex = l_element.index;
+
+		++l_element_count;
+	}
+
+	D3DVERTEXELEMENT9 l_end = D3DDECL_END();
+	l_DX9_elements[l_element_count++] = l_end;
+
+	if (FAILED(m_D3DDevice9_p->CreateVertexDeclaration(l_DX9_elements, &l_vformat.D3DVDecl9_p))) return false;
 
 	m_create_resource(l_vformat);
 

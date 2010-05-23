@@ -9,6 +9,7 @@
 #include "header.hpp"
 
 #pragma comment(lib, "d3d11")
+#pragma comment(lib, "d3dx11")
 #pragma comment(lib, "dxgi")
 
 namespace bk { /*--------------------------------------------------------------------------------*/
@@ -56,7 +57,7 @@ private:
 
 	struct schain : _resource { IDXGISwapChain *pDXGISChain; ID3D11RenderTargetView *pD3D11RenderTargetView; };
 	struct viewport : _resource { D3D11_VIEWPORT D3D11Viewport; };
-	struct vformat : _resource {  };
+	struct vformat : _resource { ID3D11InputLayout *pD3D11InputLayout; };
 	struct vbuffer : _resource { ID3D11Buffer *pD3D11Buffer; uint size, used; };
 
 	typedef make_typelist_<
@@ -193,7 +194,7 @@ void rendering_D3D11::m_destroy_resource(uint _ID)
 				case resource_types::type_<vformat>::index :
 				{
 					vformat &l_vformat = l_resource.get_<vformat>();
-					//l_vformat.D3DVDecl9_p->Release();
+					l_vformat.pD3D11InputLayout->Release();
 					break;
 				}
 				case resource_types::type_<vbuffer>::index :
@@ -367,12 +368,94 @@ bool rendering_D3D11::execute(const create_viewport &_command)
 
 	return true;
 }
+static DXGI_FORMAT get_DXGI_format(video::vf::element_type _type)
+{
+	switch (_type)
+	{
+		case video::vf::short2 : return DXGI_FORMAT_R16G16_SINT;
+	}
+
+	return DXGI_FORMAT_UNKNOWN;
+}
+static const achar* get_HLSL_type(video::vf::element_type _type)
+{
+	switch (_type)
+	{
+		case video::vf::short2 : return "float2";
+	}
+
+	return "float4";
+}
 bool rendering_D3D11::execute(const create_vformat &_command)
 {
 	vformat l_vformat;
 	l_vformat.ID = _command.ID;
 
-	//if (FAILED(m_D3DDevice9_p->CreateVertexDeclaration((CONST D3DVERTEXELEMENT9*)_command.data, &l_vformat.D3DVDecl9_p))) return false;
+	astring l_code;
+
+	l_code =
+		"struct input\n"
+		"{\n"
+	;
+	
+	uint l_element_count = 0;
+	D3D11_INPUT_ELEMENT_DESC l_DX11_elements[64];
+	video::vf::element* l_elements = (video::vf::element*)_command.data;
+
+	while (true)
+	{
+		video::vf::element &l_element = l_elements[l_element_count];
+		if (l_element.semantic == 0) break;
+
+		D3D11_INPUT_ELEMENT_DESC &l_DX11_element = l_DX11_elements[l_element_count];
+		l_DX11_element.SemanticName = l_element.semantic;
+		l_DX11_element.SemanticIndex = l_element.index;
+		l_DX11_element.Format = get_DXGI_format(l_element.type);
+		l_DX11_element.InputSlot = l_element.slot;
+		l_DX11_element.AlignedByteOffset = l_element.offset;
+		l_DX11_element.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+		l_DX11_element.InstanceDataStepRate = 0;
+
+		achar l_line[64];
+		if (sprintf(l_line, "	%s p%d : %s;\n", get_HLSL_type(l_element.type), l_element_count, l_element.semantic) == -1) return false;
+		l_code += l_line;
+
+		++l_element_count;
+	}
+
+	l_code +=
+		"};\n"
+		"float4 main(input _in) : POSITION\n"
+		"{\n"
+		"	return float4(0, 0, 0, 0);\n"
+		"}\n"
+	;
+
+	ID3D10Blob *l_shader_p = 0;
+	ID3D10Blob *l_error_p = 0;
+	if (FAILED(D3DX11CompileFromMemory
+	(
+		l_code.c_str(),
+		l_code.size(),
+		"vformat_fake_shader",
+		NULL, NULL,
+		"main",
+		"vs_5_0",
+		D3D10_SHADER_OPTIMIZATION_LEVEL2,
+		0,
+		NULL,
+		&l_shader_p,
+		&l_error_p,
+		0
+	)))
+	{
+		l_error_p->Release();
+		return false;
+	}
+
+	if (FAILED(m_pD3D11Device->CreateInputLayout(l_DX11_elements, l_element_count, l_shader_p->GetBufferPointer(), l_shader_p->GetBufferSize(), &l_vformat.pD3D11InputLayout))) return false;
+
+	l_shader_p->Release();
 
 	m_create_resource(l_vformat);
 
