@@ -38,6 +38,11 @@
 						/>
 						<EnumValue
 							Value="3"
+							Switch="/T vs_4_1"
+							DisplayName="vs_4_1"
+						/>
+						<EnumValue
+							Value="4"
 							Switch="/T vs_5_0"
 							DisplayName="vs_5_0"
 						/>
@@ -102,7 +107,7 @@
 		<CustomBuildRule
 			Name="Pixel Shader Compiler"
 			DisplayName="Pixel Shader"
-			CommandLine="fxc.exe [T] [E] [D] [I] [Fc] [Fh] [Vn] /Fo &quot;$(IntDir)\$(InputFileName).o&quot; &quot;$(InputFileName)&quot;"
+			CommandLine="fxc.exe [T] [E] [D] [I] [Fc] [Fh] [Vn] /Gec /Fo &quot;$(IntDir)\$(InputFileName).o&quot; &quot;$(InputFileName)&quot;"
 			Outputs="$(IntDir)\$(InputFileName).o"
 			FileExtensions="*.ps"
 			ExecutionDescription="Compiling pixel shader ..."
@@ -130,6 +135,16 @@
 							Value="2"
 							Switch="/T ps_4_0"
 							DisplayName="ps_4_0"
+						/>
+						<EnumValue
+							Value="3"
+							Switch="/T ps_4_1"
+							DisplayName="ps_4_1"
+						/>
+						<EnumValue
+							Value="4"
+							Switch="/T ps_5_0"
+							DisplayName="ps_5_0"
 						/>
 					</Values>
 				</EnumProperty>
