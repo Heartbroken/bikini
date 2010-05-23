@@ -719,7 +719,15 @@ bool rendering_D3D11::execute(const draw_primitive &_command)
 	//if (!m_set_consts(_command.consts_ID)) return false;
 	//if (!m_set_textures(_command.texset_ID)) return false;
 
-	//if (FAILED(m_D3DDevice9_p->DrawPrimitive((D3DPRIMITIVETYPE)_command.type, (UINT)_command.start, (UINT)_command.size))) return false;
+	D3D11_PRIMITIVE_TOPOLOGY l_topology = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
+	switch (_command.type)
+	{
+		case D3DPT_TRIANGLELIST : l_topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST; break;
+		case D3DPT_TRIANGLESTRIP : l_topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP; break;
+	}
+	m_pD3D11DeviceContext->IASetPrimitiveTopology(l_topology);
+
+	m_pD3D11DeviceContext->Draw((UINT)_command.size, (UINT)_command.start);
 
 	return true;
 }
