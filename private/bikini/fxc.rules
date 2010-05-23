@@ -36,6 +36,11 @@
 							Switch="/T vs_4_0"
 							DisplayName="vs_4_0"
 						/>
+						<EnumValue
+							Value="3"
+							Switch="/T vs_5_0"
+							DisplayName="vs_5_0"
+						/>
 					</Values>
 				</EnumProperty>
 				<StringProperty
