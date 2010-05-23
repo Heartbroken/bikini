@@ -28,7 +28,7 @@ struct video : device
 		struct create_vformat : _command { uint ID; pointer data; };
 		struct create_vbuffer : _command { uint ID; uint size; };
 		struct write_vbuffer : _command { uint ID; bool reset; };
-		struct create_vshader : _command { uint ID; pointer data; };
+		struct create_vshader : _command { uint ID; pointer data; uint size; };
 		struct create_pshader : _command { uint ID; pointer data; };
 		struct create_vbufset : _command { uint ID, vformat_ID, vbuffer_IDs[8], offsets[8], strides[8]; };
 		struct create_states : _command { uint ID; pointer data; };
@@ -362,7 +362,7 @@ struct vshader : video::object
 	struct info : video::object::info
 	{
 		typedef vshader object;
-		pointer data;
+		pointer data; uint size;
 		info();
 	};
 

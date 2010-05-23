@@ -746,6 +746,7 @@ bool vshader::update(real _dt)
 		video::rendering::create_vshader l_create_vshader;
 		l_create_vshader.ID = m_resource_ID;
 		l_create_vshader.data = get_info().data;
+		l_create_vshader.size = get_info().size;
 		add_command(l_create_vshader);
 	}
 
