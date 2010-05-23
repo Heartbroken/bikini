@@ -713,6 +713,7 @@ bool pshader::update(real _dt)
 		video::rendering::create_pshader l_create_pshader;
 		l_create_pshader.ID = m_resource_ID;
 		l_create_pshader.data = get_info().data;
+		l_create_pshader.size = get_info().size;
 		add_command(l_create_pshader);
 	}
 

@@ -54,6 +54,7 @@ renderer::renderer(video &_video)
 	m_vshader.data = flash_vs::data;
 	m_vshader.size = sizeof(flash_vs::data) / sizeof(flash_vs::data[0]);
 	m_pshader.data = flash_ps::data;
+	m_pshader.size = sizeof(flash_ps::data) / sizeof(flash_ps::data[0]);
 	m_states.data = flash_rs::data;
 }
 renderer::~renderer()
