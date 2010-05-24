@@ -44,9 +44,9 @@ private:
 	bool execute(const create_states &_command);
 	bool execute(const create_consts &_command);
 	bool execute(const write_consts &_command);
-	//bool execute(const create_texture &_command);
-	//bool execute(const write_texture &_command);
-	//bool execute(const create_texset &_command);
+	bool execute(const create_texture &_command);
+	bool execute(const write_texture &_command);
+	bool execute(const create_texset &_command);
 	bool execute(const destroy_resource &_command);
 	bool execute(const begin_scene &_command);
 	bool execute(const clear_viewport &_command);
@@ -65,9 +65,11 @@ private:
 	struct vbufset : _resource { uint vformat_ID, vbuffer_IDs[8], offsets[8], strides[8]; };
 	struct states : _resource { ID3D11RasterizerState *pD3D11RasterizerState; ID3D11DepthStencilState *pD3D11DepthStencilState; };
 	struct consts : _resource { byte_array data; };
+	struct texture : _resource { ID3D11Texture2D *pD3D11Texture2D; ID3D11ShaderResourceView *pD3D11ShaderResourceView; };
+	struct texset : _resource { uint texture_IDs[8]; };
 
 	typedef make_typelist_<
-		schain, viewport, vformat, vbuffer, vshader, pshader, vbufset, states, consts//, texture, texset
+		schain, viewport, vformat, vbuffer, vshader, pshader, vbufset, states, consts, texture, texset
 	>::type resource_types;
 
 	typedef variant_<resource_types, false> resource;
@@ -86,6 +88,8 @@ private:
 	bool m_set_pshader(uint _ID);
 	bool m_set_states(uint _ID);
 	bool m_set_consts(uint _ID);
+	bool m_set_texture(uint _i, uint _ID);
+	bool m_set_textures(uint _ID);
 };
 
 rendering_D3D11::rendering_D3D11(video &_video)
@@ -282,12 +286,13 @@ void rendering_D3D11::m_destroy_resource(uint _ID)
 				{
 					break;
 				}
-				//case resource_types::type_<texture>::index :
-				//{
-				//	texture &l_texture = l_resource.get_<texture>();
-				//	l_texture.D3DTexture9_p->Release();
-				//	break;
-				//}
+				case resource_types::type_<texture>::index :
+				{
+					texture &l_texture = l_resource.get_<texture>();
+					l_texture.pD3D11ShaderResourceView->Release();
+					l_texture.pD3D11Texture2D->Release();
+					break;
+				}
 			}
 			l_resource.destruct();
 			set_invalid(_ID);
@@ -527,6 +532,56 @@ bool rendering_D3D11::m_set_consts(uint _ID)
 	}
 	return true;
 }
+bool rendering_D3D11::m_set_texture(uint _i, uint _ID)
+{
+	uint_ID l_ID(_ID);
+	if (l_ID.index < m_resources.size())
+	{
+		resource &l_resource = m_resources[l_ID.index];
+		if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _ID)
+		{
+			switch (l_resource.type())
+			{
+				case resource_types::type_<texture>::index :
+				{
+					texture &l_texture = l_resource.get_<texture>();
+					ID3D11ShaderResourceView *l_pD3D11ShaderResourceView = l_texture.pD3D11ShaderResourceView;
+					m_pD3D11DeviceContext->PSGetShaderResources((UINT)_i, 1, &l_pD3D11ShaderResourceView);
+					break;
+				}
+			}
+			return true;
+		}
+
+		m_pD3D11DeviceContext->PSGetShaderResources((UINT)_i, 1, NULL);
+	}
+	return true;
+}
+bool rendering_D3D11::m_set_textures(uint _ID)
+{
+	uint_ID l_ID(_ID);
+	if (l_ID.index < m_resources.size())
+	{
+		resource &l_resource = m_resources[l_ID.index];
+		if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _ID)
+		{
+			switch (l_resource.type())
+			{
+				case resource_types::type_<texset>::index :
+				{
+					texset &l_texset = l_resource.get_<texset>();
+					for (uint i = 0; i < 8; ++i)
+					{
+						m_set_texture(i, l_texset.texture_IDs[i]);
+					}
+					break;
+				}
+			}
+			return true;
+		}
+	}
+	return true;
+}
 bool rendering_D3D11::execute(const command &_command)
 {
 	switch (_command.type())
@@ -542,9 +597,9 @@ bool rendering_D3D11::execute(const command &_command)
 		case command_types::type_<create_states>::index : return execute(_command.get_<create_states>());
 		case command_types::type_<create_consts>::index : return execute(_command.get_<create_consts>());
 		case command_types::type_<write_consts>::index : return execute(_command.get_<write_consts>());
-		//case command_types::type_<create_texture>::index : return execute(_command.get_<create_texture>());
-		//case command_types::type_<write_texture>::index : return execute(_command.get_<write_texture>());
-		//case command_types::type_<create_texset>::index : return execute(_command.get_<create_texset>());
+		case command_types::type_<create_texture>::index : return execute(_command.get_<create_texture>());
+		case command_types::type_<write_texture>::index : return execute(_command.get_<write_texture>());
+		case command_types::type_<create_texset>::index : return execute(_command.get_<create_texset>());
 		case command_types::type_<destroy_resource>::index : return execute(_command.get_<destroy_resource>());
 		case command_types::type_<begin_scene>::index : return execute(_command.get_<begin_scene>());
 		case command_types::type_<clear_viewport>::index : return execute(_command.get_<clear_viewport>());
@@ -860,6 +915,184 @@ bool rendering_D3D11::execute(const write_consts &_command)
 
 	return true;
 }
+bool rendering_D3D11::execute(const create_texture &_command)
+{
+	texture l_texture;
+	l_texture.ID = _command.ID;
+
+	{
+		D3D11_TEXTURE2D_DESC l_desc = {0};
+		l_desc.Width = (UINT)_command.size.x;
+		l_desc.Height = (UINT)_command.size.y;
+		l_desc.MipLevels = 0;
+		l_desc.ArraySize = 1;
+		switch (_command.format)
+		{
+			case video::tf::a8 : l_desc.Format = DXGI_FORMAT_A8_UNORM; break;
+			case video::tf::b8g8r8 : l_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; break;
+			case video::tf::a8b8g8r8 : l_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; break;
+			case video::tf::a8r8g8b8 : l_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; break;
+		}
+		l_desc.SampleDesc.Count = 1;
+		l_desc.SampleDesc.Quality = 0;
+		l_desc.Usage = D3D11_USAGE_DEFAULT;
+		l_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		l_desc.CPUAccessFlags = 0;//D3D11_CPU_ACCESS_WRITE;
+		l_desc.MiscFlags = 0;
+
+		if (FAILED(m_pD3D11Device->CreateTexture2D(&l_desc, NULL, &l_texture.pD3D11Texture2D))) return false;
+	}
+	{
+		if (FAILED(m_pD3D11Device->CreateShaderResourceView(l_texture.pD3D11Texture2D, NULL, &l_texture.pD3D11ShaderResourceView)))
+		{
+			l_texture.pD3D11Texture2D->Release();
+			return false;
+		}
+	}
+
+	//D3DFORMAT l_format;
+	//switch (_command.format)
+	//{
+	//	case video::tf::a8 : l_format = D3DFMT_A8; break;
+	//	case video::tf::b8g8r8 : l_format = D3DFMT_A8R8G8B8; break;
+	//	case video::tf::a8b8g8r8 : l_format = D3DFMT_A8R8G8B8; break;
+	//	case video::tf::a8r8g8b8 : l_format = D3DFMT_A8R8G8B8; break;
+	//}
+
+	//if (FAILED(m_D3DDevice9_p->CreateTexture((UINT)_command.size.x, (UINT)_command.size.y, 0, 0, l_format, D3DPOOL_DEFAULT, &l_texture.D3DTexture9_p, 0))) return false;
+
+	m_create_resource(l_texture);
+
+	return true;
+}
+bool rendering_D3D11::execute(const write_texture &_command)
+{
+	uint_ID l_ID(_command.ID);
+
+	resource &l_resource = m_resources[l_ID.index];
+	if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _command.ID)
+	{
+		if (l_resource.type() == resource_types::type_<texture>::index)
+		{
+			texture &l_texture = l_resource.get_<texture>();
+
+			//uint l_format; get_data(&l_format, sizeof(l_format));
+			//sint2 l_size; get_data(&l_size, sizeof(l_size));
+			//uint l_pitch; get_data(&l_pitch, sizeof(l_pitch));
+
+			//D3DFORMAT l_D3DFormat;
+			//switch (l_format)
+			//{
+			//	case video::tf::a8 : l_D3DFormat = D3DFMT_A8; break;
+			//	case video::tf::b8g8r8 : l_D3DFormat = D3DFMT_A8R8G8B8; break;
+			//	case video::tf::a8b8g8r8 : l_D3DFormat = D3DFMT_A8R8G8B8; break;
+			//	case video::tf::a8r8g8b8 : l_D3DFormat = D3DFMT_A8R8G8B8; break;
+			//}
+
+			//IDirect3DTexture9 *l_D3DTex9_p;
+			//if (FAILED(m_D3DDevice9_p->CreateTexture((UINT)l_size.x, (UINT)l_size.y, 1, 0, l_D3DFormat, D3DPOOL_SYSTEMMEM, &l_D3DTex9_p, 0)))
+			//{
+			//	throw_data(l_size.y * l_pitch);
+			//	return false;
+			//}
+
+			//D3DLOCKED_RECT l_rect;
+			//l_D3DTex9_p->LockRect(0, &l_rect, 0, 0);
+			//if (l_format == video::tf::b8g8r8 || l_format == video::tf::a8b8g8r8)
+			//{
+			//	assert((uint)l_rect.Pitch >= l_pitch);
+			//	uint l_width = l_size.x, l_height = l_size.y;
+
+			//	for (uint y = 0; y < l_height; ++y)
+			//	{
+			//		byte* l_row = (byte*)l_rect.pBits + y * l_rect.Pitch;
+			//		get_data(l_row, l_pitch);
+
+			//		switch (l_format)
+			//		{
+			//			case video::tf::b8g8r8 :
+			//			{
+			//				for (uint x = 0; x < l_width; ++x)
+			//				{
+			//					uint l_pixel = l_width - 1 - x;
+
+			//					uint l_pixel_3 = l_pixel * 3;
+			//					byte l_r = l_row[l_pixel_3 + 2];
+			//					byte l_g = l_row[l_pixel_3 + 1];
+			//					byte l_b = l_row[l_pixel_3 + 0];
+			//					byte l_a = 0xff;
+
+			//					uint l_pixel_4 = l_pixel * 4;
+			//					l_row[l_pixel_4 + 0] = l_r;
+			//					l_row[l_pixel_4 + 1] = l_g;
+			//					l_row[l_pixel_4 + 2] = l_b;
+			//					l_row[l_pixel_4 + 3] = l_a;
+			//				}
+			//				break;
+			//			}
+			//			case video::tf::a8b8g8r8 :
+			//			{
+			//				for (uint x = 0; x < l_width; ++x)
+			//				{
+			//					uint l_pixel = (l_width - 1 - x) * 4;
+
+			//					byte l_r = l_row[l_pixel + 2];
+			//					byte l_g = l_row[l_pixel + 1];
+			//					byte l_b = l_row[l_pixel + 0];
+			//					byte l_a = l_row[l_pixel + 3];
+
+			//					l_row[l_pixel + 0] = l_r;
+			//					l_row[l_pixel + 1] = l_g;
+			//					l_row[l_pixel + 2] = l_b;
+			//					l_row[l_pixel + 3] = l_a;
+			//				}
+			//				break;
+			//			}
+			//		}
+			//	}
+			//}
+			//else
+			//{
+			//	get_data(l_rect.pBits, l_size.y * l_pitch);
+			//}
+			//l_D3DTex9_p->UnlockRect(0);
+
+			//l_texture.D3DTexture9_p->Release();
+
+			//DWORD l_usage = 0;
+			//if (l_size.x * l_size.y > 1) l_usage |= D3DUSAGE_AUTOGENMIPMAP;
+
+			//m_D3DDevice9_p->CreateTexture((UINT)l_size.x, (UINT)l_size.y, 0, l_usage, l_D3DFormat, D3DPOOL_DEFAULT, &l_texture.D3DTexture9_p, 0);
+
+			//if (l_usage & D3DUSAGE_AUTOGENMIPMAP) l_texture.D3DTexture9_p->SetAutoGenFilterType(D3DTEXF_ANISOTROPIC);
+			//
+			//IDirect3DSurface9 *l_D3DSrcSurf9_p; l_D3DTex9_p->GetSurfaceLevel(0, &l_D3DSrcSurf9_p);
+			//IDirect3DSurface9 *l_D3DDstSurf9_p; l_texture.D3DTexture9_p->GetSurfaceLevel(0, &l_D3DDstSurf9_p);
+			//m_D3DDevice9_p->UpdateSurface(l_D3DSrcSurf9_p, 0, l_D3DDstSurf9_p, 0);
+			//l_D3DDstSurf9_p->Release();
+			//l_D3DSrcSurf9_p->Release();
+
+			//l_D3DTex9_p->Release();
+
+			//return true;
+		}
+	}
+
+	throw_data(_command.extra);
+
+	return true;
+}
+bool rendering_D3D11::execute(const create_texset &_command)
+{
+	texset l_texset;
+	l_texset.ID = _command.ID;
+
+	memcpy(l_texset.texture_IDs, _command.texture_IDs, sizeof(l_texset.texture_IDs));
+
+	m_create_resource(l_texset);
+
+	return true;
+}
 bool rendering_D3D11::execute(const destroy_resource &_command)
 {
 	m_destroy_resource(_command.ID);
@@ -905,7 +1138,7 @@ bool rendering_D3D11::execute(const draw_primitive &_command)
 	if (!m_set_pshader(_command.pshader_ID)) return false;
 	if (!m_set_states(_command.states_ID)) return false;
 	if (!m_set_consts(_command.consts_ID)) return false;
-	//if (!m_set_textures(_command.texset_ID)) return false;
+	if (!m_set_textures(_command.texset_ID)) return false;
 
 	D3D11_PRIMITIVE_TOPOLOGY l_topology = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 	switch (_command.type)
