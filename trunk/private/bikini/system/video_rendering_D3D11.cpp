@@ -915,6 +915,17 @@ bool rendering_D3D11::execute(const write_consts &_command)
 
 	return true;
 }
+static DXGI_FORMAT get_DXGI_texture_format(uint _format)
+{
+	switch (_format)
+	{
+		case video::tf::a8 : return DXGI_FORMAT_A8_UNORM;
+		case video::tf::b8g8r8 : return DXGI_FORMAT_R8G8B8A8_UNORM;
+		case video::tf::a8b8g8r8 : return DXGI_FORMAT_R8G8B8A8_UNORM;
+		case video::tf::a8r8g8b8 : return DXGI_FORMAT_R8G8B8A8_UNORM;
+	}
+	return DXGI_FORMAT_UNKNOWN;
+}
 bool rendering_D3D11::execute(const create_texture &_command)
 {
 	texture l_texture;
@@ -926,13 +937,7 @@ bool rendering_D3D11::execute(const create_texture &_command)
 		l_desc.Height = (UINT)_command.size.y;
 		l_desc.MipLevels = 0;
 		l_desc.ArraySize = 1;
-		switch (_command.format)
-		{
-			case video::tf::a8 : l_desc.Format = DXGI_FORMAT_A8_UNORM; break;
-			case video::tf::b8g8r8 : l_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; break;
-			case video::tf::a8b8g8r8 : l_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; break;
-			case video::tf::a8r8g8b8 : l_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; break;
-		}
+		l_desc.Format = get_DXGI_texture_format(_command.format);
 		l_desc.SampleDesc.Count = 1;
 		l_desc.SampleDesc.Quality = 0;
 		l_desc.Usage = D3D11_USAGE_DEFAULT;
@@ -975,6 +980,116 @@ bool rendering_D3D11::execute(const write_texture &_command)
 		if (l_resource.type() == resource_types::type_<texture>::index)
 		{
 			texture &l_texture = l_resource.get_<texture>();
+
+			uint l_format; get_data(&l_format, sizeof(l_format));
+			sint2 l_size; get_data(&l_size, sizeof(l_size));
+			uint l_pitch; get_data(&l_pitch, sizeof(l_pitch));
+
+			ID3D11Texture2D *l_pD3D11Texture2D = NULL;
+			{
+				D3D11_TEXTURE2D_DESC l_desc = {0};
+				l_desc.Width = (UINT)l_size.x;
+				l_desc.Height = (UINT)l_size.y;
+				l_desc.MipLevels = 1;
+				l_desc.ArraySize = 1;
+				l_desc.Format = get_DXGI_texture_format(l_format);
+				l_desc.SampleDesc.Count = 1;
+				l_desc.SampleDesc.Quality = 0;
+				l_desc.Usage = D3D11_USAGE_DYNAMIC;
+				l_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+				l_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+				l_desc.MiscFlags = 0;
+
+				if (FAILED(m_pD3D11Device->CreateTexture2D(&l_desc, NULL, &l_pD3D11Texture2D)))
+				{
+					throw_data(l_size.y * l_pitch);
+					return false;
+				}
+			}
+
+			D3D11_MAPPED_SUBRESOURCE l_resource;
+			if (FAILED(m_pD3D11DeviceContext->Map(l_pD3D11Texture2D, 0, D3D11_MAP_WRITE_DISCARD, 0, &l_resource)))
+			{
+				throw_data(l_size.y * l_pitch);
+				l_pD3D11Texture2D->Release();
+				return false;
+			}
+
+			if (l_format == video::tf::b8g8r8 || l_format == video::tf::a8b8g8r8)
+			{
+				assert((uint)l_resource.RowPitch >= l_pitch);
+				uint l_width = l_size.x, l_height = l_size.y;
+
+				for (uint y = 0; y < l_height; ++y)
+				{
+					byte* l_row = (byte*)l_resource.pData + y * l_resource.RowPitch;
+					get_data(l_row, l_pitch);
+
+					switch (l_format)
+					{
+						case video::tf::b8g8r8 :
+						{
+							for (uint x = 0; x < l_width; ++x)
+							{
+								uint l_pixel = l_width - 1 - x;
+
+								uint l_pixel_3 = l_pixel * 3;
+								byte l_r = l_row[l_pixel_3 + 2];
+								byte l_g = l_row[l_pixel_3 + 1];
+								byte l_b = l_row[l_pixel_3 + 0];
+								byte l_a = 0xff;
+
+								uint l_pixel_4 = l_pixel * 4;
+								l_row[l_pixel_4 + 0] = l_r;
+								l_row[l_pixel_4 + 1] = l_g;
+								l_row[l_pixel_4 + 2] = l_b;
+								l_row[l_pixel_4 + 3] = l_a;
+							}
+							break;
+						}
+						case video::tf::a8b8g8r8 :
+						{
+							for (uint x = 0; x < l_width; ++x)
+							{
+								uint l_pixel = (l_width - 1 - x) * 4;
+
+								byte l_r = l_row[l_pixel + 2];
+								byte l_g = l_row[l_pixel + 1];
+								byte l_b = l_row[l_pixel + 0];
+								byte l_a = l_row[l_pixel + 3];
+
+								l_row[l_pixel + 0] = l_r;
+								l_row[l_pixel + 1] = l_g;
+								l_row[l_pixel + 2] = l_b;
+								l_row[l_pixel + 3] = l_a;
+							}
+							break;
+						}
+					}
+				}
+			}
+			else
+			{
+				get_data(l_resource.pData, l_size.y * l_pitch);
+			}
+
+			m_pD3D11DeviceContext->Unmap(l_pD3D11Texture2D, 0);
+
+			ID3D11ShaderResourceView *l_pD3D11ShaderResourceView = NULL;
+			{
+				if (FAILED(m_pD3D11Device->CreateShaderResourceView(l_texture.pD3D11Texture2D, NULL, &l_pD3D11ShaderResourceView)))
+				{
+					l_pD3D11Texture2D->Release();
+					return false;
+				}
+			}
+
+			l_texture.pD3D11ShaderResourceView->Release();
+			l_texture.pD3D11Texture2D->Release();
+			l_texture.pD3D11Texture2D = l_pD3D11Texture2D;
+			l_texture.pD3D11ShaderResourceView = l_pD3D11ShaderResourceView;
+
+			return true;
 
 			//uint l_format; get_data(&l_format, sizeof(l_format));
 			//sint2 l_size; get_data(&l_size, sizeof(l_size));
