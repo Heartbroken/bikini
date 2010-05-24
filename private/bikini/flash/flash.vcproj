@@ -125,6 +125,7 @@
 			/>
 			<Tool
 				Name="Vertex Shader Compiler"
+				T="3"
 				Fh="$(InputPath).$(PlatformName).h"
 				Vn="data"
 				I="..\..\..\include"
@@ -137,6 +138,7 @@
 			/>
 			<Tool
 				Name="Pixel Shader Compiler"
+				T="3"
 				Fh="$(InputPath).$(PlatformName).h"
 				Vn="data"
 				I="..\..\..\include"
