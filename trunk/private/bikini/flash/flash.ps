@@ -9,14 +9,14 @@
 #include <bikini/system/shader.shh>
 
 #if !defined(__cplusplus) /*---------------------------------------------------------------------*/
-
+/*
 texture color : register(s0);
 
 sampler color_sampler = sampler_state
 {
 	texture = color;
 };
-
+*/
 struct input
 {
 	float2 tex0 : TEXCOORD0;
@@ -25,7 +25,7 @@ struct input
 
 float4 main(input _in) : COLOR0
 {
-	return _in.c * tex2D(color_sampler, _in.tex0);
+	return _in.c;// * tex2D(color_sampler, _in.tex0);
 }
 
 #endif /* !defined(__cplusplus) -----------------------------------------------------------------*/

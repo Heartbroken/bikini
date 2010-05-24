@@ -28,6 +28,7 @@ private:
 	ID3D11Device *m_pD3D11Device;
 	ID3D11DeviceContext *m_pD3D11DeviceContext;
 	IDXGIFactory *m_pDXGIFactory;
+	ID3D11Buffer *m_pD3D11BufferVS, *m_pD3D11BufferPS;
 
 	ID3D11Device& get_device() const;
 	IDXGIFactory& get_factory() const;
@@ -41,8 +42,8 @@ private:
 	bool execute(const create_pshader &_command);
 	bool execute(const create_vbufset &_command);
 	bool execute(const create_states &_command);
-	//bool execute(const create_consts &_command);
-	//bool execute(const write_consts &_command);
+	bool execute(const create_consts &_command);
+	bool execute(const write_consts &_command);
 	//bool execute(const create_texture &_command);
 	//bool execute(const write_texture &_command);
 	//bool execute(const create_texset &_command);
@@ -63,9 +64,10 @@ private:
 	struct pshader : _resource { ID3D11PixelShader *pD3D11PixelShader; };
 	struct vbufset : _resource { uint vformat_ID, vbuffer_IDs[8], offsets[8], strides[8]; };
 	struct states : _resource { ID3D11RasterizerState *pD3D11RasterizerState; ID3D11DepthStencilState *pD3D11DepthStencilState; };
+	struct consts : _resource { byte_array data; };
 
 	typedef make_typelist_<
-		schain, viewport, vformat, vbuffer, vshader, pshader, vbufset, states//, consts, texture, texset
+		schain, viewport, vformat, vbuffer, vshader, pshader, vbufset, states, consts//, texture, texset
 	>::type resource_types;
 
 	typedef variant_<resource_types, false> resource;
@@ -83,6 +85,7 @@ private:
 	bool m_set_vshader(uint _ID);
 	bool m_set_pshader(uint _ID);
 	bool m_set_states(uint _ID);
+	bool m_set_consts(uint _ID);
 };
 
 rendering_D3D11::rendering_D3D11(video &_video)
@@ -139,6 +142,43 @@ bool rendering_D3D11::initialize()
 	l_pDXGIAdapter->Release();
 	l_pDXGIDevice->Release();
 
+	{
+		D3D11_BUFFER_DESC l_desc;
+		l_desc.ByteWidth = 512 * sizeof(float4);
+		l_desc.Usage = D3D11_USAGE_DYNAMIC;
+		l_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		l_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		l_desc.MiscFlags = 0;
+		l_desc.StructureByteStride = 0;
+
+		if (FAILED(m_pD3D11Device->CreateBuffer(&l_desc, NULL, &m_pD3D11BufferVS)))
+		{
+			m_pDXGIFactory->Release(); m_pDXGIFactory = 0;
+			m_pD3D11Device->Release(); m_pD3D11Device = 0;
+			return false;
+		}
+
+		m_pD3D11DeviceContext->VSSetConstantBuffers(0, 1, &m_pD3D11BufferVS);
+	}
+	{
+		D3D11_BUFFER_DESC l_desc;
+		l_desc.ByteWidth = 512 * sizeof(float4);
+		l_desc.Usage = D3D11_USAGE_DYNAMIC;
+		l_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		l_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		l_desc.MiscFlags = 0;
+		l_desc.StructureByteStride = 0;
+
+		if (FAILED(m_pD3D11Device->CreateBuffer(&l_desc, NULL, &m_pD3D11BufferPS)))
+		{
+			m_pDXGIFactory->Release(); m_pDXGIFactory = 0;
+			m_pD3D11Device->Release(); m_pD3D11Device = 0;
+			return false;
+		}
+
+		m_pD3D11DeviceContext->PSSetConstantBuffers(0, 1, &m_pD3D11BufferPS);
+	}
+
 	return true;
 }
 void rendering_D3D11::finalize()
@@ -153,6 +193,8 @@ void rendering_D3D11::finalize()
 		m_resources.pop_back();
 	}
 
+	if (m_pD3D11BufferVS != 0) m_pD3D11BufferVS->Release();
+	if (m_pD3D11BufferPS != 0) m_pD3D11BufferPS->Release();
 	if (m_pDXGIFactory != 0) m_pDXGIFactory->Release();
 	if (m_pD3D11DeviceContext != 0) m_pD3D11DeviceContext->Release();
 	if (m_pD3D11Device != 0) m_pD3D11Device->Release();
@@ -232,14 +274,14 @@ void rendering_D3D11::m_destroy_resource(uint _ID)
 				case resource_types::type_<states>::index :
 				{
 					states &l_states = l_resource.get_<states>();
-					//l_states.pD3D11RasterizerState->Release();
+					l_states.pD3D11RasterizerState->Release();
 					l_states.pD3D11DepthStencilState->Release();
 					break;
 				}
-				//case resource_types::type_<consts>::index :
-				//{
-				//	break;
-				//}
+				case resource_types::type_<consts>::index :
+				{
+					break;
+				}
 				//case resource_types::type_<texture>::index :
 				//{
 				//	texture &l_texture = l_resource.get_<texture>();
@@ -424,7 +466,59 @@ bool rendering_D3D11::m_set_states(uint _ID)
 				{
 					states &l_states = l_resource.get_<states>();
 					m_pD3D11DeviceContext->OMSetDepthStencilState(l_states.pD3D11DepthStencilState, 0);
-					//m_pD3D11DeviceContext->RSSetState(l_states.pD3D11RasterizerState);
+					m_pD3D11DeviceContext->RSSetState(l_states.pD3D11RasterizerState);
+					break;
+				}
+			}
+			return true;
+		}
+	}
+	return true;
+}
+bool rendering_D3D11::m_set_consts(uint _ID)
+{
+	uint_ID l_ID(_ID);
+	if (l_ID.index < m_resources.size())
+	{
+		resource &l_resource = m_resources[l_ID.index];
+		if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _ID)
+		{
+			switch (l_resource.type())
+			{
+				case resource_types::type_<consts>::index :
+				{
+					consts &l_consts = l_resource.get_<consts>();
+
+					if (!l_consts.data.empty())
+					{
+						byte* l_begin = &l_consts.data[0];
+						sint l_length = l_consts.data.size();
+
+						byte* l_current = &l_consts.data[0];
+
+						D3D11_MAPPED_SUBRESOURCE l_resource1, l_resource2;
+						if (FAILED(m_pD3D11DeviceContext->Map(m_pD3D11BufferVS, 0, D3D11_MAP_WRITE_DISCARD, 0, &l_resource1))) return false;
+						if (FAILED(m_pD3D11DeviceContext->Map(m_pD3D11BufferPS, 0, D3D11_MAP_WRITE_DISCARD, 0, &l_resource2))) return false;
+
+						while (l_current - l_begin < l_length)
+						{
+							uint l_type = *(uint*)l_current; l_current += sizeof(uint);
+							uint l_offset = *(uint*)l_current; l_current += sizeof(uint);
+							uint l_size = *(uint*)l_current; l_current += sizeof(uint);
+
+							if (l_type & 1)
+								memcpy((float4*)l_resource1.pData + l_offset, l_current, l_size);
+
+							if (l_type & 2)
+								memcpy((float4*)l_resource2.pData + l_offset, l_current, l_size);
+
+							l_current += l_size;
+						}
+
+						m_pD3D11DeviceContext->Unmap(m_pD3D11BufferVS, 0);
+						m_pD3D11DeviceContext->Unmap(m_pD3D11BufferPS, 0);
+					}
+
 					break;
 				}
 			}
@@ -446,8 +540,8 @@ bool rendering_D3D11::execute(const command &_command)
 		case command_types::type_<create_pshader>::index : return execute(_command.get_<create_pshader>());
 		case command_types::type_<create_vbufset>::index : return execute(_command.get_<create_vbufset>());
 		case command_types::type_<create_states>::index : return execute(_command.get_<create_states>());
-		//case command_types::type_<create_consts>::index : return execute(_command.get_<create_consts>());
-		//case command_types::type_<write_consts>::index : return execute(_command.get_<write_consts>());
+		case command_types::type_<create_consts>::index : return execute(_command.get_<create_consts>());
+		case command_types::type_<write_consts>::index : return execute(_command.get_<write_consts>());
 		//case command_types::type_<create_texture>::index : return execute(_command.get_<create_texture>());
 		//case command_types::type_<write_texture>::index : return execute(_command.get_<write_texture>());
 		//case command_types::type_<create_texset>::index : return execute(_command.get_<create_texset>());
@@ -474,7 +568,7 @@ bool rendering_D3D11::execute(const create_schain &_command)
 	l_desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	l_desc.BufferDesc.RefreshRate.Numerator = 60;
 	l_desc.BufferDesc.RefreshRate.Denominator = 1;
-	l_desc.SampleDesc.Count = 1;
+	l_desc.SampleDesc.Count = 8;
 	l_desc.SampleDesc.Quality = 0;
 	l_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
@@ -530,7 +624,7 @@ static const achar* get_HLSL_type(video::vf::element_type _type)
 {
 	switch (_type)
 	{
-		case video::vf::short2 : return "float2";
+		case video::vf::short2 : return "int2";
 	}
 
 	return "float4";
@@ -703,21 +797,66 @@ bool rendering_D3D11::execute(const create_states &_command)
 	states l_states;
 	l_states.ID = _command.ID;
 
-	//{
-	//	D3D11_RASTERIZER_DESC l_desc =
-	//	{
-	//		D3D11_FILL_SOLID, D3D11_CULL_BACK
-	//	};
+	{
+		D3D11_RASTERIZER_DESC l_desc =
+		{
+			D3D11_FILL_SOLID,		// D3D11_FILL_MODE FillMode;
+			D3D11_CULL_NONE,		// D3D11_CULL_MODE CullMode;
+			TRUE,					// BOOL FrontCounterClockwise;
+			0,						// INT DepthBias;
+			0,						// FLOAT DepthBiasClamp;
+			0,						// FLOAT SlopeScaledDepthBias;
+			FALSE,					// BOOL DepthClipEnable;
+			FALSE,					// BOOL ScissorEnable;
+			FALSE,					// BOOL MultisampleEnable;
+			TRUE					// BOOL AntialiasedLineEnable;
+		};
 
-	//	if (FAILED(m_pD3D11Device->CreateRasterizerState(&l_desc, l_states.pD3D11RasterizerState))) return false;
-	//}
+		if (FAILED(m_pD3D11Device->CreateRasterizerState(&l_desc, &l_states.pD3D11RasterizerState))) return false;
+	}
 	{
 		D3D11_DEPTH_STENCIL_DESC l_desc = {0};
+		l_desc.DepthEnable = FALSE;
 
 		if (FAILED(m_pD3D11Device->CreateDepthStencilState(&l_desc, &l_states.pD3D11DepthStencilState))) return false;
 	}
 
 	m_create_resource(l_states);
+
+	return true;
+}
+bool rendering_D3D11::execute(const create_consts &_command)
+{
+	consts l_consts;
+	l_consts.ID = _command.ID;
+
+	m_create_resource(l_consts);
+
+	return true;
+}
+bool rendering_D3D11::execute(const write_consts &_command)
+{
+	uint_ID l_ID(_command.ID);
+
+	resource &l_resource = m_resources[l_ID.index];
+	if (!l_resource.is_nothing() && l_resource.get_<_resource>().ID == _command.ID)
+	{
+		if (l_resource.type() == resource_types::type_<consts>::index)
+		{
+			consts &l_consts = l_resource.get_<consts>();
+
+			if (_command.reset) l_consts.data.resize(0);
+
+			uint l_oldsize = l_consts.data.size();
+			l_consts.data.resize(l_oldsize + _command.extra);
+
+			get_data(&l_consts.data[l_oldsize], _command.extra);
+
+			return true;
+		}
+	}
+
+	throw_data(_command.extra);
 
 	return true;
 }
@@ -765,7 +904,7 @@ bool rendering_D3D11::execute(const draw_primitive &_command)
 	if (!m_set_vshader(_command.vshader_ID)) return false;
 	if (!m_set_pshader(_command.pshader_ID)) return false;
 	if (!m_set_states(_command.states_ID)) return false;
-	//if (!m_set_consts(_command.consts_ID)) return false;
+	if (!m_set_consts(_command.consts_ID)) return false;
 	//if (!m_set_textures(_command.texset_ID)) return false;
 
 	D3D11_PRIMITIVE_TOPOLOGY l_topology = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
@@ -776,7 +915,13 @@ bool rendering_D3D11::execute(const draw_primitive &_command)
 	}
 	m_pD3D11DeviceContext->IASetPrimitiveTopology(l_topology);
 
-	m_pD3D11DeviceContext->Draw((UINT)_command.size, (UINT)_command.start);
+	UINT l_vcount = 0;
+	switch (_command.type)
+	{
+		case D3DPT_TRIANGLELIST : l_vcount = _command.size * 3; break;
+		case D3DPT_TRIANGLESTRIP : l_vcount = _command.size + 2; break;
+	}
+	m_pD3D11DeviceContext->Draw(l_vcount, (UINT)_command.start);
 
 	return true;
 }

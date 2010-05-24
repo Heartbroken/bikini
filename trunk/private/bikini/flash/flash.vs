@@ -15,7 +15,7 @@
 
 struct input
 {
-	float2 p : POSITION;
+	int2 p : POSITION;
 };
 
 struct output
