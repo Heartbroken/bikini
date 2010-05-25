@@ -65,7 +65,7 @@ private:
 	struct vbufset : _resource { uint vformat_ID, vbuffer_IDs[8], offsets[8], strides[8]; };
 	struct states : _resource { ID3D11RasterizerState *pD3D11RasterizerState; ID3D11DepthStencilState *pD3D11DepthStencilState; };
 	struct consts : _resource { byte_array data; };
-	struct texture : _resource { ID3D11Texture2D *pD3D11Texture2D; ID3D11ShaderResourceView *pD3D11ShaderResourceView; };
+	struct texture : _resource { ID3D11Texture2D *pD3D11Texture2D; ID3D11ShaderResourceView *pD3D11ShaderResourceView; ID3D11SamplerState *pD3D11SamplerState; };
 	struct texset : _resource { uint texture_IDs[8]; };
 
 	typedef make_typelist_<
@@ -289,6 +289,7 @@ void rendering_D3D11::m_destroy_resource(uint _ID)
 				case resource_types::type_<texture>::index :
 				{
 					texture &l_texture = l_resource.get_<texture>();
+					l_texture.pD3D11SamplerState->Release();
 					l_texture.pD3D11ShaderResourceView->Release();
 					l_texture.pD3D11Texture2D->Release();
 					break;
@@ -547,6 +548,8 @@ bool rendering_D3D11::m_set_texture(uint _i, uint _ID)
 					texture &l_texture = l_resource.get_<texture>();
 					ID3D11ShaderResourceView *l_pD3D11ShaderResourceView = l_texture.pD3D11ShaderResourceView;
 					m_pD3D11DeviceContext->PSGetShaderResources((UINT)_i, 1, &l_pD3D11ShaderResourceView);
+					ID3D11SamplerState *l_pD3D11SamplerState = l_texture.pD3D11SamplerState;
+					m_pD3D11DeviceContext->PSSetSamplers((UINT)_i, 1, &l_pD3D11SamplerState);
 					break;
 				}
 			}
@@ -954,7 +957,23 @@ bool rendering_D3D11::execute(const create_texture &_command)
 			return false;
 		}
 	}
+	{
+		D3D11_SAMPLER_DESC l_desc;
+		l_desc.Filter = D3D11_FILTER_ANISOTROPIC;
+		l_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		l_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		l_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		l_desc.MipLODBias = 0;
+		l_desc.MaxAnisotropy = 0;
+		l_desc.ComparisonFunc = D3D11_COMPARISON_LESS;
 
+		if (FAILED(m_pD3D11Device->CreateSamplerState(&l_desc, &l_texture.pD3D11SamplerState)))
+		{
+			l_texture.pD3D11ShaderResourceView->Release();
+			l_texture.pD3D11Texture2D->Release();
+			return false;
+		}
+	}
 	//D3DFORMAT l_format;
 	//switch (_command.format)
 	//{
