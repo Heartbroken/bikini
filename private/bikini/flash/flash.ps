@@ -10,11 +10,14 @@
 
 #if !defined(__cplusplus) /*---------------------------------------------------------------------*/
 
-texture color : register(s0);
+Texture2D color : register(t0);
 
-sampler color_sampler = sampler_state
+SamplerState color_sampler
 {
-	texture = color;
+//	texture = color;
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
 };
 
 struct input
@@ -25,7 +28,8 @@ struct input
 
 float4 main(input _in) : COLOR0
 {
-	return _in.c * tex2D(color_sampler, _in.tex0);
+	return _in.c * color.Sample(color_sampler, _in.tex0);
+//	return _in.c * tex2D(color_sampler, _in.tex0);
 }
 
 #endif /* !defined(__cplusplus) -----------------------------------------------------------------*/
