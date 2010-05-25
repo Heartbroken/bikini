@@ -547,7 +547,7 @@ bool rendering_D3D11::m_set_texture(uint _i, uint _ID)
 				{
 					texture &l_texture = l_resource.get_<texture>();
 					ID3D11ShaderResourceView *l_pD3D11ShaderResourceView = l_texture.pD3D11ShaderResourceView;
-					m_pD3D11DeviceContext->PSGetShaderResources((UINT)_i, 1, &l_pD3D11ShaderResourceView);
+					m_pD3D11DeviceContext->PSSetShaderResources((UINT)_i, 1, &l_pD3D11ShaderResourceView);
 					ID3D11SamplerState *l_pD3D11SamplerState = l_texture.pD3D11SamplerState;
 					m_pD3D11DeviceContext->PSSetSamplers((UINT)_i, 1, &l_pD3D11SamplerState);
 					break;
@@ -555,9 +555,13 @@ bool rendering_D3D11::m_set_texture(uint _i, uint _ID)
 			}
 			return true;
 		}
-
-		m_pD3D11DeviceContext->PSGetShaderResources((UINT)_i, 1, NULL);
 	}
+
+	ID3D11ShaderResourceView *l_pD3D11ShaderResourceView = NULL;
+	m_pD3D11DeviceContext->PSSetShaderResources((UINT)_i, 1, &l_pD3D11ShaderResourceView);
+	ID3D11SamplerState *l_pD3D11SamplerState = NULL;
+	m_pD3D11DeviceContext->PSSetSamplers((UINT)_i, 1, &l_pD3D11SamplerState);
+
 	return true;
 }
 bool rendering_D3D11::m_set_textures(uint _ID)
