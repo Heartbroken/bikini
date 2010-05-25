@@ -107,7 +107,7 @@
 		<CustomBuildRule
 			Name="Pixel Shader Compiler"
 			DisplayName="Pixel Shader"
-			CommandLine="fxc.exe [T] [E] [D] [I] [Fc] [Fh] [Vn] /Gec /Fo &quot;$(IntDir)\$(InputFileName).o&quot; &quot;$(InputFileName)&quot;"
+			CommandLine="fxc.exe [T] [E] [D] [I] [Fc] [Fh] [Vn] /Fo &quot;$(IntDir)\$(InputFileName).o&quot; &quot;$(InputFileName)&quot;"
 			Outputs="$(IntDir)\$(InputFileName).o"
 			FileExtensions="*.ps"
 			ExecutionDescription="Compiling pixel shader ..."
