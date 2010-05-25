@@ -963,13 +963,15 @@ bool rendering_D3D11::execute(const create_texture &_command)
 	}
 	{
 		D3D11_SAMPLER_DESC l_desc;
-		l_desc.Filter = D3D11_FILTER_ANISOTROPIC;
+		l_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 		l_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 		l_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 		l_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 		l_desc.MipLODBias = 0;
 		l_desc.MaxAnisotropy = 0;
 		l_desc.ComparisonFunc = D3D11_COMPARISON_LESS;
+		l_desc.MaxLOD = 0;
+		l_desc.MinLOD = D3D11_FLOAT32_MAX;
 
 		if (FAILED(m_pD3D11Device->CreateSamplerState(&l_desc, &l_texture.pD3D11SamplerState)))
 		{
@@ -978,16 +980,6 @@ bool rendering_D3D11::execute(const create_texture &_command)
 			return false;
 		}
 	}
-	//D3DFORMAT l_format;
-	//switch (_command.format)
-	//{
-	//	case video::tf::a8 : l_format = D3DFMT_A8; break;
-	//	case video::tf::b8g8r8 : l_format = D3DFMT_A8R8G8B8; break;
-	//	case video::tf::a8b8g8r8 : l_format = D3DFMT_A8R8G8B8; break;
-	//	case video::tf::a8r8g8b8 : l_format = D3DFMT_A8R8G8B8; break;
-	//}
-
-	//if (FAILED(m_D3DDevice9_p->CreateTexture((UINT)_command.size.x, (UINT)_command.size.y, 0, 0, l_format, D3DPOOL_DEFAULT, &l_texture.D3DTexture9_p, 0))) return false;
 
 	m_create_resource(l_texture);
 
@@ -1038,7 +1030,7 @@ bool rendering_D3D11::execute(const write_texture &_command)
 				return false;
 			}
 
-			if (l_format == video::tf::b8g8r8 || l_format == video::tf::a8b8g8r8)
+			if (l_format == video::tf::b8g8r8 || l_format == video::tf::a8b8g8r8 || l_format == video::tf::a8r8g8b8)
 			{
 				assert((uint)l_resource.RowPitch >= l_pitch);
 				uint l_width = l_size.x, l_height = l_size.y;
@@ -1057,9 +1049,9 @@ bool rendering_D3D11::execute(const write_texture &_command)
 								uint l_pixel = l_width - 1 - x;
 
 								uint l_pixel_3 = l_pixel * 3;
-								byte l_r = l_row[l_pixel_3 + 2];
+								byte l_r = l_row[l_pixel_3 + 0];
 								byte l_g = l_row[l_pixel_3 + 1];
-								byte l_b = l_row[l_pixel_3 + 0];
+								byte l_b = l_row[l_pixel_3 + 2];
 								byte l_a = 0xff;
 
 								uint l_pixel_4 = l_pixel * 4;
@@ -1076,10 +1068,28 @@ bool rendering_D3D11::execute(const write_texture &_command)
 							{
 								uint l_pixel = (l_width - 1 - x) * 4;
 
-								byte l_r = l_row[l_pixel + 2];
+								byte l_r = l_row[l_pixel + 0];
 								byte l_g = l_row[l_pixel + 1];
-								byte l_b = l_row[l_pixel + 0];
+								byte l_b = l_row[l_pixel + 2];
 								byte l_a = l_row[l_pixel + 3];
+
+								l_row[l_pixel + 0] = l_r;
+								l_row[l_pixel + 1] = l_g;
+								l_row[l_pixel + 2] = l_b;
+								l_row[l_pixel + 3] = l_a;
+							}
+							break;
+						}
+						case video::tf::a8r8g8b8 :
+						{
+							for (uint x = 0; x < l_width; ++x)
+							{
+								uint l_pixel = (l_width - 1 - x) * 4;
+
+								byte l_r = l_row[l_pixel + 1];
+								byte l_g = l_row[l_pixel + 2];
+								byte l_b = l_row[l_pixel + 3];
+								byte l_a = l_row[l_pixel + 0];
 
 								l_row[l_pixel + 0] = l_r;
 								l_row[l_pixel + 1] = l_g;
@@ -1100,7 +1110,7 @@ bool rendering_D3D11::execute(const write_texture &_command)
 
 			ID3D11ShaderResourceView *l_pD3D11ShaderResourceView = NULL;
 			{
-				if (FAILED(m_pD3D11Device->CreateShaderResourceView(l_texture.pD3D11Texture2D, NULL, &l_pD3D11ShaderResourceView)))
+				if (FAILED(m_pD3D11Device->CreateShaderResourceView(l_pD3D11Texture2D, NULL, &l_pD3D11ShaderResourceView)))
 				{
 					l_pD3D11Texture2D->Release();
 					return false;
@@ -1113,106 +1123,6 @@ bool rendering_D3D11::execute(const write_texture &_command)
 			l_texture.pD3D11ShaderResourceView = l_pD3D11ShaderResourceView;
 
 			return true;
-
-			//uint l_format; get_data(&l_format, sizeof(l_format));
-			//sint2 l_size; get_data(&l_size, sizeof(l_size));
-			//uint l_pitch; get_data(&l_pitch, sizeof(l_pitch));
-
-			//D3DFORMAT l_D3DFormat;
-			//switch (l_format)
-			//{
-			//	case video::tf::a8 : l_D3DFormat = D3DFMT_A8; break;
-			//	case video::tf::b8g8r8 : l_D3DFormat = D3DFMT_A8R8G8B8; break;
-			//	case video::tf::a8b8g8r8 : l_D3DFormat = D3DFMT_A8R8G8B8; break;
-			//	case video::tf::a8r8g8b8 : l_D3DFormat = D3DFMT_A8R8G8B8; break;
-			//}
-
-			//IDirect3DTexture9 *l_D3DTex9_p;
-			//if (FAILED(m_D3DDevice9_p->CreateTexture((UINT)l_size.x, (UINT)l_size.y, 1, 0, l_D3DFormat, D3DPOOL_SYSTEMMEM, &l_D3DTex9_p, 0)))
-			//{
-			//	throw_data(l_size.y * l_pitch);
-			//	return false;
-			//}
-
-			//D3DLOCKED_RECT l_rect;
-			//l_D3DTex9_p->LockRect(0, &l_rect, 0, 0);
-			//if (l_format == video::tf::b8g8r8 || l_format == video::tf::a8b8g8r8)
-			//{
-			//	assert((uint)l_rect.Pitch >= l_pitch);
-			//	uint l_width = l_size.x, l_height = l_size.y;
-
-			//	for (uint y = 0; y < l_height; ++y)
-			//	{
-			//		byte* l_row = (byte*)l_rect.pBits + y * l_rect.Pitch;
-			//		get_data(l_row, l_pitch);
-
-			//		switch (l_format)
-			//		{
-			//			case video::tf::b8g8r8 :
-			//			{
-			//				for (uint x = 0; x < l_width; ++x)
-			//				{
-			//					uint l_pixel = l_width - 1 - x;
-
-			//					uint l_pixel_3 = l_pixel * 3;
-			//					byte l_r = l_row[l_pixel_3 + 2];
-			//					byte l_g = l_row[l_pixel_3 + 1];
-			//					byte l_b = l_row[l_pixel_3 + 0];
-			//					byte l_a = 0xff;
-
-			//					uint l_pixel_4 = l_pixel * 4;
-			//					l_row[l_pixel_4 + 0] = l_r;
-			//					l_row[l_pixel_4 + 1] = l_g;
-			//					l_row[l_pixel_4 + 2] = l_b;
-			//					l_row[l_pixel_4 + 3] = l_a;
-			//				}
-			//				break;
-			//			}
-			//			case video::tf::a8b8g8r8 :
-			//			{
-			//				for (uint x = 0; x < l_width; ++x)
-			//				{
-			//					uint l_pixel = (l_width - 1 - x) * 4;
-
-			//					byte l_r = l_row[l_pixel + 2];
-			//					byte l_g = l_row[l_pixel + 1];
-			//					byte l_b = l_row[l_pixel + 0];
-			//					byte l_a = l_row[l_pixel + 3];
-
-			//					l_row[l_pixel + 0] = l_r;
-			//					l_row[l_pixel + 1] = l_g;
-			//					l_row[l_pixel + 2] = l_b;
-			//					l_row[l_pixel + 3] = l_a;
-			//				}
-			//				break;
-			//			}
-			//		}
-			//	}
-			//}
-			//else
-			//{
-			//	get_data(l_rect.pBits, l_size.y * l_pitch);
-			//}
-			//l_D3DTex9_p->UnlockRect(0);
-
-			//l_texture.D3DTexture9_p->Release();
-
-			//DWORD l_usage = 0;
-			//if (l_size.x * l_size.y > 1) l_usage |= D3DUSAGE_AUTOGENMIPMAP;
-
-			//m_D3DDevice9_p->CreateTexture((UINT)l_size.x, (UINT)l_size.y, 0, l_usage, l_D3DFormat, D3DPOOL_DEFAULT, &l_texture.D3DTexture9_p, 0);
-
-			//if (l_usage & D3DUSAGE_AUTOGENMIPMAP) l_texture.D3DTexture9_p->SetAutoGenFilterType(D3DTEXF_ANISOTROPIC);
-			//
-			//IDirect3DSurface9 *l_D3DSrcSurf9_p; l_D3DTex9_p->GetSurfaceLevel(0, &l_D3DSrcSurf9_p);
-			//IDirect3DSurface9 *l_D3DDstSurf9_p; l_texture.D3DTexture9_p->GetSurfaceLevel(0, &l_D3DDstSurf9_p);
-			//m_D3DDevice9_p->UpdateSurface(l_D3DSrcSurf9_p, 0, l_D3DDstSurf9_p, 0);
-			//l_D3DDstSurf9_p->Release();
-			//l_D3DSrcSurf9_p->Release();
-
-			//l_D3DTex9_p->Release();
-
-			//return true;
 		}
 	}
 

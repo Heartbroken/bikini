@@ -12,7 +12,7 @@
 
 Texture2D color : register(t0);
 
-SamplerState color_sampler
+SamplerState color_sampler : register(s0)
 {
 //	texture = color;
 	Filter = MIN_MAG_MIP_LINEAR;
@@ -26,8 +26,9 @@ struct input
 	float4 c : COLOR0;
 };
 
-float4 main(input _in) : COLOR0
+float4 main(input _in) : SV_TARGET
 {
+//	return color.Sample(color_sampler, _in.tex0);
 	return _in.c * color.Sample(color_sampler, _in.tex0);
 //	return _in.c * tex2D(color_sampler, _in.tex0);
 }
