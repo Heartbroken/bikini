@@ -57,7 +57,6 @@ namespace Studio
 				MemoryStream l_stream = new MemoryStream(l_byteArray);
 				XmlTextReader l_xml = new XmlTextReader(l_stream);
 				l_xml.WhitespaceHandling = WhitespaceHandling.None;
-                //l_xml.MoveToElement();
 
                 while (l_xml.Read())
                 {
@@ -79,7 +78,6 @@ namespace Studio
 
             while (_xml.Read())
             {
-
                 if (_xml.IsStartElement())
                 {
                     if (_xml.Name == "package") ParsePackageStructure(_xml, l_projectNode);
@@ -106,7 +104,6 @@ namespace Studio
             TreeNode l_folderNode = AddNode(new Bikini.Folder(l_name, true, l_guid), _parentNode.Nodes);
             while (_xml.Read())
             {
-
                 if (_xml.IsStartElement())
                 {
                     if (_xml.Name == "package") ParsePackageStructure(_xml, l_folderNode);
