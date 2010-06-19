@@ -83,7 +83,8 @@ struct project : workspace::object
 
 	static const bk::wchar* extension;
 
-	project(const info &_info, workspace &_workspace, const bk::wstring &_path, const bk::wstring &_name);
+	project(const info &_info, workspace &_workspace, const bk::wstring &_path);							// load project
+	project(const info &_info, workspace &_workspace, const bk::wstring &_path, const bk::wstring &_name);	// create project
 
 	virtual bool add_child(bk::uint _child);
 	virtual bool rename(const bk::wstring &_name);
