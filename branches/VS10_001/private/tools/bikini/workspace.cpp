@@ -37,11 +37,13 @@ void workspace::destroy()
 	clear();
 }
 
+static wo::project::info& project_info() { static wo::project::info sl_project; return sl_project; }
+static wo::package::info& package_info() { static wo::package::info sl_package; return sl_package; }
+static wo::folder::info& folder_info() { static wo::folder::info sl_folder; return sl_folder; }
+
 const bk::GUID& workspace::new_project(const bk::wstring &_location, const bk::wstring &_name)
 {
-	static wo::project::info sl_project;
-
-	bk::uint l_ID = spawn(sl_project, _location, _name);
+	bk::uint l_ID = spawn(project_info(), _location, _name);
 
 	if (!get_<object>(l_ID).valid())
 	{
@@ -53,9 +55,7 @@ const bk::GUID& workspace::new_project(const bk::wstring &_location, const bk::w
 }
 const bk::GUID& workspace::open_project(const bk::wstring &_path)
 {
-	static wo::project::info sl_project;
-
-	bk::uint l_ID = spawn(sl_project, _path, L"");
+	bk::uint l_ID = spawn(project_info(), _path);
 
 	if (!get_<object>(l_ID).valid())
 	{
@@ -67,8 +67,6 @@ const bk::GUID& workspace::open_project(const bk::wstring &_path)
 }
 const bk::GUID& workspace::new_package(const bk::GUID &_parent, const bk::wstring &_name)
 {
-	static wo::package::info sl_package;
-
 	bk::uint l_parent_ID = find_object(_parent);
 
 	if (l_parent_ID == bk::bad_ID)
@@ -77,7 +75,7 @@ const bk::GUID& workspace::new_package(const bk::GUID &_parent, const bk::wstrin
 		return bk::bad_GUID;
 	}
 
-	bk::uint l_ID = spawn(sl_package, l_parent_ID, _name);
+	bk::uint l_ID = spawn(package_info(), l_parent_ID, _name);
 
 	if (!get_<object>(l_ID).valid())
 	{
@@ -89,8 +87,6 @@ const bk::GUID& workspace::new_package(const bk::GUID &_parent, const bk::wstrin
 }
 const bk::GUID& workspace::new_folder(const bk::GUID &_parent, const bk::wstring &_name)
 {
-	static wo::folder::info sl_folder;
-
 	bk::uint l_parent_ID = find_object(_parent);
 
 	if (l_parent_ID == bk::bad_ID)
@@ -99,7 +95,7 @@ const bk::GUID& workspace::new_folder(const bk::GUID &_parent, const bk::wstring
 		return bk::bad_GUID;
 	}
 
-	bk::uint l_ID = spawn(sl_folder, l_parent_ID, _name);
+	bk::uint l_ID = spawn(folder_info(), l_parent_ID, _name);
 
 	if (!get_<object>(l_ID).valid())
 	{
@@ -187,45 +183,45 @@ namespace wo { // workspace objects --------------------------------------------
 
 const bk::wchar* project::extension = L".project";
 
-project::project(const info &_info, workspace &_workspace, const bk::wstring &_path, const bk::wstring &_name)
+project::project(const info &_info, workspace &_workspace, const bk::wstring &_path) // load project
+:
+	workspace::object(_info, _workspace, bk::bad_ID, L"")
+{
+	bk::wchar l_drive[MAX_PATH], l_dir[MAX_PATH], l_fname[MAX_PATH], l_ext[MAX_PATH];
+	_wsplitpath_s(_path.c_str(), l_drive, l_dir, l_fname, l_ext);
+
+	bk::wstring l_path = (const bk::wchar*)bk::format(L"%s%s", l_drive, l_dir);
+
+	m_folder = bk::folder(l_path); l_path = m_folder.path();
+	set_name(l_path.substr(l_path.rfind('/') + 1));
+
+	if (!load()) return;
+
+	set_valid();
+}
+project::project(const info &_info, workspace &_workspace, const bk::wstring &_path, const bk::wstring &_name) // create project
 :
 	workspace::object(_info, _workspace, bk::bad_ID, _name)
 {
-	if (name() != L"")	// Create new project
-	{
-		m_folder = bk::folder(_path + L"/" + name());
+	m_folder = bk::folder(_path + L"/" + name());
 
-		if (m_folder.exists())
+	if (m_folder.exists())
+	{
+		if (!m_folder.empty())
 		{
-			if (!m_folder.empty())
-			{
-				std::wcerr << "ERROR: Can't create project. Folder '" << m_folder.path() << "' already exists and isn't empty\n";
-				m_folder = bk::bad_folder;
-				return;
-			}
-		}
-		else if(!m_folder.create())
-		{
-			std::wcerr << "ERROR: Can't create project. Can't create folder '" << m_folder.path() << "'\n";
+			std::wcerr << "ERROR: Can't create project. Folder '" << m_folder.path() << "' already exists and isn't empty\n";
 			m_folder = bk::bad_folder;
 			return;
 		}
-
-		if (!save()) return;
 	}
-	else				// Load existing project
+	else if(!m_folder.create())
 	{
-		bk::wchar l_drive[MAX_PATH], l_dir[MAX_PATH], l_fname[MAX_PATH], l_ext[MAX_PATH];
-		_wsplitpath_s(_path.c_str(), l_drive, l_dir, l_fname, l_ext);
-
-		bk::wstring l_path = (const bk::wchar*)bk::format(L"%s%s", l_drive, l_dir);
-		bk::wstring l_name = (const bk::wchar*)bk::format(L"%s%s", l_fname, l_ext);
-
-		m_folder = bk::folder(l_path);
-		set_name(l_fname);
-
-		if (!load()) return;
+		std::wcerr << "ERROR: Can't create project. Can't create folder '" << m_folder.path() << "'\n";
+		m_folder = bk::bad_folder;
+		return;
 	}
+
+	if (!save()) return;
 
 	set_valid();
 }
@@ -309,6 +305,16 @@ bool project::load()
 
 	pugi::xml_node l_project = l_document.child("project");
 	if (bk::astring("project") != l_project.name()) return false;
+
+	for (pugi::xml_node l_child = l_project.first_child(); l_child; l_child = l_child.next_sibling())
+	{
+		if (bk::astring("folder") == l_child.name())
+		{
+		}
+		else if (bk::astring("package") == l_child.name())
+		{
+		}
+	}
 
 	return true;
 }
