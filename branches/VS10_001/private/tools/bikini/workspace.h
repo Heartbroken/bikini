@@ -104,6 +104,7 @@ struct package : workspace::object
 	struct info : workspace::object::info
 	{
 		typedef package object;
+		typedef bool a2;				// load
 
 		inline info()
 		:
@@ -114,6 +115,7 @@ struct package : workspace::object
 	static const bk::wchar* extension;
 
 	package(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name);
+	package(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name, bool _load);
 
 	virtual bool add_child(bk::uint _child);
 	virtual bool rename(const bk::wstring &_name);
