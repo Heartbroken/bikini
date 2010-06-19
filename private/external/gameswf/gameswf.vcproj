@@ -15,9 +15,6 @@
 		<Platform
 			Name="x64"
 		/>
-		<Platform
-			Name="Xbox 360"
-		/>
 	</Platforms>
 	<ToolFiles>
 	</ToolFiles>
@@ -87,11 +84,12 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Debug|x64"
+			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)..\..\library\"
 			IntermediateDirectory="$(SolutionDir)..\..\_tmp\$(ConfigurationName)\$(PlatformName)\$(ProjectName)\"
 			ConfigurationType="4"
 			CharacterSet="1"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -107,16 +105,16 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				TargetEnvironment="3"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="0"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories=".\;..\zlib\;..\png\;..\jpeg\"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;TU_CONFIG_LINK_TO_LIBPNG=1;TU_CONFIG_LINK_TO_FFMPEG=0;TU_CONFIG_LINK_TO_LIB3DS=0;TU_CONFIG_LINK_TO_MYSQL=0;TU_CONFIG_LINK_TO_FREETYPE=0;TU_CONFIG_LINK_TO_THREAD=3;TU_CONFIG_LINK_STATIC=1"
-				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;TU_CONFIG_LINK_TO_LIBPNG=1;TU_CONFIG_LINK_TO_FFMPEG=0;TU_CONFIG_LINK_TO_LIB3DS=0;TU_CONFIG_LINK_TO_MYSQL=0;TU_CONFIG_LINK_TO_FREETYPE=0;TU_CONFIG_LINK_TO_THREAD=0"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
+				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"
@@ -151,74 +149,11 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Debug|Xbox 360"
-			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="4"
-			UseOfMFC="-1"
-			UseOfATL="0"
-			CharacterSet="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLX360CompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories=".\;..\zlib\;..\png\;..\jpeg\"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;TU_CONFIG_LINK_TO_LIBPNG=1;TU_CONFIG_LINK_TO_FFMPEG=0;TU_CONFIG_LINK_TO_LIB3DS=0;TU_CONFIG_LINK_TO_MYSQL=0;TU_CONFIG_LINK_TO_FREETYPE=0;TU_CONFIG_LINK_TO_THREAD=0"
-				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
-				RuntimeTypeInfo="false"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				DebugInformationFormat="4"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)$(ProjectName) ($(PlatformName)!$(ConfigurationName)).lib"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-			<DebuggerTool
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release|Win32"
+			Name="Debug|x64"
 			OutputDirectory="$(SolutionDir)..\..\library\"
 			IntermediateDirectory="$(SolutionDir)..\..\_tmp\$(ConfigurationName)\$(PlatformName)\$(ProjectName)\"
 			ConfigurationType="4"
 			CharacterSet="1"
-			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -234,16 +169,16 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
+				TargetEnvironment="3"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
-				EnableIntrinsicFunctions="true"
+				Optimization="0"
 				AdditionalIncludeDirectories=".\;..\zlib\;..\png\;..\jpeg\"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;TU_CONFIG_LINK_TO_LIBPNG=1;TU_CONFIG_LINK_TO_FFMPEG=0;TU_CONFIG_LINK_TO_LIB3DS=0;TU_CONFIG_LINK_TO_MYSQL=0;TU_CONFIG_LINK_TO_FREETYPE=0;TU_CONFIG_LINK_TO_THREAD=0"
-				RuntimeLibrary="0"
-				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="false"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;TU_CONFIG_LINK_TO_LIBPNG=1;TU_CONFIG_LINK_TO_FFMPEG=0;TU_CONFIG_LINK_TO_LIB3DS=0;TU_CONFIG_LINK_TO_MYSQL=0;TU_CONFIG_LINK_TO_FREETYPE=0;TU_CONFIG_LINK_TO_THREAD=3;TU_CONFIG_LINK_STATIC=1"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"
@@ -340,69 +275,6 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release|Xbox 360"
-			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="4"
-			UseOfMFC="-1"
-			UseOfATL="0"
-			CharacterSet="1"
-			WholeProgramOptimization="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLX360CompilerTool"
-				Optimization="2"
-				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories=".\;..\zlib\;..\png\;..\jpeg\"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;TU_CONFIG_LINK_TO_LIBPNG=1;TU_CONFIG_LINK_TO_FFMPEG=0;TU_CONFIG_LINK_TO_LIB3DS=0;TU_CONFIG_LINK_TO_MYSQL=0;TU_CONFIG_LINK_TO_FREETYPE=0;TU_CONFIG_LINK_TO_THREAD=0"
-				RuntimeLibrary="0"
-				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="false"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)$(ProjectName) ($(PlatformName)!$(ConfigurationName)).lib"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-			<DebuggerTool
 			/>
 		</Configuration>
 	</Configurations>
