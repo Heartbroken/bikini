@@ -185,7 +185,7 @@ namespace wo { // workspace objects --------------------------------------------
 
 // project
 
-const bk::wchar* project::extension = L".bkproj";
+const bk::wchar* project::extension = L".project";
 
 project::project(const info &_info, workspace &_workspace, const bk::wstring &_path, const bk::wstring &_name)
 :
@@ -246,15 +246,15 @@ bool project::rename(const bk::wstring &_name)
 		return false;
 	}
 
-	bk::wstring l_oldpath = m_folder.path() + L"/" + name() + extension;
-	bk::wstring l_newpath = m_folder.path() + L"/" + _name + extension;
+	//bk::wstring l_oldpath = m_folder.path() + L"/" + name() + extension;
+	//bk::wstring l_newpath = m_folder.path() + L"/" + _name + extension;
 
-	if (_wrename(l_oldpath.c_str(), l_newpath.c_str()) != 0)
-	{
-		std::wcerr << "ERROR: Can't rename project file\n";
-		m_folder.rename(name());
-		return false;
-	}
+	//if (_wrename(l_oldpath.c_str(), l_newpath.c_str()) != 0)
+	//{
+	//	std::wcerr << "ERROR: Can't rename project file\n";
+	//	m_folder.rename(name());
+	//	return false;
+	//}
 
 	return super::rename(_name);
 }
@@ -275,7 +275,7 @@ bool project::save() const
 		return false;
 	}
 
-	bk::wstring l_path = m_folder.path() + L"/" + name() + extension;
+	bk::wstring l_path = m_folder.path() + L"/" + /*name() +*/ extension;
 
 	std::fstream l_stream(l_path.c_str(), std::ios_base::out);
 
@@ -294,7 +294,7 @@ bool project::save() const
 }
 bool project::load()
 {
-	bk::wstring l_path = m_folder.path() + L"/" + name() + extension;
+	bk::wstring l_path = m_folder.path() + L"/" + /*name() +*/ extension;
 
 	std::fstream l_stream(l_path.c_str(), std::ios_base::in);
 
@@ -387,7 +387,7 @@ void project::write_structure(pugi::xml_node &_root) const
 
 // package
 
-const bk::wchar* package::extension = L".pack";
+const bk::wchar* package::extension = L".package";
 
 package::package(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name)
 :
@@ -444,15 +444,15 @@ bool package::rename(const bk::wstring &_name)
 		return false;
 	}
 
-	bk::wstring l_oldpath = l_folder.path() + L"/" + name() + extension;
-	bk::wstring l_newpath = l_folder.path() + L"/" + _name + extension;
+	//bk::wstring l_oldpath = l_folder.path() + L"/" + name() + extension;
+	//bk::wstring l_newpath = l_folder.path() + L"/" + _name + extension;
 
-	if (_wrename(l_oldpath.c_str(), l_newpath.c_str()) != 0)
-	{
-		std::wcerr << "ERROR: Can't rename package file\n";
-		l_folder.rename(name());
-		return false;
-	}
+	//if (_wrename(l_oldpath.c_str(), l_newpath.c_str()) != 0)
+	//{
+	//	std::wcerr << "ERROR: Can't rename package file\n";
+	//	l_folder.rename(name());
+	//	return false;
+	//}
 
 	return super::rename(_name);
 }
@@ -475,7 +475,7 @@ bool package::save() const
 		return false;
 	}
 
-	bk::wstring l_path = l_folder.path() + L"/" + name() + extension;
+	bk::wstring l_path = l_folder.path() + L"/" + /*name() +*/ extension;
 
 	std::fstream l_stream(l_path.c_str(), std::ios_base::out);
 
