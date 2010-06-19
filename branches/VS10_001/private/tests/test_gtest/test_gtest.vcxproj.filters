@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="gtest">
+      <UniqueIdentifier>{85af70a3-01ad-4d01-8d2e-f2e493ba5293}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gtest\Header Files">
+      <UniqueIdentifier>{c45d33aa-be81-48bb-bfdb-ba8b42631a46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gtest\Source Files">
+      <UniqueIdentifier>{a0ac68aa-c0b9-485c-b601-f73140cb9904}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_base.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_base_pool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_system_video.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gtest\src\gtest-death-test.cc">
+      <Filter>gtest\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gtest\src\gtest-filepath.cc">
+      <Filter>gtest\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gtest\src\gtest-port.cc">
+      <Filter>gtest\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gtest\src\gtest-test-part.cc">
+      <Filter>gtest\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gtest\src\gtest-typed-test.cc">
+      <Filter>gtest\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gtest\src\gtest.cc">
+      <Filter>gtest\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gtest\src\gtest_main.cc">
+      <Filter>gtest\Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest\include\gtest\internal\gtest-death-test-internal.h">
+      <Filter>gtest\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest\include\gtest\gtest-death-test.h">
+      <Filter>gtest\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest\include\gtest\internal\gtest-filepath.h">
+      <Filter>gtest\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest\src\gtest-internal-inl.h">
+      <Filter>gtest\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest\include\gtest\internal\gtest-internal.h">
+      <Filter>gtest\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest\include\gtest\internal\gtest-linked_ptr.h">
+      <Filter>gtest\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest\include\gtest\gtest-message.h">
+      <Filter>gtest\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest\include\gtest\gtest-param-test.h">
+      <Filter>gtest\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest\include\gtest\internal\gtest-param-util-generated.h">
+      <Filter>gtest\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest\include\gtest\internal\gtest-param-util.h">
+      <Filter>gtest\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest\include\gtest\internal\gtest-port.h">
+      <Filter>gtest\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest\include\gtest\gtest-spi.h">
+      <Filter>gtest\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest\include\gtest\internal\gtest-string.h">
+      <Filter>gtest\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest\include\gtest\gtest-test-part.h">
+      <Filter>gtest\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest\include\gtest\internal\gtest-type-util.h">
+      <Filter>gtest\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest\include\gtest\gtest-typed-test.h">
+      <Filter>gtest\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest\include\gtest\gtest.h">
+      <Filter>gtest\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest\include\gtest\gtest_pred_impl.h">
+      <Filter>gtest\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest\include\gtest\gtest_prod.h">
+      <Filter>gtest\Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
