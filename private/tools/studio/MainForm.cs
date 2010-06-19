@@ -186,8 +186,9 @@ namespace Studio
 		{
 			if (openProjectDialog.ShowDialog() == DialogResult.OK)
 			{
-				Bikini.OpenProject(openProjectDialog.FileName);
-			}
+				Guid l_project = Bikini.OpenProject(openProjectDialog.FileName);
+                m_solutionExplorer.UpdateTreeView(l_project);
+            }
 
 			//OpenFileDialog openFile = new OpenFileDialog();
 
