@@ -34,14 +34,14 @@ uint loader::seek(uint _ID, sint _offset, uint _from)
 	if (!m_pool.exists(_ID)) return bad_ID;
 	std::ifstream &l_stream = *m_pool.get(_ID);
 	l_stream.seekg(_offset, (std::ifstream::seek_dir)_from);
-	return l_stream.tellg();
+	return (uint)l_stream.tellg();
 }
 uint loader::read(uint _ID, handle _buffer, uint _length)
 {
 	if (!m_pool.exists(_ID)) return bad_ID;
 	std::ifstream &l_stream = *m_pool.get(_ID);
 	l_stream.read((achar*)_buffer, _length);
-	return l_stream.gcount();
+	return (uint)l_stream.gcount();
 }
 void loader::close(uint _ID)
 {

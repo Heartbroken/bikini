@@ -37,7 +37,7 @@ bool ARI(wchar* _expression, wchar* _file, int _line, wchar* _function, wchar* _
 
 	std::cerr << l_oem;
 
-	wstring l_message = format(L"%s\n\nFile: %s(%d)\nFunction: %s\n%s\n\nHit <Retry> to debug", _expression, _file, _line, _function, _message ? _message : L"");
+	wstring l_message = (const wchar*)format(L"%s\n\nFile: %s(%d)\nFunction: %s\n%s\n\nHit <Retry> to debug", _expression, _file, _line, _function, _message ? _message : L"");
 
 //	switch(MessageBoxW(0, format("%s\n\nFile: %s:%d\nFunction: %s\n%s\n\nHit <Retry> to debug", _expression, _file, _line, _function, _message ? _message : ""), "bikini-iii | assertion failed", MB_ABORTRETRYIGNORE|MB_ICONERROR)) {
 	switch(MessageBoxW(0, l_message.c_str(), L"bikini-iii | assertion failed", MB_ABORTRETRYIGNORE|MB_ICONERROR)) {

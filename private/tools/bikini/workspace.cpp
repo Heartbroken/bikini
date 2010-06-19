@@ -218,8 +218,8 @@ project::project(const info &_info, workspace &_workspace, const bk::wstring &_p
 		bk::wchar l_drive[MAX_PATH], l_dir[MAX_PATH], l_fname[MAX_PATH], l_ext[MAX_PATH];
 		_wsplitpath_s(_path.c_str(), l_drive, l_dir, l_fname, l_ext);
 
-		bk::wstring l_path = bk::format(L"%s%s", l_drive, l_dir);
-		bk::wstring l_name = bk::format(L"%s%s", l_fname, l_ext);
+		bk::wstring l_path = (const bk::wchar*)bk::format(L"%s%s", l_drive, l_dir);
+		bk::wstring l_name = (const bk::wchar*)bk::format(L"%s%s", l_fname, l_ext);
 
 		m_folder = bk::folder(l_path);
 		set_name(l_fname);
