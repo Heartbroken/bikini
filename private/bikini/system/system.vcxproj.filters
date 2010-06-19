@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="folder">
+      <UniqueIdentifier>{3f3888f0-81f4-4f92-87c5-efad4f05fce1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="application">
+      <UniqueIdentifier>{c22261d6-4c63-4faa-bf45-053297fa499b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\window">
+      <UniqueIdentifier>{d134c96f-3e4d-4caf-979c-2b99745d12d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="device">
+      <UniqueIdentifier>{0a4106e3-c50a-498c-bce9-7eab8b78145a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="device\audio">
+      <UniqueIdentifier>{14fb26d6-c99e-41f6-be7c-153682f89145}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="device\input">
+      <UniqueIdentifier>{b9012af4-3a0c-4f4a-8013-dc7c7f8d76a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="device\video">
+      <UniqueIdentifier>{3af57985-07df-4f07-953a-44fc5f9e3589}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="device\video\shaders">
+      <UniqueIdentifier>{863156ef-ee13-409a-b651-754b78fa5aa9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="device\video\rendering">
+      <UniqueIdentifier>{1810be38-7c6e-4df2-85a2-3bb75c4674df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thread">
+      <UniqueIdentifier>{a6a432f5-f120-48bb-8f91-6451fa4f3a8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="time">
+      <UniqueIdentifier>{9cf8c01a-9a0c-4a0b-9a99-537bbda2942b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="time\ticker">
+      <UniqueIdentifier>{14cbeb3e-8aa3-4abc-aee0-5f9ce9bfdb87}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="folder.cpp">
+      <Filter>folder</Filter>
+    </ClCompile>
+    <ClCompile Include="system.cpp">
+      <Filter>header</Filter>
+    </ClCompile>
+    <ClCompile Include="application.cpp">
+      <Filter>application</Filter>
+    </ClCompile>
+    <ClCompile Include="window.cpp">
+      <Filter>application\window</Filter>
+    </ClCompile>
+    <ClCompile Include="device.cpp">
+      <Filter>device</Filter>
+    </ClCompile>
+    <ClCompile Include="audio.cpp">
+      <Filter>device\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>device\input</Filter>
+    </ClCompile>
+    <ClCompile Include="video.cpp">
+      <Filter>device\video</Filter>
+    </ClCompile>
+    <ClCompile Include="video_rendering_D3D11.cpp">
+      <Filter>device\video\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="video_rendering_D3D9.cpp">
+      <Filter>device\video\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="video_rendering_WIN.cpp">
+      <Filter>device\video\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="time.cpp">
+      <Filter>time</Filter>
+    </ClCompile>
+    <ClCompile Include="ticker.cpp">
+      <Filter>time\ticker</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\bikini\system\folder.hpp">
+      <Filter>folder</Filter>
+    </ClInclude>
+    <ClInclude Include="header.hpp">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\system.hpp">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\system\system_win32.hpp">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\system\application.hpp">
+      <Filter>application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\system\window.hpp">
+      <Filter>application\window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\system\device.hpp">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\system\audio.hpp">
+      <Filter>device\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\system\input.hpp">
+      <Filter>device\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\system\shader.hpp">
+      <Filter>device\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\system\video.hpp">
+      <Filter>device\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\system\thread.hpp">
+      <Filter>thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\system\time.hpp">
+      <Filter>time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\system\ticker.hpp">
+      <Filter>time\ticker</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\include\bikini\system\increment_c_register.shh">
+      <Filter>device\video\shaders</Filter>
+    </None>
+    <None Include="..\..\..\include\bikini\system\next_c_register.shh">
+      <Filter>device\video\shaders</Filter>
+    </None>
+    <None Include="..\..\..\include\bikini\system\shader.shh">
+      <Filter>device\video\shaders</Filter>
+    </None>
+    <None Include="..\..\..\include\bikini\system\viewport.shh">
+      <Filter>device\video\shaders</Filter>
+    </None>
+    <None Include="..\..\..\include\bikini\system\thread.inl">
+      <Filter>thread</Filter>
+    </None>
+  </ItemGroup>
+</Project>
