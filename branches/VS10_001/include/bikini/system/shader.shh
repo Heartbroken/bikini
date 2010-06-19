@@ -1,0 +1,24 @@
+/*---------------------------------------------------------------------------------------------*//*
+
+	Binary Kinematics 3 - C++ Game Programming Library
+	Copyright (C) 2008-2010 Viktor Reutskyy
+	viktor.reutskyy@gmail.com
+
+*//*---------------------------------------------------------------------------------------------*/
+
+#if defined(__cplusplus) /*----------------------------------------------------------------------*/
+
+typedef bk::vector_<float, 4> float4, float2;
+typedef bk::matrix_<float, 4, 2> float4x2, float3x2;
+typedef bk::matrix_<float, 4, 3> float4x3, float3x3;
+typedef bk::matrix_<float, 4, 4> float4x4;
+
+#endif /* defined(__cplusplus) ------------------------------------------------------------------*/
+
+#ifdef used_c_registers
+#	undef used_c_registers
+#endif
+
+#define used_c_registers 0
+
+/* ----------------------------------------------------------------------------------------------*/
