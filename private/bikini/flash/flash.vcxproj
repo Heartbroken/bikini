@@ -87,13 +87,13 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Vertex_Shader_Compiler>
       <T>3</T>
-      <Fh>$(ProjectPath).$(Platform).h</Fh>
+      <Fh>%(FullPath).$(Platform).h</Fh>
       <Vn>data</Vn>
       <I>..\..\..\include</I>
     </Vertex_Shader_Compiler>
     <Pixel_Shader_Compiler>
       <T>3</T>
-      <Fh>$(ProjectPath).$(Platform).h</Fh>
+      <Fh>%(FullPath).$(Platform).h</Fh>
       <Vn>data</Vn>
       <I>..\..\..\include</I>
     </Pixel_Shader_Compiler>
@@ -116,13 +116,13 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Vertex_Shader_Compiler>
       <T>3</T>
-      <Fh>$(ProjectPath).$(Platform).h</Fh>
+      <Fh>%(FullPath).$(Platform).h</Fh>
       <Vn>data</Vn>
       <I>..\..\..\include</I>
     </Vertex_Shader_Compiler>
     <Pixel_Shader_Compiler>
       <T>3</T>
-      <Fh>$(ProjectPath).$(Platform).h</Fh>
+      <Fh>%(FullPath).$(Platform).h</Fh>
       <Vn>data</Vn>
       <I>..\..\..\include</I>
     </Pixel_Shader_Compiler>
@@ -224,16 +224,10 @@
     <None Include="shape.shh" />
   </ItemGroup>
   <ItemGroup>
-    <Pixel_Shader_Compiler Include="flash.ps">
-      <Fh Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectPath).$(Platform).h</Fh>
-      <Fh Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectPath).$(Platform).h</Fh>
-    </Pixel_Shader_Compiler>
+    <Pixel_Shader_Compiler Include="flash.ps" />
   </ItemGroup>
   <ItemGroup>
-    <Vertex_Shader_Compiler Include="flash.vs">
-      <Fh Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectPath).$(Platform).h</Fh>
-      <Fh Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectPath).$(Platform).h</Fh>
-    </Vertex_Shader_Compiler>
+    <Vertex_Shader_Compiler Include="flash.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
