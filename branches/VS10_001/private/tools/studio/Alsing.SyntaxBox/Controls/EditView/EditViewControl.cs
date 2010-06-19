@@ -23,7 +23,7 @@ using Studio.Alsing.Globalization;
 using Studio.Alsing.SourceCode;
 using Studio.Alsing.Windows.Forms.CoreLib;
 using Studio.Alsing.Windows.Forms.SyntaxBox.Painter;
-using Studio.Alsing.Resouces;
+using Studio.Alsing.SyntaxBox;
 //using Properties;
 using ScrollEventArgs=Studio.Alsing.Windows.Forms.IntelliMouse.ScrollEventArgs;
 

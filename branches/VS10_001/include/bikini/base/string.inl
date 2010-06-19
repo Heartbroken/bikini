@@ -57,11 +57,11 @@ inline _string& _string::operator = (const wchar* _s)
 	astr = utf8(_s); wstr = _s;
 	return *this;
 }
-inline _string::operator astring()
+inline _string::operator astring&()
 {
 	return astr;
 }
-inline _string::operator wstring()
+inline _string::operator wstring&()
 {
 	return wstr;
 }

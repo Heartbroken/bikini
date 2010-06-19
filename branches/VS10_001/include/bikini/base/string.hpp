@@ -28,8 +28,8 @@ struct _string
 	inline _string& operator = (const wstring &_s);
 	inline _string& operator = (const achar* _s);
 	inline _string& operator = (const wchar* _s);
-	inline operator astring();
-	inline operator wstring();
+	inline operator astring&();
+	inline operator wstring&();
 	inline operator const achar*();
 	inline operator const wchar*();
 };
