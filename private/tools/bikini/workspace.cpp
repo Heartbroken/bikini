@@ -199,11 +199,11 @@ project::project(const info &_info, workspace &_workspace, const bk::wstring &_p
 
 	set_valid();
 }
-project::project(const info &_info, workspace &_workspace, const bk::wstring &_path, const bk::wstring &_name) // create project
+project::project(const info &_info, workspace &_workspace, const bk::wstring &_location, const bk::wstring &_name) // create project
 :
 	workspace::object(_info, _workspace, bk::bad_ID, _name)
 {
-	m_folder = bk::folder(_path + L"/" + name());
+	m_folder = bk::folder(_location + L"/" + name());
 
 	if (m_folder.exists())
 	{
