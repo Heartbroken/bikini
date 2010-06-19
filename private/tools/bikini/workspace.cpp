@@ -313,6 +313,8 @@ bool project::load()
 		}
 		else if (bk::astring("package") == l_child.name())
 		{
+			bk::wstring l_name = bk::utf8(l_child.attribute("name").value());
+			get_workspace().spawn(package_info(), ID(), l_name, false);
 		}
 	}
 
@@ -428,6 +430,14 @@ package::package(const info &_info, workspace &_workspace, bk::uint _parent_ID, 
 
 	if (!save()) return;
 
+	if(!get_workspace().get_<object>(_parent_ID).add_child(ID())) return;
+
+	set_valid();
+}
+package::package(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name, bool _load)
+:
+	workspace::object(_info, _workspace, _parent_ID, _name)
+{
 	if(!get_workspace().get_<object>(_parent_ID).add_child(ID())) return;
 
 	set_valid();
