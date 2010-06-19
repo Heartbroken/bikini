@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <PropertyPageSchema
+      Include="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml" />
+    <AvailableItemName
+      Include="Vertex_Shader_Compiler">
+      <Targets>_Vertex_Shader_Compiler</Targets>
+    </AvailableItemName>
+    <AvailableItemName
+      Include="Pixel_Shader_Compiler">
+      <Targets>_Pixel_Shader_Compiler</Targets>
+    </AvailableItemName>
+  </ItemGroup>
+  <UsingTask
+    TaskName="Vertex_Shader_Compiler"
+    TaskFactory="XamlTaskFactory"
+    AssemblyName="Microsoft.Build.Tasks.v4.0">
+    <Task>$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml</Task>
+  </UsingTask>
+  <UsingTask
+    TaskName="Pixel_Shader_Compiler"
+    TaskFactory="XamlTaskFactory"
+    AssemblyName="Microsoft.Build.Tasks.v4.0">
+    <Task>$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml</Task>
+  </UsingTask>
+  <Target
+    Name="_Vertex_Shader_Compiler"
+    BeforeTargets="$(Vertex_Shader_CompilerBeforeTargets)"
+    AfterTargets="$(Vertex_Shader_CompilerAfterTargets)"
+    Condition="'@(Vertex_Shader_Compiler)' != ''"
+    DependsOnTargets="$(Vertex_Shader_CompilerDependsOn);ComputeVertex_Shader_CompilerOutput"
+    Outputs="%(Vertex_Shader_Compiler.Outputs)"
+    Inputs="%(Vertex_Shader_Compiler.Identity);%(Vertex_Shader_Compiler.AdditionalDependencies);$(MSBuildProjectFile)">
+    <ItemGroup
+      Condition="'@(SelectedFiles)' != ''">
+      <Vertex_Shader_Compiler
+        Remove="@(Vertex_Shader_Compiler)"
+        Condition="'%(Identity)' != '@(SelectedFiles)'" />
+    </ItemGroup>
+    <ItemGroup>
+      <Vertex_Shader_Compiler_tlog
+        Include="%(Vertex_Shader_Compiler.Outputs)"
+        Condition="'%(Vertex_Shader_Compiler.Outputs)' != '' and '%(Vertex_Shader_Compiler.ExcludedFromBuild)' != 'true'">
+        <Source>@(Vertex_Shader_Compiler, '|')</Source>
+      </Vertex_Shader_Compiler_tlog>
+    </ItemGroup>
+    <Message
+      Importance="High"
+      Text="%(Vertex_Shader_Compiler.ExecutionDescription)" />
+    <WriteLinesToFile
+      Condition="'@(Vertex_Shader_Compiler_tlog)' != '' and '%(Vertex_Shader_Compiler_tlog.ExcludedFromBuild)' != 'true'"
+      File="$(IntDir)$(ProjectName).write.1.tlog"
+      Lines="^%(Vertex_Shader_Compiler_tlog.Source);@(Vertex_Shader_Compiler_tlog-&gt;'%(Fullpath)')" />
+    <Vertex_Shader_Compiler
+      Condition="'@(Vertex_Shader_Compiler)' != '' and '%(Vertex_Shader_Compiler.ExcludedFromBuild)' != 'true'"
+      CommandLineTemplate="%(Vertex_Shader_Compiler.CommandLineTemplate)"
+      E="%(Vertex_Shader_Compiler.E)"
+      D="%(Vertex_Shader_Compiler.D)"
+      Fh="%(Vertex_Shader_Compiler.Fh)"
+      Vn="%(Vertex_Shader_Compiler.Vn)"
+      Fc="%(Vertex_Shader_Compiler.Fc)"
+      Fx="%(Vertex_Shader_Compiler.Fx)"
+      I="%(Vertex_Shader_Compiler.I)"
+      T="%(Vertex_Shader_Compiler.T)"
+      AdditionalOptions="%(Vertex_Shader_Compiler.AdditionalOptions)"
+      Inputs="%(Vertex_Shader_Compiler.Identity)" />
+  </Target>
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>
+            $(ComputeLinkInputsTargets);
+            ComputeVertex_Shader_CompilerOutput;
+          </ComputeLinkInputsTargets>
+    <ComputeLibInputsTargets>
+            $(ComputeLibInputsTargets);
+            ComputeVertex_Shader_CompilerOutput;
+          </ComputeLibInputsTargets>
+  </PropertyGroup>
+  <Target
+    Name="ComputeVertex_Shader_CompilerOutput"
+    Condition="'@(Vertex_Shader_Compiler)' != ''">
+    <ItemGroup>
+      <Vertex_Shader_CompilerDirsToMake
+        Condition="'@(Vertex_Shader_Compiler)' != '' and '%(Vertex_Shader_Compiler.ExcludedFromBuild)' != 'true'"
+        Include="%(Vertex_Shader_Compiler.Outputs)" />
+      <Link
+        Include="%(Vertex_Shader_CompilerDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <Lib
+        Include="%(Vertex_Shader_CompilerDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <ImpLib
+        Include="%(Vertex_Shader_CompilerDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+    </ItemGroup>
+    <MakeDir
+      Directories="@(Vertex_Shader_CompilerDirsToMake-&gt;'%(RootDir)%(Directory)')" />
+  </Target>
+  <Target
+    Name="_Pixel_Shader_Compiler"
+    BeforeTargets="$(Pixel_Shader_CompilerBeforeTargets)"
+    AfterTargets="$(Pixel_Shader_CompilerAfterTargets)"
+    Condition="'@(Pixel_Shader_Compiler)' != ''"
+    DependsOnTargets="$(Pixel_Shader_CompilerDependsOn);ComputePixel_Shader_CompilerOutput"
+    Outputs="%(Pixel_Shader_Compiler.Outputs)"
+    Inputs="%(Pixel_Shader_Compiler.Identity);%(Pixel_Shader_Compiler.AdditionalDependencies);$(MSBuildProjectFile)">
+    <ItemGroup
+      Condition="'@(SelectedFiles)' != ''">
+      <Pixel_Shader_Compiler
+        Remove="@(Pixel_Shader_Compiler)"
+        Condition="'%(Identity)' != '@(SelectedFiles)'" />
+    </ItemGroup>
+    <ItemGroup>
+      <Pixel_Shader_Compiler_tlog
+        Include="%(Pixel_Shader_Compiler.Outputs)"
+        Condition="'%(Pixel_Shader_Compiler.Outputs)' != '' and '%(Pixel_Shader_Compiler.ExcludedFromBuild)' != 'true'">
+        <Source>@(Pixel_Shader_Compiler, '|')</Source>
+      </Pixel_Shader_Compiler_tlog>
+    </ItemGroup>
+    <Message
+      Importance="High"
+      Text="%(Pixel_Shader_Compiler.ExecutionDescription)" />
+    <WriteLinesToFile
+      Condition="'@(Pixel_Shader_Compiler_tlog)' != '' and '%(Pixel_Shader_Compiler_tlog.ExcludedFromBuild)' != 'true'"
+      File="$(IntDir)$(ProjectName).write.1.tlog"
+      Lines="^%(Pixel_Shader_Compiler_tlog.Source);@(Pixel_Shader_Compiler_tlog-&gt;'%(Fullpath)')" />
+    <Pixel_Shader_Compiler
+      Condition="'@(Pixel_Shader_Compiler)' != '' and '%(Pixel_Shader_Compiler.ExcludedFromBuild)' != 'true'"
+      CommandLineTemplate="%(Pixel_Shader_Compiler.CommandLineTemplate)"
+      E="%(Pixel_Shader_Compiler.E)"
+      D="%(Pixel_Shader_Compiler.D)"
+      Fh="%(Pixel_Shader_Compiler.Fh)"
+      Vn="%(Pixel_Shader_Compiler.Vn)"
+      Fc="%(Pixel_Shader_Compiler.Fc)"
+      Fx="%(Pixel_Shader_Compiler.Fx)"
+      I="%(Pixel_Shader_Compiler.I)"
+      T="%(Pixel_Shader_Compiler.T)"
+      AdditionalOptions="%(Pixel_Shader_Compiler.AdditionalOptions)"
+      Inputs="%(Pixel_Shader_Compiler.Identity)" />
+  </Target>
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>
+            $(ComputeLinkInputsTargets);
+            ComputePixel_Shader_CompilerOutput;
+          </ComputeLinkInputsTargets>
+    <ComputeLibInputsTargets>
+            $(ComputeLibInputsTargets);
+            ComputePixel_Shader_CompilerOutput;
+          </ComputeLibInputsTargets>
+  </PropertyGroup>
+  <Target
+    Name="ComputePixel_Shader_CompilerOutput"
+    Condition="'@(Pixel_Shader_Compiler)' != ''">
+    <ItemGroup>
+      <Pixel_Shader_CompilerDirsToMake
+        Condition="'@(Pixel_Shader_Compiler)' != '' and '%(Pixel_Shader_Compiler.ExcludedFromBuild)' != 'true'"
+        Include="%(Pixel_Shader_Compiler.Outputs)" />
+      <Link
+        Include="%(Pixel_Shader_CompilerDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <Lib
+        Include="%(Pixel_Shader_CompilerDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <ImpLib
+        Include="%(Pixel_Shader_CompilerDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+    </ItemGroup>
+    <MakeDir
+      Directories="@(Pixel_Shader_CompilerDirsToMake-&gt;'%(RootDir)%(Directory)')" />
+  </Target>
+</Project>
