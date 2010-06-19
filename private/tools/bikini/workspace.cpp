@@ -95,7 +95,7 @@ const bk::GUID& workspace::new_folder(const bk::GUID &_parent, const bk::wstring
 		return bk::bad_GUID;
 	}
 
-	bk::uint l_ID = spawn(folder_info(), l_parent_ID, _name);
+	bk::uint l_ID = spawn(folder_info(), l_parent_ID, _name, true);
 
 	if (!get_<object>(l_ID).valid())
 	{
@@ -306,17 +306,25 @@ bool project::load()
 	pugi::xml_node l_project = l_document.child("project");
 	if (bk::astring("project") != l_project.name()) return false;
 
-	for (pugi::xml_node l_child = l_project.first_child(); l_child; l_child = l_child.next_sibling())
+	struct _l { static void load_childs(pugi::xml_node _parent, bk::uint _ID, workspace &_w)
 	{
-		if (bk::astring("folder") == l_child.name())
+		for (pugi::xml_node l_child = _parent.first_child(); l_child; l_child = l_child.next_sibling())
 		{
+			if (bk::astring("folder") == l_child.name())
+			{
+				bk::wstring l_name = bk::utf8(l_child.attribute("name").value());
+				bk::uint l_ID = _w.spawn(folder_info(), _ID, l_name, false);
+				load_childs(l_child, l_ID, _w);
+			}
+			else if (bk::astring("package") == l_child.name())
+			{
+				bk::wstring l_name = bk::utf8(l_child.attribute("name").value());
+				_w.spawn(package_info(), _ID, l_name, false);
+			}
 		}
-		else if (bk::astring("package") == l_child.name())
-		{
-			bk::wstring l_name = bk::utf8(l_child.attribute("name").value());
-			get_workspace().spawn(package_info(), ID(), l_name, false);
-		}
-	}
+	}};
+
+	_l::load_childs(l_project, ID(), get_workspace());
 
 	return true;
 }
@@ -547,34 +555,37 @@ void package::write_structure(pugi::xml_node &_root) const
 
 // folder
 
-folder::folder(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name)
+folder::folder(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name, bool _create)
 :
 	workspace::object(_info, _workspace, _parent_ID, _name)
 {
-	if (!get_workspace().exists(_parent_ID) ||
-		(get_workspace().get(_parent_ID).type() != workspace::ot::project &&
-		 get_workspace().get(_parent_ID).type() != workspace::ot::folder))
+	if (_create)
 	{
-		std::wcerr << "ERROR: Can't create folder. Bad parent ID\n";
-		return;
-	}
-
-	bk::folder l_folder = bk::folder(path());
-
-	if (l_folder.exists())
-	{
-		if (!l_folder.empty())
+		if (!get_workspace().exists(_parent_ID) ||
+			(get_workspace().get(_parent_ID).type() != workspace::ot::project &&
+			 get_workspace().get(_parent_ID).type() != workspace::ot::folder))
 		{
-			std::wcerr << "ERROR: Can't create folder. Folder '" << l_folder.path() << "' already exists and isn't empty\n";
+			std::wcerr << "ERROR: Can't create folder. Bad parent ID\n";
 			return;
 		}
-	}
-	else
-	{
-		if(!l_folder.create())
+
+		bk::folder l_folder = bk::folder(path());
+
+		if (l_folder.exists())
 		{
-			std::wcerr << "ERROR: Can't create folder. Can't create folder '" << l_folder.path() << "'\n";
-			return;
+			if (!l_folder.empty())
+			{
+				std::wcerr << "ERROR: Can't create folder. Folder '" << l_folder.path() << "' already exists and isn't empty\n";
+				return;
+			}
+		}
+		else
+		{
+			if(!l_folder.create())
+			{
+				std::wcerr << "ERROR: Can't create folder. Can't create folder '" << l_folder.path() << "'\n";
+				return;
+			}
 		}
 	}
 

@@ -133,6 +133,7 @@ struct folder : workspace::object
 	struct info : workspace::object::info
 	{
 		typedef folder object;
+		typedef bool a2;				// create
 
 		inline info()
 		:
@@ -140,7 +141,7 @@ struct folder : workspace::object
 		{}
 	};
 
-	folder(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name);
+	folder(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name, bool _create);
 
 	virtual bool add_child(bk::uint _child);
 	virtual bool rename(const bk::wstring &_name);
