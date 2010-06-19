@@ -73,7 +73,8 @@ struct project : workspace::object
 	struct info : workspace::object::info
 	{
 		typedef project object;
-		typedef const bk::wstring& a0;
+		typedef const bk::wstring& a0;	// path/location
+		typedef const bk::wstring& a1;	// name
 
 		inline info()
 		:
@@ -84,7 +85,7 @@ struct project : workspace::object
 	static const bk::wchar* extension;
 
 	project(const info &_info, workspace &_workspace, const bk::wstring &_path);							// load project
-	project(const info &_info, workspace &_workspace, const bk::wstring &_path, const bk::wstring &_name);	// create project
+	project(const info &_info, workspace &_workspace, const bk::wstring &_location, const bk::wstring &_name);	// create project
 
 	virtual bool add_child(bk::uint _child);
 	virtual bool rename(const bk::wstring &_name);
