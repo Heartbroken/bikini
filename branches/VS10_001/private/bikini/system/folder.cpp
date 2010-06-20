@@ -136,6 +136,16 @@ bool folder::rename(const wstring &_name)
 
 	return true;
 }
+bool folder::remove()
+{
+	if (!exists()) return false;
+
+	wstring l_path = path();
+
+	if (_wrmdir(l_path.c_str()) != 0) return false;
+
+	return true;
+}
 
 // file
 

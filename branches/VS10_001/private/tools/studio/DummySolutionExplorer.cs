@@ -195,14 +195,20 @@ namespace Studio
 
 			TreeNode l_node = m_treeView.GetNodeAt(m_treeView.PointToClient(Control.MousePosition));
 
+            Bikini.ProjectItem l_draggedItem = (Bikini.ProjectItem)m_pickedNode.Tag;
+            Bikini.ProjectItem l_targetItem = (Bikini.ProjectItem)l_node.Tag;
+
 			if (l_node != null && l_node != m_pickedNode)
 			{
-				m_pickedNode.Remove();
-				l_node.Nodes.Add(m_pickedNode);
-				m_treeView.SelectedNode = m_pickedNode;
-				m_pickedNode.EnsureVisible();
+                if (Bikini.MoveObject(l_draggedItem.GUID, l_targetItem.GUID))
+                {
+				    m_pickedNode.Remove();
+				    l_node.Nodes.Add(m_pickedNode);
+				    m_treeView.SelectedNode = m_pickedNode;
+				    m_pickedNode.EnsureVisible();
 
-				e.Effect = DragDropEffects.Move;
+				    e.Effect = DragDropEffects.Move;
+                }
 			}
 
 			m_pickedNode = null;
@@ -373,7 +379,11 @@ namespace Studio
 
 		private void removeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			m_treeView.SelectedNode.Remove();
+            TreeNode l_selectedNode = m_treeView.SelectedNode;
+            Bikini.ProjectItem l_selectedItem = (Bikini.ProjectItem)l_selectedNode.Tag;
+
+            if (Bikini.RemoveObject(l_selectedItem.GUID))
+			    m_treeView.SelectedNode.Remove();
 		}
 
 		private void m_projectContextMenu_Opening(object sender, CancelEventArgs e)

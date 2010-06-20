@@ -18,6 +18,7 @@ bool workspace::create()
 	commands::add("NewFolder", bk::functor_<const bk::GUID&, const bk::GUID&, const bk::wstring&>(*this, &workspace::new_folder));
 	commands::add("ObjectStructure", bk::functor_<bk::astring, const bk::GUID&>(*this, &workspace::object_structure));
 	commands::add("RenameObject", bk::functor_<bool, const bk::GUID&, const bk::wstring&>(*this, &workspace::rename_object));
+	commands::add("MoveObject", bk::functor_<bool, const bk::GUID&, const bk::GUID&>(*this, &workspace::move_object));
 	commands::add("RemoveObject", bk::functor_<bool, const bk::GUID&>(*this, &workspace::remove_object));
 	commands::add("SaveAll", bk::functor_<bool>(*this, &workspace::save_all));
 
@@ -27,6 +28,7 @@ void workspace::destroy()
 {
 	commands::remove("SaveAll");
 	commands::remove("RemoveObject");
+	commands::remove("MoveObject");
 	commands::remove("RenameObject");
 	commands::remove("ObjectStructure");
 	commands::remove("NewFolder");
@@ -129,6 +131,26 @@ bool workspace::rename_object(const bk::GUID &_object, const bk::wstring &_name)
 
 	return get_<object>(l_ID).rename(_name);
 }
+bool workspace::move_object(const bk::GUID& _object, const bk::GUID& _new_parent)
+{
+	bk::uint l_ID = find_object(_object);
+
+	if (l_ID == bk::bad_ID)
+	{
+		std::wcerr << "ERROR: Can't move object. Object not found";
+		return false;
+	}
+
+	bk::uint l_new_parent_ID = find_object(_new_parent);
+
+	if (l_new_parent_ID == bk::bad_ID)
+	{
+		std::wcerr << "ERROR: Can't move object. New parent object not found";
+		return false;
+	}
+
+	return get_<object>(l_ID).move(l_new_parent_ID);
+}
 bool workspace::remove_object(const bk::GUID &_object)
 {
 	bk::uint l_ID = find_object(_object);
@@ -138,6 +160,8 @@ bool workspace::remove_object(const bk::GUID &_object)
 		std::wcerr << "ERROR: Can't remove object. Object not found";
 		return false;
 	}
+
+	if (!get_<object>(l_ID).remove()) return false;
 
 	kill(l_ID);
 
@@ -242,16 +266,6 @@ bool project::rename(const bk::wstring &_name)
 		return false;
 	}
 
-	//bk::wstring l_oldpath = m_folder.path() + L"/" + name() + extension;
-	//bk::wstring l_newpath = m_folder.path() + L"/" + _name + extension;
-
-	//if (_wrename(l_oldpath.c_str(), l_newpath.c_str()) != 0)
-	//{
-	//	std::wcerr << "ERROR: Can't rename project file\n";
-	//	m_folder.rename(name());
-	//	return false;
-	//}
-
 	return super::rename(_name);
 }
 bk::astring project::structure() const
@@ -271,7 +285,7 @@ bool project::save() const
 		return false;
 	}
 
-	bk::wstring l_path = m_folder.path() + L"/" + /*name() +*/ extension;
+	bk::wstring l_path = m_folder.path() + L"/" + extension;
 
 	std::fstream l_stream(l_path.c_str(), std::ios_base::out);
 
@@ -290,7 +304,7 @@ bool project::save() const
 }
 bool project::load()
 {
-	bk::wstring l_path = m_folder.path() + L"/" + /*name() +*/ extension;
+	bk::wstring l_path = m_folder.path() + L"/" + extension;
 
 	std::fstream l_stream(l_path.c_str(), std::ios_base::in);
 
@@ -371,34 +385,6 @@ void project::write_structure(pugi::xml_node &_root) const
 	l_project.append_attribute("GUID") = bk::print_GUID(GUID());
 
 	_l::write_childs(l_project, *this);
-
-	//{
-	//	for (bk::uint l_ID = first_relation(); l_ID != bk::bad_ID; l_ID = next_relation(l_ID))
-	//	{
-	//		if (!get_workspace().exists(get_relation(l_ID))) continue;
-
-	//		object &l_object = get_workspace().get_<object>(get_relation(l_ID));
-	//		switch (l_object.type())
-	//		{
-	//			case workspace::ot::package :
-	//			{
-	//				pugi::xml_node l_package = l_project.append_child();
-	//				l_package.set_name("package");
-	//				l_package.append_attribute("Name") = bk::utf8(l_object.name()).c_str();
-	//				l_package.append_attribute("GUID") = bk::print_GUID(l_object.GUID());
-	//			}
-	//			break;
-	//			case workspace::ot::folder :
-	//			{
-	//				pugi::xml_node l_package = l_project.append_child();
-	//				l_package.set_name("folder");
-	//				l_package.append_attribute("Name") = bk::utf8(l_object.name()).c_str();
-	//				l_package.append_attribute("GUID") = bk::print_GUID(l_object.GUID());
-	//			}
-	//			break;
-	//		}
-	//	}
-	//}
 }
 
 // package
@@ -468,17 +454,27 @@ bool package::rename(const bk::wstring &_name)
 		return false;
 	}
 
-	//bk::wstring l_oldpath = l_folder.path() + L"/" + name() + extension;
-	//bk::wstring l_newpath = l_folder.path() + L"/" + _name + extension;
-
-	//if (_wrename(l_oldpath.c_str(), l_newpath.c_str()) != 0)
-	//{
-	//	std::wcerr << "ERROR: Can't rename package file\n";
-	//	l_folder.rename(name());
-	//	return false;
-	//}
-
 	return super::rename(_name);
+}
+bool package::remove()
+{
+	bk::folder l_folder(path());
+
+	bk::wstring l_path = l_folder.path() + L"/" + extension;
+
+	if (!DeleteFileW(l_path.c_str()))
+	{
+		std::wcerr << "ERROR: Can't remove package file\n";
+		return false;
+	}
+
+	if (!l_folder.remove())
+	{
+		std::wcerr << "ERROR: Can't remove package folder\n";
+		return false;
+	}
+
+	return true;
 }
 bk::astring package::structure() const
 {
@@ -499,7 +495,7 @@ bool package::save() const
 		return false;
 	}
 
-	bk::wstring l_path = l_folder.path() + L"/" + /*name() +*/ extension;
+	bk::wstring l_path = l_folder.path() + L"/" + extension;
 
 	std::fstream l_stream(l_path.c_str(), std::ios_base::out);
 
@@ -608,11 +604,27 @@ bool folder::rename(const bk::wstring &_name)
 
 	if (!l_folder.rename(_name))
 	{
-		std::wcerr << "ERROR: Can't rename package folder\n";
+		std::wcerr << "ERROR: Can't rename folder\n";
 		return false;
 	}
 
 	return super::rename(_name);
+}
+bool folder::move(bk::uint _new_parent_ID)
+{
+	return false;
+}
+bool folder::remove()
+{
+	bk::folder l_folder(path());
+
+	if (!l_folder.remove())
+	{
+		std::wcerr << "ERROR: Can't remove folder\n";
+		return false;
+	}
+
+	return true;
 }
 bk::wstring folder::path() const
 {
