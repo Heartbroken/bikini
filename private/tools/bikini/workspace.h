@@ -22,18 +22,23 @@ struct workspace : bk::manager
 		inline bk::uint parent_ID() const { return m_parent_ID; }
 		inline const bk::wstring& name() const { return m_name; }
 		inline bool valid() const { return m_valid; }
+		inline void add_child(bk::uint _child) { add_relation(_child); }
+		inline void remove_child(bk::uint _child) { for (bk::uint l_ID = first_relation(); l_ID != bk::bad_ID; l_ID = next_relation(l_ID)) if (get_relation(l_ID) == _child) { remove_relation(l_ID); break; } }
 
 		object(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name);
+		~object();
 
-		virtual bool add_child(bk::uint _child) { add_relation(_child); return true; }
-		virtual bool remove_child(bk::uint _child) { for (bk::uint l_ID = first_relation(); l_ID != bk::bad_ID; l_ID = next_relation(l_ID)) if (get_relation(l_ID) == _child) { remove_relation(l_ID); return true; } return false; }
+		virtual bool check_parent(bk::uint _ID) const { return get_workspace().exists(_ID); }
+		//virtual bool add_child(bk::uint _child) { add_relation(_child); return true; }
+		//virtual bool remove_child(bk::uint _child) { for (bk::uint l_ID = first_relation(); l_ID != bk::bad_ID; l_ID = next_relation(l_ID)) if (get_relation(l_ID) == _child) { remove_relation(l_ID); return true; } return false; }
 		virtual bool rename(const bk::wstring &_name) { set_name(_name); return true; }
 		virtual bool move(bk::uint _new_parent_ID) { m_parent_ID = _new_parent_ID; return true; }
 		virtual bool remove() { return false; }
 		virtual bk::astring structure() const { return ""; }
 		virtual bool save() const { return true; }
 		virtual bool load() { return true; }
-		virtual bk::wstring path() const { return L""; }
+
+		bk::wstring path() const;
 
 	protected:
 		inline void set_name(const bk::wstring &_name) { m_name = _name; }
@@ -46,10 +51,33 @@ struct workspace : bk::manager
 		bool m_valid;
 	};
 
+	struct folder : object
+	{
+		struct info : object::info
+		{
+			typedef bool a2;
+
+			inline info(bk::uint _type)
+			:
+				object::info(_type)
+			{}
+		};
+
+		folder(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring &_name, bool _create);
+
+		virtual bool rename(const bk::wstring &_name);
+		virtual bool move(bk::uint _new_parent_ID);
+		virtual bool remove();
+
+	private:
+	};
+
 	struct ot { enum object_type
 	{
 		project, package, folder, stage, resources
 	};};
+
+	inline const bk::wstring& location() const { return m_location; }
 
 	workspace();
 
@@ -67,92 +95,95 @@ struct workspace : bk::manager
 	bool save_all();
 
 private:
+	bk::wstring m_location;
 	bk::uint find_object(const bk::GUID &_object) const;
 };
 
 namespace wo { // workspace objects ---------------------------------------------------------------
 
-struct project : workspace::object
+struct project : workspace::folder
 {
-	struct info : workspace::object::info
+	struct info : workspace::folder::info
 	{
 		typedef project object;
-		typedef const bk::wstring& a0;	// path/location
-		typedef const bk::wstring& a1;	// name
+		typedef const bk::wstring& a0;	// name
+		typedef bool a1;				// create
 
 		inline info()
 		:
-			workspace::object::info(workspace::ot::project)
+			workspace::folder::info(workspace::ot::project)
 		{}
 	};
 
 	static const bk::wchar* extension;
 
-	project(const info &_info, workspace &_workspace, const bk::wstring &_path);							// load project
-	project(const info &_info, workspace &_workspace, const bk::wstring &_location, const bk::wstring &_name);	// create project
+	//project(const info &_info, workspace &_workspace, const bk::wstring &_path);								// load project
+	project(const info &_info, workspace &_workspace, const bk::wstring &_name, bool _create);	// create project
 
-	virtual bool add_child(bk::uint _child);
-	virtual bool rename(const bk::wstring &_name);
+	virtual bool check_parent(bk::uint _ID) const;
+	//virtual bool add_child(bk::uint _child);
+	//virtual bool rename(const bk::wstring &_name);
 	virtual bk::astring structure() const;
 	virtual bool save() const;
 	virtual bool load();
-	virtual bk::wstring path() const;
+	//virtual bk::wstring path() const;
 
 private:
 	bk::folder m_folder;
 	void write_structure(pugi::xml_node &_root) const;
 };
 
-struct package : workspace::object
+struct package : workspace::folder
 {
-	struct info : workspace::object::info
+	struct info : workspace::folder::info
 	{
 		typedef package object;
-		typedef bool a2;				// load
+		//typedef bool a2;				// load
 
 		inline info()
 		:
-			workspace::object::info(workspace::ot::package)
+			workspace::folder::info(workspace::ot::package)
 		{}
 	};
 
 	static const bk::wchar* extension;
 
-	package(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name);
-	package(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name, bool _load);
+	//package(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name);
+	package(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name, bool _create);
 
-	virtual bool add_child(bk::uint _child);
-	virtual bool rename(const bk::wstring &_name);
-	virtual bool remove();
+	virtual bool check_parent(bk::uint _ID) const;
+	//virtual bool add_child(bk::uint _child);
+	//virtual bool rename(const bk::wstring &_name);
+	//virtual bool remove();
 	virtual bk::astring structure() const;
 	virtual bool save() const;
-	virtual bk::wstring path() const;
+	//virtual bk::wstring path() const;
 
 
 private:
 	void write_structure(pugi::xml_node &_root) const;
 };
 
-struct folder : workspace::object
+struct folder : workspace::folder
 {
-	struct info : workspace::object::info
+	struct info : workspace::folder::info
 	{
 		typedef folder object;
-		typedef bool a2;				// create
 
 		inline info()
 		:
-			workspace::object::info(workspace::ot::folder)
+			workspace::folder::info(workspace::ot::folder)
 		{}
 	};
 
 	folder(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name, bool _create);
 
-	virtual bool add_child(bk::uint _child);
-	virtual bool rename(const bk::wstring &_name);
-	virtual bool move(bk::uint _new_parent_ID);
-	virtual bool remove();
-	virtual bk::wstring path() const;
+	virtual bool check_parent(bk::uint _ID) const;
+	//virtual bool add_child(bk::uint _child);
+	//virtual bool rename(const bk::wstring &_name);
+	//virtual bool move(bk::uint _new_parent_ID);
+	//virtual bool remove();
+	//virtual bk::wstring path() const;
 };
 
 } // namespace wo ---------------------------------------------------------------------------------
