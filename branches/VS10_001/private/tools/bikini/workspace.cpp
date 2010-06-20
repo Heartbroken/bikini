@@ -66,13 +66,13 @@ const bk::GUID& workspace::open_project(const bk::wstring &_path)
 		return bk::bad_GUID;
 	}
 
-	m_location.resize(m_location.size() - bk::wstring(wo::project::extension).size());
+	m_location.resize(m_location.size() - wcslen(wo::project::extension));
 
-	m_location = bk::folder(m_location).path();
+	bk::folder l_folder(m_location);
 
-	bk::wstring l_name = m_location.substr(m_location.rfind('/') + 1);
+	m_location = l_folder.parent().path();
 
-	bk::uint l_ID = spawn(project_info(), l_name, false);
+	bk::uint l_ID = spawn(project_info(), l_folder.name(), false);
 
 	if (!get_<object>(l_ID).valid())
 	{
@@ -215,14 +215,16 @@ workspace::object::object(const info &_info, workspace &_workspace, bk::uint _pa
 	m_name(_name),
 	m_valid(true)
 {
-	if (!check_parent(parent_ID()))
-	{
-		std::wcerr << "ERROR: Can't create object. Bad parent ID\n";
-		set_valid(false);
-	}
+	//if (!check_parent(parent_ID()))
+	//{
+	//	std::wcerr << "ERROR: Can't create object. Bad parent ID\n";
+	//	set_valid(false);
+	//}
 
 	if (get_workspace().exists(parent_ID()))
-		get_workspace().get_<object>(parent_ID()).add_child(ID());
+	{
+		if (!get_workspace().get_<object>(parent_ID()).add_child(ID())) set_valid(false);
+	}
 }
 workspace::object::~object()
 {
@@ -247,7 +249,7 @@ workspace::folder::folder(const info &_info, workspace &_workspace, bk::uint _pa
 
 	if (_create)
 	{
-		bk::folder l_folder = bk::folder(path());
+		bk::folder l_folder(path());
 
 		if (l_folder.exists())
 		{
@@ -282,25 +284,31 @@ bool workspace::folder::rename(const bk::wstring &_name)
 }
 bool workspace::folder::move(bk::uint _new_parent_ID)
 {
-	if (!check_parent(_new_parent_ID))
+	//if (!check_parent(_new_parent_ID))
+	//{
+	//	std::wcerr << "ERROR: Can't move folder. Bad new parent ID\n";
+	//	return false;
+	//}
+
+	object &l_old_parent = get_workspace().get_<object>(parent_ID());
+	object &l_new_parent = get_workspace().get_<object>(_new_parent_ID);
+
+	if (!l_new_parent.add_child(ID()))
 	{
 		std::wcerr << "ERROR: Can't move folder. Bad new parent ID\n";
 		return false;
 	}
-
-	object &l_old_parent = get_workspace().get_<object>(parent_ID());
-	object &l_new_parent = get_workspace().get_<object>(_new_parent_ID);
 
 	bk::folder l_folder(path());
 
 	if (!l_folder.move(l_new_parent.path()))
 	{
 		std::wcerr << "ERROR: Can't move folder. I/O error\n";
+		l_new_parent.remove_child(ID());
 		return false;
 	}
 
 	l_old_parent.remove_child(ID());
-	l_new_parent.add_child(ID());
 
 	return super::move(_new_parent_ID);
 }
@@ -379,18 +387,18 @@ project::project(const info &_info, workspace &_workspace, const bk::wstring &_n
 	//set_valid();
 }
 
-bool project::check_parent(bk::uint _ID) const
-{
-	return _ID == bk::bad_ID;
-}
-//bool project::add_child(bk::uint _child)
+//bool project::check_parent(bk::uint _ID) const
 //{
-//	if (get_workspace().get(_child).type() != workspace::ot::package &&
-//		get_workspace().get(_child).type() != workspace::ot::folder)
-//		return false;
-//
-//	return super::add_child(_child);
+//	return _ID == bk::bad_ID;
 //}
+bool project::add_child(bk::uint _child)
+{
+	if (get_workspace().get(_child).type() != workspace::ot::package &&
+		get_workspace().get(_child).type() != workspace::ot::folder)
+		return false;
+
+	return super::add_child(_child);
+}
 //bool project::rename(const bk::wstring &_name)
 //{
 //	if (!m_folder.rename(_name))
@@ -412,13 +420,15 @@ bk::astring project::structure() const
 }
 bool project::save() const
 {
-	if (!m_folder.exists())
+	bk::folder l_folder(path());
+
+	if (!l_folder.exists())
 	{
-		std::wcerr << "ERROR: Can't save project. Folder '" << m_folder.path() << "' doesn't exist\n";
+		std::wcerr << "ERROR: Can't save project. Folder '" << l_folder.path() << "' doesn't exist\n";
 		return false;
 	}
 
-	bk::wstring l_path = m_folder.path() + L"/" + extension;
+	bk::wstring l_path = l_folder.path() + L"/" + extension;
 
 	std::fstream l_stream(l_path.c_str(), std::ios_base::out);
 
@@ -437,7 +447,7 @@ bool project::save() const
 }
 bool project::load()
 {
-	bk::wstring l_path = m_folder.path() + L"/" + extension;
+	bk::wstring l_path = path() + L"/" + extension;
 
 	std::fstream l_stream(l_path.c_str(), std::ios_base::in);
 
@@ -575,17 +585,17 @@ package::package(const info &_info, workspace &_workspace, bk::uint _parent_ID, 
 	//set_valid();
 }
 
-bool package::check_parent(bk::uint _ID) const
-{
-	return super::check_parent(_ID) && (get_workspace().get(_ID).type() == workspace::ot::project || get_workspace().get(_ID).type() == workspace::ot::folder);
-}
-//bool package::add_child(bk::uint _child)
+//bool package::check_parent(bk::uint _ID) const
 //{
-//	if (get_workspace().get(_child).type() != workspace::ot::stage)
-//		return false;
-//
-//	return super::add_child(_child);
+//	return super::check_parent(_ID) && (get_workspace().get(_ID).type() == workspace::ot::project || get_workspace().get(_ID).type() == workspace::ot::folder);
 //}
+bool package::add_child(bk::uint _child)
+{
+	if (get_workspace().get(_child).type() != workspace::ot::stage)
+		return false;
+
+	return super::add_child(_child);
+}
 //bool package::rename(const bk::wstring &_name)
 //{
 //	bk::folder l_folder(path());
@@ -732,18 +742,18 @@ folder::folder(const info &_info, workspace &_workspace, bk::uint _parent_ID, co
 	//set_valid();
 }
 
-bool folder::check_parent(bk::uint _ID) const
-{
-	return super::check_parent(_ID) && (get_workspace().get(_ID).type() == workspace::ot::project || get_workspace().get(_ID).type() == workspace::ot::folder);
-}
-//bool folder::add_child(bk::uint _child)
+//bool folder::check_parent(bk::uint _ID) const
 //{
-//	if (get_workspace().get(_child).type() != workspace::ot::package &&
-//		get_workspace().get(_child).type() != workspace::ot::folder)
-//		return false;
-//
-//	return super::add_child(_child);
+//	return super::check_parent(_ID) && (get_workspace().get(_ID).type() == workspace::ot::project || get_workspace().get(_ID).type() == workspace::ot::folder);
 //}
+bool folder::add_child(bk::uint _child)
+{
+	if (get_workspace().get(_child).type() != workspace::ot::package &&
+		get_workspace().get(_child).type() != workspace::ot::folder)
+		return false;
+
+	return super::add_child(_child);
+}
 //bool folder::rename(const bk::wstring &_name)
 //{
 //	bk::folder l_folder(path());
