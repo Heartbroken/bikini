@@ -26,8 +26,9 @@ struct workspace : bk::manager
 		object(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name);
 
 		virtual bool add_child(bk::uint _child) { add_relation(_child); return true; }
+		virtual bool remove_child(bk::uint _child) { for (bk::uint l_ID = first_relation(); l_ID != bk::bad_ID; l_ID = next_relation(l_ID)) if (get_relation(l_ID) == _child) { remove_relation(l_ID); return true; } return false; }
 		virtual bool rename(const bk::wstring &_name) { set_name(_name); return true; }
-		virtual bool move(bk::uint _new_parent_ID) { return false; }
+		virtual bool move(bk::uint _new_parent_ID) { m_parent_ID = _new_parent_ID; return true; }
 		virtual bool remove() { return false; }
 		virtual bk::astring structure() const { return ""; }
 		virtual bool save() const { return true; }

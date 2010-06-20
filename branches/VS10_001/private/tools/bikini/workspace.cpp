@@ -612,7 +612,29 @@ bool folder::rename(const bk::wstring &_name)
 }
 bool folder::move(bk::uint _new_parent_ID)
 {
-	return false;
+	if (!get_workspace().exists(_new_parent_ID) ||
+		(get_workspace().get(_new_parent_ID).type() != workspace::ot::project &&
+		 get_workspace().get(_new_parent_ID).type() != workspace::ot::folder))
+	{
+		std::wcerr << "ERROR: Can't move folder. Bad new parent ID\n";
+		return false;
+	}
+
+	object &l_old_parent = get_workspace().get_<object>(parent_ID());
+	object &l_new_parent = get_workspace().get_<object>(_new_parent_ID);
+
+	bk::folder l_folder(path());
+
+	if (!l_folder.move(l_new_parent.path()))
+	{
+		std::wcerr << "ERROR: Can't move folder. I/O error\n";
+		return false;
+	}
+
+	l_old_parent.remove_child(ID());
+	l_new_parent.add_child(ID());
+
+	return super::move(_new_parent_ID);
 }
 bool folder::remove()
 {
