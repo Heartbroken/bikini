@@ -58,7 +58,7 @@ namespace Studio
 				XmlTextReader l_xml = new XmlTextReader(l_stream);
 				l_xml.WhitespaceHandling = WhitespaceHandling.None;
 
-                while (l_xml.Read())
+                if (!l_xml.IsEmptyElement) while (l_xml.Read())
                 {
                     if (l_xml.IsStartElement() && l_xml.Name == "project")
                     {
@@ -76,7 +76,7 @@ namespace Studio
             Guid l_guid = new Guid(_xml.GetAttribute("GUID"));
             TreeNode l_projectNode = AddNode(new Bikini.Project(l_name, l_guid), m_treeView.Nodes);
 
-            while (_xml.Read())
+            if (!_xml.IsEmptyElement) while (_xml.Read())
             {
                 if (_xml.IsStartElement())
                 {
@@ -102,7 +102,7 @@ namespace Studio
             String l_name = _xml.GetAttribute("name");
             Guid l_guid = new Guid(_xml.GetAttribute("GUID"));
             TreeNode l_folderNode = AddNode(new Bikini.Folder(l_name, true, l_guid), _parentNode.Nodes);
-            while (_xml.Read())
+            if (!_xml.IsEmptyElement) while (_xml.Read())
             {
                 if (_xml.IsStartElement())
                 {
