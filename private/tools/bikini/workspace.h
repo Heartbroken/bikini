@@ -27,6 +27,8 @@ struct workspace : bk::manager
 
 		virtual bool add_child(bk::uint _child) { add_relation(_child); return true; }
 		virtual bool rename(const bk::wstring &_name) { set_name(_name); return true; }
+		virtual bool move(bk::uint _new_parent_ID) { return false; }
+		virtual bool remove() { return false; }
 		virtual bk::astring structure() const { return ""; }
 		virtual bool save() const { return true; }
 		virtual bool load() { return true; }
@@ -59,6 +61,7 @@ struct workspace : bk::manager
 	const bk::GUID& new_folder(const bk::GUID& _parent, const bk::wstring &_name);
 	bk::astring object_structure(const bk::GUID& _object);
 	bool rename_object(const bk::GUID& _object, const bk::wstring &_name);
+	bool move_object(const bk::GUID& _object, const bk::GUID& _new_parent);
 	bool remove_object(const bk::GUID& _object);
 	bool save_all();
 
@@ -119,6 +122,7 @@ struct package : workspace::object
 
 	virtual bool add_child(bk::uint _child);
 	virtual bool rename(const bk::wstring &_name);
+	virtual bool remove();
 	virtual bk::astring structure() const;
 	virtual bool save() const;
 	virtual bk::wstring path() const;
@@ -145,6 +149,8 @@ struct folder : workspace::object
 
 	virtual bool add_child(bk::uint _child);
 	virtual bool rename(const bk::wstring &_name);
+	virtual bool move(bk::uint _new_parent_ID);
+	virtual bool remove();
 	virtual bk::wstring path() const;
 };
 

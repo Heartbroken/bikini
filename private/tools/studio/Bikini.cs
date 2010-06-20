@@ -104,7 +104,19 @@ namespace Studio
 			if (l_result is bool && Convert.ToBoolean(l_result)) return true;
 			return false;
 		}
-		public static Boolean RemoveObject(Guid _object)
+        public static Boolean MoveObject(Guid _object, Guid _newParent)
+        {
+            XmlTextWriter l_xml = StartWriteRequest("MoveObject");
+            WriteRequestArgument(l_xml, _object);
+            WriteRequestArgument(l_xml, _newParent);
+            String l_request = EndWriteRequest(l_xml);
+
+            Object l_result = ReadResult(request(l_request));
+
+            if (l_result is bool && Convert.ToBoolean(l_result)) return true;
+            return false;
+        }
+        public static Boolean RemoveObject(Guid _object)
 		{
 			XmlTextWriter l_xml = StartWriteRequest("RemoveObject");
 			WriteRequestArgument(l_xml, _object);
