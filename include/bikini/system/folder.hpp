@@ -34,6 +34,7 @@ struct folder
 	bool create() const;
 	bool empty() const;
 	bool rename(const wstring &_name);
+	bool move(const folder &_to);
 	bool remove();
 
 private:

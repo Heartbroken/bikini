@@ -136,6 +136,19 @@ bool folder::rename(const wstring &_name)
 
 	return true;
 }
+bool folder::move(const folder &_to)
+{
+	if (!exists()) return false;
+
+	wstring l_oldpath = path();
+	wstring l_newpath = _to.is_root() ? m_name : _to.path() + L"/" + m_name;
+
+	if (!MoveFileW(l_oldpath.c_str(), l_newpath.c_str())) return false;
+
+	m_parent = _to;
+
+	return true;
+}
 bool folder::remove()
 {
 	if (!exists()) return false;
