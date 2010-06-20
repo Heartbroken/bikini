@@ -640,6 +640,12 @@ bool folder::remove()
 {
 	bk::folder l_folder(path());
 
+	for (bk::uint l_ID = first_relation(); l_ID != bk::bad_ID; l_ID = next_relation(l_ID))
+	{
+		get_workspace().get_<object>(get_relation(l_ID)).remove();
+		remove_relation(l_ID);
+	}
+
 	if (!l_folder.remove())
 	{
 		std::wcerr << "ERROR: Can't remove folder\n";
