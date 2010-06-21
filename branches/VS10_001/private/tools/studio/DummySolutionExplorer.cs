@@ -45,28 +45,31 @@ namespace Studio
 			//// test
 		}
 
+        private XmlTextReader ObjectStructure(Guid _object)
+        {
+            String l_objecttStructure = Bikini.ObjectStructure(_object);
+
+            byte[] l_byteArray = Encoding.ASCII.GetBytes(l_objecttStructure);
+            MemoryStream l_stream = new MemoryStream(l_byteArray);
+            XmlTextReader l_xml = new XmlTextReader(l_stream);
+            l_xml.WhitespaceHandling = WhitespaceHandling.None;
+
+            return l_xml;
+        }
 		public void UpdateTreeView(Guid _project)
 		{
 			m_treeView.Nodes.Clear();
 
-			String l_projectStructure = Bikini.ObjectStructure(_project);
+            XmlTextReader l_xml = ObjectStructure(_project);
 
-			if (l_projectStructure.Length > 0)
-			{
-				byte[] l_byteArray = Encoding.ASCII.GetBytes(l_projectStructure);
-				MemoryStream l_stream = new MemoryStream(l_byteArray);
-				XmlTextReader l_xml = new XmlTextReader(l_stream);
-				l_xml.WhitespaceHandling = WhitespaceHandling.None;
-
-                if (!l_xml.IsEmptyElement) while (l_xml.Read())
+            while (l_xml.Read())
+            {
+                if (l_xml.IsStartElement() && l_xml.Name == "project")
                 {
-                    if (l_xml.IsStartElement() && l_xml.Name == "project")
-                    {
-                        ParseProjectStructure(l_xml);
-                        break;
-                    }
+                    ParseProjectStructure(l_xml);
+                    break;
                 }
-			}
+            }
 		}
 		private void ParseProjectStructure(XmlTextReader _xml)
 		{
@@ -75,12 +78,11 @@ namespace Studio
             String l_name = _xml.GetAttribute("name");
             Guid l_guid = new Guid(_xml.GetAttribute("GUID"));
             TreeNode l_projectNode = AddNode(new Bikini.Project(l_name, l_guid), m_treeView.Nodes);
-
             if (!_xml.IsEmptyElement) while (_xml.Read())
             {
                 if (_xml.IsStartElement())
                 {
-                    if (_xml.Name == "package") ParsePackageStructure(_xml, l_projectNode);
+                    if (_xml.Name == "package") OpenPackageFile(_xml, l_projectNode);
                     else if (_xml.Name == "folder") ParseFolderStructure(_xml, l_projectNode);
                 }
                 else
@@ -91,11 +93,38 @@ namespace Studio
 
             l_projectNode.Expand();
 		}
+        private void OpenPackageFile(XmlTextReader _xml, TreeNode _parentNode)
+        {
+            Guid l_package = new Guid(_xml.GetAttribute("GUID"));
+            
+            XmlTextReader l_xml = ObjectStructure(l_package);
+
+            while (l_xml.Read())
+            {
+                if (l_xml.IsStartElement() && l_xml.Name == "package")
+                {
+                    ParsePackageStructure(l_xml, _parentNode);
+                    break;
+                }
+            }
+        }
         private void ParsePackageStructure(XmlTextReader _xml, TreeNode _parentNode)
         {
             String l_name = _xml.GetAttribute("name");
             Guid l_guid = new Guid(_xml.GetAttribute("GUID"));
             TreeNode l_packageNode = AddNode(new Bikini.Package(l_name, l_guid), _parentNode.Nodes);
+
+            if (!_xml.IsEmptyElement) while (_xml.Read())
+            {
+                if (_xml.IsStartElement())
+                {
+                    if (_xml.Name == "stage") ParseStageStructure(_xml, l_packageNode);
+                }
+                else
+                {
+                    if (_xml.Name == "package") break;
+                }
+            }
         }
         private void ParseFolderStructure(XmlTextReader _xml, TreeNode _parentNode)
         {
@@ -106,7 +135,7 @@ namespace Studio
             {
                 if (_xml.IsStartElement())
                 {
-                    if (_xml.Name == "package") ParsePackageStructure(_xml, l_folderNode);
+                    if (_xml.Name == "package") OpenPackageFile(_xml, l_folderNode);
                     else if (_xml.Name == "folder") ParseFolderStructure(_xml, l_folderNode);
                 }
                 else
@@ -114,6 +143,23 @@ namespace Studio
                     if (_xml.Name == "folder") break;
                 }
             }
+        }
+        private void ParseStageStructure(XmlTextReader _xml, TreeNode _parentNode)
+        {
+            String l_name = _xml.GetAttribute("name");
+            Guid l_guid = new Guid(_xml.GetAttribute("GUID"));
+            TreeNode l_folderNode = AddNode(new Bikini.Stage(l_name, l_guid), _parentNode.Nodes);
+            if (!_xml.IsEmptyElement) while (_xml.Read())
+                {
+                    if (_xml.IsStartElement())
+                    {
+                        if (_xml.Name == "stage") ParseStageStructure(_xml, l_folderNode);
+                    }
+                    else
+                    {
+                        if (_xml.Name == "stage") break;
+                    }
+                }
         }
 
 		private TreeNode AddNode(Bikini.ProjectItem _item, TreeNodeCollection _nodes)
