@@ -85,6 +85,7 @@ struct workspace : bk::manager
 	const bk::GUID& open_project(const bk::wstring &_path);
 	const bk::GUID& new_package(const bk::GUID& _parent, const bk::wstring &_name);
 	const bk::GUID& new_folder(const bk::GUID& _parent, const bk::wstring &_name);
+	const bk::GUID& new_stage(const bk::GUID& _parent, const bk::wstring &_name);
 	bk::astring object_structure(const bk::GUID& _object);
 	bool rename_object(const bk::GUID& _object, const bk::wstring &_name);
 	bool move_object(const bk::GUID& _object, const bk::GUID& _new_parent);
@@ -144,6 +145,7 @@ struct package : workspace::folder
 	virtual bool add_child(bk::uint _child);
 	virtual bk::astring structure() const;
 	virtual bool save() const;
+	virtual bool load();
 
 private:
 	void write_structure(pugi::xml_node &_root) const;
@@ -164,6 +166,30 @@ struct folder : workspace::folder
 	folder(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name, bool _create);
 
 	virtual bool add_child(bk::uint _child);
+};
+
+struct stage : workspace::folder
+{
+	struct info : workspace::folder::info
+	{
+		typedef stage object;
+
+		inline info()
+		:
+			workspace::folder::info(workspace::ot::stage)
+		{}
+	};
+
+	static const bk::wchar* extension;
+
+	stage(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name, bool _create);
+
+	virtual bool add_child(bk::uint _child);
+	virtual bk::astring structure() const;
+	virtual bool save() const;
+
+private:
+	void write_structure(pugi::xml_node &_root) const;
 };
 
 } // namespace wo ---------------------------------------------------------------------------------

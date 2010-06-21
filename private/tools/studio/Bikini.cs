@@ -81,7 +81,19 @@ namespace Studio
 			if (l_result is Guid) return (Guid)l_result;
 			return Guid.Empty;
 		}
-		public static String ObjectStructure(Guid _object)
+        public static Guid NewStage(Guid _parent, String _name)
+        {
+            XmlTextWriter l_xml = StartWriteRequest("NewStage");
+            WriteRequestArgument(l_xml, _parent);
+            WriteRequestArgument(l_xml, _name);
+            String l_request = EndWriteRequest(l_xml);
+
+            Object l_result = ReadResult(request(l_request));
+
+            if (l_result is Guid) return (Guid)l_result;
+            return Guid.Empty;
+        }
+        public static String ObjectStructure(Guid _object)
 		{
 			XmlTextWriter l_xml = StartWriteRequest("ObjectStructure");
 			WriteRequestArgument(l_xml, _object);
@@ -376,7 +388,7 @@ namespace Studio
         // Stage
 		public class Stage : NamedProjectItem
         {
-			public Stage(String _name) : base(_name) {}
+            public Stage(String _name, Guid _guid) : base(_name, _guid) { }
 			public override String Type { get { return "Stage"; } }
 			public override String SubItems() { return "Stage|Resources"; }
 		}
