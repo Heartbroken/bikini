@@ -187,6 +187,7 @@ struct stage : workspace::folder
 	virtual bool add_child(bk::uint _child);
 	virtual bk::astring structure() const;
 	virtual bool save() const;
+	virtual bool load();
 
 private:
 	void write_structure(pugi::xml_node &_root) const;

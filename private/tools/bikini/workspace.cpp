@@ -567,8 +567,8 @@ bool package::load()
 	pugi::xml_document l_document;
 	l_document.load(l_stream);
 
-	pugi::xml_node l_project = l_document.child("package");
-	if (bk::astring("package") != l_project.name()) return false;
+	pugi::xml_node l_package = l_document.child("package");
+	if (bk::astring("package") != l_package.name()) return false;
 
 	struct _l { static void load_childs(pugi::xml_node _parent, bk::uint _ID, workspace &_w)
 	{
@@ -583,7 +583,7 @@ bool package::load()
 		}
 	}};
 
-	_l::load_childs(l_project, ID(), get_workspace());
+	_l::load_childs(l_package, ID(), get_workspace());
 
 	return true;
 }
@@ -642,7 +642,13 @@ stage::stage(const info &_info, workspace &_workspace, bk::uint _parent_ID, cons
 	if (valid())
 	{
 		if (_create)
+		{
 			if (!save()) set_valid(false);
+		}
+		else
+		{
+			if (!load()) set_valid(false);
+		}
 	}
 }
 
@@ -689,13 +695,48 @@ bool stage::save() const
 
 	return true;
 }
+bool stage::load()
+{
+	bk::wstring l_path = path() + L"/" + extension;
+
+	std::fstream l_stream(l_path.c_str(), std::ios_base::in);
+
+	if (!l_stream.good())
+	{
+		std::wcerr << "ERROR: Can't load stage. Can't open file '" << l_path << "'\n";
+		return false;
+	}
+
+	pugi::xml_document l_document;
+	l_document.load(l_stream);
+
+	pugi::xml_node l_stage = l_document.child("stage");
+	if (bk::astring("stage") != l_stage.name()) return false;
+
+	struct _l { static void load_childs(pugi::xml_node _parent, bk::uint _ID, workspace &_w)
+	{
+		for (pugi::xml_node l_child = _parent.first_child(); l_child; l_child = l_child.next_sibling())
+		{
+			if (bk::astring("stage") == l_child.name())
+			{
+				bk::wstring l_name = bk::utf8(l_child.attribute("name").value());
+				bk::uint l_ID = _w.spawn(stage_info(), _ID, l_name, false);
+				load_childs(l_child, l_ID, _w);
+			}
+		}
+	}};
+
+	_l::load_childs(l_stage, ID(), get_workspace());
+
+	return true;
+}
 
 void stage::write_structure(pugi::xml_node &_root) const
 {
-	pugi::xml_node l_package = _root.append_child();
-	l_package.set_name("stage");
-	l_package.append_attribute("name") = bk::utf8(name()).c_str();
-	l_package.append_attribute("GUID") = bk::print_GUID(GUID());
+	pugi::xml_node l_stage = _root.append_child();
+	l_stage.set_name("stage");
+	l_stage.append_attribute("name") = bk::utf8(name()).c_str();
+	l_stage.append_attribute("GUID") = bk::print_GUID(GUID());
 	{
 		for (bk::uint l_ID = first_relation(); l_ID != bk::bad_ID; l_ID = next_relation(l_ID))
 		{
@@ -706,10 +747,10 @@ void stage::write_structure(pugi::xml_node &_root) const
 			{
 				case workspace::ot::stage :
 				{
-					pugi::xml_node l_stage = l_package.append_child();
-					l_package.set_name("stage");
-					l_package.append_attribute("name") = bk::utf8(l_object.name()).c_str();
-					l_package.append_attribute("GUID") = bk::print_GUID(l_object.GUID());
+					pugi::xml_node l_stage2 = l_stage.append_child();
+					l_stage2.set_name("stage");
+					l_stage2.append_attribute("name") = bk::utf8(l_object.name()).c_str();
+					l_stage2.append_attribute("GUID") = bk::print_GUID(l_object.GUID());
 				}
 				break;
 			}
