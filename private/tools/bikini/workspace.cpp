@@ -577,7 +577,7 @@ bool package::load()
 			if (bk::astring("stage") == l_child.name())
 			{
 				bk::wstring l_name = bk::utf8(l_child.attribute("name").value());
-				bk::uint l_ID = _w.spawn(folder_info(), _ID, l_name, false);
+				bk::uint l_ID = _w.spawn(stage_info(), _ID, l_name, false);
 				load_childs(l_child, l_ID, _w);
 			}
 		}
