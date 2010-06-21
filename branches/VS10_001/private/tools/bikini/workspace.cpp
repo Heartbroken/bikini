@@ -425,6 +425,8 @@ bool project::load()
 	pugi::xml_node l_project = l_document.child("project");
 	if (bk::astring("project") != l_project.name()) return false;
 
+	set_GUID(bk::scan_GUID(l_project.attribute("GUID").value()));
+
 	struct _l { static void load_childs(pugi::xml_node _parent, bk::uint _ID, workspace &_w)
 	{
 		for (pugi::xml_node l_child = _parent.first_child(); l_child; l_child = l_child.next_sibling())
@@ -570,6 +572,8 @@ bool package::load()
 	pugi::xml_node l_package = l_document.child("package");
 	if (bk::astring("package") != l_package.name()) return false;
 
+	set_GUID(bk::scan_GUID(l_package.attribute("GUID").value()));
+
 	struct _l { static void load_childs(pugi::xml_node _parent, bk::uint _ID, workspace &_w)
 	{
 		for (pugi::xml_node l_child = _parent.first_child(); l_child; l_child = l_child.next_sibling())
@@ -712,6 +716,8 @@ bool stage::load()
 
 	pugi::xml_node l_stage = l_document.child("stage");
 	if (bk::astring("stage") != l_stage.name()) return false;
+
+	set_GUID(bk::scan_GUID(l_stage.attribute("GUID").value()));
 
 	struct _l { static void load_childs(pugi::xml_node _parent, bk::uint _ID, workspace &_w)
 	{

@@ -38,6 +38,7 @@ struct workspace : bk::manager
 		bk::wstring path() const;
 
 	protected:
+		inline void set_GUID(const bk::GUID &_GUID) { m_GUID = _GUID; }
 		inline void set_name(const bk::wstring &_name) { m_name = _name; }
 		inline void set_valid(bool _yes = true) { m_valid = _yes; }
 
