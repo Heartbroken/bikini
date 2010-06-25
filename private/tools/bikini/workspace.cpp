@@ -347,7 +347,7 @@ namespace wo { // workspace objects --------------------------------------------
 
 // project
 
-const bk::wchar* project::extension = L".project";
+bk::wchar const* project::extension = L".project";
 
 project::project(const info &_info, workspace &_workspace, const bk::wstring &_name, bool _create)
 :
@@ -492,7 +492,7 @@ void project::write_structure(pugi::xml_node &_root) const
 
 // package
 
-const bk::wchar* package::extension = L".package";
+bk::wchar const* package::extension = L".package";
 
 package::package(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name, bool _create)
 :
@@ -637,7 +637,7 @@ bool folder::add_child(bk::uint _child)
 
 // stage
 
-const bk::wchar* stage::extension = L".stage";
+bk::wchar const* stage::extension = L".stage";
 
 stage::stage(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name, bool _create)
 :
