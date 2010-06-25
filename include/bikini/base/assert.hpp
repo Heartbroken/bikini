@@ -21,8 +21,7 @@
 #	undef assert
 #endif
 
-bool ARI(wchar* _expression, wchar* _file, int _line, wchar* _function, wchar* _message = 0);
-//bool ARI2(char* _expression, char* _file, int _line, char* _function, char* _message = 0);
+bool ARI(wchar const* _expression, wchar const* _file, int _line, wchar const* _function, wchar const* _message = 0);
 
 #define halt { Sleep(1); __debugbreak(); }
 #define __T(x) L ## x

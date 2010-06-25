@@ -51,7 +51,7 @@ wstring utf8(const astring &_s)
 //
 //	return &l_data[0];
 //}
-_string _format(const wchar* _f, ...)
+_string format(wchar const* _f, ...)
 {
 	va_list l_args;
 	va_start(l_args, _f);
@@ -65,12 +65,37 @@ _string _format(const wchar* _f, ...)
 
 	l_buffer[l_length] = 0;
 
-	static wchar_array l_data;
-	l_data.assign(l_buffer, l_buffer + l_length + 1);
+	//static wchar_array l_data;
+	//l_data.assign(l_buffer, l_buffer + l_length + 1);
 
 	va_end(l_args);
 
-	return &l_data[0];
+	return l_buffer;
+
+	//return &l_data[0];
+}
+_string format(achar const* _f, ...)
+{
+	va_list l_args;
+	va_start(l_args, _f);
+
+	const uint l_buffer_max = 1024;
+	achar l_buffer[l_buffer_max];
+
+	sint l_length = vsprintf_s(l_buffer, _f, l_args);
+	
+	if (l_length <= 0) return "";
+
+	l_buffer[l_length] = 0;
+
+	//static wchar_array l_data;
+	//l_data.assign(l_buffer, l_buffer + l_length + 1);
+
+	va_end(l_args);
+
+	return l_buffer;
+
+	//return &l_data[0];
 }
 _string print_GUID(const GUID &_g)
 {
