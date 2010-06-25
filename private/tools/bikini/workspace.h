@@ -114,7 +114,7 @@ struct project : workspace::folder
 		{}
 	};
 
-	static const bk::wchar* extension;
+	static bk::wchar const* extension;
 
 	project(const info &_info, workspace &_workspace, const bk::wstring &_name, bool _create);
 
@@ -139,7 +139,7 @@ struct package : workspace::folder
 		{}
 	};
 
-	static const bk::wchar* extension;
+	static bk::wchar const* extension;
 
 	package(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name, bool _create);
 
@@ -181,7 +181,7 @@ struct stage : workspace::folder
 		{}
 	};
 
-	static const bk::wchar* extension;
+	static bk::wchar const* extension;
 
 	stage(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name, bool _create);
 
