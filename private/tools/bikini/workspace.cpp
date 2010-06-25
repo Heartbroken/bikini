@@ -146,7 +146,7 @@ const bk::GUID& workspace::new_stage(const bk::GUID &_parent, const bk::wstring 
 
 	return get_<object>(l_ID).GUID();
 }
-bk::astring workspace::object_structure(const bk::GUID& _object)
+bk::astring workspace::object_structure(const bk::GUID &_object)
 {
 	bk::uint l_ID = find_object(_object);
 
@@ -170,7 +170,7 @@ bool workspace::rename_object(const bk::GUID &_object, const bk::wstring &_name)
 
 	return get_<object>(l_ID).rename(_name);
 }
-bool workspace::move_object(const bk::GUID& _object, const bk::GUID& _new_parent)
+bool workspace::move_object(const bk::GUID &_object, const bk::GUID &_new_parent)
 {
 	bk::uint l_ID = find_object(_object);
 
@@ -231,7 +231,7 @@ bk::uint workspace::find_object(const bk::GUID &_object) const
 
 // workspace::object
 
-workspace::object::object(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name)
+workspace::object::object(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring &_name)
 :
 	bk::manager::object(_info, _workspace),
 	m_GUID(bk::random_GUID(sg_GUID_random)),
@@ -494,7 +494,7 @@ void project::write_structure(pugi::xml_node &_root) const
 
 bk::wchar const* package::extension = L".package";
 
-package::package(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name, bool _create)
+package::package(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring &_name, bool _create)
 :
 	workspace::folder(_info, _workspace, _parent_ID, _name, _create)
 {
@@ -621,7 +621,7 @@ void package::write_structure(pugi::xml_node &_root) const
 
 // folder
 
-folder::folder(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name, bool _create)
+folder::folder(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring &_name, bool _create)
 :
 	workspace::folder(_info, _workspace, _parent_ID, _name, _create)
 {}
@@ -639,7 +639,7 @@ bool folder::add_child(bk::uint _child)
 
 bk::wchar const* stage::extension = L".stage";
 
-stage::stage(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name, bool _create)
+stage::stage(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring &_name, bool _create)
 :
 	workspace::folder(_info, _workspace, _parent_ID, _name, _create)
 {

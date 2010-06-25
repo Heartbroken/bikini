@@ -66,8 +66,6 @@ struct workspace : bk::manager
 		virtual bool rename(const bk::wstring &_name);
 		virtual bool move(bk::uint _new_parent_ID);
 		virtual bool remove();
-
-	private:
 	};
 
 	struct ot { enum object_type
@@ -84,13 +82,13 @@ struct workspace : bk::manager
 
 	const bk::GUID& new_project(const bk::wstring &_location, const bk::wstring &_name);
 	const bk::GUID& open_project(const bk::wstring &_path);
-	const bk::GUID& new_package(const bk::GUID& _parent, const bk::wstring &_name);
-	const bk::GUID& new_folder(const bk::GUID& _parent, const bk::wstring &_name);
-	const bk::GUID& new_stage(const bk::GUID& _parent, const bk::wstring &_name);
-	bk::astring object_structure(const bk::GUID& _object);
-	bool rename_object(const bk::GUID& _object, const bk::wstring &_name);
-	bool move_object(const bk::GUID& _object, const bk::GUID& _new_parent);
-	bool remove_object(const bk::GUID& _object);
+	const bk::GUID& new_package(const bk::GUID &_parent, const bk::wstring &_name);
+	const bk::GUID& new_folder(const bk::GUID &_parent, const bk::wstring &_name);
+	const bk::GUID& new_stage(const bk::GUID &_parent, const bk::wstring &_name);
+	bk::astring object_structure(const bk::GUID &_object);
+	bool rename_object(const bk::GUID &_object, const bk::wstring &_name);
+	bool move_object(const bk::GUID &_object, const bk::GUID &_new_parent);
+	bool remove_object(const bk::GUID &_object);
 	bool save_all();
 
 private:
@@ -141,7 +139,7 @@ struct package : workspace::folder
 
 	static bk::wchar const* extension;
 
-	package(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name, bool _create);
+	package(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring &_name, bool _create);
 
 	virtual bool add_child(bk::uint _child);
 	virtual bk::astring structure() const;
@@ -164,7 +162,7 @@ struct folder : workspace::folder
 		{}
 	};
 
-	folder(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name, bool _create);
+	folder(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring &_name, bool _create);
 
 	virtual bool add_child(bk::uint _child);
 };
@@ -183,7 +181,7 @@ struct stage : workspace::folder
 
 	static bk::wchar const* extension;
 
-	stage(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name, bool _create);
+	stage(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring &_name, bool _create);
 
 	virtual bool add_child(bk::uint _child);
 	virtual bk::astring structure() const;
