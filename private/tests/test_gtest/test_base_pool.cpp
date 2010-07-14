@@ -1,7 +1,8 @@
 #include "stdafx.h"
 
 // base/pool
-TEST(base_pool, should_report_value_exists) {
+TEST(base_pool, should_report_value_exists)
+{
 	// given
 	bk::uint l_test_value = 12345;
 	bk::pool_<bk::uint> l_pool1, l_pool2;
@@ -15,7 +16,8 @@ TEST(base_pool, should_report_value_exists) {
 	EXPECT_TRUE(l_exists1);
 	EXPECT_FALSE(l_exists2);
 }
-TEST(base_pool, should_return_value_by_ID) {
+TEST(base_pool, should_return_value_by_ID)
+{
 	// given
 	bk::uint l_test_value = 12345;
 	bk::pool_<bk::uint> l_pool;
@@ -27,7 +29,8 @@ TEST(base_pool, should_return_value_by_ID) {
 	// then
 	EXPECT_EQ(l_value, l_test_value);
 }
-TEST(base_pool, should_return_pool_size) {
+TEST(base_pool, should_return_pool_size)
+{
 	// given
 	bk::pool_<bk::uint> l_pool;
 	bk::uint_array l_IDs;
@@ -42,7 +45,8 @@ TEST(base_pool, should_return_pool_size) {
 	// then
 	EXPECT_EQ(l_size, 2);
 }
-TEST(base_pool, should_report_pool_is_empty) {
+TEST(base_pool, should_report_pool_is_empty)
+{
 	// given
 	bk::pool_<bk::uint> l_pool1, l_pool2;
 	bk::uint l_ID = l_pool1.add(12345);
