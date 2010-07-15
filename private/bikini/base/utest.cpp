@@ -19,6 +19,3 @@ void run_unit_tests()
 }
 
 } /* namespace bk -------------------------------------------------------------------------------*/
-
-int matrix_utest_holder();
-static int matrix_utest = matrix_utest_holder();

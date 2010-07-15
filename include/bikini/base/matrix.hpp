@@ -227,3 +227,7 @@ int f();
 
 
 #include "matrix.inl"
+
+declare_utest(matrix);
+//extern int matrix_utest;
+//static int s_matrix_utest = matrix_utest;
