@@ -6,9 +6,12 @@
 
 *//*---------------------------------------------------------------------------------------------*/
 
-#pragma once
+#include "header.hpp"
 
-#include <bikini/base.hpp>
-
-#include <gtest/gtest.h>
-#pragma comment(lib, "gtest ("_PLATFORM_"!"_CONFIGURATION_")")
+TEST(base_math, matrix_assign)
+{
+	bk::real3 l_v(1, 2, 3);
+	EXPECT_EQ(1, l_v.x);
+	EXPECT_EQ(2, l_v.y);
+	EXPECT_EQ(3, l_v.z);
+}
