@@ -9,13 +9,16 @@
 #include "header.hpp"
 
 namespace bk { /*--------------------------------------------------------------------------------*/
-//
-//void run_unit_tests()
-//{
-//	int argc = 1; char* argv = "";
-//	testing::InitGoogleTest(&argc, &argv);
-//
-//	RUN_ALL_TESTS();
-//}
+
+void run_unit_tests()
+{
+	int argc = 1; char* argv = "";
+	testing::InitGoogleTest(&argc, &argv);
+
+	RUN_ALL_TESTS();
+}
 
 } /* namespace bk -------------------------------------------------------------------------------*/
+
+int matrix_utest_holder();
+static int matrix_utest = matrix_utest_holder();

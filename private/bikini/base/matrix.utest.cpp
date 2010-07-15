@@ -8,7 +8,9 @@
 
 #include "header.hpp"
 
-TEST(math_matrix, should_assign_elements_values)
+int matrix_utest_holder() { return 1; }
+
+TEST(matrix, constructor_accepts_elements_values)
 {
 	// when
 	bk::real3x3 l_m( 1, 2, 3,
@@ -26,15 +28,27 @@ TEST(math_matrix, should_assign_elements_values)
 	EXPECT_EQ(8, l_m.m32);
 	EXPECT_EQ(9, l_m.m33);
 }
-
-namespace bk { /*--------------------------------------------------------------------------------*/
-
-void run_unit_tests()
+TEST(matrix, add_operator_adds_per_element)
 {
-	int argc = 1; char* argv = "";
-	testing::InitGoogleTest(&argc, &argv);
+	// given
+	bk::real3x3 l_m1( 1, 2, 3,
+					  4, 5, 6,
+					  7, 8, 9 );
+	bk::real3x3 l_m2( 9, 8, 7,
+					  6, 5, 4,
+					  3, 2, 1 );
 
-	RUN_ALL_TESTS();
+	// when
+	bk::real3x3 l_m3 = l_m1 + l_m2;
+
+	// then
+	EXPECT_EQ(10, l_m3.m11);
+	EXPECT_EQ(10, l_m3.m12);
+	EXPECT_EQ(10, l_m3.m13);
+	EXPECT_EQ(10, l_m3.m21);
+	EXPECT_EQ(10, l_m3.m22);
+	EXPECT_EQ(10, l_m3.m23);
+	EXPECT_EQ(10, l_m3.m31);
+	EXPECT_EQ(10, l_m3.m32);
+	EXPECT_EQ(10, l_m3.m33);
 }
-
-} /* namespace bk -------------------------------------------------------------------------------*/
