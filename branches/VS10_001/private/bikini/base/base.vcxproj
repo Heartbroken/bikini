@@ -170,6 +170,7 @@
     <ClCompile Include="math.cpp" />
     <ClCompile Include="matrix.utest.cpp" />
     <ClCompile Include="string.cpp" />
+    <ClCompile Include="utest.cpp" />
     <ClCompile Include="watch.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -191,6 +192,7 @@
     <None Include="..\..\..\include\bikini\base\watch.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\bikini\base\utest.hpp" />
     <ClInclude Include="header.hpp" />
     <ClInclude Include="..\..\..\include\bikini\base\assert.hpp" />
     <ClInclude Include="..\..\..\include\bikini\base.hpp" />

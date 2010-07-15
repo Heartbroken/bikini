@@ -223,5 +223,7 @@ const r4x4 r4x4_1(r_1, r_0, r_0, r_0,
 				  r_0, r_0, r_1, r_0,
 				  r_0, r_0, r_0, r_1);
 
+int f();
+
 
 #include "matrix.inl"

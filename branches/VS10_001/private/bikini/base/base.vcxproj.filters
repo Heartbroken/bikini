@@ -77,6 +77,9 @@
     <Filter Include="typelist">
       <UniqueIdentifier>{b02a9cb6-9c73-4474-99e1-398ff863a3aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="utest">
+      <UniqueIdentifier>{1c50625c-1616-4dca-98fd-e44261d6283a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="assert.cpp">
@@ -102,6 +105,9 @@
     </ClCompile>
     <ClCompile Include="matrix.utest.cpp">
       <Filter>matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="utest.cpp">
+      <Filter>utest</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -238,6 +244,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\bikini\base\watch.hpp">
       <Filter>watch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\base\utest.hpp">
+      <Filter>utest</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
