@@ -85,7 +85,6 @@ struct task0 : bk::application::task
 
 void main()
 {
-	//bk::matrix_utest = 1;
 	bk::run_unit_tests();
 
 	bk::application l_app;
