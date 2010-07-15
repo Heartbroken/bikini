@@ -41,12 +41,4 @@ bool ARI(wchar const* _expression, wchar const* _file, int _line, wchar const* _
 
 #endif
 
-void run_unit_tests()
-{
-	int argc = 0; char* argv = "";
-	testing::InitGoogleTest(&argc, &argv);
-
-	RUN_ALL_TESTS();
-}
-
 } /* namespace bk -------------------------------------------------------------------------------*/
