@@ -38,3 +38,6 @@ template<bool> struct compile_time_assert;
 template<> struct compile_time_assert<true> {};
 
 #define c_assert(E)	{ bk::compile_time_assert<((E) != 0)> COMPILE_TIME_ERROR; COMPILE_TIME_ERROR; }
+
+
+void run_unit_tests();

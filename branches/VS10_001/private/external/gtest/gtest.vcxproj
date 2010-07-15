@@ -11,46 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\gtest-all.cc">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="src\gtest-death-test.cc" />
-    <ClCompile Include="src\gtest-filepath.cc" />
-    <ClCompile Include="src\gtest-port.cc" />
-    <ClCompile Include="src\gtest-test-part.cc" />
-    <ClCompile Include="src\gtest-typed-test.cc" />
-    <ClCompile Include="src\gtest.cc" />
-    <ClCompile Include="src\gtest_main.cc">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClInclude Include="gtest.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\gtest\gtest-death-test.h" />
-    <ClInclude Include="include\gtest\gtest-message.h" />
-    <ClInclude Include="include\gtest\gtest-param-test.h" />
-    <ClInclude Include="include\gtest\gtest-spi.h" />
-    <ClInclude Include="include\gtest\gtest-test-part.h" />
-    <ClInclude Include="include\gtest\gtest-typed-test.h" />
-    <ClInclude Include="include\gtest\gtest.h" />
-    <ClInclude Include="include\gtest\gtest_pred_impl.h" />
-    <ClInclude Include="include\gtest\gtest_prod.h" />
-    <ClInclude Include="include\gtest\internal\gtest-death-test-internal.h" />
-    <ClInclude Include="include\gtest\internal\gtest-filepath.h" />
-    <ClInclude Include="include\gtest\internal\gtest-internal.h" />
-    <ClInclude Include="include\gtest\internal\gtest-linked_ptr.h" />
-    <ClInclude Include="include\gtest\internal\gtest-param-util-generated.h" />
-    <ClInclude Include="include\gtest\internal\gtest-param-util.h" />
-    <ClInclude Include="include\gtest\internal\gtest-port.h" />
-    <ClInclude Include="include\gtest\internal\gtest-string.h" />
-    <ClInclude Include="include\gtest\internal\gtest-type-util.h" />
-    <ClInclude Include="src\gtest-internal-inl.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="include\gtest\gtest-param-test.h.pump" />
-    <None Include="include\gtest\internal\gtest-param-util-generated.h.pump" />
-    <None Include="include\gtest\internal\gtest-type-util.h.pump" />
+    <ClCompile Include="gtest-all.cc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{008AF052-839E-4E60-A10C-E355C6BD57F4}</ProjectGuid>
@@ -97,7 +61,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>./;./include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -114,7 +78,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>./;./include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
