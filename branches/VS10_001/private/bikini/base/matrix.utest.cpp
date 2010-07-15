@@ -9,7 +9,6 @@
 #include "header.hpp"
 
 define_utest(matrix);
-//namespace bk { int matrix_utest = 0; }
 
 TEST(matrix, constructor_accepts_elements_values)
 {
