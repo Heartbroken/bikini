@@ -42,6 +42,7 @@ namespace bk { /*---------------------------------------------------------------
 
 #include "base/defines.hpp"
 #include "base/types.hpp"
+#include "base/utest.hpp"
 #include "base/string.hpp"
 #include "base/constants.hpp"
 #include "base/assert.hpp"
@@ -64,6 +65,5 @@ namespace bk { /*---------------------------------------------------------------
 #include "base/fsm.hpp"
 #include "base/loader.hpp"
 #include "base/watch.hpp"
-#include "base/utest.hpp"
 
 } /* namespace bk -------------------------------------------------------------------------------*/

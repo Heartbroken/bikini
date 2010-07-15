@@ -8,7 +8,8 @@
 
 #include "header.hpp"
 
-int matrix_utest_holder() { return 1; }
+define_utest(matrix);
+//namespace bk { int matrix_utest = 0; }
 
 TEST(matrix, constructor_accepts_elements_values)
 {
@@ -28,15 +29,34 @@ TEST(matrix, constructor_accepts_elements_values)
 	EXPECT_EQ(8, l_m.m32);
 	EXPECT_EQ(9, l_m.m33);
 }
+TEST(matrix, assign_operator_assigns_elements_values)
+{
+	// given
+	bk::real3x3 l_m1( 1, 2, 3,
+					  4, 5, 6,
+					  7, 8, 9 ), l_m2;
+	// when
+	l_m2 = l_m1;
+
+	// then
+	EXPECT_EQ(1, l_m2.m11);
+	EXPECT_EQ(2, l_m2.m12);
+	EXPECT_EQ(3, l_m2.m13);
+	EXPECT_EQ(4, l_m2.m21);
+	EXPECT_EQ(5, l_m2.m22);
+	EXPECT_EQ(6, l_m2.m23);
+	EXPECT_EQ(7, l_m2.m31);
+	EXPECT_EQ(8, l_m2.m32);
+	EXPECT_EQ(9, l_m2.m33);
+}
 TEST(matrix, add_operator_adds_per_element)
 {
 	// given
 	bk::real3x3 l_m1( 1, 2, 3,
 					  4, 5, 6,
-					  7, 8, 9 );
-	bk::real3x3 l_m2( 9, 8, 7,
-					  6, 5, 4,
-					  3, 2, 1 );
+					  7, 8, 9 ), l_m2( 9, 8, 7,
+									   6, 5, 4,
+									   3, 2, 1 );
 
 	// when
 	bk::real3x3 l_m3 = l_m1 + l_m2;
