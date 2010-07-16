@@ -8,7 +8,7 @@
 
 #pragma once
 
-bool run_unit_tests();
+bool run_unittests();
 
 #define DECLARE_UTEST(NAME)						\
 	extern int NAME##_utest;					\

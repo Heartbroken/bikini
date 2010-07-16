@@ -85,7 +85,7 @@ struct task0 : bk::application::task
 
 void main()
 {
-	bk::run_unit_tests();
+	bk::run_unittests();
 
 	bk::application l_app;
 	task0::info l_task0_info;
