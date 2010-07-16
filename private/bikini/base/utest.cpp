@@ -10,12 +10,16 @@
 
 namespace bk { /*--------------------------------------------------------------------------------*/
 
-void run_unit_tests()
+bool run_unit_tests()
 {
-	int argc = 1; char* argv = "";
-	testing::InitGoogleTest(&argc, &argv);
+	int argc = 1;
+	wchar_t** argv = (wchar_t**)_alloca(sizeof(wchar_t*));
+	argv[0] = (wchar_t*)_alloca(MAX_PATH * sizeof(wchar_t));
+	GetModuleFileNameW(GetModuleHandleW(NULL), argv[0], MAX_PATH);
 
-	RUN_ALL_TESTS();
+	testing::InitGoogleTest(&argc, argv);
+
+	return (RUN_ALL_TESTS() == 0);
 }
 
 } /* namespace bk -------------------------------------------------------------------------------*/

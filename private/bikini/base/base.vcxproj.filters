@@ -29,9 +29,6 @@
     <Filter Include="matrix">
       <UniqueIdentifier>{2ba40c55-ae5e-4521-9bc2-158c4463c753}</UniqueIdentifier>
     </Filter>
-    <Filter Include="quat">
-      <UniqueIdentifier>{ea566257-f8d3-4084-9ac3-c9fe1a02fab6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="random">
       <UniqueIdentifier>{63d79fc2-538c-4b33-af75-9acadb2982bd}</UniqueIdentifier>
     </Filter>
@@ -79,6 +76,9 @@
     </Filter>
     <Filter Include="utest">
       <UniqueIdentifier>{1c50625c-1616-4dca-98fd-e44261d6283a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="quat">
+      <UniqueIdentifier>{ea566257-f8d3-4084-9ac3-c9fe1a02fab6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

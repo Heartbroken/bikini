@@ -228,4 +228,4 @@ int f();
 
 #include "matrix.inl"
 
-declare_utest(matrix);
+DECLARE_UTEST(matrix);
