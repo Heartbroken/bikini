@@ -10,7 +10,7 @@
 
 namespace bk { /*--------------------------------------------------------------------------------*/
 
-bool run_unit_tests()
+bool run_unittests()
 {
 	int argc = 1;
 	wchar_t** argv = (wchar_t**)_alloca(sizeof(wchar_t*));
