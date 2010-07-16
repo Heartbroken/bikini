@@ -10,7 +10,7 @@
 
 UTEST_FILE(matrix);
 
-TEST(matrix, constructor_accepts_elements_values)
+TEST(matrix, constructor_sets_elements)
 {
 	// when
 	bk::real3x3 l_m( 1, 2, 3,
@@ -28,27 +28,7 @@ TEST(matrix, constructor_accepts_elements_values)
 	EXPECT_EQ(8, l_m.m32);
 	EXPECT_EQ(9, l_m.m33);
 }
-TEST(matrix, assign_operator_assigns_elements_values)
-{
-	// given
-	bk::real3x3 l_m1( 1, 2, 3,
-					  4, 5, 6,
-					  7, 8, 9 ), l_m2;
-	// when
-	l_m2 = l_m1;
-
-	// then
-	EXPECT_EQ(1, l_m2.m11);
-	EXPECT_EQ(2, l_m2.m12);
-	EXPECT_EQ(3, l_m2.m13);
-	EXPECT_EQ(4, l_m2.m21);
-	EXPECT_EQ(5, l_m2.m22);
-	EXPECT_EQ(6, l_m2.m23);
-	EXPECT_EQ(7, l_m2.m31);
-	EXPECT_EQ(8, l_m2.m32);
-	EXPECT_EQ(9, l_m2.m33);
-}
-TEST(matrix, unary_minus_operator_negates_elements_values)
+TEST(matrix, unary_minus_op_negates_elements)
 {
 	// given
 	bk::real3x3 l_m1( 1, 2, 3,
@@ -68,6 +48,96 @@ TEST(matrix, unary_minus_operator_negates_elements_values)
 	EXPECT_EQ(-8, l_m2.m32);
 	EXPECT_EQ(-9, l_m2.m33);
 }
+TEST(matrix, assign_op_sets_corresponding_elements)
+{
+	// given
+	bk::real3x3 l_m1( 1, 2, 3,
+					  4, 5, 6,
+					  7, 8, 9 ), l_m2;
+	// when
+	l_m2 = l_m1;
+
+	// then
+	EXPECT_EQ(1, l_m2.m11);
+	EXPECT_EQ(2, l_m2.m12);
+	EXPECT_EQ(3, l_m2.m13);
+	EXPECT_EQ(4, l_m2.m21);
+	EXPECT_EQ(5, l_m2.m22);
+	EXPECT_EQ(6, l_m2.m23);
+	EXPECT_EQ(7, l_m2.m31);
+	EXPECT_EQ(8, l_m2.m32);
+	EXPECT_EQ(9, l_m2.m33);
+}
+TEST(matrix, add_assign_op_adds_corresponding_elements)
+{
+	// given
+	bk::real3x3 l_m1( 1, 2, 3,
+					  4, 5, 6,
+					  7, 8, 9 ), l_m2( 9, 8, 7,
+									   6, 5, 4,
+									   3, 2, 1 );
+
+	// when
+	l_m2 += l_m1;
+
+	// then
+	EXPECT_EQ(10, l_m2.m11);
+	EXPECT_EQ(10, l_m2.m12);
+	EXPECT_EQ(10, l_m2.m13);
+	EXPECT_EQ(10, l_m2.m21);
+	EXPECT_EQ(10, l_m2.m22);
+	EXPECT_EQ(10, l_m2.m23);
+	EXPECT_EQ(10, l_m2.m31);
+	EXPECT_EQ(10, l_m2.m32);
+	EXPECT_EQ(10, l_m2.m33);
+}
+TEST(matrix, sub_assign_op_subs_corresponding_elements)
+{
+	// given
+	bk::real3x3 l_m1( 1, 2, 3,
+					  4, 5, 6,
+					  7, 8, 9 ), l_m2( 1, 2, 3,
+									   4, 5, 6,
+									   7, 8, 9 );
+
+	// when
+	l_m2 -= l_m1;
+
+	// then
+	EXPECT_EQ(0, l_m2.m11);
+	EXPECT_EQ(0, l_m2.m12);
+	EXPECT_EQ(0, l_m2.m13);
+	EXPECT_EQ(0, l_m2.m21);
+	EXPECT_EQ(0, l_m2.m22);
+	EXPECT_EQ(0, l_m2.m23);
+	EXPECT_EQ(0, l_m2.m31);
+	EXPECT_EQ(0, l_m2.m32);
+	EXPECT_EQ(0, l_m2.m33);
+}
+TEST(matrix, mul_assign_op_muls_corresponding_elements)
+{
+	// given
+	bk::real3x3 l_m1( 1, 2, 3,
+					  4, 5, 6,
+					  7, 8, 9 ), l_m2( 1, 2, 3,
+									   4, 5, 6,
+									   7, 8, 9 );
+
+	// when
+	l_m2 *= l_m1;
+
+	// then
+	EXPECT_EQ(1*1, l_m2.m11);
+	EXPECT_EQ(2*2, l_m2.m12);
+	EXPECT_EQ(3*3, l_m2.m13);
+	EXPECT_EQ(4*4, l_m2.m21);
+	EXPECT_EQ(5*5, l_m2.m22);
+	EXPECT_EQ(6*6, l_m2.m23);
+	EXPECT_EQ(7*7, l_m2.m31);
+	EXPECT_EQ(8*8, l_m2.m32);
+	EXPECT_EQ(9*9, l_m2.m33);
+}
+
 TEST(matrix, add_operator_adds_per_element)
 {
 	// given
