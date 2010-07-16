@@ -8,11 +8,11 @@
 
 #pragma once
 
-void run_unit_tests();
+bool run_unit_tests();
 
-#define declare_utest(name)						\
-	extern int name##_utest;					\
-	static int s_##name##_utest = name##_utest;
+#define DECLARE_UTEST(NAME)						\
+	extern int NAME##_utest;					\
+	static int s_##NAME##_utest = NAME##_utest;
 
-#define define_utest(name)	\
-	namespace bk { int name##_utest = 0; }
+#define UTEST_FILE(NAME)						\
+	namespace bk { int NAME##_utest = 0; }
