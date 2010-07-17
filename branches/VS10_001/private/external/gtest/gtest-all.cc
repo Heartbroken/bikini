@@ -4066,7 +4066,7 @@ void PrettyUnitTestResultPrinter::OnTestIterationStart(
 void PrettyUnitTestResultPrinter::OnEnvironmentsSetUpStart(
     const UnitTest& /*unit_test*/) {
   ColoredPrintf(COLOR_GREEN,  "[----------] ");
-  printf("Global test environment set-up.\n");
+  printf("Global test environment set-up.\n\n");
   fflush(stdout);
 }
 
@@ -4209,6 +4209,7 @@ void PrettyUnitTestResultPrinter::PrintFailedTests(const UnitTest& unit_test) {
                   num_disabled,
                   num_disabled == 1 ? "TEST" : "TESTS");
   }
+  printf("\n");
   // Ensure that Google Test output is printed before, e.g., heapchecker output.
   fflush(stdout);
 }
