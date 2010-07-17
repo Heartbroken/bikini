@@ -9,7 +9,7 @@
 #pragma once
 
 /// quaternion template
-template<typename _Type>
+template <typename _Type>
 struct quat_
 :
 	_vector_<quat_<_Type>, _Type, 4>
@@ -24,5 +24,7 @@ typedef quat_<real> quat;
 
 /// unit quaternion
 const quat_<real> quat_1(r_0, r_0, r_0, r_1);
+
+DECLARE_UTEST(quat);
 
 #include "quat.inl"
