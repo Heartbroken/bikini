@@ -14,8 +14,8 @@ TEST(matrix, constructor_sets_elements)
 {
 	// when
 	bk::real3x3 l_m( 1, 2, 3,
-					 4, 5, 6,
-					 7, 8, 9 );
+	                 4, 5, 6,
+	                 7, 8, 9 );
 
 	// then
 	EXPECT_EQ(1, l_m.m11);
@@ -32,8 +32,8 @@ TEST(matrix, minus_op_negates_elements)
 {
 	// given
 	bk::real3x3 l_m1( 1, 2, 3,
-					  4, 5, 6,
-					  7, 8, 9 ), l_m2;
+	                  4, 5, 6,
+	                  7, 8, 9 ), l_m2;
 	// when
 	l_m2 = -l_m1;
 
@@ -52,8 +52,8 @@ TEST(matrix, assign_op_sets_corresponding_elements)
 {
 	// given
 	bk::real3x3 l_m1( 1, 2, 3,
-					  4, 5, 6,
-					  7, 8, 9 ), l_m2;
+	                  4, 5, 6,
+	                  7, 8, 9 ), l_m2;
 	// when
 	l_m2 = l_m1;
 
@@ -72,10 +72,10 @@ TEST(matrix, add_assign_op_adds_corresponding_elements)
 {
 	// given
 	bk::real3x3 l_m1( 1, 2, 3,
-					  4, 5, 6,
-					  7, 8, 9 ), l_m2( 9, 8, 7,
-									   6, 5, 4,
-									   3, 2, 1 );
+	                  4, 5, 6,
+	                  7, 8, 9 ), l_m2( 9, 8, 7,
+	                                   6, 5, 4,
+	                                   3, 2, 1 );
 
 	// when
 	l_m2 += l_m1;
@@ -95,10 +95,10 @@ TEST(matrix, sub_assign_op_subs_corresponding_elements)
 {
 	// given
 	bk::real3x3 l_m1( 1, 2, 3,
-					  4, 5, 6,
-					  7, 8, 9 ), l_m2( 1, 2, 3,
-									   4, 5, 6,
-									   7, 8, 9 );
+	                  4, 5, 6,
+	                  7, 8, 9 ), l_m2( 1, 2, 3,
+	                                   4, 5, 6,
+	                                   7, 8, 9 );
 
 	// when
 	l_m2 -= l_m1;
@@ -118,10 +118,10 @@ TEST(matrix, mul_assign_op_muls_corresponding_elements)
 {
 	// given
 	bk::real3x3 l_m1( 1, 2, 3,
-					  4, 5, 6,
-					  7, 8, 9 ), l_m2( 1, 2, 3,
-									   4, 5, 6,
-									   7, 8, 9 );
+	                  4, 5, 6,
+	                  7, 8, 9 ), l_m2( 1, 2, 3,
+	                                   4, 5, 6,
+	                                   7, 8, 9 );
 
 	// when
 	l_m2 *= l_m1;
@@ -141,10 +141,10 @@ TEST(matrix, div_assign_op_divs_corresponding_elements)
 {
 	// given
 	bk::real3x3 l_m1( 1, 2, 3,
-					  4, 5, 6,
-					  7, 8, 9 ), l_m2( 1, 2, 3,
-									   4, 5, 6,
-									   7, 8, 9 );
+	                  4, 5, 6,
+	                  7, 8, 9 ), l_m2( 1, 2, 3,
+	                                   4, 5, 6,
+	                                   7, 8, 9 );
 
 	// when
 	l_m2 /= l_m1;
@@ -164,8 +164,8 @@ TEST(matrix, mul_scalar_assign_op_muls_elements_by_scalar)
 {
 	// given
 	bk::real3x3 l_m( 1, 2, 3,
-					 4, 5, 6,
-					 7, 8, 9 );
+	                 4, 5, 6,
+	                 7, 8, 9 );
 
 	// when
 	l_m *= 2;
@@ -185,8 +185,8 @@ TEST(matrix, div_scalar_assign_op_divs_elements_by_scalar)
 {
 	// given
 	bk::real3x3 l_m( 1, 2, 3,
-					 4, 5, 6,
-					 7, 8, 9 );
+	                 4, 5, 6,
+	                 7, 8, 9 );
 
 	// when
 	l_m /= 0.5f;
@@ -207,10 +207,10 @@ TEST(matrix, add_operator_adds_per_element)
 {
 	// given
 	bk::real3x3 l_m1( 1, 2, 3,
-					  4, 5, 6,
-					  7, 8, 9 ), l_m2( 9, 8, 7,
-									   6, 5, 4,
-									   3, 2, 1 );
+	                  4, 5, 6,
+	                  7, 8, 9 ), l_m2( 9, 8, 7,
+	                                   6, 5, 4,
+	                                   3, 2, 1 );
 
 	// when
 	bk::real3x3 l_m3 = l_m1 + l_m2;

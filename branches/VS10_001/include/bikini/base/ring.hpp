@@ -20,15 +20,15 @@ template<typename _Type> struct ring_
 	inline uint free_space() const;
 	inline bool empty() const;
 	inline bool full() const;
-	inline bool push(const type &_v);
-	inline bool write(const type* _data, uint _size);
-	inline type& front();
-	inline const type& front() const;
+	inline bool push(const type & _v);
+	inline bool write(const type * _data, uint _size);
+	inline type & front();
+	inline const type & front() const;
 	inline void pop();
-	inline bool read(type* _data, uint _size);
+	inline bool read(type * _data, uint _size);
 
 private:
-	type* m_buffer;
+	type * m_buffer;
 	const uint m_size;
 	uint m_write, m_read;
 };

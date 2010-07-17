@@ -10,10 +10,11 @@
 
 ///	typelist template
 /**	[TODO]
-	
+
  */
 template<typename _First, typename _Rest = notype> struct typelist_;
-template<typename _First, typename _Second, typename _Third> struct typelist_<_First, typelist_<_Second, _Third> > {
+template<typename _First, typename _Second, typename _Third> struct typelist_<_First, typelist_<_Second, _Third> >
+{
 	/// First type of the list
 	typedef _First first;
 	/// The rest of the list
@@ -23,7 +24,8 @@ template<typename _First, typename _Second, typename _Third> struct typelist_<_F
 	/// The biggest type size
 	static const uint max_size = sizeof(first) > rest::max_size ? sizeof(first) : rest::max_size;
 	/// List item info
-	template<uint _Index> struct item_ {
+	template<uint _Index> struct item_
+	{
 		/// Item type
 		typedef typename rest::item_<_Index - 1>::type type;
 		/// Item size
@@ -32,7 +34,8 @@ template<typename _First, typename _Second, typename _Third> struct typelist_<_F
 		type value;
 #		endif
 	};
-	template<> struct item_<0> {
+	template<> struct item_<0>
+	{
 		typedef first type;
 		static const uint size = sizeof(type);
 #		ifdef _DEBUG
@@ -40,7 +43,8 @@ template<typename _First, typename _Second, typename _Third> struct typelist_<_F
 #		endif
 	};
 	/// Type info
-	template<typename _Type> struct type_ {
+	template<typename _Type> struct type_
+	{
 		// _check_rest helper
 		typedef typename rest::type_<_Type> _check_rest;
 		/// Type index in the list
@@ -48,22 +52,26 @@ template<typename _First, typename _Second, typename _Third> struct typelist_<_F
 		/// Type presence in the list
 		static const bool exists = _check_rest::exists;
 	};
-	template<> struct type_<first> {
+	template<> struct type_<first>
+	{
 		static const uint index = 0;
 		static const bool exists = true;
 	};
 	/// Append a type to the list
-	template<typename _Type> struct append_ {
+	template<typename _Type> struct append_
+	{
 		typedef typelist_<first, typename rest::append_<_Type>::result> result;
 	};
 	/// Other typelist info
-	template<typename _Otherlist> struct otherlist_ {
+	template<typename _Otherlist> struct otherlist_
+	{
 		/// If other typelist types are contained in the list
 		static const bool belong = type_<typename _Otherlist::first>::exists && otherlist_<typename _Otherlist::rest>::belong;
 		/// Remap type index in other list to index in the list
 		inline static uint remap(uint _i);
 	};
-	template<> struct otherlist_<typelist_<notype> > {
+	template<> struct otherlist_<typelist_<notype> >
+	{
 		static const bool belong = true;
 		inline static uint remap(uint _i) { return bad_ID; }
 	};
@@ -82,7 +90,8 @@ template<typename _First, typename _Second, typename _Third> struct typelist_<_F
 	/// Compare two pointed objects of i-th type
 	inline static bool compare(uint _i, pointer _a, pointer _b);
 };
-template<> struct typelist_<notype> {
+template<> struct typelist_<notype>
+{
 	static const uint count = 0;
 	static const uint max_size = 0;
 	template<uint _Index> struct item_ { typedef typename notype type; static const uint size = 0; };
@@ -99,8 +108,8 @@ template<> struct typelist_<notype> {
 };
 
 ///	make_typelist template
-/**	
-	
+/**
+
  */
 template<
 	typename _Type0,
@@ -114,7 +123,9 @@ template<
 	typename _Type36 = notype, typename _Type37 = notype, typename _Type38 = notype, typename _Type39 = notype, typename _Type40 = notype,
 	typename _Type41 = notype, typename _Type42 = notype, typename _Type43 = notype, typename _Type44 = notype, typename _Type45 = notype,
 	typename _Type46 = notype, typename _Type47 = notype, typename _Type48 = notype, typename _Type49 = notype, typename _Type50 = notype
-> struct make_typelist_ {
+>
+struct make_typelist_
+{
 	typedef typelist_<
 		_Type0,
 		typename make_typelist_<
@@ -126,7 +137,8 @@ template<
 		>::type
 	> type;
 };
-template<> struct make_typelist_<notype> {
+template<> struct make_typelist_<notype>
+{
 	typedef typelist_<notype> type;
 };
 

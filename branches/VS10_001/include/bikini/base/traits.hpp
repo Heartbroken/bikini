@@ -17,28 +17,29 @@ typedef make_typelist_<bool, u8, u16, u32, u64, uint, ubig, s8, s16, s32, s64, s
 /// traits
 /**	[TODO]
  */
-template<typename _Type> struct traits_ {
+template<typename _Type> struct traits_
+{
 private:
 	template<typename _T> struct pointer_traits_ { static const bool yes = false; typedef _T type; };
-	template<typename _T> struct pointer_traits_<_T*> { static const bool yes = true; typedef _T type; };
+	template<typename _T> struct pointer_traits_<_T *> { static const bool yes = true; typedef _T type; };
 
 	template<typename _T> struct reference_traits_ { static const bool yes = false; typedef _T type; };
-	template<typename _T> struct reference_traits_<_T&> { static const bool yes = true; typedef _T type; };
-	template<typename _T> struct reference_traits_<const _T&> { static const bool yes = true; typedef _T type; };
+	template<typename _T> struct reference_traits_<_T &> { static const bool yes = true; typedef _T type; };
+	template<typename _T> struct reference_traits_<const _T &> { static const bool yes = true; typedef _T type; };
 
-	template<typename _T> struct parameter_traits_ { typedef const _T& type; };
-	template<typename _T> struct parameter_traits_<_T&> { typedef _T& type; };
+	template<typename _T> struct parameter_traits_ { typedef const _T & type; };
+	template<typename _T> struct parameter_traits_<_T &> { typedef _T & type; };
 
 	template<typename _T> struct member_ptr_traits_ { static const bool yes = false; };
-	template<typename _T, typename _M> struct member_ptr_traits_<_T _M::*> { static const bool yes = true; };
-	template<typename _T, typename _M> struct member_ptr_traits_<_T _M::*&> { static const bool yes = true; };
+	template<typename _T, typename _M> struct member_ptr_traits_<_T _M:: *> { static const bool yes = true; };
+	template<typename _T, typename _M> struct member_ptr_traits_<_T _M::* &> { static const bool yes = true; };
 
 	template<typename _T> struct const_traits_ { static const bool yes = false; typedef _T type; };
 	template<typename _T> struct const_traits_<const _T> { static const bool yes = true; typedef _T type; };
 
 	template<typename _T> struct function_traits_ { static const bool yes = false; };
-	template<typename _T> struct function_traits_<_T (&)> { static const bool yes = true; };
-	template<typename _T> struct function_traits_<_T (*)> { static const bool yes = true; };
+	template<typename _T> struct function_traits_<_T ( &)> { static const bool yes = true; };
+	template<typename _T> struct function_traits_<_T ( *)> { static const bool yes = true; };
 
 	template<typename _T> struct array_traits_ { static const bool yes = false; typedef _T type; };
 	template<typename _T, uint _N> struct array_traits_<_T[_N]> { static const bool yes = true; typedef _T type; };

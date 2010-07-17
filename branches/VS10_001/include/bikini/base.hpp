@@ -38,7 +38,8 @@
 #include <sstream>
 
 /// bikini-iii main namespace
-namespace bk { /*--------------------------------------------------------------------------------*/
+namespace bk   /*--------------------------------------------------------------------------------*/
+{
 
 #include "base/defines.hpp"
 #include "base/types.hpp"

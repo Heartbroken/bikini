@@ -11,7 +11,8 @@
 ///	loader
 /**	[TODO]
  */
-struct loader {
+struct loader
+{
 	/// constructor
 	loader();
 
@@ -21,7 +22,7 @@ struct loader {
 	///	open a file
 	/**	open the file specified by _path and return it's ID or uint(-1) if failed
 	 */
-	uint open(const wchar* _path);
+	uint open(const wchar * _path);
 
 	///	check a file
 	/**	check if the file specified by _ID is opened
@@ -46,7 +47,7 @@ struct loader {
 	void close(uint _ID);
 
 private:
-	pool_<std::ifstream*> m_pool;
+	pool_<std::ifstream *> m_pool;
 	//struct file { std::ifstream* stream_p; uint ID; };
 	//array_<file> m_files;
 	//array_<uint> m_free_IDs;
