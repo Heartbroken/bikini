@@ -11,10 +11,10 @@
 typedef ::GUID GUID;
 
 /// create random GUID
-inline GUID random_GUID(random &_random = random_0);
+inline GUID random_GUID(random & _random = random_0);
 
-_string print_GUID(const GUID &_g);
-GUID scan_GUID(const _string &_s);
+_string print_GUID(const GUID & _g);
+GUID scan_GUID(const _string & _s);
 //GUID scan_GUID(const wstring &_s);
 
 /// bad GUID

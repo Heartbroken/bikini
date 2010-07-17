@@ -9,8 +9,8 @@
 #pragma once
 
 ///
-astring utf8(const wstring &_s);
-wstring utf8(const astring &_s);
+astring utf8(const wstring & _s);
+wstring utf8(const astring & _s);
 
 ///
 struct _string
@@ -18,16 +18,16 @@ struct _string
 	astring astr;
 	wstring wstr;
 	inline _string();
-	inline _string(const _string &_s);
-	inline _string(const astring &_s);
-	inline _string(const wstring &_s);
-	inline _string(const achar* _s);
-	inline _string(const wchar* _s);
-	inline _string& operator = (const _string &_s);
-	inline _string& operator = (const astring &_s);
-	inline _string& operator = (const wstring &_s);
-	inline _string& operator = (const achar* _s);
-	inline _string& operator = (const wchar* _s);
+	inline _string(const _string & _s);
+	inline _string(const astring & _s);
+	inline _string(const wstring & _s);
+	inline _string(const achar * _s);
+	inline _string(const wchar * _s);
+	inline _string & operator = (const _string & _s);
+	inline _string & operator = (const astring & _s);
+	inline _string & operator = (const wstring & _s);
+	inline _string & operator = (const achar * _s);
+	inline _string & operator = (const wchar * _s);
 	inline operator astring&();
 	inline operator wstring&();
 	inline operator const achar*();

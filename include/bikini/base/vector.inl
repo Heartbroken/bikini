@@ -11,12 +11,12 @@
 // _vector_
 
 template <typename _V, typename _E, uint _S, uint _P>
-const _E& _vector_<_V, _E, _S, _P>::operator [] (uint _i) const
+const _E & _vector_<_V, _E, _S, _P>::operator [] (uint _i) const
 {
 	return super::operator [] (0)[_i];
 }
 template <typename _V, typename _E, uint _S, uint _P>
-_E& _vector_<_V, _E, _S, _P>::operator [] (uint _i)
+_E & _vector_<_V, _E, _S, _P>::operator [] (uint _i)
 {
 	return super::operator [] (0)[_i];
 }
@@ -28,7 +28,7 @@ inline vector_<_T, 1>::vector_()
 {}
 template <typename _T>
 inline vector_<_T, 1>::vector_(_T _x)
-:
+	:
 	x(_x)
 {}
 
@@ -37,7 +37,7 @@ inline vector_<_T, 2>::vector_()
 {}
 template <typename _T>
 inline vector_<_T, 2>::vector_(_T _x, _T _y)
-:
+	:
 	x(_x), y(_y)
 {}
 
@@ -46,7 +46,7 @@ inline vector_<_T, 3>::vector_()
 {}
 template <typename _T>
 inline vector_<_T, 3>::vector_(_T _x, _T _y, _T _z)
-:
+	:
 	x(_x), y(_y), z(_z)
 {}
 
@@ -55,22 +55,28 @@ inline vector_<_T, 4>::vector_()
 {}
 template <typename _T>
 inline vector_<_T, 4>::vector_(_T _x, _T _y, _T _z, _T _w)
-:
+	:
 	x(_x), y(_y), z(_z), w(_w)
 {}
 
 // vector_ function
 
 template <typename _T, uint _S, uint _E, uint _I = _S>
-struct _vector_dot_helper_ { static inline const _T get(const vector_<_T, _S, _E> &_a, const vector_<_T, _S, _E> &_b)
+struct _vector_dot_helper_
 {
-	return _vector_dot_helper_<_T, _S, _E, _I - 1>::get(_a, _b) + _a.cell_<_I - 1, 0>() * _b.cell_<_I - 1, 0>();
-}};
+	static inline const _T get(const vector_<_T, _S, _E> &_a, const vector_<_T, _S, _E> &_b)
+	{
+		return _vector_dot_helper_<_T, _S, _E, _I - 1>::get(_a, _b) + _a.cell_<_I - 1, 0>() * _b.cell_<_I - 1, 0>();
+	}
+};
 template <typename _T, uint _S, uint _E>
-struct _vector_dot_helper_<_T, _S, _E, 0> { static inline const _T get(const vector_<_T, _S, _E> &_a, const vector_<_T, _S, _E> &_b)
+struct _vector_dot_helper_<_T, _S, _E, 0>
 {
-	return 0;
-}};
+	static inline const _T get(const vector_<_T, _S, _E> &_a, const vector_<_T, _S, _E> &_b)
+	{
+		return 0;
+	}
+};
 template <typename _T, uint _S, uint _E>
 inline const _T dot(const vector_<_T, _S, _E> &_a, const vector_<_T, _S, _E> &_b)
 {

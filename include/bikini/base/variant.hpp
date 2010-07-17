@@ -20,7 +20,7 @@ template<typename _Typelist, bool _Dynamic = true> struct variant_
 	/// Construct a variant another similar variant
 	inline variant_(const variant_ &_v);
 	/// Construct a variant from a value. Type of a value must be in the list of types
-	template<typename _Type> inline variant_(const _Type &_v);
+	template<typename _Type> inline variant_(const _Type & _v);
 	/// Construct a variant from another variant with different type list
 	template<typename _Typelist2, bool _Dynamic2> inline variant_(const variant_<_Typelist2, _Dynamic2> &_v);
 	/// Destruct a variant
@@ -36,21 +36,21 @@ template<typename _Typelist, bool _Dynamic = true> struct variant_
 	/// Assign
 	inline variant_& operator = (const variant_ &_v);
 	/// Assign
-	template<typename _Type> inline variant_& operator = (const _Type &_v);
+	template<typename _Type> inline variant_& operator = (const _Type & _v);
 	/// Assign
 	template<typename _Typelist2, bool _Dynamic2> inline variant_& operator = (const variant_<_Typelist2, _Dynamic2> &_v);
 	/// Test if equal
 	inline bool operator == (const variant_ &_v) const;
 	/// Test if equal
-	template<typename _Type> inline bool operator == (const _Type &_v) const;
+	template<typename _Type> inline bool operator == (const _Type & _v) const;
 	/// Test if equal
 	template<typename _Typelist2, bool _Dynamic2> inline bool operator == (const variant_<_Typelist2, _Dynamic2> &_v) const;
 	/// Test if not equal
-	template<typename _Type> inline bool operator != (const _Type &_v) const;
+	template<typename _Type> inline bool operator != (const _Type & _v) const;
 	/// Test if a variant can take specified type
 	template<typename _Type> inline static bool can_take();
 	/// Test if a variant can take specified type by value
-	template<typename _Type> inline static bool can_take(const _Type &_v);
+	template<typename _Type> inline static bool can_take(const _Type & _v);
 	/// Test if a variant can take current type fo another variant
 	template<typename _Typelist2, bool _Dynamic2> inline static bool can_take(const variant_<_Typelist2, _Dynamic2> &_v);
 	/// Test if a variant has no value
@@ -58,10 +58,10 @@ template<typename _Typelist, bool _Dynamic = true> struct variant_
 	/// Chech a type of a variant
 	template<typename _Type> inline bool is_() const;
 	/// Get a variant's value
-	template<typename _Type> inline _Type& get_();
-	template<typename _Type> inline const _Type& get_() const;
+	template<typename _Type> inline _Type & get_();
+	template<typename _Type> inline const _Type & get_() const;
 	/// Get a variant value. If there is no value return default value
-	template<typename _Type> inline const _Type& def(const _Type &_def) const;
+	template<typename _Type> inline const _Type & def(const _Type & _def) const;
 
 	//struct _types;
 private:

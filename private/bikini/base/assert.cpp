@@ -8,13 +8,14 @@
 
 #include "header.hpp"
 
-namespace bk { /*--------------------------------------------------------------------------------*/
+namespace bk   /*--------------------------------------------------------------------------------*/
+{
 
 #if defined(XBOX)
 
 #elif defined(WIN32)
 
-bool ARI(wchar const* _expression, wchar const* _file, int _line, wchar const* _function, wchar const* _message)
+bool ARI(wchar const * _expression, wchar const * _file, int _line, wchar const * _function, wchar const * _message)
 {
 	std::wstringstream l_cerr;
 	l_cerr << L"Assertion failed ...\n";
@@ -32,9 +33,9 @@ bool ARI(wchar const* _expression, wchar const* _file, int _line, wchar const* _
 
 	switch(MessageBoxW(0, l_message.c_str(), L"bikini | assertion failed", MB_ABORTRETRYIGNORE|MB_ICONERROR))
 	{
-		case IDABORT : std::cerr << L"... terminating\n"; Sleep(1); _exit(-1);
-		case IDRETRY : std::cerr << L"... debugging\n"; return false;
-		case IDIGNORE : std::cerr << L"... ignored\n"; return true;
+	case IDABORT : std::cerr << L"... terminating\n"; Sleep(1); _exit(-1);
+	case IDRETRY : std::cerr << L"... debugging\n"; return false;
+	case IDIGNORE : std::cerr << L"... ignored\n"; return true;
 	}
 	return true;
 }
