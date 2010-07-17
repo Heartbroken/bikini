@@ -26,7 +26,7 @@ struct _matrix_helper_
 	static inline void mul(_M & _a, const _E & _b) { _next::mul(_a, _b); _a.cell_<_C - 1, _R - 1>() *= _b; }
 	static inline void div(_M & _a, const _E & _b) { _next::div(_a, _b); _a.cell_<_C - 1, _R - 1>() /= _b; }
 	static inline bool equ(const _M & _a, const _M & _b) { return _a.cell_<_C - 1, _R - 1>() == _b.cell_<_C - 1, _R - 1>() && _next::equ(_a, _b); }
-	static inline bool neq(const _M & _a, const _M & _b) { return _a.cell_<_C - 1, _R - 1>() != _b.cell_<_C - 1, _R - 1>() !! _next::neq(_a, _b); }
+	static inline bool neq(const _M & _a, const _M & _b) { return _a.cell_<_C - 1, _R - 1>() != _b.cell_<_C - 1, _R - 1>() || _next::neq(_a, _b); }
 };
 template <typename _M, uint _R>
 struct _matrix_helper_<_M, 0, _R>
