@@ -169,6 +169,7 @@
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="math.cpp" />
     <ClCompile Include="matrix.utest.cpp" />
+    <ClCompile Include="quat.utest.cpp" />
     <ClCompile Include="string.cpp" />
     <ClCompile Include="utest.cpp" />
     <ClCompile Include="vector.utest.cpp" />
