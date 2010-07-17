@@ -10,12 +10,12 @@
 
 ///
 template
-	<
+<
 	typename _Matrix,
-	typename _Element,
-	uint _Columns, uint _Rows,
-	uint _Rowstride = sizeof(_Element) * _Columns
-	>
+    typename _Element,
+    uint _Columns, uint _Rows,
+    uint _Rowstride = sizeof(_Element) * _Columns
+>
 struct _matrix_
 {
 	typedef _Matrix matrix;
@@ -70,7 +70,7 @@ struct _matrix_
 
 template <typename _Type, uint _Columns, uint _Rows, uint _Extra = 0>
 struct matrix_
-:
+	:
 	_matrix_<matrix_<_Type, _Columns, _Rows>, _Type, _Columns, _Rows, sizeof(_Type) * (_Columns + _Extra)>
 {
     _Type m[_Rows][_Columns + _Extra];
@@ -78,7 +78,7 @@ struct matrix_
 
 template <typename _Type>
 struct matrix_<_Type, 1, 1>
-:
+	:
 	_matrix_<matrix_<_Type, 1, 1>, _Type, 1, 1>
 {
 	_Type m11;
@@ -89,7 +89,7 @@ struct matrix_<_Type, 1, 1>
 
 template <typename _Type>
 struct matrix_<_Type, 2, 2>
-:
+	:
 	_matrix_<matrix_<_Type, 2, 2>, _Type, 2, 2>
 {
 	_Type m11, m12,
@@ -102,7 +102,7 @@ struct matrix_<_Type, 2, 2>
 
 template <typename _Type>
 struct matrix_<_Type, 3, 3>
-:
+	:
 	_matrix_<matrix_<_Type, 3, 3>, _Type, 3, 3>
 {
 	_Type m11, m12, m13,
@@ -117,7 +117,7 @@ struct matrix_<_Type, 3, 3>
 
 template <typename _Type>
 struct matrix_<_Type, 3, 2>
-:
+	:
 	_matrix_<matrix_<_Type, 3, 2>, _Type, 3, 2>
 {
 	_Type m11, m12, m13,
@@ -130,7 +130,7 @@ struct matrix_<_Type, 3, 2>
 
 template <typename _Type>
 struct matrix_<_Type, 4, 4>
-:
+	:
 	_matrix_<matrix_<_Type, 4, 4>, _Type, 4, 4>
 {
 	_Type m11, m12, m13, m14,
@@ -147,7 +147,7 @@ struct matrix_<_Type, 4, 4>
 
 template <typename _Type>
 struct matrix_<_Type, 4, 2>
-:
+	:
 	_matrix_<matrix_<_Type, 4, 2>, _Type, 4, 2>
 {
 	_Type m11, m12, m13, m14,
