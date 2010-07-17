@@ -9,13 +9,7 @@
 #pragma once
 
 ///
-template
-<
-	typename _Matrix,
-    typename _Element,
-    uint _Columns, uint _Rows,
-    uint _Rowstride = sizeof(_Element) * _Columns
->
+template <typename _Matrix, typename _Element, uint _Columns, uint _Rows, uint _Rowstride = sizeof(_Element) * _Columns>
 struct _matrix_
 {
 	typedef _Matrix matrix;
@@ -70,15 +64,15 @@ struct _matrix_
 
 template <typename _Type, uint _Columns, uint _Rows, uint _Extra = 0>
 struct matrix_
-	:
+:
 	_matrix_<matrix_<_Type, _Columns, _Rows>, _Type, _Columns, _Rows, sizeof(_Type) * (_Columns + _Extra)>
 {
-    _Type m[_Rows][_Columns + _Extra];
+	_Type m[_Rows][_Columns + _Extra];
 };
 
 template <typename _Type>
 struct matrix_<_Type, 1, 1>
-	:
+:
 	_matrix_<matrix_<_Type, 1, 1>, _Type, 1, 1>
 {
 	_Type m11;
@@ -89,73 +83,73 @@ struct matrix_<_Type, 1, 1>
 
 template <typename _Type>
 struct matrix_<_Type, 2, 2>
-	:
+:
 	_matrix_<matrix_<_Type, 2, 2>, _Type, 2, 2>
 {
 	_Type m11, m12,
-	      m21, m22;
+		  m21, m22;
 
 	inline matrix_();
 	inline matrix_(_Type _m11, _Type _m12,
-	               _Type _m21, _Type _m22);
+				   _Type _m21, _Type _m22);
 };
 
 template <typename _Type>
 struct matrix_<_Type, 3, 3>
-	:
+:
 	_matrix_<matrix_<_Type, 3, 3>, _Type, 3, 3>
 {
 	_Type m11, m12, m13,
-	      m21, m22, m23,
-	      m31, m32, m33;
+		  m21, m22, m23,
+		  m31, m32, m33;
 
 	inline matrix_();
 	inline matrix_(_Type _m11, _Type _m12, _Type _m13,
-	               _Type _m21, _Type _m22, _Type _m23,
-	               _Type _m31, _Type _m32, _Type _m33);
+				   _Type _m21, _Type _m22, _Type _m23,
+				   _Type _m31, _Type _m32, _Type _m33);
 };
 
 template <typename _Type>
 struct matrix_<_Type, 3, 2>
-	:
+:
 	_matrix_<matrix_<_Type, 3, 2>, _Type, 3, 2>
 {
 	_Type m11, m12, m13,
-	      m21, m22, m23;
+		  m21, m22, m23;
 
 	inline matrix_();
 	inline matrix_(_Type _m11, _Type _m12, _Type _m13,
-	               _Type _m21, _Type _m22, _Type _m23);
+				   _Type _m21, _Type _m22, _Type _m23);
 };
 
 template <typename _Type>
 struct matrix_<_Type, 4, 4>
-	:
+:
 	_matrix_<matrix_<_Type, 4, 4>, _Type, 4, 4>
 {
 	_Type m11, m12, m13, m14,
-	      m21, m22, m23, m24,
-	      m31, m32, m33, m34,
-	      m41, m42, m43, m44;
+		  m21, m22, m23, m24,
+		  m31, m32, m33, m34,
+		  m41, m42, m43, m44;
 
 	inline matrix_();
 	inline matrix_(_Type _m11, _Type _m12, _Type _m13, _Type _m14,
-	               _Type _m21, _Type _m22, _Type _m23, _Type _m24,
-	               _Type _m31, _Type _m32, _Type _m33, _Type _m34,
-	               _Type _m41, _Type _m42, _Type _m43, _Type _m44);
+				   _Type _m21, _Type _m22, _Type _m23, _Type _m24,
+				   _Type _m31, _Type _m32, _Type _m33, _Type _m34,
+				   _Type _m41, _Type _m42, _Type _m43, _Type _m44);
 };
 
 template <typename _Type>
 struct matrix_<_Type, 4, 2>
-	:
+:
 	_matrix_<matrix_<_Type, 4, 2>, _Type, 4, 2>
 {
 	_Type m11, m12, m13, m14,
-	      m21, m22, m23, m24;
+		  m21, m22, m23, m24;
 
 	inline matrix_();
 	inline matrix_(_Type _m11, _Type _m12, _Type _m13, _Type _m14,
-	               _Type _m21, _Type _m22, _Type _m23, _Type _m24);
+				   _Type _m21, _Type _m22, _Type _m23, _Type _m24);
 };
 
 template <typename _T, uint _C, uint _R, uint _E>
@@ -188,42 +182,41 @@ typedef matrix_<real, 4, 2> r4x2, real4x2;
 
 /// zero 3x3 matrix of float
 const f3x3 f3x3_0(f_0, f_0, f_0,
-                  f_0, f_0, f_0,
-                  f_0, f_0, f_0);
+				  f_0, f_0, f_0,
+				  f_0, f_0, f_0);
 /// unit 3x3 matrix of float
 const f3x3 f3x3_1(f_1, f_0, f_0,
-                  f_0, f_1, f_0,
-                  f_0, f_0, f_1);
+				  f_0, f_1, f_0,
+				  f_0, f_0, f_1);
 /// zero 4x4 matrix of float
 const f4x4 f4x4_0(f_0, f_0, f_0, f_0,
-                  f_0, f_0, f_0, f_0,
-                  f_0, f_0, f_0, f_0,
-                  f_0, f_0, f_0, f_0);
+				  f_0, f_0, f_0, f_0,
+				  f_0, f_0, f_0, f_0,
+				  f_0, f_0, f_0, f_0);
 /// unit 4x4 matrix of float
 const f4x4 f4x4_1(f_1, f_0, f_0, f_0,
-                  f_0, f_1, f_0, f_0,
-                  f_0, f_0, f_1, f_0,
-                  f_0, f_0, f_0, f_1);
+				  f_0, f_1, f_0, f_0,
+				  f_0, f_0, f_1, f_0,
+				  f_0, f_0, f_0, f_1);
 /// zero 3x3 matrix of real
 const r3x3 r3x3_0(r_0, r_0, r_0,
-                  r_0, r_0, r_0,
-                  r_0, r_0, r_0);
+				  r_0, r_0, r_0,
+				  r_0, r_0, r_0);
 /// unit 3x3 matrix of real
 const r3x3 r3x3_1(r_1, r_0, r_0,
-                  r_0, r_1, r_0,
-                  r_0, r_0, r_1);
+				  r_0, r_1, r_0,
+				  r_0, r_0, r_1);
 /// zero 4x4 matrix of real
 const r4x4 r4x4_0(r_0, r_0, r_0, r_0,
-                  r_0, r_0, r_0, r_0,
-                  r_0, r_0, r_0, r_0,
-                  r_0, r_0, r_0, r_0);
+				  r_0, r_0, r_0, r_0,
+				  r_0, r_0, r_0, r_0,
+				  r_0, r_0, r_0, r_0);
 /// unit 4x4 matrix of real
 const r4x4 r4x4_1(r_1, r_0, r_0, r_0,
-                  r_0, r_1, r_0, r_0,
-                  r_0, r_0, r_1, r_0,
-                  r_0, r_0, r_0, r_1);
-
-
-#include "matrix.inl"
+				  r_0, r_1, r_0, r_0,
+				  r_0, r_0, r_1, r_0,
+				  r_0, r_0, r_0, r_1);
 
 DECLARE_UTEST(matrix);
+
+#include "matrix.inl"
