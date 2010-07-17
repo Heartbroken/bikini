@@ -109,6 +109,9 @@
     <ClCompile Include="utest.cpp">
       <Filter>utest</Filter>
     </ClCompile>
+    <ClCompile Include="vector.utest.cpp">
+      <Filter>vector</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\include\bikini\base\color.inl">
