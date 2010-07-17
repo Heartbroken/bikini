@@ -171,6 +171,7 @@
     <ClCompile Include="matrix.utest.cpp" />
     <ClCompile Include="string.cpp" />
     <ClCompile Include="utest.cpp" />
+    <ClCompile Include="vector.utest.cpp" />
     <ClCompile Include="watch.cpp" />
   </ItemGroup>
   <ItemGroup>
