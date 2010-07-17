@@ -150,7 +150,7 @@ TEST(matrix, div_scalar_assign_op_divs_elements_by_scalar)
 	EXPECT_EQ(7*2, l_m.m31); EXPECT_EQ(8*2, l_m.m32); EXPECT_EQ(9*2, l_m.m33);
 }
 
-TEST(matrix, add_operator_makes_per_element_sum)
+TEST(matrix, add_op_makes_per_element_sum)
 {
 	// given
 	bk::real3x3 l_m1( 1, 2, 3,
@@ -167,7 +167,7 @@ TEST(matrix, add_operator_makes_per_element_sum)
 	EXPECT_EQ(10, l_m3.m21); EXPECT_EQ(10, l_m3.m22); EXPECT_EQ(10, l_m3.m23);
 	EXPECT_EQ(10, l_m3.m31); EXPECT_EQ(10, l_m3.m32); EXPECT_EQ(10, l_m3.m33);
 }
-TEST(matrix, sub_operator_makes_per_element_diff)
+TEST(matrix, sub_op_makes_per_element_diff)
 {
 	// given
 	bk::real3x3 l_m1( 1, 2, 3,
@@ -184,7 +184,7 @@ TEST(matrix, sub_operator_makes_per_element_diff)
 	EXPECT_EQ(0, l_m3.m21); EXPECT_EQ(0, l_m3.m22); EXPECT_EQ(0, l_m3.m23);
 	EXPECT_EQ(0, l_m3.m31); EXPECT_EQ(0, l_m3.m32); EXPECT_EQ(0, l_m3.m33);
 }
-TEST(matrix, mul_operator_makes_per_element_prod)
+TEST(matrix, mul_op_makes_per_element_prod)
 {
 	// given
 	bk::real3x3 l_m1( 1, 2, 3,
@@ -201,7 +201,7 @@ TEST(matrix, mul_operator_makes_per_element_prod)
 	EXPECT_EQ(4*4, l_m3.m21); EXPECT_EQ(5*5, l_m3.m22); EXPECT_EQ(6*6, l_m3.m23);
 	EXPECT_EQ(7*7, l_m3.m31); EXPECT_EQ(8*8, l_m3.m32); EXPECT_EQ(9*9, l_m3.m33);
 }
-TEST(matrix, div_operator_makes_per_element_quot)
+TEST(matrix, div_op_makes_per_element_quot)
 {
 	// given
 	bk::real3x3 l_m1( 1, 2, 3,
@@ -249,6 +249,37 @@ TEST(matrix, div_scalar_op_divs_elements_by_scalar)
 	EXPECT_EQ(7*2, l_m2.m31); EXPECT_EQ(8*2, l_m2.m32); EXPECT_EQ(9*2, l_m2.m33);
 }
 
+TEST(matrix, equal_op_compares_two_matrices)
+{
+	// given
+	bk::real3x3 l_m1( 1, 2, 3,
+	                  4, 5, 6,
+	                  7, 8, 9 ), l_m2( 1, 2, 3,
+	                                   4, 5, 6,
+	                                   7, 8, 9 );
+
+	// when
+	bool l_r = (l_m1 == l_m2);
+
+	// then
+	EXPECT_TRUE(l_r);
+}
+TEST(matrix, not_equal_op_compares_two_matrices)
+{
+	// given
+	bk::real3x3 l_m1( 1, 2, 3,
+	                  4, 5, 6,
+	                  7, 8, 9 ), l_m2( 1, 2, 3,
+	                                   4, 5, 6,
+	                                   7, 8, 9 );
+
+	// when
+	bool l_r = (l_m1 != l_m2);
+
+	// then
+	EXPECT_FALSE(l_r);
+}
+
 TEST(matrix, transpose_fn_makes_transposed_matrix)
 {
 	// given
@@ -290,4 +321,36 @@ TEST(matrix, determinant_fn_calcs_matrix_determinant)
 
 	// then
 	EXPECT_EQ(1, l_d);
+}
+TEST(matrix, inverse_fn_makes_inverted_matrix)
+{
+	// given
+	bk::real3x3 l_m1( 2, 2, 0,
+	                  0, 2, 0,
+	                  0, 2, 2 );
+
+	// when
+	bk::real3x3 l_m2 = bk::inverse(l_m1);
+
+	// then
+	EXPECT_EQ(0.5, l_m2.m11); EXPECT_EQ(-.5, l_m2.m12); EXPECT_EQ(0.0, l_m2.m13);
+	EXPECT_EQ(0.0, l_m2.m21); EXPECT_EQ(0.5, l_m2.m22); EXPECT_EQ(0.0, l_m2.m23);
+	EXPECT_EQ(0.0, l_m2.m31); EXPECT_EQ(-.5, l_m2.m32); EXPECT_EQ(0.5, l_m2.m33);
+}
+TEST(matrix, mul_fn_multiplies_two_matrices)
+{
+	// given
+	bk::real3x3 l_m1( 1, 2, 3,
+	                  4, 5, 6,
+	                  7, 8, 9 ), l_m2( 9, 8, 7,
+	                                   6, 5, 4,
+	                                   3, 2, 1 );
+
+	// when
+	bk::real3x3 l_m3 = bk::mul(l_m1, l_m2);
+
+	// then
+	EXPECT_EQ( 30, l_m3.m11); EXPECT_EQ( 24, l_m3.m12); EXPECT_EQ( 18, l_m3.m13);
+	EXPECT_EQ( 84, l_m3.m21); EXPECT_EQ( 69, l_m3.m22); EXPECT_EQ( 54, l_m3.m23);
+	EXPECT_EQ(138, l_m3.m31); EXPECT_EQ(114, l_m3.m32); EXPECT_EQ( 90, l_m3.m33);
 }

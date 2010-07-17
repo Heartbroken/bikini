@@ -17,24 +17,24 @@ struct _matrix_
 	static const uint columns = _Columns;
 	static const uint rows = _Rows;
 
-	inline _matrix_& operator - ();
-	inline _matrix_& operator = (const _matrix_ &_m);
-	inline _matrix_& operator += (const _matrix_ &_m);
-	inline _matrix_& operator -= (const _matrix_ &_m);
-	inline _matrix_& operator *= (const _matrix_ &_m);
-	inline _matrix_& operator /= (const _matrix_ &_m);
-	inline _matrix_& operator *= (const _Element & _s);
-	inline _matrix_& operator /= (const _Element & _s);
+	inline _matrix_ & operator - ();
+	inline _matrix_ & operator = (const _matrix_ & _m);
+	inline _matrix_ & operator += (const _matrix_ & _m);
+	inline _matrix_ & operator -= (const _matrix_ & _m);
+	inline _matrix_ & operator *= (const _matrix_ & _m);
+	inline _matrix_ & operator /= (const _matrix_ & _m);
+	inline _matrix_ & operator *= (const _Element & _s);
+	inline _matrix_ & operator /= (const _Element & _s);
 
-	inline const _Matrix operator + (const _matrix_ &_m) const;
-	inline const _Matrix operator - (const _matrix_ &_m) const;
-	inline const _Matrix operator * (const _matrix_ &_m) const;
-	inline const _Matrix operator / (const _matrix_ &_m) const;
+	inline const _Matrix operator + (const _matrix_ & _m) const;
+	inline const _Matrix operator - (const _matrix_ & _m) const;
+	inline const _Matrix operator * (const _matrix_ & _m) const;
+	inline const _Matrix operator / (const _matrix_ & _m) const;
 	inline const _Matrix operator * (const _Element & _s) const;
 	inline const _Matrix operator / (const _Element & _s) const;
 
-	inline bool operator == (const _matrix_ &_m) const;
-	inline bool operator != (const _matrix_ &_m) const;
+	inline bool operator == (const _matrix_ & _m) const;
+	inline bool operator != (const _matrix_ & _m) const;
 
 	template <uint _I, uint _J> inline _Element & cell_();
 	template <uint _I, uint _J> inline const _Element & cell_() const;
@@ -44,8 +44,8 @@ struct _matrix_
 	inline const _row & operator [] (uint _i) const;
 	inline _row & operator [] (uint _i);
 
-	inline operator _Matrix& ();
-	inline operator const _Matrix& () const;
+	inline operator _Matrix & ();
+	inline operator const _Matrix & () const;
 };
 
 template <typename _Type, uint _Columns, uint _Rows, uint _Extra = 0>
@@ -157,11 +157,14 @@ template <typename _T, uint _C, uint _M, uint _R, uint _Ea, uint _Eb>
 inline const matrix_<_T, _C, _R> mul(matrix_<_T, _M, _R, _Ea> &_a, matrix_<_T, _C, _M, _Eb> &_b);
 
 //
+typedef matrix_<float, 1, 1> f1x1, float1x1;
 typedef matrix_<float, 2, 2> f2x2, float2x2;
 typedef matrix_<float, 3, 3> f3x3, float3x3;
 typedef matrix_<float, 3, 2> f3x2, float3x2;
 typedef matrix_<float, 4, 4> f4x4, float4x4;
 typedef matrix_<float, 4, 2> f4x2, float4x2;
+//
+typedef matrix_<real, 1, 1> r1x1, real1x1;
 typedef matrix_<real, 2, 2> r2x2, real2x2;
 typedef matrix_<real, 3, 3> r3x3, real3x3;
 typedef matrix_<real, 3, 2> r3x2, real3x2;
