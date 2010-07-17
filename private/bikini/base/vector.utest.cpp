@@ -71,3 +71,51 @@ TEST(vector, normalize_fn_calcs_normalized_vector)
 	EXPECT_NEAR(1, l_length2, bk::eps);
 	EXPECT_NEAR(l_length1, l_dot, bk::eps);
 }
+
+TEST(vector, cross_fn_calcs_cross_vector_of_vector2)
+{
+	// given
+	bk::real2 l_v1(1, 2);
+
+	// when
+	bk::real2 l_v2 = bk::cross(l_v1);
+
+	// then
+	EXPECT_EQ( 2, l_v2.x);
+	EXPECT_EQ(-1, l_v2.y);
+}
+TEST(vector, cross_fn_calcs_cross_scalar_of_two_vector2)
+{
+	// given
+	bk::real2 l_v1(1, 2), l_v2(2, 1);
+
+	// when
+	bk::real l_cross = bk::cross(l_v1, l_v2);
+
+	// then
+	EXPECT_EQ(-3, l_cross);
+}
+TEST(vector, cross_fn_calcs_cross_vector_of_two_vector3)
+{
+	// given
+	bk::real3 l_v1(1, 2, 3), l_v2(3, 2, 1);
+
+	// when
+	bk::real3 l_v3 = bk::cross(l_v1, l_v2);
+
+	// then
+	EXPECT_EQ(-4, l_v3.x);
+	EXPECT_EQ( 8, l_v3.y);
+	EXPECT_EQ( 0, l_v3.z);
+}
+TEST(vector, cross_fn_calcs_cross_scalar_of_three_vector3)
+{
+	// given
+	bk::real3 l_v1(1, 2, 3), l_v2(3, 2, 1), l_v3(1, 3, 2);
+
+	// when
+	bk::real l_cross = bk::cross(l_v1, l_v2, l_v3);
+
+	// then
+	EXPECT_EQ(20, l_cross);
+}
