@@ -338,3 +338,41 @@ TEST(matrix, div_scalar_op_divs_elements_by_scalar)
 	EXPECT_EQ(8*2, l_m2.m32);
 	EXPECT_EQ(9*2, l_m2.m33);
 }
+
+TEST(matrix, transpose_fn_makes_transposed_matrix)
+{
+	// given
+	bk::real3x3 l_m1( 1, 2, 3,
+	                  4, 5, 6,
+	                  7, 8, 9 );
+
+	// when
+	bk::real3x3 l_m2 = bk::transpose(l_m1);
+
+	// then
+	EXPECT_EQ(1, l_m2.m11);
+	EXPECT_EQ(4, l_m2.m12);
+	EXPECT_EQ(7, l_m2.m13);
+	EXPECT_EQ(2, l_m2.m21);
+	EXPECT_EQ(5, l_m2.m22);
+	EXPECT_EQ(8, l_m2.m23);
+	EXPECT_EQ(3, l_m2.m31);
+	EXPECT_EQ(6, l_m2.m32);
+	EXPECT_EQ(9, l_m2.m33);
+}
+TEST(matrix, minor_fn_calcs_matrix_minor)
+{
+	// given
+	bk::real3x3 l_m1( 1, 2, 3,
+	                  4, 5, 6,
+	                  7, 8, 9 );
+
+	// when
+	bk::real2x2 l_m2 = bk::minor_<1, 1>(l_m1);
+
+	// then
+	EXPECT_EQ(1, l_m2.m11);
+	EXPECT_EQ(3, l_m2.m12);
+	EXPECT_EQ(7, l_m2.m21);
+	EXPECT_EQ(9, l_m2.m22);
+}

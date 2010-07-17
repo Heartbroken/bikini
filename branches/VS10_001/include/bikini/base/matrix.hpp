@@ -157,10 +157,12 @@ template <typename _T, uint _C, uint _M, uint _R, uint _Ea, uint _Eb>
 inline const matrix_<_T, _C, _R> mul(matrix_<_T, _M, _R, _Ea> &_a, matrix_<_T, _C, _M, _Eb> &_b);
 
 //
+typedef matrix_<float, 2, 2> f2x2, float2x2;
 typedef matrix_<float, 3, 3> f3x3, float3x3;
 typedef matrix_<float, 3, 2> f3x2, float3x2;
 typedef matrix_<float, 4, 4> f4x4, float4x4;
 typedef matrix_<float, 4, 2> f4x2, float4x2;
+typedef matrix_<real, 2, 2> r2x2, real2x2;
 typedef matrix_<real, 3, 3> r3x3, real3x3;
 typedef matrix_<real, 3, 2> r3x2, real3x2;
 typedef matrix_<real, 4, 4> r4x4, real4x4;
