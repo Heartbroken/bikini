@@ -119,3 +119,19 @@ TEST(vector, cross_fn_calcs_cross_scalar_of_three_vector3)
 	// then
 	EXPECT_EQ(20, l_cross);
 }
+
+TEST(vector, mul_fn_multiplies_vector_and_matrix)
+{
+	// given
+	bk::real3 l_v1(1, 0, 0); bk::real3x3 l_m( 0, 1, 0,
+											 1, 0, 0,
+											 0, 0, 1 );
+
+	// when
+	bk::real3 l_v2 = bk::mul(l_v1, l_m);
+
+	// then
+	EXPECT_EQ(0, l_v2.x);
+	EXPECT_EQ(1, l_v2.y);
+	EXPECT_EQ(0, l_v2.z);
+}
