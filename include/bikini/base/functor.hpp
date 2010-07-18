@@ -210,11 +210,13 @@ private:
 ///	A functor with up to ten arguments
 /**	[TODO]
  */
-template<
-typename _R = void,
-         typename _A0 = notype, typename _A1 = notype, typename _A2 = notype, typename _A3 = notype, typename _A4 = notype,
-         typename _A5 = notype, typename _A6 = notype, typename _A7 = notype, typename _A8 = notype, typename _A9 = notype
-         > struct functor_
+template
+<
+	typename _R = void,
+    typename _A0 = notype, typename _A1 = notype, typename _A2 = notype, typename _A3 = notype, typename _A4 = notype,
+    typename _A5 = notype, typename _A6 = notype, typename _A7 = notype, typename _A8 = notype, typename _A9 = notype
+>
+struct functor_
 {
 	typedef _R rettype;
 	typedef make_typelist_<_A0, _A1, _A2, _A3, _A4, _A5, _A6, _A7, _A8, _A9> arglist;
