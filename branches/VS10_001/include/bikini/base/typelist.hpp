@@ -111,7 +111,8 @@ template<> struct typelist_<notype>
 /**
 
  */
-template<
+template
+<
 	typename _Type0,
 	typename _Type01 = notype, typename _Type02 = notype, typename _Type03 = notype, typename _Type04 = notype, typename _Type05 = notype,
 	typename _Type06 = notype, typename _Type07 = notype, typename _Type08 = notype, typename _Type09 = notype, typename _Type10 = notype,
