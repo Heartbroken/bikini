@@ -722,7 +722,7 @@ bool rendering_D3D11::execute(const create_vformat &_command)
 		l_DX11_element.InstanceDataStepRate = 0;
 
 		achar l_line[64];
-		if (sprintf(l_line, "	%s p%d : %s;\n", get_HLSL_type(l_element.type), l_element_count, l_element.semantic) == -1) return false;
+		if (sprintf_s(l_line, 64, "	%s p%d : %s;\n", get_HLSL_type(l_element.type), l_element_count, l_element.semantic) == -1) return false;
 		l_code += l_line;
 
 		++l_element_count;

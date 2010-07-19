@@ -10,5 +10,4 @@
 
 #include <bikini/base.hpp>
 
-#include <gtest/gtest.h>
 #pragma comment(lib, "gtest ("_PLATFORM_"!"_CONFIGURATION_")")

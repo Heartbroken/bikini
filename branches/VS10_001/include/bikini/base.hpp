@@ -37,6 +37,8 @@
 #include <fstream>
 #include <sstream>
 
+#include <gtest/gtest.h>
+
 /// bikini-iii main namespace
 namespace bk   /*--------------------------------------------------------------------------------*/
 {
