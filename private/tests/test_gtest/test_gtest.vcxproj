@@ -108,7 +108,15 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <Profile>true</Profile>
     </Link>
+    <PostBuildEvent>
+      <Command>"$(VSInstallDir)Team Tools\Performance Tools\vsinstr.exe" "$(TargetPath)" /COVERAGE
+"$(VSInstallDir)Team Tools\Performance Tools\VSPerfCmd.exe" -START:COVERAGE -OUTPUT:"$(TargetPath).coverage"
+"$(TargetPath)"
+"$(VSInstallDir)Team Tools\Performance Tools\VSPerfCmd.exe"  /SHUTDOWN
+"$(TargetPath).coverage"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
