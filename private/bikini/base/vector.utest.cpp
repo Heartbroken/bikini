@@ -10,6 +10,9 @@
 
 UTEST_FILE(vector);
 
+namespace utest
+{
+
 TEST(vector, constructor_sets_elements)
 {
 	// when
@@ -134,4 +137,6 @@ TEST(vector, mul_fn_multiplies_vector_and_matrix)
 	EXPECT_EQ(0, l_v2.x);
 	EXPECT_EQ(1, l_v2.y);
 	EXPECT_EQ(0, l_v2.z);
+}
+
 }

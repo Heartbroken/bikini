@@ -10,6 +10,9 @@
 
 UTEST_FILE(matrix);
 
+namespace utest
+{
+
 TEST(matrix, constructor_sets_elements)
 {
 	// when
@@ -353,4 +356,6 @@ TEST(matrix, mul_fn_multiplies_two_matrices)
 	EXPECT_EQ( 30, l_m3.m11); EXPECT_EQ( 24, l_m3.m12); EXPECT_EQ( 18, l_m3.m13);
 	EXPECT_EQ( 84, l_m3.m21); EXPECT_EQ( 69, l_m3.m22); EXPECT_EQ( 54, l_m3.m23);
 	EXPECT_EQ(138, l_m3.m31); EXPECT_EQ(114, l_m3.m32); EXPECT_EQ( 90, l_m3.m33);
+}
+
 }

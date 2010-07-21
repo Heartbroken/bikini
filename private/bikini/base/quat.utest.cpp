@@ -10,6 +10,9 @@
 
 UTEST_FILE(quat);
 
+namespace utest
+{
+
 TEST(quat, constructor_sets_elements)
 {
 	// when
@@ -22,3 +25,4 @@ TEST(quat, constructor_sets_elements)
 	EXPECT_EQ(1, l_q.r);
 }
 
+}
