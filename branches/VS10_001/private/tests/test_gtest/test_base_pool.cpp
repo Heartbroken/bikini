@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+namespace utest
+{
+
 // base/pool
 TEST(base_pool, should_report_value_exists)
 {
@@ -60,3 +63,4 @@ TEST(base_pool, should_report_pool_is_empty)
 	EXPECT_TRUE(l_empty2);
 }
 
+}
