@@ -15,6 +15,7 @@ namespace Studio
         private bool m_bSaveLayout = true;
 		private DeserializeDockContent m_deserializeDockContent;
 		private ProjectExplorer m_projectExplorer = new ProjectExplorer();
+        private ResourceExplorer m_resourceExplorer = new ResourceExplorer();
 		private DummyPropertyWindow m_propertyWindow = new DummyPropertyWindow();
 		private DummyToolbox m_toolbox = new DummyToolbox();
 		private DummyOutputWindow m_outputWindow = new DummyOutputWindow();
@@ -43,7 +44,8 @@ namespace Studio
 		private void menuItemProjectExplorer_Click(object sender, System.EventArgs e)
 		{
 			m_projectExplorer.Show(dockPanel);
-		}
+            m_resourceExplorer.Show(dockPanel);
+        }
 
 		private void menuItemPropertyWindow_Click(object sender, System.EventArgs e)
 		{
@@ -418,6 +420,7 @@ namespace Studio
 		{
 			// we don't want to create another instance of tool window, set DockPanel to null
 			m_projectExplorer.DockPanel = null;
+            m_resourceExplorer.DockPanel = null;
 			m_propertyWindow.DockPanel = null;
 			m_toolbox.DockPanel = null;
 			m_outputWindow.DockPanel = null;

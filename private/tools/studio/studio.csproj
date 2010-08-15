@@ -276,6 +276,12 @@
     <Compile Include="NewProjectDialog.Designer.cs">
       <DependentUpon>NewProjectDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="ResourceExplorer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ResourceExplorer.Designer.cs">
+      <DependentUpon>ResourceExplorer.cs</DependentUpon>
+    </Compile>
     <Compile Include="ScriptDoc.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -552,6 +558,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResourceExplorer.resx">
+      <DependentUpon>ResourceExplorer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\DockPanel.xml">
       <SubType>Designer</SubType>
@@ -895,6 +904,7 @@
     <Content Include="Alsing.SyntaxBox\Text\ReadMe.txt" />
     <Content Include="Images\FolderClose.bmp" />
     <Content Include="Images\FolderOpen.bmp" />
+    <Content Include="Images\Resources.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
