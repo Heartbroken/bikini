@@ -14,11 +14,11 @@ using System.Diagnostics;
 
 namespace Studio
 {
-	public partial class DummySolutionExplorer : ToolWindow
+	public partial class ProjectExplorer : ToolWindow
 	{
 		const Int32 StartDragDist = 3;
 
-		public DummySolutionExplorer()
+		public ProjectExplorer()
 		{
 			InitializeComponent();
 

@@ -14,7 +14,7 @@ namespace Studio
     {
         private bool m_bSaveLayout = true;
 		private DeserializeDockContent m_deserializeDockContent;
-		private DummySolutionExplorer m_solutionExplorer = new DummySolutionExplorer();
+		private ProjectExplorer m_solutionExplorer = new ProjectExplorer();
 		private DummyPropertyWindow m_propertyWindow = new DummyPropertyWindow();
 		private DummyToolbox m_toolbox = new DummyToolbox();
 		private DummyOutputWindow m_outputWindow = new DummyOutputWindow();
@@ -27,7 +27,7 @@ namespace Studio
             InitializeComponent();
             showRightToLeft.Checked = (RightToLeft == RightToLeft.Yes);
             RightToLeftLayout = showRightToLeft.Checked;
-            m_solutionExplorer = new DummySolutionExplorer();
+            m_solutionExplorer = new ProjectExplorer();
             m_solutionExplorer.RightToLeftLayout = RightToLeftLayout;
             //m_solutionExplorer.m_treeView.Nodes["solutionNode"].Expand();
 			m_deserializeDockContent = new DeserializeDockContent(GetContentFromPersistString);
@@ -278,7 +278,7 @@ namespace Studio
 
 		private IDockContent GetContentFromPersistString(string persistString)
 		{
-			if (persistString == typeof(DummySolutionExplorer).ToString())
+			if (persistString == typeof(ProjectExplorer).ToString())
 				return m_solutionExplorer;
 			else if (persistString == typeof(DummyPropertyWindow).ToString())
 				return m_propertyWindow;

@@ -411,11 +411,11 @@
     <Compile Include="DummyPropertyWindow.Designer.cs">
       <DependentUpon>DummyPropertyWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="DummySolutionExplorer.cs">
+    <Compile Include="ProjectExplorer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DummySolutionExplorer.Designer.cs">
-      <DependentUpon>DummySolutionExplorer.cs</DependentUpon>
+    <Compile Include="ProjectExplorer.Designer.cs">
+      <DependentUpon>ProjectExplorer.cs</DependentUpon>
     </Compile>
     <Compile Include="DummyTaskList.cs">
       <SubType>Form</SubType>
@@ -467,9 +467,9 @@
       <SubType>Designer</SubType>
       <DependentUpon>DummyPropertyWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DummySolutionExplorer.resx">
+    <EmbeddedResource Include="ProjectExplorer.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>DummySolutionExplorer.cs</DependentUpon>
+      <DependentUpon>ProjectExplorer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DummyTaskList.resx">
       <SubType>Designer</SubType>
