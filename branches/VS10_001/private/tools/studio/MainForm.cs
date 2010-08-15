@@ -14,7 +14,7 @@ namespace Studio
     {
         private bool m_bSaveLayout = true;
 		private DeserializeDockContent m_deserializeDockContent;
-		private ProjectExplorer m_solutionExplorer = new ProjectExplorer();
+		private ProjectExplorer m_projectExplorer = new ProjectExplorer();
 		private DummyPropertyWindow m_propertyWindow = new DummyPropertyWindow();
 		private DummyToolbox m_toolbox = new DummyToolbox();
 		private DummyOutputWindow m_outputWindow = new DummyOutputWindow();
@@ -27,9 +27,9 @@ namespace Studio
             InitializeComponent();
             showRightToLeft.Checked = (RightToLeft == RightToLeft.Yes);
             RightToLeftLayout = showRightToLeft.Checked;
-            m_solutionExplorer = new ProjectExplorer();
-            m_solutionExplorer.RightToLeftLayout = RightToLeftLayout;
-            //m_solutionExplorer.m_treeView.Nodes["solutionNode"].Expand();
+            m_projectExplorer = new ProjectExplorer();
+            m_projectExplorer.RightToLeftLayout = RightToLeftLayout;
+            //m_projectExplorer.m_treeView.Nodes["solutionNode"].Expand();
 			m_deserializeDockContent = new DeserializeDockContent(GetContentFromPersistString);
 
             //Bikini.Test(-125, "Test call");
@@ -40,9 +40,9 @@ namespace Studio
 			Close();
 		}
 
-		private void menuItemSolutionExplorer_Click(object sender, System.EventArgs e)
+		private void menuItemProjectExplorer_Click(object sender, System.EventArgs e)
 		{
-			m_solutionExplorer.Show(dockPanel);
+			m_projectExplorer.Show(dockPanel);
 		}
 
 		private void menuItemPropertyWindow_Click(object sender, System.EventArgs e)
@@ -111,7 +111,7 @@ namespace Studio
 			if (l_newProjectDlg.ShowDialog(this) == DialogResult.OK)
 			{
 				Guid l_project = Bikini.NewProject(l_newProjectDlg.ProjectLocation, l_newProjectDlg.ProjectName);
-				m_solutionExplorer.UpdateTreeView(l_project);
+				m_projectExplorer.UpdateTreeView(l_project);
 			}
 
 			/////////
@@ -187,7 +187,7 @@ namespace Studio
 			if (openProjectDialog.ShowDialog() == DialogResult.OK)
 			{
 				Guid l_project = Bikini.OpenProject(openProjectDialog.FileName);
-                m_solutionExplorer.UpdateTreeView(l_project);
+                m_projectExplorer.UpdateTreeView(l_project);
             }
 
 			//OpenFileDialog openFile = new OpenFileDialog();
@@ -279,7 +279,7 @@ namespace Studio
 		private IDockContent GetContentFromPersistString(string persistString)
 		{
 			if (persistString == typeof(ProjectExplorer).ToString())
-				return m_solutionExplorer;
+				return m_projectExplorer;
 			else if (persistString == typeof(DummyPropertyWindow).ToString())
 				return m_propertyWindow;
 			else if (persistString == typeof(DummyToolbox).ToString())
@@ -343,8 +343,8 @@ namespace Studio
                 menuItemNew_Click(null, null);
             else if (e.ClickedItem == toolBarButtonOpen)
                 menuItemOpen_Click(null, null);
-            else if (e.ClickedItem == toolBarButtonSolutionExplorer)
-                menuItemSolutionExplorer_Click(null, null);
+            else if (e.ClickedItem == toolBarButtonProjectExplorer)
+                menuItemProjectExplorer_Click(null, null);
             else if (e.ClickedItem == toolBarButtonPropertyWindow)
                 menuItemPropertyWindow_Click(null, null);
             else if (e.ClickedItem == toolBarButtonToolbox)
@@ -380,10 +380,10 @@ namespace Studio
 		{
 			dockPanel.SuspendLayout(true);
 
-			m_solutionExplorer.Show(dockPanel, DockState.DockRight);
-			m_propertyWindow.Show(m_solutionExplorer.Pane, m_solutionExplorer);
+			m_projectExplorer.Show(dockPanel, DockState.DockRight);
+			m_propertyWindow.Show(m_projectExplorer.Pane, m_projectExplorer);
 			m_toolbox.Show(dockPanel, new Rectangle(98, 133, 200, 383));
-			m_outputWindow.Show(m_solutionExplorer.Pane, DockAlignment.Bottom, 0.35);
+			m_outputWindow.Show(m_projectExplorer.Pane, DockAlignment.Bottom, 0.35);
 			m_taskList.Show(m_toolbox.Pane, DockAlignment.Left, 0.4);
 
 			CloseAllDocuments();
@@ -417,7 +417,7 @@ namespace Studio
 		private void CloseAllContents()
 		{
 			// we don't want to create another instance of tool window, set DockPanel to null
-			m_solutionExplorer.DockPanel = null;
+			m_projectExplorer.DockPanel = null;
 			m_propertyWindow.DockPanel = null;
 			m_toolbox.DockPanel = null;
 			m_outputWindow.DockPanel = null;
@@ -509,7 +509,7 @@ namespace Studio
                 this.RightToLeft = RightToLeft.Yes;
                 this.RightToLeftLayout = true;
             }
-            m_solutionExplorer.RightToLeftLayout = this.RightToLeftLayout;
+            m_projectExplorer.RightToLeftLayout = this.RightToLeftLayout;
             showRightToLeft.Checked = !showRightToLeft.Checked;
         }
 
