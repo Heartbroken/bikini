@@ -55,7 +55,7 @@ namespace Studio
             this.menuItemExit = new System.Windows.Forms.ToolStripMenuItem();
             this.exitWithoutSavingLayout = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemView = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItemSolutionExplorer = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemProjectExplorer = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemPropertyWindow = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemToolbox = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemOutputWindow = new System.Windows.Forms.ToolStripMenuItem();
@@ -89,7 +89,7 @@ namespace Studio
             this.toolBarButtonNew = new System.Windows.Forms.ToolStripButton();
             this.toolBarButtonOpen = new System.Windows.Forms.ToolStripButton();
             this.toolBarButtonSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolBarButtonSolutionExplorer = new System.Windows.Forms.ToolStripButton();
+            this.toolBarButtonProjectExplorer = new System.Windows.Forms.ToolStripButton();
             this.toolBarButtonPropertyWindow = new System.Windows.Forms.ToolStripButton();
             this.toolBarButtonToolbox = new System.Windows.Forms.ToolStripButton();
             this.toolBarButtonOutputWindow = new System.Windows.Forms.ToolStripButton();
@@ -191,7 +191,7 @@ namespace Studio
             // menuItemView
             // 
             this.menuItemView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuItemSolutionExplorer,
+            this.menuItemProjectExplorer,
             this.menuItemPropertyWindow,
             this.menuItemToolbox,
             this.menuItemOutputWindow,
@@ -207,12 +207,12 @@ namespace Studio
             this.menuItemView.Size = new System.Drawing.Size(41, 20);
             this.menuItemView.Text = "&View";
             // 
-            // menuItemSolutionExplorer
+            // menuItemProjectExplorer
             // 
-            this.menuItemSolutionExplorer.Name = "menuItemSolutionExplorer";
-            this.menuItemSolutionExplorer.Size = new System.Drawing.Size(187, 22);
-            this.menuItemSolutionExplorer.Text = "&Project Explorer";
-            this.menuItemSolutionExplorer.Click += new System.EventHandler(this.menuItemSolutionExplorer_Click);
+            this.menuItemProjectExplorer.Name = "menuItemProjectExplorer";
+            this.menuItemProjectExplorer.Size = new System.Drawing.Size(187, 22);
+            this.menuItemProjectExplorer.Text = "&Project Explorer";
+            this.menuItemProjectExplorer.Click += new System.EventHandler(this.menuItemProjectExplorer_Click);
             // 
             // menuItemPropertyWindow
             // 
@@ -458,7 +458,7 @@ namespace Studio
             this.toolBarButtonNew,
             this.toolBarButtonOpen,
             this.toolBarButtonSeparator1,
-            this.toolBarButtonSolutionExplorer,
+            this.toolBarButtonProjectExplorer,
             this.toolBarButtonPropertyWindow,
             this.toolBarButtonToolbox,
             this.toolBarButtonOutputWindow,
@@ -490,12 +490,12 @@ namespace Studio
             this.toolBarButtonSeparator1.Name = "toolBarButtonSeparator1";
             this.toolBarButtonSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
-            // toolBarButtonSolutionExplorer
+            // toolBarButtonProjectExplorer
             // 
-            this.toolBarButtonSolutionExplorer.ImageIndex = 2;
-            this.toolBarButtonSolutionExplorer.Name = "toolBarButtonSolutionExplorer";
-            this.toolBarButtonSolutionExplorer.Size = new System.Drawing.Size(23, 22);
-            this.toolBarButtonSolutionExplorer.ToolTipText = "Project Explorer";
+            this.toolBarButtonProjectExplorer.ImageIndex = 2;
+            this.toolBarButtonProjectExplorer.Name = "toolBarButtonProjectExplorer";
+            this.toolBarButtonProjectExplorer.Size = new System.Drawing.Size(23, 22);
+            this.toolBarButtonProjectExplorer.ToolTipText = "Project Explorer";
             // 
             // toolBarButtonPropertyWindow
             // 
@@ -648,7 +648,7 @@ namespace Studio
         private System.Windows.Forms.ToolStripSeparator menuItem4;
         private System.Windows.Forms.ToolStripMenuItem menuItemExit;
         private System.Windows.Forms.ToolStripMenuItem menuItemView;
-        private System.Windows.Forms.ToolStripMenuItem menuItemSolutionExplorer;
+        private System.Windows.Forms.ToolStripMenuItem menuItemProjectExplorer;
         private System.Windows.Forms.ToolStripMenuItem menuItemPropertyWindow;
         private System.Windows.Forms.ToolStripMenuItem menuItemToolbox;
         private System.Windows.Forms.ToolStripMenuItem menuItemOutputWindow;
@@ -684,7 +684,7 @@ namespace Studio
         private System.Windows.Forms.ToolStripButton toolBarButtonNew;
         private System.Windows.Forms.ToolStripButton toolBarButtonOpen;
         private System.Windows.Forms.ToolStripSeparator toolBarButtonSeparator1;
-        private System.Windows.Forms.ToolStripButton toolBarButtonSolutionExplorer;
+        private System.Windows.Forms.ToolStripButton toolBarButtonProjectExplorer;
         private System.Windows.Forms.ToolStripButton toolBarButtonPropertyWindow;
         private System.Windows.Forms.ToolStripButton toolBarButtonToolbox;
         private System.Windows.Forms.ToolStripButton toolBarButtonOutputWindow;
