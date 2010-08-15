@@ -1,6 +1,6 @@
 namespace Studio
 {
-    partial class DummySolutionExplorer
+    partial class ProjectExplorer
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@ namespace Studio
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DummySolutionExplorer));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProjectExplorer));
 			this.m_treeView = new System.Windows.Forms.TreeView();
 			this.m_projectContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.buildToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -176,7 +176,7 @@ namespace Studio
 			this.m_treeViewImageList.Images.SetKeyName(19, "");
 			this.m_treeViewImageList.Images.SetKeyName(20, "Project.bmp");
 			// 
-			// DummySolutionExplorer
+			// ProjectExplorer
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.ClientSize = new System.Drawing.Size(245, 322);
@@ -184,7 +184,7 @@ namespace Studio
 			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.HideOnClose = true;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Name = "DummySolutionExplorer";
+			this.Name = "ProjectExplorer";
 			this.Padding = new System.Windows.Forms.Padding(0, 24, 0, 1);
 			this.ShowHint = Studio.WinFormsUI.Docking.DockState.DockRight;
 			this.TabText = "Project Explorer";

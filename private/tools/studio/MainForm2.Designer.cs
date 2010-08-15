@@ -211,7 +211,7 @@ namespace Studio
             // 
             this.menuItemSolutionExplorer.Name = "menuItemSolutionExplorer";
             this.menuItemSolutionExplorer.Size = new System.Drawing.Size(187, 22);
-            this.menuItemSolutionExplorer.Text = "&Solution Explorer";
+            this.menuItemSolutionExplorer.Text = "&Project Explorer";
             this.menuItemSolutionExplorer.Click += new System.EventHandler(this.menuItemSolutionExplorer_Click);
             // 
             // menuItemPropertyWindow
@@ -495,7 +495,7 @@ namespace Studio
             this.toolBarButtonSolutionExplorer.ImageIndex = 2;
             this.toolBarButtonSolutionExplorer.Name = "toolBarButtonSolutionExplorer";
             this.toolBarButtonSolutionExplorer.Size = new System.Drawing.Size(23, 22);
-            this.toolBarButtonSolutionExplorer.ToolTipText = "Solution Explorer";
+            this.toolBarButtonSolutionExplorer.ToolTipText = "Project Explorer";
             // 
             // toolBarButtonPropertyWindow
             // 
