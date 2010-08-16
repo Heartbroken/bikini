@@ -57,6 +57,7 @@
             treeNode1,
             treeNode2});
             this.m_treeView.SelectedImageIndex = 0;
+            this.m_treeView.ShowRootLines = false;
             this.m_treeView.Size = new System.Drawing.Size(292, 241);
             this.m_treeView.TabIndex = 3;
             // 
