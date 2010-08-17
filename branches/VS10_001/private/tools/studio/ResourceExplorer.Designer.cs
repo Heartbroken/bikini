@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Tisiphone\\main\\menu");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Tisiphone\\main\\menu\\game");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("main/menu");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("main/menu/game");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ResourceExplorer));
             this.m_treeView = new System.Windows.Forms.TreeView();
             this.m_treeViewImageList = new System.Windows.Forms.ImageList(this.components);
@@ -50,9 +50,9 @@
             this.m_treeView.Location = new System.Drawing.Point(0, 24);
             this.m_treeView.Name = "m_treeView";
             treeNode1.Name = "";
-            treeNode1.Text = "Tisiphone\\main\\menu";
+            treeNode1.Text = "main/menu";
             treeNode2.Name = "";
-            treeNode2.Text = "Tisiphone\\main\\menu\\game";
+            treeNode2.Text = "main/menu/game";
             this.m_treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode2});
