@@ -28,7 +28,7 @@ namespace Studio
             InitializeComponent();
             showRightToLeft.Checked = (RightToLeft == RightToLeft.Yes);
             RightToLeftLayout = showRightToLeft.Checked;
-            m_projectExplorer = new ProjectExplorer();
+            //m_projectExplorer = new ProjectExplorer();
             m_projectExplorer.RightToLeftLayout = RightToLeftLayout;
             //m_projectExplorer.m_treeView.Nodes["solutionNode"].Expand();
 			m_deserializeDockContent = new DeserializeDockContent(GetContentFromPersistString);
@@ -282,6 +282,8 @@ namespace Studio
 		{
 			if (persistString == typeof(ProjectExplorer).ToString())
 				return m_projectExplorer;
+			if (persistString == typeof(ResourceExplorer).ToString())
+				return m_resourceExplorer;
 			else if (persistString == typeof(DummyPropertyWindow).ToString())
 				return m_propertyWindow;
 			else if (persistString == typeof(DummyToolbox).ToString())
