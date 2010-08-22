@@ -31,9 +31,11 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("main/menu");
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("main/menu/game");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Project \'Tisiphone\'", new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("episodes/e1/e1s1");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Project \'Tisiphone\'", new System.Windows.Forms.TreeNode[] {
             treeNode1,
-            treeNode2});
+            treeNode2,
+            treeNode3});
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ResourceExplorer));
             this.m_treeView = new System.Windows.Forms.TreeView();
             this.m_treeViewImageList = new System.Windows.Forms.ImageList(this.components);
@@ -60,10 +62,14 @@
             treeNode2.Name = "";
             treeNode2.SelectedImageKey = "Stage";
             treeNode2.Text = "main/menu/game";
+            treeNode3.ImageKey = "Stage";
             treeNode3.Name = "";
-            treeNode3.Text = "Project \'Tisiphone\'";
+            treeNode3.SelectedImageKey = "Stage";
+            treeNode3.Text = "episodes/e1/e1s1";
+            treeNode4.Name = "";
+            treeNode4.Text = "Project \'Tisiphone\'";
             this.m_treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3});
+            treeNode4});
             this.m_treeView.SelectedImageIndex = 0;
             this.m_treeView.ShowRootLines = false;
             this.m_treeView.Size = new System.Drawing.Size(292, 241);
