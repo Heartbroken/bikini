@@ -104,7 +104,18 @@ namespace Studio
 			if (l_result is String) return Convert.ToString(l_result);
 			return "";
 		}
-		public static Boolean RenameObject(Guid _object, String _name)
+        public static String ObjectPath(Guid _object)
+        {
+            XmlTextWriter l_xml = StartWriteRequest("ObjectPath");
+            WriteRequestArgument(l_xml, _object);
+            String l_request = EndWriteRequest(l_xml);
+
+            Object l_result = ReadResult(request(l_request));
+
+            if (l_result is String) return Convert.ToString(l_result);
+            return "";
+        }
+        public static Boolean RenameObject(Guid _object, String _name)
 		{
 			XmlTextWriter l_xml = StartWriteRequest("RenameObject");
 			WriteRequestArgument(l_xml, _object);
@@ -321,7 +332,7 @@ namespace Studio
             public ComboBox comboBox;
 
 			public ProjectItem() { m_guid = Guid.NewGuid(); }
-			public ProjectItem(Guid _guid) { m_guid = _guid; }
+            public ProjectItem(Guid _guid) { m_guid = _guid; m_path = ObjectPath(_guid); }
 
             // GUID
             private Guid m_guid;
@@ -331,6 +342,11 @@ namespace Studio
 			// Type
 			[CategoryAttribute("Object ID"), DescriptionAttribute("Object's type")]
 			public abstract String Type { get; }
+
+            // Path
+            private String m_path;
+            [CategoryAttribute("Object ID"), DescriptionAttribute("Object's path")]
+            public String Path { get { return m_path; } }
 
 			public override string ToString() { return Type; }
 			public virtual String FullName() { return Type; }

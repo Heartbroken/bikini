@@ -19,6 +19,7 @@ bool workspace::create()
 	commands::add("NewFolder", bk::functor_<const bk::GUID&, const bk::GUID&, const bk::wstring&>(*this, &workspace::new_folder));
 	commands::add("NewStage", bk::functor_<const bk::GUID&, const bk::GUID&, const bk::wstring&>(*this, &workspace::new_stage));
 	commands::add("ObjectStructure", bk::functor_<bk::astring, const bk::GUID&>(*this, &workspace::object_structure));
+	commands::add("ObjectPath", bk::functor_<bk::astring, const bk::GUID&>(*this, &workspace::object_path));
 	commands::add("RenameObject", bk::functor_<bool, const bk::GUID&, const bk::wstring&>(*this, &workspace::rename_object));
 	commands::add("MoveObject", bk::functor_<bool, const bk::GUID&, const bk::GUID&>(*this, &workspace::move_object));
 	commands::add("RemoveObject", bk::functor_<bool, const bk::GUID&>(*this, &workspace::remove_object));
@@ -32,6 +33,7 @@ void workspace::destroy()
 	commands::remove("RemoveObject");
 	commands::remove("MoveObject");
 	commands::remove("RenameObject");
+	commands::remove("ObjectPath");
 	commands::remove("ObjectStructure");
 	commands::remove("NewStage");
 	commands::remove("NewFolder");
@@ -157,6 +159,18 @@ bk::astring workspace::object_structure(const bk::GUID &_object)
 	}
 
 	return get_<object>(l_ID).structure();
+}
+bk::astring workspace::object_path(const bk::GUID &_object)
+{
+	bk::uint l_ID = find_object(_object);
+
+	if (l_ID == bk::bad_ID)
+	{
+		std::wcerr << "ERROR: Can't get object's structure. Object not found";
+		return false;
+	}
+
+	return bk::utf8(get_<object>(l_ID).path());
 }
 bool workspace::rename_object(const bk::GUID &_object, const bk::wstring &_name)
 {
