@@ -21,28 +21,6 @@ namespace Studio
 		public ProjectExplorer()
 		{
 			InitializeComponent();
-
-			//// test
-			//{
-			//    TreeNode l_projectNode = AddNode(new Bikini.Project("Grrr"), m_treeView.Nodes);
-			//    l_projectNode.Expand();
-			//    {
-			//        TreeNode l_packageNode = AddNode(new Bikini.Package("main"), l_projectNode.Nodes);
-			//        {
-			//            TreeNode l_stageNode = AddNode(new Bikini.Stage("main"), l_packageNode.Nodes);
-			//        }
-			//    }
-			//    {
-			//        TreeNode l_folderNode = AddNode(new Bikini.Folder("episodes", true), l_projectNode.Nodes);
-			//        {
-			//            TreeNode l_packageNode = AddNode(new Bikini.Package("e1"), l_folderNode.Nodes);
-			//            {
-			//                TreeNode l_stageNode = AddNode(new Bikini.Stage("e1s1"), l_packageNode.Nodes);
-			//            }
-			//        }
-			//    }
-			//}
-			//// test
 		}
 
         private XmlTextReader ObjectStructure(Guid _object)
@@ -131,16 +109,19 @@ namespace Studio
             String l_name = _xml.GetAttribute("name");
             Guid l_guid = new Guid(_xml.GetAttribute("GUID"));
             TreeNode l_folderNode = AddNode(new Bikini.Folder(l_name, true, l_guid), _parentNode.Nodes);
-            if (!_xml.IsEmptyElement) while (_xml.Read())
+            if (!_xml.IsEmptyElement)
             {
-                if (_xml.IsStartElement())
+                while (_xml.Read())
                 {
-                    if (_xml.Name == "package") OpenPackageFile(_xml, l_folderNode);
-                    else if (_xml.Name == "folder") ParseFolderStructure(_xml, l_folderNode);
-                }
-                else
-                {
-                    if (_xml.Name == "folder") break;
+                    if (_xml.IsStartElement())
+                    {
+                        if (_xml.Name == "package") OpenPackageFile(_xml, l_folderNode);
+                        else if (_xml.Name == "folder") ParseFolderStructure(_xml, l_folderNode);
+                    }
+                    else
+                    {
+                        if (_xml.Name == "folder") break;
+                    }
                 }
             }
         }
