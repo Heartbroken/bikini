@@ -114,6 +114,7 @@ namespace Studio
 			{
 				Guid l_project = Bikini.NewProject(l_newProjectDlg.ProjectLocation, l_newProjectDlg.ProjectName);
 				m_projectExplorer.UpdateTreeView(l_project);
+				m_resourceExplorer.UpdateTreeView(l_project);
 			}
 
 			/////////
@@ -190,6 +191,7 @@ namespace Studio
 			{
 				Guid l_project = Bikini.OpenProject(openProjectDialog.FileName);
                 m_projectExplorer.UpdateTreeView(l_project);
+                m_resourceExplorer.UpdateTreeView(l_project);
             }
 
 			//OpenFileDialog openFile = new OpenFileDialog();
