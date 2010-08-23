@@ -59,5 +59,40 @@ namespace Studio.Properties {
                 resourceCulture = value;
             }
         }
+        
+        internal static System.Drawing.Bitmap FolderOpen {
+            get {
+                object obj = ResourceManager.GetObject("FolderOpen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Interface {
+            get {
+                object obj = ResourceManager.GetObject("Interface", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Package2 {
+            get {
+                object obj = ResourceManager.GetObject("Package2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Resources2 {
+            get {
+                object obj = ResourceManager.GetObject("Resources2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Substage {
+            get {
+                object obj = ResourceManager.GetObject("Substage", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }
