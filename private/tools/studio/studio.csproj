@@ -904,6 +904,10 @@
     <Content Include="Alsing.SyntaxBox\Text\ReadMe.txt" />
     <Content Include="Images\FolderClose.bmp" />
     <Content Include="Images\FolderOpen.bmp" />
+    <None Include="Images\Substage.bmp" />
+    <None Include="Images\Package2.bmp" />
+    <None Include="Images\Interface.bmp" />
+    <None Include="Images\Resources.bmp" />
     <Content Include="Images\Resources.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
