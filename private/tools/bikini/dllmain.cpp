@@ -8,7 +8,7 @@ BOOL APIENTRY DllMain(HMODULE _module, DWORD _reason, LPVOID)
 		case DLL_PROCESS_ATTACH :
 		{
 			commands::create();
-			commands::add("Create", bk::functor_<bool>(get_bikini(), &bikini::create));
+			commands::add("CreateWorkspace", bk::functor_<bool>(get_bikini(), &bikini::create));
 			break;
 		}
 		case DLL_THREAD_ATTACH :
@@ -21,7 +21,7 @@ BOOL APIENTRY DllMain(HMODULE _module, DWORD _reason, LPVOID)
 		}
 		case DLL_PROCESS_DETACH :
 		{
-			commands::remove("Create");
+			commands::remove("CreateWorkspace");
 			commands::destroy();
 			break;
 		}

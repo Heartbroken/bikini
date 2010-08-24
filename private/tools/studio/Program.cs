@@ -15,14 +15,14 @@ namespace Studio
         [STAThread]
         static void Main()
         {
-            if (Bikini.Create())
+            if (Bikini.CreateWorkspace())
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Idle += new EventHandler(Application_Idle);
                 m_mainForm = new MainForm();
                 Application.Run(m_mainForm);
-                Bikini.Destroy();
+                Bikini.DestroyWorkspace();
             }
         }
 
