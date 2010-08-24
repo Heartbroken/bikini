@@ -22,18 +22,18 @@ struct workspace : bk::manager
 		inline bk::uint parent_ID() const { return m_parent_ID; }
 		inline const bk::wstring& name() const { return m_name; }
 		inline bool valid() const { return m_valid; }
-		inline void remove_child(bk::uint _child) { for (bk::uint l_ID = first_relation(); l_ID != bk::bad_ID; l_ID = next_relation(l_ID)) if (get_relation(l_ID) == _child) { remove_relation(l_ID); break; } }
 
 		object(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring& _name);
 		~object();
 
-		virtual bool add_child(bk::uint _child) { add_relation(_child); return true; }
-		virtual bool rename(const bk::wstring &_name) { set_name(_name); return true; }
-		virtual bool move(bk::uint _new_parent_ID) { m_parent_ID = _new_parent_ID; return true; }
-		virtual bool remove() { return false; }
-		virtual bk::astring structure() const { return ""; }
-		virtual bool save() const { return true; }
-		virtual bool load() { return true; }
+		virtual bool add_child(bk::uint _child);
+		virtual bool remove_child(bk::uint _child);
+		virtual bool rename(const bk::wstring &_name);
+		virtual bool move(bk::uint _new_parent_ID);
+		virtual bool remove();
+		virtual bk::astring structure() const;
+		virtual bool save() const;
+		virtual bool load();
 
 		bk::wstring path() const;
 
@@ -41,12 +41,14 @@ struct workspace : bk::manager
 		inline void set_GUID(const bk::GUID &_GUID) { m_GUID = _GUID; }
 		inline void set_name(const bk::wstring &_name) { m_name = _name; }
 		inline void set_valid(bool _yes = true) { m_valid = _yes; }
+		inline void set_loading(bool _yes) { m_loading = _yes; }
+		inline bool loading() const { return m_loading; }
 
 	private:
 		bk::GUID m_GUID;
 		bk::uint m_parent_ID;
 		bk::wstring m_name;
-		bool m_valid;
+		bool m_valid, m_loading;
 	};
 
 	struct folder : object
@@ -167,6 +169,7 @@ struct folder : workspace::folder
 	folder(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring &_name, bool _create);
 
 	virtual bool add_child(bk::uint _child);
+	virtual bool save() const;
 };
 
 struct stage : workspace::folder
