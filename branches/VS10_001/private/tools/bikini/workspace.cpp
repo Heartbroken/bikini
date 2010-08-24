@@ -20,6 +20,7 @@ bool workspace::create()
 	commands::add("NewStage", bk::functor_<const bk::GUID&, const bk::GUID&, const bk::wstring&>(*this, &workspace::new_stage));
 	commands::add("ObjectStructure", bk::functor_<bk::astring, const bk::GUID&>(*this, &workspace::object_structure));
 	commands::add("ObjectPath", bk::functor_<bk::astring, const bk::GUID&>(*this, &workspace::object_path));
+	commands::add("ObjectName", bk::functor_<bk::astring, const bk::GUID&>(*this, &workspace::object_name));
 	commands::add("RenameObject", bk::functor_<bool, const bk::GUID&, const bk::wstring&>(*this, &workspace::rename_object));
 	commands::add("MoveObject", bk::functor_<bool, const bk::GUID&, const bk::GUID&>(*this, &workspace::move_object));
 	commands::add("RemoveObject", bk::functor_<bool, const bk::GUID&>(*this, &workspace::remove_object));
@@ -33,6 +34,7 @@ void workspace::destroy()
 	commands::remove("RemoveObject");
 	commands::remove("MoveObject");
 	commands::remove("RenameObject");
+	commands::remove("ObjectName");
 	commands::remove("ObjectPath");
 	commands::remove("ObjectStructure");
 	commands::remove("NewStage");
@@ -166,11 +168,23 @@ bk::astring workspace::object_path(const bk::GUID &_object)
 
 	if (l_ID == bk::bad_ID)
 	{
-		std::wcerr << "ERROR: Can't get object's structure. Object not found";
+		std::wcerr << "ERROR: Can't get object's path. Object not found";
 		return false;
 	}
 
 	return bk::utf8(get_<object>(l_ID).path());
+}
+bk::astring workspace::object_name(const bk::GUID &_object)
+{
+	bk::uint l_ID = find_object(_object);
+
+	if (l_ID == bk::bad_ID)
+	{
+		std::wcerr << "ERROR: Can't get object's name. Object not found";
+		return false;
+	}
+
+	return bk::utf8(get_<object>(l_ID).name());
 }
 bool workspace::rename_object(const bk::GUID &_object, const bk::wstring &_name)
 {

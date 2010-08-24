@@ -50,10 +50,10 @@ namespace Studio
         {
             Debug.Assert(_xml.IsStartElement() && _xml.Name == "project");
 
-            String l_name = _xml.GetAttribute("name");
+            //String l_name = _xml.GetAttribute("name");
             Guid l_guid = new Guid(_xml.GetAttribute("GUID"));
             tmp = 0;
-            TreeNode l_projectNode = AddNode(new Bikini.Project(l_name, l_guid), m_treeView.Nodes);
+            TreeNode l_projectNode = AddNode(new Bikini.Project(l_guid), m_treeView.Nodes);
             Bikini.Project l_project = (Bikini.Project)l_projectNode.Tag;
             tmp = l_project.Path.Length;
             if (!_xml.IsEmptyElement)
@@ -145,9 +145,9 @@ namespace Studio
         }
         private void ParseStageStructure(XmlTextReader _xml, TreeNode _parentNode)
         {
-            String l_name = _xml.GetAttribute("name");
+            //String l_name = _xml.GetAttribute("name");
             Guid l_guid = new Guid(_xml.GetAttribute("GUID"));
-            TreeNode l_folderNode = AddNode(new Bikini.Stage(l_name, l_guid), _parentNode.Nodes);
+            TreeNode l_folderNode = AddNode(new Bikini.Stage(l_guid), _parentNode.Nodes);
             if (!_xml.IsEmptyElement) while (_xml.Read())
                 {
                     if (_xml.IsStartElement())
@@ -162,7 +162,7 @@ namespace Studio
         }
 
         int tmp = 0;
-        private TreeNode AddNode(Bikini.ProjectItem _item, TreeNodeCollection _nodes)
+        private TreeNode AddNode(Bikini.WorkspaceObject _item, TreeNodeCollection _nodes)
         {
             String l_name = tmp != 0 ? _item.Path.Substring(tmp + 1) : _item.FullName();
             TreeNode l_node = _nodes.Add("", l_name, _item.Type, _item.Type);

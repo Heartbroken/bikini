@@ -15,16 +15,16 @@ namespace Studio
     {
         public const UInt64 BadID = 0xffffffffffffffff;
 
-        public static Boolean Create()
+        public static Boolean CreateWorkspace()
         {
-            Object l_result = ReadResult(request(WriteRequest("Create")));
+            Object l_result = ReadResult(request(WriteRequest("CreateWorkspace")));
 
             if (l_result is bool && Convert.ToBoolean(l_result)) return true;
             return false;
         }
-        public static void Destroy()
+        public static void DestroyWorkspace()
         {
-            request(WriteRequest("Destroy"));
+            request(WriteRequest("DestroyWorkspace"));
         }
         public static Boolean Update()
         {
@@ -107,6 +107,17 @@ namespace Studio
         public static String ObjectPath(Guid _object)
         {
             XmlTextWriter l_xml = StartWriteRequest("ObjectPath");
+            WriteRequestArgument(l_xml, _object);
+            String l_request = EndWriteRequest(l_xml);
+
+            Object l_result = ReadResult(request(l_request));
+
+            if (l_result is String) return Convert.ToString(l_result);
+            return "";
+        }
+        public static String ObjectName(Guid _object)
+        {
+            XmlTextWriter l_xml = StartWriteRequest("ObjectName");
             WriteRequestArgument(l_xml, _object);
             String l_request = EndWriteRequest(l_xml);
 
@@ -311,28 +322,29 @@ namespace Studio
 
 #       if DEBUG
 #           if Win32
-                [DllImport("bikini (Win32!Debug).dll", CharSet = CharSet.Ansi)]
+                private const String DllName = "bikini (Win32!Debug).dll";
 #           elif x64
-                [DllImport("bikini (x64!Debug).dll", CharSet = CharSet.Unicode)]
+                private const String DllName = "bikini (x64!Debug).dll";
 #           endif
 #       elif RELEASE
 #           if Win32
-                [DllImport("bikini (Win32!Release).dll", CharSet = CharSet.Unicode)]
+                private const String DllName = "bikini (Win32!Release).dll";
 #           elif x64
-                [DllImport("bikini (x64!Release).dll", CharSet = CharSet.Unicode)]
+                private const String DllName = "bikini (x64!Release).dll";
 #           endif
 #       endif
+
+        [DllImport(DllName, CharSet = CharSet.Ansi)]
         public static extern IntPtr request(IntPtr _command);
 
         // PropertyGrid objects
 
-		public abstract class ProjectItem
+		public abstract class WorkspaceObject
         {
 			public TreeNode treeNode;
             public ComboBox comboBox;
 
-			public ProjectItem() { m_guid = Guid.NewGuid(); }
-            public ProjectItem(Guid _guid) { m_guid = _guid; m_path = ObjectPath(_guid); }
+            public WorkspaceObject(Guid _guid) { m_guid = _guid; m_path = ObjectPath(_guid); }
 
             // GUID
             private Guid m_guid;
@@ -344,7 +356,7 @@ namespace Studio
 			public abstract String Type { get; }
 
             // Path
-            private String m_path;
+            protected String m_path;
             [CategoryAttribute("Object ID"), DescriptionAttribute("Object's path")]
             public String Path { get { return m_path; } }
 
@@ -353,10 +365,9 @@ namespace Studio
 			public virtual String ItemType() { return Type; }
 			public virtual String SubItems() { return ""; }
 		}
-		public abstract class NamedProjectItem : ProjectItem
+		public abstract class NamedWorkspaceObject : WorkspaceObject
 		{
-			public NamedProjectItem(String _name) { m_name = _name; }
-			public NamedProjectItem(String _name, Guid _guid) : base(_guid) { m_name = _name; }
+            public NamedWorkspaceObject(Guid _guid) : base(_guid) { m_name = ObjectName(_guid); }
 
             // Name
             private String m_name;
@@ -366,10 +377,14 @@ namespace Studio
                 get { return m_name; }
                 set
                 {
-                    m_name = value;
-					if (treeNode != null) treeNode.Text = this.FullName();
-					Debug.Assert(comboBox == null || comboBox.SelectedItem == this);
-					if (comboBox != null && comboBox.SelectedItem == this) comboBox.Items[comboBox.SelectedIndex] = this;
+                    if (RenameObject(GUID, value))
+                    {
+                        m_name = value;
+                        m_path = ObjectPath(GUID);
+					    if (treeNode != null) treeNode.Text = this.FullName();
+					    Debug.Assert(comboBox == null || comboBox.SelectedItem == this);
+					    if (comboBox != null && comboBox.SelectedItem == this) comboBox.Items[comboBox.SelectedIndex] = this;
+                    }
                 }
             }
 
@@ -378,54 +393,55 @@ namespace Studio
 		}
 
         // Project
-		public class Project : NamedProjectItem
+		public class Project : NamedWorkspaceObject
         {
-			public Project(String _name, Guid _guid) : base(_name, _guid) { }
+			public Project(Guid _guid) : base(_guid) { }
 			public override String Type { get { return "Project"; } }
 			public override String FullName() { return ToString(); }
 			public override String SubItems() { return "PFolder|Package"; }
 		}
         // Folder
-		public class Folder : NamedProjectItem
+		public class Folder : NamedWorkspaceObject
         {
 			Boolean m_projectFolder;
-			public Folder(String _name, Boolean _projectFolder, Guid _guid) : base(_name, _guid) { m_projectFolder = _projectFolder; }
+			public Folder(Boolean _projectFolder, Guid _guid) : base(_guid) { m_projectFolder = _projectFolder; }
 			public override String Type { get { return "Folder"; } }
 			public override String ItemType() { return m_projectFolder ? "PFolder" : "RFolder"; }
 			public override String SubItems() { return m_projectFolder ? "PFolder|Package" : "RFolder|Menu"; }
 		}
         // Package
-		public class Package : NamedProjectItem
+		public class Package : NamedWorkspaceObject
         {
-			public Package(String _name, Guid _guid) : base(_name, _guid) { }
+			public Package(Guid _guid) : base(_guid) { }
 			public override String Type { get { return "Package"; } }
 			public override String SubItems() { return "Stage"; }
 		}
         // Stage
-		public class Stage : NamedProjectItem
+		public class Stage : NamedWorkspaceObject
         {
-            public Stage(String _name, Guid _guid) : base(_name, _guid) { }
+            public Stage(Guid _guid) : base(_guid) { }
 			public override String Type { get { return "Stage"; } }
 			public override String SubItems() { return "Stage|Resources"; }
 		}
 		// Resources
-		public class Resources : ProjectItem
+		public class Resources : WorkspaceObject
 		{
-			public Resources() { }
+            //public Resources() { }
+            public Resources(Guid _guid) : base(_guid) { }
 			public override String Type { get { return "Resources"; } }
 			public override String SubItems() { return "Menu|RFolder"; }
 		}
 
 		// Resource item
-		public abstract class ResourceItem : NamedProjectItem
+		public abstract class ResourceItem : NamedWorkspaceObject
 		{
-			public ResourceItem(String _name) : base(_name) {}
+            public ResourceItem(Guid _guid) : base(_guid) { }
 			public override String FullName() { return Name + "." + Type.ToLower(); }
 		}
 		// Menu
 		public class Menu : ResourceItem
 		{
-			public Menu(String _name) : base(_name) {}
+            public Menu(Guid _guid) : base(_guid) { }
 			public override String Type { get { return "Menu"; } }
 		}
 	}

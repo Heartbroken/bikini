@@ -26,9 +26,9 @@ namespace Studio
 			comboBox.Items.Clear();
 			propertyGrid.SelectedObject = null;
 
-			if (value is Bikini.ProjectItem)
+			if (value is Bikini.WorkspaceObject)
 			{
-				Bikini.ProjectItem l_item = (Bikini.ProjectItem)value;
+				Bikini.WorkspaceObject l_item = (Bikini.WorkspaceObject)value;
 				l_item.comboBox = comboBox;
 
 				comboBox.Items.Add(l_item);

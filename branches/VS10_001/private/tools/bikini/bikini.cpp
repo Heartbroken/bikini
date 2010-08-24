@@ -17,7 +17,7 @@ bool bikini::create()
 	if (m_video.create())
 	{
 		commands::add("Update", bk::functor_<bool>(*this, &bikini::update));
-		commands::add("Destroy", bk::functor(*this, &bikini::destroy));
+		commands::add("DestroyWorkspace", bk::functor(*this, &bikini::destroy));
 
 		// test
 		commands::add("CreateView", bk::functor_<bk::uint, bk::handle>(*this, &bikini::create_window));
@@ -49,7 +49,7 @@ void bikini::destroy()
 	commands::remove("CreateView");
 	// test
 
-	commands::remove("Destroy");
+	commands::remove("DestroyWorkspace");
 	commands::remove("Update");
 
 	m_workspace.destroy();

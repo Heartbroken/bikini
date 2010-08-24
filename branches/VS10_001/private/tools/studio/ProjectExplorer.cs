@@ -53,9 +53,9 @@ namespace Studio
 		{
             Debug.Assert(_xml.IsStartElement() && _xml.Name == "project");
 
-            String l_name = _xml.GetAttribute("name");
+            //String l_name = _xml.GetAttribute("name");
             Guid l_guid = new Guid(_xml.GetAttribute("GUID"));
-            TreeNode l_projectNode = AddNode(new Bikini.Project(l_name, l_guid), m_treeView.Nodes);
+            TreeNode l_projectNode = AddNode(new Bikini.Project(l_guid), m_treeView.Nodes);
             if (!_xml.IsEmptyElement) while (_xml.Read())
             {
                 if (_xml.IsStartElement())
@@ -88,9 +88,9 @@ namespace Studio
         }
         private void ParsePackageStructure(XmlTextReader _xml, TreeNode _parentNode)
         {
-            String l_name = _xml.GetAttribute("name");
+            //String l_name = _xml.GetAttribute("name");
             Guid l_guid = new Guid(_xml.GetAttribute("GUID"));
-            TreeNode l_packageNode = AddNode(new Bikini.Package(l_name, l_guid), _parentNode.Nodes);
+            TreeNode l_packageNode = AddNode(new Bikini.Package(l_guid), _parentNode.Nodes);
 
             if (!_xml.IsEmptyElement) while (_xml.Read())
             {
@@ -106,9 +106,9 @@ namespace Studio
         }
         private void ParseFolderStructure(XmlTextReader _xml, TreeNode _parentNode)
         {
-            String l_name = _xml.GetAttribute("name");
+            //String l_name = _xml.GetAttribute("name");
             Guid l_guid = new Guid(_xml.GetAttribute("GUID"));
-            TreeNode l_folderNode = AddNode(new Bikini.Folder(l_name, true, l_guid), _parentNode.Nodes);
+            TreeNode l_folderNode = AddNode(new Bikini.Folder(true, l_guid), _parentNode.Nodes);
             if (!_xml.IsEmptyElement)
             {
                 while (_xml.Read())
@@ -142,9 +142,9 @@ namespace Studio
         }
         private void ParseStageStructure(XmlTextReader _xml, TreeNode _parentNode)
         {
-            String l_name = _xml.GetAttribute("name");
+            //String l_name = _xml.GetAttribute("name");
             Guid l_guid = new Guid(_xml.GetAttribute("GUID"));
-            TreeNode l_folderNode = AddNode(new Bikini.Stage(l_name, l_guid), _parentNode.Nodes);
+            TreeNode l_folderNode = AddNode(new Bikini.Stage(l_guid), _parentNode.Nodes);
             if (!_xml.IsEmptyElement) while (_xml.Read())
             {
                 if (_xml.IsStartElement())
@@ -158,7 +158,7 @@ namespace Studio
             }
         }
 
-		private TreeNode AddNode(Bikini.ProjectItem _item, TreeNodeCollection _nodes)
+		private TreeNode AddNode(Bikini.WorkspaceObject _item, TreeNodeCollection _nodes)
 		{
 			TreeNode l_node = _nodes.Add("", _item.FullName(), _item.Type, _item.Type);
 			l_node.Tag = _item; _item.treeNode = l_node;
@@ -221,8 +221,8 @@ namespace Studio
 
 				m_treeView.SelectedNode = l_node;
 
-				Bikini.ProjectItem l_draggedItem = (Bikini.ProjectItem)m_pickedNode.Tag;
-				Bikini.ProjectItem l_targetItem = (Bikini.ProjectItem)l_node.Tag;
+				Bikini.WorkspaceObject l_draggedItem = (Bikini.WorkspaceObject)m_pickedNode.Tag;
+				Bikini.WorkspaceObject l_targetItem = (Bikini.WorkspaceObject)l_node.Tag;
 
 				if (l_targetItem.SubItems().IndexOf(l_draggedItem.ItemType()) > -1)
 				{
@@ -237,8 +237,8 @@ namespace Studio
 
 			TreeNode l_node = m_treeView.GetNodeAt(m_treeView.PointToClient(Control.MousePosition));
 
-            Bikini.ProjectItem l_draggedItem = (Bikini.ProjectItem)m_pickedNode.Tag;
-            Bikini.ProjectItem l_targetItem = (Bikini.ProjectItem)l_node.Tag;
+            Bikini.WorkspaceObject l_draggedItem = (Bikini.WorkspaceObject)m_pickedNode.Tag;
+            Bikini.WorkspaceObject l_targetItem = (Bikini.WorkspaceObject)l_node.Tag;
 
 			if (l_node != null && l_node != m_pickedNode)
 			{
@@ -293,9 +293,9 @@ namespace Studio
 		private const int WM_SETTEXT = 0x000C;
 		private void m_treeView_BeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
 		{
-			if (e.Node.Tag is Bikini.NamedProjectItem)
+			if (e.Node.Tag is Bikini.NamedWorkspaceObject)
 			{
-				Bikini.NamedProjectItem l_item = (Bikini.NamedProjectItem)e.Node.Tag;
+				Bikini.NamedWorkspaceObject l_item = (Bikini.NamedWorkspaceObject)e.Node.Tag;
 				IntPtr l_editBoxHandle = SendMessage(m_treeView.Handle, TVM_GETEDITCONTROL, IntPtr.Zero, IntPtr.Zero);
 				SendMessage(l_editBoxHandle, WM_SETTEXT, IntPtr.Zero, Marshal.UnsafeAddrOfPinnedArrayElement(Encoding.Unicode.GetBytes(l_item.Name), 0));
 			}
@@ -310,13 +310,10 @@ namespace Studio
 			e.CancelEdit = true;
 			e.Node.EndEdit(true);
 
-			if (e.Node.Tag is Bikini.NamedProjectItem && e.Label != null && e.Label.Length > 0)
+			if (e.Node.Tag is Bikini.NamedWorkspaceObject && e.Label != null && e.Label.Length > 0)
 			{
-				Bikini.NamedProjectItem l_item = (Bikini.NamedProjectItem)e.Node.Tag;
-				if (Bikini.RenameObject(l_item.GUID, e.Label))
-				{
-					l_item.Name = e.Label;
-				}
+				Bikini.NamedWorkspaceObject l_item = (Bikini.NamedWorkspaceObject)e.Node.Tag;
+				l_item.Name = e.Label;
 			}
 		}
 
@@ -341,11 +338,11 @@ namespace Studio
 				m_treeView.SelectedNode.Tag is Bikini.Folder)
 			{
 				TreeNode l_parentNode = m_treeView.SelectedNode;
-				Bikini.ProjectItem l_parentItem = (Bikini.ProjectItem)l_parentNode.Tag;
+				Bikini.WorkspaceObject l_parentItem = (Bikini.WorkspaceObject)l_parentNode.Tag;
 				Guid l_guid = Bikini.NewPackage(l_parentItem.GUID, "NewPackage");
 				if (l_guid != Guid.Empty)
 				{
-					TreeNode l_newNode = AddNode(new Bikini.Package("NewPackage", l_guid), l_parentNode.Nodes);
+					TreeNode l_newNode = AddNode(new Bikini.Package(l_guid), l_parentNode.Nodes);
 					m_treeView.SelectedNode = l_newNode;
 					l_newNode.BeginEdit();
 				}
@@ -372,12 +369,12 @@ namespace Studio
 			{
 				TreeNode l_parentNode = m_treeView.SelectedNode;
 				Boolean l_projectFolder = !FindResourcesItem(l_parentNode);
-				Bikini.ProjectItem l_parentItem = (Bikini.ProjectItem)l_parentNode.Tag;
+				Bikini.WorkspaceObject l_parentItem = (Bikini.WorkspaceObject)l_parentNode.Tag;
 
 				Guid l_guid = Bikini.NewFolder(l_parentItem.GUID, "NewFolder");
 				if (l_guid != Guid.Empty)
 				{
-					TreeNode l_newNode = AddNode(new Bikini.Folder("NewFolder", l_projectFolder, l_guid), l_parentNode.Nodes);
+					TreeNode l_newNode = AddNode(new Bikini.Folder(l_projectFolder, l_guid), l_parentNode.Nodes);
 					m_treeView.SelectedNode = l_newNode;
 					l_newNode.BeginEdit();
 				}
@@ -390,11 +387,11 @@ namespace Studio
 				m_treeView.SelectedNode.Tag is Bikini.Stage)
 			{
 				TreeNode l_parentNode = m_treeView.SelectedNode;
-                Bikini.ProjectItem l_parentItem = (Bikini.ProjectItem)l_parentNode.Tag;
+                Bikini.WorkspaceObject l_parentItem = (Bikini.WorkspaceObject)l_parentNode.Tag;
                 Guid l_guid = Bikini.NewStage(l_parentItem.GUID, "NewStage");
                 if (l_guid != Guid.Empty)
                 {
-                    TreeNode l_newNode = AddNode(new Bikini.Stage("NewStage", l_guid), l_parentNode.Nodes);
+                    TreeNode l_newNode = AddNode(new Bikini.Stage(l_guid), l_parentNode.Nodes);
                     m_treeView.SelectedNode = l_newNode;
                     l_newNode.BeginEdit();
                 }
@@ -407,27 +404,27 @@ namespace Studio
 				m_treeView.SelectedNode.Tag is Bikini.Resources ||
 				m_treeView.SelectedNode.Tag is Bikini.Folder)
 			{
-				TreeNode l_parentNode = m_treeView.SelectedNode;
-				if (m_treeView.SelectedNode.Tag is Bikini.Stage)
-				{
-					TreeNode l_resourcesNode = l_parentNode.Nodes["Resources"];
-					if (l_resourcesNode == null)
-					{
-						l_resourcesNode = AddNode(new Bikini.Resources(), l_parentNode.Nodes);
-                        l_resourcesNode.Name = "Resources";
-					}
-					l_parentNode = l_resourcesNode;
-				}
-				TreeNode l_newNode = AddNode(new Bikini.Menu("New"), l_parentNode.Nodes);
-				m_treeView.SelectedNode = l_newNode;
-				l_newNode.BeginEdit();
+                //TreeNode l_parentNode = m_treeView.SelectedNode;
+                //if (m_treeView.SelectedNode.Tag is Bikini.Stage)
+                //{
+                //    TreeNode l_resourcesNode = l_parentNode.Nodes["Resources"];
+                //    if (l_resourcesNode == null)
+                //    {
+                //        l_resourcesNode = AddNode(new Bikini.Resources(), l_parentNode.Nodes);
+                //        l_resourcesNode.Name = "Resources";
+                //    }
+                //    l_parentNode = l_resourcesNode;
+                //}
+                //TreeNode l_newNode = AddNode(new Bikini.Menu("New"), l_parentNode.Nodes);
+                //m_treeView.SelectedNode = l_newNode;
+                //l_newNode.BeginEdit();
 			}
 		}
 
 		private void removeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
             TreeNode l_selectedNode = m_treeView.SelectedNode;
-            Bikini.ProjectItem l_selectedItem = (Bikini.ProjectItem)l_selectedNode.Tag;
+            Bikini.WorkspaceObject l_selectedItem = (Bikini.WorkspaceObject)l_selectedNode.Tag;
 
             if (Bikini.RemoveObject(l_selectedItem.GUID))
 			    m_treeView.SelectedNode.Remove();
@@ -437,20 +434,20 @@ namespace Studio
 		{
 			TreeNode l_node = m_treeView.GetNodeAt(m_treeView.PointToClient(Control.MousePosition));
 
-			if (l_node == null || !(l_node.Tag is Bikini.ProjectItem))
+			if (l_node == null || !(l_node.Tag is Bikini.WorkspaceObject))
 			{
 				e.Cancel = true;
 				return;
 			}
 
-			Bikini.ProjectItem l_item = (Bikini.ProjectItem)l_node.Tag;
+			Bikini.WorkspaceObject l_item = (Bikini.WorkspaceObject)l_node.Tag;
 
 			SetMenuVisibleItems(m_projectContextMenu, l_item);
 
 			m_treeView.SelectedNode = l_node;
 		}
 
-		private Int32 SetMenuVisibleItems(ToolStrip _menu, Bikini.ProjectItem _projectItem)
+		private Int32 SetMenuVisibleItems(ToolStrip _menu, Bikini.WorkspaceObject _projectItem)
 		{
 			Int32 l_hiddenCount = 0;
 
