@@ -326,7 +326,26 @@ bool workspace::folder::rename(const bk::wstring &_name)
 		return false;
 	}
 
-	return super::rename(_name);
+	bk::wstring l_old_name = name();
+	super::rename(_name);
+
+	if (!save())
+	{
+		super::rename(l_old_name);
+		return false;
+	}
+
+	if (get_workspace().exists(parent_ID()))
+	{
+		if (!get_workspace().get_<object>(parent_ID()).save())
+		{
+			super::rename(l_old_name);
+			save();
+			return false;
+		}
+	}
+
+	return true;
 }
 bool workspace::folder::move(bk::uint _new_parent_ID)
 {
@@ -336,6 +355,12 @@ bool workspace::folder::move(bk::uint _new_parent_ID)
 	if (!l_new_parent.add_child(ID()))
 	{
 		std::wcerr << "ERROR: Can't move folder. Bad new parent ID\n";
+		return false;
+	}
+
+	if (!l_new_parent.save())
+	{
+		l_new_parent.remove_child(ID());
 		return false;
 	}
 
@@ -350,6 +375,13 @@ bool workspace::folder::move(bk::uint _new_parent_ID)
 
 	l_old_parent.remove_child(ID());
 
+	if (!l_old_parent.save())
+	{
+		l_new_parent.remove_child(ID());
+		l_old_parent.add_child(ID());
+		return false;
+	}
+
 	return super::move(_new_parent_ID);
 }
 bool workspace::folder::remove()
@@ -362,12 +394,17 @@ bool workspace::folder::remove()
 		remove_relation(l_ID);
 	}
 
+	if (get_workspace().exists(parent_ID()))
+	{
+		get_workspace().get_<object>(parent_ID()).remove_child(ID());
+		get_workspace().get_<object>(parent_ID()).save();
+	}
+
 	if (!l_folder.remove())
 	{
 		std::wcerr << "ERROR: Can't remove folder\n";
 		return false;
 	}
-
 	return true;
 }
 
