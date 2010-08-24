@@ -242,7 +242,7 @@ namespace Studio
 
 			if (l_node != null && l_node != m_pickedNode)
 			{
-                if (Bikini.MoveObject(l_draggedItem.GUID, l_targetItem.GUID))
+                if (l_draggedItem.MoveTo(l_targetItem))
                 {
 				    m_pickedNode.Remove();
 				    l_node.Nodes.Add(m_pickedNode);

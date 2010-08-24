@@ -364,6 +364,17 @@ namespace Studio
 			public virtual String FullName() { return Type; }
 			public virtual String ItemType() { return Type; }
 			public virtual String SubItems() { return ""; }
+
+            public Boolean MoveTo(WorkspaceObject _newParent)
+            {
+                if (MoveObject(m_guid, _newParent.GUID))
+                {
+                    m_path = ObjectPath(m_guid);
+                    return true;
+                }
+
+                return false;
+            }
 		}
 		public abstract class NamedWorkspaceObject : WorkspaceObject
 		{
