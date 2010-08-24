@@ -265,7 +265,8 @@ workspace::object::object(const info &_info, workspace &_workspace, bk::uint _pa
 	m_GUID(bk::random_GUID(sg_GUID_random)),
 	m_parent_ID(_parent_ID),
 	m_name(_name),
-	m_valid(true)
+	m_valid(true),
+	m_loading(false)
 {
 	if (get_workspace().exists(parent_ID()))
 	{
@@ -275,7 +276,102 @@ workspace::object::object(const info &_info, workspace &_workspace, bk::uint _pa
 workspace::object::~object()
 {
 	if (get_workspace().exists(parent_ID()))
+	{
 		get_workspace().get_<object>(parent_ID()).remove_child(ID());
+	}
+}
+bool workspace::object::add_child(bk::uint _child)
+{
+	bk::uint l_child = add_relation(_child);
+
+	if (!loading() && !save())
+	{
+		remove_relation(l_child);
+		return false;
+	}
+
+	return true;
+}
+bool workspace::object::remove_child(bk::uint _child)
+{
+	for (bk::uint l_ID = first_relation(); l_ID != bk::bad_ID; l_ID = next_relation(l_ID))
+	{
+		if (get_relation(l_ID) == _child)
+		{
+			remove_relation(l_ID);
+
+			if (!save())
+			{
+				add_relation(_child);
+				return false;
+			}
+
+			return true;
+		}
+	}
+
+	assert(0);
+
+	return false;
+}
+bool workspace::object::rename(const bk::wstring &_name)
+{
+	bk::wstring l_old_name = name();
+	set_name(_name);
+
+	if (!save())
+	{
+		set_name(l_old_name);
+		return false;
+	}
+
+	if (get_workspace().exists(parent_ID()))
+	{
+		if (!get_workspace().get_<object>(parent_ID()).save())
+		{
+			set_name(l_old_name);
+			save();
+			return false;
+		}
+	}
+
+	return true;
+}
+bool workspace::object::move(bk::uint _new_parent_ID)
+{
+	object &l_old_parent = get_workspace().get_<object>(parent_ID());
+	object &l_new_parent = get_workspace().get_<object>(_new_parent_ID);
+
+	if (!l_new_parent.add_child(ID()))
+	{
+		return false;
+	}
+
+	if (!l_old_parent.remove_child(ID()))
+	{
+		l_new_parent.remove_child(ID());
+		return false;
+	}
+
+	m_parent_ID = _new_parent_ID;
+
+	return true;
+}
+bool workspace::object::remove()
+{
+	return false;
+}
+bk::astring workspace::object::structure() const
+{
+	return "";
+}
+bool workspace::object::save() const
+{
+	return true;
+}
+bool workspace::object::load()
+{
+	return true;
 }
 bk::wstring workspace::object::path() const
 {
@@ -326,43 +422,12 @@ bool workspace::folder::rename(const bk::wstring &_name)
 		return false;
 	}
 
-	bk::wstring l_old_name = name();
-	super::rename(_name);
-
-	if (!save())
-	{
-		super::rename(l_old_name);
-		return false;
-	}
-
-	if (get_workspace().exists(parent_ID()))
-	{
-		if (!get_workspace().get_<object>(parent_ID()).save())
-		{
-			super::rename(l_old_name);
-			save();
-			return false;
-		}
-	}
-
-	return true;
+	return super::rename(_name);
 }
 bool workspace::folder::move(bk::uint _new_parent_ID)
 {
 	object &l_old_parent = get_workspace().get_<object>(parent_ID());
 	object &l_new_parent = get_workspace().get_<object>(_new_parent_ID);
-
-	if (!l_new_parent.add_child(ID()))
-	{
-		std::wcerr << "ERROR: Can't move folder. Bad new parent ID\n";
-		return false;
-	}
-
-	if (!l_new_parent.save())
-	{
-		l_new_parent.remove_child(ID());
-		return false;
-	}
 
 	bk::folder l_folder(path());
 
@@ -370,15 +435,6 @@ bool workspace::folder::move(bk::uint _new_parent_ID)
 	{
 		std::wcerr << "ERROR: Can't move folder. I/O error\n";
 		l_new_parent.remove_child(ID());
-		return false;
-	}
-
-	l_old_parent.remove_child(ID());
-
-	if (!l_old_parent.save())
-	{
-		l_new_parent.remove_child(ID());
-		l_old_parent.add_child(ID());
 		return false;
 	}
 
@@ -405,6 +461,7 @@ bool workspace::folder::remove()
 		std::wcerr << "ERROR: Can't remove folder\n";
 		return false;
 	}
+
 	return true;
 }
 
@@ -510,7 +567,9 @@ bool project::load()
 		}
 	}};
 
+	set_loading(true);
 	_l::load_childs(l_project, ID(), get_workspace());
+	set_loading(false);
 
 	return true;
 }
@@ -652,7 +711,9 @@ bool package::load()
 		}
 	}};
 
+	set_loading(true);
 	_l::load_childs(l_package, ID(), get_workspace());
+	set_loading(false);
 
 	return true;
 }
@@ -698,6 +759,12 @@ bool folder::add_child(bk::uint _child)
 		return false;
 
 	return super::add_child(_child);
+}
+bool folder::save() const
+{
+	assert(get_workspace().exists(parent_ID()));
+
+	return get_workspace().get_<object>(parent_ID()).save();
 }
 
 // stage
@@ -797,7 +864,9 @@ bool stage::load()
 		}
 	}};
 
+	set_loading(true);
 	_l::load_childs(l_stage, ID(), get_workspace());
+	set_loading(false);
 
 	return true;
 }
