@@ -1,0 +1,207 @@
+
+; bikini types -------------------------------------------------------------------------------
+
+bk::array_<*>{
+	children
+	(
+		#array
+		(
+			expr :		($e._Myfirst)[$i],
+			size :		$e._Mylast-$e._Myfirst
+		)
+	)
+	preview
+	(
+		#(
+			"[", $e._Mylast - $e._Myfirst , "](",
+			#array
+			(
+				expr :	($e._Myfirst)[$i],
+				size :	$e._Mylast-$e._Myfirst
+			),
+			")"
+		)
+	)
+}
+bk::_matrix_row_<*,*>{
+	children
+	(
+		#array
+		(
+			expr :		(($T2*)&$e)[$i],
+			size :		$T1
+		)
+	)
+	preview
+	(
+		#(
+			"(",
+			#array
+			(
+				expr :	(($T2*)&$e)[$i],
+				size :	$T1
+			),
+			")"
+		)
+	)
+}
+bk::matrix_<*,*,*>{
+	children
+	(
+		#array
+		(
+			expr :		((bk::_matrix_row_<$T2,$T3>*)&$e)[$i],
+			size :		$T1
+		)
+	)
+	preview
+	(
+		#(
+			"(",
+			#array
+			(
+				expr :	((bk::_matrix_row_<$T2,$T3>*)&$e)[$i],
+				size :	$T1
+			),
+			")"
+		)
+	)
+}
+bk::vector_<*,*,*>{
+	children
+	(
+		#array
+		(
+			expr :		(($T1*)&$e)[$i],
+			size :		$T2
+		)
+	)
+	preview
+	(
+		#(
+			"(",
+			#array
+			(
+				expr :	(($T1*)&$e)[$i],
+				size :	$T2
+			),
+			")"
+		)
+	)
+}
+bk::variant_<*,*>{
+	children
+	(
+		#switch ($e.m_type)
+		#case  0 ( #( value : (($T1::item_<0>*)$e.m_data)->value ) )
+		#case  1 ( #( value : (($T1::item_<1>*)$e.m_data)->value ) )
+		#case  2 ( #( value : (($T1::item_<2>*)$e.m_data)->value ) )
+		#case  3 ( #( value : (($T1::item_<3>*)$e.m_data)->value ) )
+		#case  4 ( #( value : (($T1::item_<4>*)$e.m_data)->value ) )
+		#case  5 ( #( value : (($T1::item_<5>*)$e.m_data)->value ) )
+		#case  6 ( #( value : (($T1::item_<6>*)$e.m_data)->value ) )
+		#case  7 ( #( value : (($T1::item_<7>*)$e.m_data)->value ) )
+		#case  8 ( #( value : (($T1::item_<8>*)$e.m_data)->value ) )
+		#case  9 ( #( value : (($T1::item_<9>*)$e.m_data)->value ) )
+		#case 10 ( #( value : (($T1::item_<10>*)$e.m_data)->value ) )
+		#case 11 ( #( value : (($T1::item_<11>*)$e.m_data)->value ) )
+		#case 12 ( #( value : (($T1::item_<12>*)$e.m_data)->value ) )
+		#case 13 ( #( value : (($T1::item_<13>*)$e.m_data)->value ) )
+		#case 14 ( #( value : (($T1::item_<14>*)$e.m_data)->value ) )
+		#case 15 ( #( value : (($T1::item_<15>*)$e.m_data)->value ) )
+		#case 16 ( #( value : (($T1::item_<16>*)$e.m_data)->value ) )
+		#case 17 ( #( value : (($T1::item_<17>*)$e.m_data)->value ) )
+		#case 18 ( #( value : (($T1::item_<18>*)$e.m_data)->value ) )
+		#case 19 ( #( value : (($T1::item_<19>*)$e.m_data)->value ) )
+		#case 20 ( #( value : (($T1::item_<20>*)$e.m_data)->value ) )
+		#case 21 ( #( value : (($T1::item_<21>*)$e.m_data)->value ) )
+		#case 22 ( #( value : (($T1::item_<22>*)$e.m_data)->value ) )
+		#case 23 ( #( value : (($T1::item_<23>*)$e.m_data)->value ) )
+		#case 24 ( #( value : (($T1::item_<24>*)$e.m_data)->value ) )
+		#case 25 ( #( value : (($T1::item_<25>*)$e.m_data)->value ) )
+		#case 26 ( #( value : (($T1::item_<26>*)$e.m_data)->value ) )
+		#case 27 ( #( value : (($T1::item_<27>*)$e.m_data)->value ) )
+		#case 28 ( #( value : (($T1::item_<28>*)$e.m_data)->value ) )
+		#case 29 ( #( value : (($T1::item_<29>*)$e.m_data)->value ) )
+		#case 30 ( #( value : (($T1::item_<30>*)$e.m_data)->value ) )
+		#case 31 ( #( value : (($T1::item_<31>*)$e.m_data)->value ) )
+		#case 32 ( #( value : (($T1::item_<32>*)$e.m_data)->value ) )
+		#case 33 ( #( value : (($T1::item_<33>*)$e.m_data)->value ) )
+		#case 34 ( #( value : (($T1::item_<34>*)$e.m_data)->value ) )
+		#case 35 ( #( value : (($T1::item_<35>*)$e.m_data)->value ) )
+		#case 36 ( #( value : (($T1::item_<36>*)$e.m_data)->value ) )
+		#case 37 ( #( value : (($T1::item_<37>*)$e.m_data)->value ) )
+		#case 38 ( #( value : (($T1::item_<38>*)$e.m_data)->value ) )
+		#case 39 ( #( value : (($T1::item_<39>*)$e.m_data)->value ) )
+		#case 40 ( #( value : (($T1::item_<40>*)$e.m_data)->value ) )
+		#case 41 ( #( value : (($T1::item_<41>*)$e.m_data)->value ) )
+		#case 42 ( #( value : (($T1::item_<42>*)$e.m_data)->value ) )
+		#case 43 ( #( value : (($T1::item_<43>*)$e.m_data)->value ) )
+		#case 44 ( #( value : (($T1::item_<44>*)$e.m_data)->value ) )
+		#case 45 ( #( value : (($T1::item_<45>*)$e.m_data)->value ) )
+		#case 46 ( #( value : (($T1::item_<46>*)$e.m_data)->value ) )
+		#case 47 ( #( value : (($T1::item_<47>*)$e.m_data)->value ) )
+		#case 48 ( #( value : (($T1::item_<48>*)$e.m_data)->value ) )
+		#case 49 ( #( value : (($T1::item_<49>*)$e.m_data)->value ) )
+		#case 50 ( #( value : (($T1::item_<50>*)$e.m_data)->value ) )
+		#default ( #array (expr : 0, size : 0 ) ) 
+	)
+	preview
+	(
+		#switch ($e.m_type)
+		#case  0 ( #( (($T1::item_<0>*)$e.m_data)->value ) )
+		#case  1 ( #( (($T1::item_<1>*)$e.m_data)->value ) )
+		#case  2 ( #( (($T1::item_<2>*)$e.m_data)->value ) )
+		#case  3 ( #( (($T1::item_<3>*)$e.m_data)->value ) )
+		#case  4 ( #( (($T1::item_<4>*)$e.m_data)->value ) )
+		#case  5 ( #( (($T1::item_<5>*)$e.m_data)->value ) )
+		#case  6 ( #( (($T1::item_<6>*)$e.m_data)->value ) )
+		#case  7 ( #( (($T1::item_<7>*)$e.m_data)->value ) )
+		#case  8 ( #( (($T1::item_<8>*)$e.m_data)->value ) )
+		#case  9 ( #( (($T1::item_<9>*)$e.m_data)->value ) )
+		#case 10 ( #( (($T1::item_<10>*)$e.m_data)->value ) )
+		#case 11 ( #( (($T1::item_<11>*)$e.m_data)->value ) )
+		#case 12 ( #( (($T1::item_<12>*)$e.m_data)->value ) )
+		#case 13 ( #( (($T1::item_<13>*)$e.m_data)->value ) )
+		#case 14 ( #( (($T1::item_<14>*)$e.m_data)->value ) )
+		#case 15 ( #( (($T1::item_<15>*)$e.m_data)->value ) )
+		#case 16 ( #( (($T1::item_<16>*)$e.m_data)->value ) )
+		#case 17 ( #( (($T1::item_<17>*)$e.m_data)->value ) )
+		#case 18 ( #( (($T1::item_<18>*)$e.m_data)->value ) )
+		#case 19 ( #( (($T1::item_<19>*)$e.m_data)->value ) )
+		#case 20 ( #( (($T1::item_<20>*)$e.m_data)->value ) )
+		#case 21 ( #( (($T1::item_<21>*)$e.m_data)->value ) )
+		#case 22 ( #( (($T1::item_<22>*)$e.m_data)->value ) )
+		#case 23 ( #( (($T1::item_<23>*)$e.m_data)->value ) )
+		#case 24 ( #( (($T1::item_<24>*)$e.m_data)->value ) )
+		#case 25 ( #( (($T1::item_<25>*)$e.m_data)->value ) )
+		#case 26 ( #( (($T1::item_<26>*)$e.m_data)->value ) )
+		#case 27 ( #( (($T1::item_<27>*)$e.m_data)->value ) )
+		#case 28 ( #( (($T1::item_<28>*)$e.m_data)->value ) )
+		#case 29 ( #( (($T1::item_<29>*)$e.m_data)->value ) )
+		#case 30 ( #( (($T1::item_<30>*)$e.m_data)->value ) )
+		#case 31 ( #( (($T1::item_<31>*)$e.m_data)->value ) )
+		#case 32 ( #( (($T1::item_<32>*)$e.m_data)->value ) )
+		#case 33 ( #( (($T1::item_<33>*)$e.m_data)->value ) )
+		#case 34 ( #( (($T1::item_<34>*)$e.m_data)->value ) )
+		#case 35 ( #( (($T1::item_<35>*)$e.m_data)->value ) )
+		#case 36 ( #( (($T1::item_<36>*)$e.m_data)->value ) )
+		#case 37 ( #( (($T1::item_<37>*)$e.m_data)->value ) )
+		#case 38 ( #( (($T1::item_<38>*)$e.m_data)->value ) )
+		#case 39 ( #( (($T1::item_<39>*)$e.m_data)->value ) )
+		#case 40 ( #( (($T1::item_<40>*)$e.m_data)->value ) )
+		#case 41 ( #( (($T1::item_<41>*)$e.m_data)->value ) )
+		#case 42 ( #( (($T1::item_<42>*)$e.m_data)->value ) )
+		#case 43 ( #( (($T1::item_<43>*)$e.m_data)->value ) )
+		#case 44 ( #( (($T1::item_<44>*)$e.m_data)->value ) )
+		#case 45 ( #( (($T1::item_<45>*)$e.m_data)->value ) )
+		#case 46 ( #( (($T1::item_<46>*)$e.m_data)->value ) )
+		#case 47 ( #( (($T1::item_<47>*)$e.m_data)->value ) )
+		#case 48 ( #( (($T1::item_<48>*)$e.m_data)->value ) )
+		#case 49 ( #( (($T1::item_<49>*)$e.m_data)->value ) )
+		#case 50 ( #( (($T1::item_<50>*)$e.m_data)->value ) )
+		#default ("nothing")
+	)
+}
+
+; bikini types -------------------------------------------------------------------------------

@@ -1,0 +1,56 @@
+resources:
+
+schain		- swap chain
+vbuffer		- vertex buffer, start vertex index
+ibuffer		- index buffer
+vformat		- vertex declaration
+texture		- texture, sampler states
+vshader		- vertex shader
+pshader		- pixel shader
+consts		- list of vertex and pixel shader constants
+states		- list of render states
+viewport	- viewport parameters
+rtarget		- render target, states, consts
+material	- vshader, pshader, list of textures, states, consts
+primitive	- list of vbuffers, ibuffer, states, consts
+
+commands:
+
+init
+	create_schain		( key = { init, sequence }, value = { type, ID, data } )
+	create_vbuffer
+	create_ibuffer
+	create_vformat
+	create_texture
+	create_vshader
+	create_pshader
+	create_consts
+	create_states
+	create_viewport
+	create_rtarget
+	create_material
+	create_primitive
+begin
+	begin_scene		( key = { begin } )
+draw
+	clear_viewport		( key = { draw, rtarget, viewport, sequence }, value = { rtarget, viewport, flags, color, depth, stencil } )
+	draw_primitive		( key = { draw, rtarget, viewport, sequence, translucency, depth, material }, value = { rtarget, viewport, material, primitive } )
+end
+	end_scene		( key = { end } )
+present
+	present_schain		( key = { present }, value = { schain } )
+
+
+
+
+
+type		8	3   3
+rtarget		64	6   9
+viewport	64	6   15
+sequence	32	5   20
+translucency	4	2   22
+depth		4096	12  32
+material	1024	10  42
+-------------------------
+total			42
+

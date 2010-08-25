@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="player">
+      <UniqueIdentifier>{0fc2005c-929e-4944-8ec4-2eec4b780b56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer">
+      <UniqueIdentifier>{c75efbb9-c060-45b3-be89-51b3d8a2a084}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer\shaders">
+      <UniqueIdentifier>{b2d470e7-acaa-41ef-9f7f-93ec96e77cdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sensor">
+      <UniqueIdentifier>{a221ea12-1eb4-428a-bf4a-833214d81a7e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="flash.cpp">
+      <Filter>header</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="line_mesh.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="sensor.cpp">
+      <Filter>sensor</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\bikini\flash.hpp">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="header.hpp">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\flash\player.hpp">
+      <Filter>player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\flash\renderer.hpp">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\flash\sensor.hpp">
+      <Filter>sensor</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\include\bikini\flash\player.inl">
+      <Filter>player</Filter>
+    </None>
+    <None Include="shape.shh">
+      <Filter>renderer\shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Pixel_Shader_Compiler Include="flash.ps">
+      <Filter>renderer\shaders</Filter>
+    </Pixel_Shader_Compiler>
+  </ItemGroup>
+  <ItemGroup>
+    <Vertex_Shader_Compiler Include="flash.vs">
+      <Filter>renderer\shaders</Filter>
+    </Vertex_Shader_Compiler>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,36 @@
+/*---------------------------------------------------------------------------------------------*//*
+
+	Binary Kinematics 3 - C++ Game Programming Library
+	Copyright (C) 2008-2010 Viktor Reutskyy
+	viktor.reutskyy@gmail.com
+
+*//*---------------------------------------------------------------------------------------------*/
+
+#include <bikini/system/shader.shh>
+
+#if !defined(__cplusplus) /*---------------------------------------------------------------------*/
+
+Texture2D color : register(t0);
+
+SamplerState color_sampler : register(s0)
+{
+//	texture = color;
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+
+struct input
+{
+	float2 tex0 : TEXCOORD0;
+	float4 c : COLOR0;
+};
+
+float4 main(input _in) : SV_TARGET
+{
+//	return color.Sample(color_sampler, _in.tex0);
+	return _in.c * color.Sample(color_sampler, _in.tex0);
+//	return _in.c * tex2D(color_sampler, _in.tex0);
+}
+
+#endif /* !defined(__cplusplus) -----------------------------------------------------------------*/
