@@ -16,17 +16,17 @@ struct _matrix_helper_
 	typedef _matrix_helper_<_M, _C - 1, _R> _next;
 	typedef typename _M::element _E;
 
-	static inline void neg(_M &_a) { _next::neg(_a); _a.cell_<_C - 1, _R - 1>() = -_a.cell_<_C - 1, _R - 1>(); }
-	static inline void set(_M &_a, const _M &_b) { _next::set(_a, _b); _a.cell_<_C - 1, _R - 1>() = _b.cell_<_C - 1, _R - 1>(); }
-	static inline void get(const _M &_a, _M &_b) { _next::get(_a, _b); _b.cell_<_C - 1, _R - 1>() = _a.cell_<_C - 1, _R - 1>(); }
-	static inline void add(_M &_a, const _M &_b) { _next::add(_a, _b); _a.cell_<_C - 1, _R - 1>() += _b.cell_<_C - 1, _R - 1>(); }
-	static inline void sub(_M &_a, const _M &_b) { _next::sub(_a, _b); _a.cell_<_C - 1, _R - 1>() -= _b.cell_<_C - 1, _R - 1>(); }
-	static inline void mul(_M &_a, const _M &_b) { _next::mul(_a, _b); _a.cell_<_C - 1, _R - 1>() *= _b.cell_<_C - 1, _R - 1>(); }
-	static inline void div(_M &_a, const _M &_b) { _next::div(_a, _b); _a.cell_<_C - 1, _R - 1>() /= _b.cell_<_C - 1, _R - 1>(); }
-	static inline void mul(_M &_a, const _E &_b) { _next::mul(_a, _b); _a.cell_<_C - 1, _R - 1>() *= _b; }
-	static inline void div(_M &_a, const _E &_b) { _next::div(_a, _b); _a.cell_<_C - 1, _R - 1>() /= _b; }
-	static inline bool equ(const _M &_a, const _M &_b) { return _a.cell_<_C - 1, _R - 1>() == _b.cell_<_C - 1, _R - 1>() && _next::equ(_a, _b); }
-	static inline bool neq(const _M &_a, const _M &_b) { return _a.cell_<_C - 1, _R - 1>() != _b.cell_<_C - 1, _R - 1>() !! _next::neq(_a, _b); }
+	static inline void neg(_M & _a) { _next::neg(_a); _a.cell_<_C - 1, _R - 1>() = -_a.cell_<_C - 1, _R - 1>(); }
+	static inline void set(_M & _a, const _M & _b) { _next::set(_a, _b); _a.cell_<_C - 1, _R - 1>() = _b.cell_<_C - 1, _R - 1>(); }
+	static inline void get(const _M & _a, _M & _b) { _next::get(_a, _b); _b.cell_<_C - 1, _R - 1>() = _a.cell_<_C - 1, _R - 1>(); }
+	static inline void add(_M & _a, const _M & _b) { _next::add(_a, _b); _a.cell_<_C - 1, _R - 1>() += _b.cell_<_C - 1, _R - 1>(); }
+	static inline void sub(_M & _a, const _M & _b) { _next::sub(_a, _b); _a.cell_<_C - 1, _R - 1>() -= _b.cell_<_C - 1, _R - 1>(); }
+	static inline void mul(_M & _a, const _M & _b) { _next::mul(_a, _b); _a.cell_<_C - 1, _R - 1>() *= _b.cell_<_C - 1, _R - 1>(); }
+	static inline void div(_M & _a, const _M & _b) { _next::div(_a, _b); _a.cell_<_C - 1, _R - 1>() /= _b.cell_<_C - 1, _R - 1>(); }
+	static inline void mul(_M & _a, const _E & _b) { _next::mul(_a, _b); _a.cell_<_C - 1, _R - 1>() *= _b; }
+	static inline void div(_M & _a, const _E & _b) { _next::div(_a, _b); _a.cell_<_C - 1, _R - 1>() /= _b; }
+	static inline bool equ(const _M & _a, const _M & _b) { return _a.cell_<_C - 1, _R - 1>() == _b.cell_<_C - 1, _R - 1>() && _next::equ(_a, _b); }
+	static inline bool neq(const _M & _a, const _M & _b) { return _a.cell_<_C - 1, _R - 1>() != _b.cell_<_C - 1, _R - 1>() || _next::neq(_a, _b); }
 };
 template <typename _M, uint _R>
 struct _matrix_helper_<_M, 0, _R>
@@ -34,34 +34,34 @@ struct _matrix_helper_<_M, 0, _R>
 	typedef _matrix_helper_<_M, _M::columns, _R - 1> _next;
 	typedef typename _M::element _E;
 
-	static inline void neg(_M &_a) { _next::neg(_a); }
-	static inline void set(_M &_a, const _M &_b) { _next::set(_a, _b); }
-	static inline void get(const _M &_a, _M &_b) { _next::get(_a, _b); }
-	static inline void add(_M &_a, const _M &_b) { _next::add(_a, _b); }
-	static inline void sub(_M &_a, const _M &_b) { _next::sub(_a, _b); }
-	static inline void mul(_M &_a, const _M &_b) { _next::mul(_a, _b); }
-	static inline void div(_M &_a, const _M &_b) { _next::div(_a, _b); }
-	static inline void mul(_M &_a, const _E &_b) { _next::mul(_a, _b); }
-	static inline void div(_M &_a, const _E &_b) { _next::div(_a, _b); }
-	static inline bool equ(const _M &_a, const _M &_b) { return _next::equ(_a, _b); }
-	static inline bool neq(const _M &_a, const _M &_b) { return _next::neq(_a, _b); }
+	static inline void neg(_M & _a) { _next::neg(_a); }
+	static inline void set(_M & _a, const _M & _b) { _next::set(_a, _b); }
+	static inline void get(const _M & _a, _M & _b) { _next::get(_a, _b); }
+	static inline void add(_M & _a, const _M & _b) { _next::add(_a, _b); }
+	static inline void sub(_M & _a, const _M & _b) { _next::sub(_a, _b); }
+	static inline void mul(_M & _a, const _M & _b) { _next::mul(_a, _b); }
+	static inline void div(_M & _a, const _M & _b) { _next::div(_a, _b); }
+	static inline void mul(_M & _a, const _E & _b) { _next::mul(_a, _b); }
+	static inline void div(_M & _a, const _E & _b) { _next::div(_a, _b); }
+	static inline bool equ(const _M & _a, const _M & _b) { return _next::equ(_a, _b); }
+	static inline bool neq(const _M & _a, const _M & _b) { return _next::neq(_a, _b); }
 };
 template <typename _M, uint _C>
 struct _matrix_helper_<_M, _C, 0>
 {
 	typedef typename _M::element _E;
 
-	static inline void neg(_M &_a) {}
-	static inline void set(_M &_a, const _M &_b) {}
-	static inline void get(const _M &_a, _M &_b) {}
-	static inline void add(_M &_a, const _M &_b) {}
-	static inline void sub(_M &_a, const _M &_b) {}
-	static inline void mul(_M &_a, const _M &_b) {}
-	static inline void div(_M &_a, const _M &_b) {}
-	static inline void mul(_M &_a, const _E &_b) {}
-	static inline void div(_M &_a, const _E &_b) {}
-	static inline bool equ(const _M &_a, const _M &_b) { return true; }
-	static inline bool neq(const _M &_a, const _M &_b) { return false; }
+	static inline void neg(_M & _a) {}
+	static inline void set(_M & _a, const _M & _b) {}
+	static inline void get(const _M & _a, _M & _b) {}
+	static inline void add(_M & _a, const _M & _b) {}
+	static inline void sub(_M & _a, const _M & _b) {}
+	static inline void mul(_M & _a, const _M & _b) {}
+	static inline void div(_M & _a, const _M & _b) {}
+	static inline void mul(_M & _a, const _E & _b) {}
+	static inline void div(_M & _a, const _E & _b) {}
+	static inline bool equ(const _M & _a, const _M & _b) { return true; }
+	static inline bool neq(const _M & _a, const _M & _b) { return false; }
 };
 
 // _matrix_
@@ -104,13 +104,13 @@ inline _matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator /=
 	return *this;
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-inline _matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator *= (const _E &_s)
+inline _matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator *= (const _E & _s)
 {
 	_matrix_helper_<matrix, _C, _R>::mul(*this, _s);
 	return *this;
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-inline _matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator /= (const _E &_s)
+inline _matrix_<_M, _E, _C, _R, _Rs>& _matrix_<_M, _E, _C, _R, _Rs>::operator /= (const _E & _s)
 {
 	_matrix_helper_<matrix, _C, _R>::div(*this, _s);
 	return *this;
@@ -136,12 +136,12 @@ inline const _M _matrix_<_M, _E, _C, _R, _Rs>::operator / (const _matrix_ &_m) c
 	return _M(*this) /= _m;
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-inline const _M _matrix_<_M, _E, _C, _R, _Rs>::operator * (const _E &_s) const
+inline const _M _matrix_<_M, _E, _C, _R, _Rs>::operator * (const _E & _s) const
 {
 	return _M(*this) *= _s;
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-inline const _M _matrix_<_M, _E, _C, _R, _Rs>::operator / (const _E &_s) const
+inline const _M _matrix_<_M, _E, _C, _R, _Rs>::operator / (const _E & _s) const
 {
 	return _M(*this) /= _s;
 }
@@ -156,59 +156,67 @@ inline bool _matrix_<_M, _E, _C, _R, _Rs>::operator != (const _matrix_ &_m) cons
 	return _matrix_helper_<matrix, _C, _R>::neq(*this, _m);
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs> template <uint _I, uint _J>
-inline _E& _matrix_<_M, _E, _C, _R, _Rs>::cell_()
+inline _E & _matrix_<_M, _E, _C, _R, _Rs>::cell_()
 {
-	return ((_E*)this)[_J * _C + _I];
+	return ((_E *)this)[_J * _C + _I];
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs> template <uint _I, uint _J>
-inline const _E& _matrix_<_M, _E, _C, _R, _Rs>::cell_() const
+inline const _E & _matrix_<_M, _E, _C, _R, _Rs>::cell_() const
 {
-	return ((const _E*)this)[_J * _C + _I];
+	return ((const _E *)this)[_J * _C + _I];
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
 struct _matrix_<_M, _E, _C, _R, _Rs>::_row
 {
-	inline _E& operator [] (uint _i) { return ((_E*)this)[_i]; }
-	inline const _E& operator [] (uint _i) const { return ((const _E*)this)[_i]; }
+	inline _E & operator [] (uint _i) { return ((_E *)this)[_i]; }
+	inline const _E & operator [] (uint _i) const { return ((const _E *)this)[_i]; }
 };
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-inline const typename _matrix_<_M, _E, _C, _R, _Rs>::_row& _matrix_<_M, _E, _C, _R, _Rs>::operator [] (uint _i) const
+inline const typename _matrix_<_M, _E, _C, _R, _Rs>::_row & _matrix_<_M, _E, _C, _R, _Rs>::operator [] (uint _i) const
 {
 	assert(_i < _R);
-	return *(const _row*)((const byte*)this + _Rs * _i);
+	return *(const _row *)((const byte *)this + _Rs * _i);
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
-inline typename _matrix_<_M, _E, _C, _R, _Rs>::_row& _matrix_<_M, _E, _C, _R, _Rs>::operator [] (uint _i)
+inline typename _matrix_<_M, _E, _C, _R, _Rs>::_row & _matrix_<_M, _E, _C, _R, _Rs>::operator [] (uint _i)
 {
 	assert(_i < _R);
-	return *(_row*)((byte*)this + _Rs * _i);
+	return *(_row *)((byte *)this + _Rs * _i);
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
 inline _matrix_<_M, _E, _C, _R, _Rs>::operator _M& ()
 {
-	return *(_M*)this;
+	return *(_M *)this;
 }
 template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
 inline _matrix_<_M, _E, _C, _R, _Rs>::operator const _M& () const
 {
-	return *(const _M*)this;
+	return *(const _M *)this;
 }
 
 // _matrix_ convert
 
 template <typename _M0, typename _M1, uint _I = _M1::columns, uint _J = _M1::rows>
-struct _matrix_convert_helper_ { static void get(const _M0 &_a, _M1 &_b)
+struct _matrix_convert_helper_
 {
-	_matrix_convert_helper_<_M0, _M1, _I - 1, _J>::get(_a, _b);
-	_b.cell_<_I - 1, _J - 1>() = _a.cell_<_I - 1, _J - 1>();
-}};
+	static void get(const _M0 & _a, _M1 & _b)
+	{
+		_matrix_convert_helper_<_M0, _M1, _I - 1, _J>::get(_a, _b);
+		_b.cell_<_I - 1, _J - 1>() = _a.cell_<_I - 1, _J - 1>();
+	}
+};
 template <typename _M0, typename _M1, uint _J>
-struct _matrix_convert_helper_<_M0, _M1, 0, _J> { static void get(const _M0 &_a, _M1 &_b)
+struct _matrix_convert_helper_<_M0, _M1, 0, _J>
 {
-	_matrix_convert_helper_<_M0, _M1, _M1::columns, _J - 1>::get(_a, _b);
-}};
+	static void get(const _M0 & _a, _M1 & _b)
+	{
+		_matrix_convert_helper_<_M0, _M1, _M1::columns, _J - 1>::get(_a, _b);
+	}
+};
 template <typename _M0, typename _M1, uint _I>
-struct _matrix_convert_helper_<_M0, _M1, _I, 0> { static void get(const _M0 &_a, _M1 &_b)
+struct _matrix_convert_helper_<_M0, _M1, _I, 0>
+{
+	static void get(const _M0 & _a, _M1 & _b)
 {}};
 
 //template <typename _M, typename _E, uint _C, uint _R, uint _Rs>
@@ -234,33 +242,47 @@ struct _matrix_convert_helper_<_M0, _M1, _I, 0> { static void get(const _M0 &_a,
 // _matrix_ multiply
 
 template <typename _Ma, typename _Mb, typename _Mc, uint _C, uint _R, uint _I = _Ma::columns>
-struct _matrix_mul_dot_helper_ { static void dot(const _Ma &_a, const _Mb &_b, _Mc &_c)
+struct _matrix_mul_dot_helper_
 {
-	_matrix_mul_dot_helper_<_Ma, _Mb, _Mc, _C, _R, _I - 1>::dot(_a, _b, _c);
-	_c.cell_<_C, _R>() += _a.cell_<_I - 1, _R>() * _b.cell_<_C, _I - 1>();
-}};
+	static void dot(const _Ma & _a, const _Mb & _b, _Mc & _c)
+	{
+		_matrix_mul_dot_helper_<_Ma, _Mb, _Mc, _C, _R, _I - 1>::dot(_a, _b, _c);
+		_c.cell_<_C, _R>() += _a.cell_<_I - 1, _R>() * _b.cell_<_C, _I - 1>();
+	}
+};
 template <typename _Ma, typename _Mb, typename _Mc, uint _C, uint _R>
-struct _matrix_mul_dot_helper_<_Ma, _Mb, _Mc, _C, _R, 0> { static void dot(const _Ma &_a, const _Mb &_b, _Mc &_c)
+struct _matrix_mul_dot_helper_<_Ma, _Mb, _Mc, _C, _R, 0>
 {
-	_c.cell_<_C, _R>() = 0;
-}};
+	static void dot(const _Ma & _a, const _Mb & _b, _Mc & _c)
+	{
+		_c.cell_<_C, _R>() = 0;
+	}
+};
 template <typename _Ma, typename _Mb, typename _Mc, uint _I = _Mb::columns, uint _J = _Ma::rows>
-struct _matrix_mul_helper_ { static void mul(const _Ma &_a, const _Mb &_b, _Mc &_c)
+struct _matrix_mul_helper_
 {
-	_matrix_mul_helper_<_Ma, _Mb, _Mc, _I - 1, _J>::mul(_a, _b, _c);
-	_matrix_mul_dot_helper_<_Ma, _Mb, _Mc, _I - 1, _J - 1>::dot(_a, _b, _c);
-}};
+	static void mul(const _Ma & _a, const _Mb & _b, _Mc & _c)
+	{
+		_matrix_mul_helper_<_Ma, _Mb, _Mc, _I - 1, _J>::mul(_a, _b, _c);
+		_matrix_mul_dot_helper_<_Ma, _Mb, _Mc, _I - 1, _J - 1>::dot(_a, _b, _c);
+	}
+};
 template <typename _Ma, typename _Mb, typename _Mc, uint _J>
-struct _matrix_mul_helper_<_Ma, _Mb, _Mc, 0, _J> { static void mul(const _Ma &_a, const _Mb &_b, _Mc &_c)
+struct _matrix_mul_helper_<_Ma, _Mb, _Mc, 0, _J>
 {
-	_matrix_mul_helper_<_Ma, _Mb, _Mc, _Ma::columns, _J - 1>::mul(_a, _b, _c);
-}};
+	static void mul(const _Ma & _a, const _Mb & _b, _Mc & _c)
+	{
+		_matrix_mul_helper_<_Ma, _Mb, _Mc, _Ma::columns, _J - 1>::mul(_a, _b, _c);
+	}
+};
 template <typename _Ma, typename _Mb, typename _Mc, uint _I>
-struct _matrix_mul_helper_<_Ma, _Mb, _Mc, _I, 0> { static void mul(const _Ma &_a, const _Mb &_b, _Mc &_c)
+struct _matrix_mul_helper_<_Ma, _Mb, _Mc, _I, 0>
+{
+	static void mul(const _Ma & _a, const _Mb & _b, _Mc & _c)
 {}};
 
 template <typename _Ma, typename _Mb, typename _Mc>
-void mul(const _Ma &_a, const _Mb &_b, _Mc &_c)
+void mul(const _Ma & _a, const _Mb & _b, _Mc & _c)
 {
 	c_assert(_Ma::columns == _Mb::rows && _Ma::rows == _Mc::rows && _Mb::columns == _Mc::columns);
 	_matrix_mul_helper_<_Ma, _Mb, _Mc>::mul(_a, _b, _c);
@@ -273,7 +295,7 @@ inline matrix_<_T, 1, 1>::matrix_()
 {}
 template <typename _T>
 inline matrix_<_T, 1, 1>::matrix_(_T _m11)
-:
+	:
 	m11(_m11)
 {}
 
@@ -282,8 +304,8 @@ inline matrix_<_T, 2, 2>::matrix_()
 {}
 template <typename _T>
 inline matrix_<_T, 2, 2>::matrix_(_T _m11, _T _m12,
-								  _T _m21, _T _m22)
-:
+                                  _T _m21, _T _m22)
+	:
 	m11(_m11), m12(_m12),
 	m21(_m21), m22(_m22)
 {}
@@ -293,9 +315,9 @@ inline matrix_<_T, 3, 3>::matrix_()
 {}
 template <typename _T>
 inline matrix_<_T, 3, 3>::matrix_(_T _m11, _T _m12, _T _m13,
-								  _T _m21, _T _m22, _T _m23,
-								  _T _m31, _T _m32, _T _m33)
-:
+                                  _T _m21, _T _m22, _T _m23,
+                                  _T _m31, _T _m32, _T _m33)
+	:
 	m11(_m11), m12(_m12), m13(_m13),
 	m21(_m21), m22(_m22), m23(_m23),
 	m31(_m31), m32(_m32), m33(_m33)
@@ -306,8 +328,8 @@ inline matrix_<_T, 3, 2>::matrix_()
 {}
 template <typename _T>
 inline matrix_<_T, 3, 2>::matrix_(_T _m11, _T _m12, _T _m13,
-								  _T _m21, _T _m22, _T _m23)
-:
+                                  _T _m21, _T _m22, _T _m23)
+	:
 	m11(_m11), m12(_m12), m13(_m13),
 	m21(_m21), m22(_m22), m23(_m23)
 {}
@@ -317,10 +339,10 @@ inline matrix_<_T, 4, 4>::matrix_()
 {}
 template <typename _T>
 inline matrix_<_T, 4, 4>::matrix_(_T _m11, _T _m12, _T _m13, _T _m14,
-								  _T _m21, _T _m22, _T _m23, _T _m24,
-								  _T _m31, _T _m32, _T _m33, _T _m34,
-								  _T _m41, _T _m42, _T _m43, _T _m44)
-:
+                                  _T _m21, _T _m22, _T _m23, _T _m24,
+                                  _T _m31, _T _m32, _T _m33, _T _m34,
+                                  _T _m41, _T _m42, _T _m43, _T _m44)
+	:
 	m11(_m11), m12(_m12), m13(_m13), m14(_m14),
 	m21(_m21), m22(_m22), m23(_m23), m24(_m24),
 	m31(_m31), m32(_m32), m33(_m33), m34(_m34),
@@ -332,8 +354,8 @@ inline matrix_<_T, 4, 2>::matrix_()
 {}
 template <typename _T>
 inline matrix_<_T, 4, 2>::matrix_(_T _m11, _T _m12, _T _m13, _T _m14,
-								  _T _m21, _T _m22, _T _m23, _T _m24)
-:
+                                  _T _m21, _T _m22, _T _m23, _T _m24)
+	:
 	m11(_m11), m12(_m12), m13(_m13), m14(_m14),
 	m21(_m21), m22(_m22), m23(_m23), m24(_m24)
 {}
@@ -341,18 +363,26 @@ inline matrix_<_T, 4, 2>::matrix_(_T _m11, _T _m12, _T _m13, _T _m14,
 // matrix_ transpose
 
 template <typename _Ma, typename _Mt, uint _I = _Ma::columns, uint _J = _Ma::rows>
-struct _matrix_transpose_helper_ { static void get(const _Ma &_a, _Mt &_b)
+struct _matrix_transpose_helper_
 {
-	_matrix_transpose_helper_<_Ma, _Mt, _I - 1, _J>::get(_a, _b);
-	_b.cell_<_J - 1, _I - 1>() = _a.cell_<_I - 1, _J - 1>();
-}};
+	static void get(const _Ma & _a, _Mt & _b)
+	{
+		_matrix_transpose_helper_<_Ma, _Mt, _I - 1, _J>::get(_a, _b);
+		_b.cell_<_J - 1, _I - 1>() = _a.cell_<_I - 1, _J - 1>();
+	}
+};
 template <typename _Ma, typename _Mt, uint _J>
-struct _matrix_transpose_helper_<_Ma, _Mt, 0, _J> { static void get(const _Ma &_a, _Mt &_b)
+struct _matrix_transpose_helper_<_Ma, _Mt, 0, _J>
 {
-	_matrix_transpose_helper_<_Ma, _Mt, _Ma::columns, _J - 1>::get(_a, _b);
-}};
+	static void get(const _Ma & _a, _Mt & _b)
+	{
+		_matrix_transpose_helper_<_Ma, _Mt, _Ma::columns, _J - 1>::get(_a, _b);
+	}
+};
 template <typename _Ma, typename _Mt, uint _I>
-struct _matrix_transpose_helper_<_Ma, _Mt, _I, 0> { static void get(const _Ma &_a, _Mt &_b)
+struct _matrix_transpose_helper_<_Ma, _Mt, _I, 0>
+{
+	static void get(const _Ma & _a, _Mt & _b)
 {}};
 template <typename _T, uint _C, uint _R, uint _E>
 inline const matrix_<_T, _R, _C> transpose(const matrix_<_T, _C, _R, _E> &_m)
@@ -367,18 +397,26 @@ inline const matrix_<_T, _R, _C> transpose(const matrix_<_T, _C, _R, _E> &_m)
 // matrix_ minor, determinant, inverse
 
 template <typename _Ma, typename _Mi, uint _C, uint _R, uint _I, uint _J>
-struct _matrix_minor_helper_ { static inline void get(const _Ma &_a, _Mi &_b)
+struct _matrix_minor_helper_
 {
-	_matrix_minor_helper_<_Ma,_Mi, _C, _R, _I - 1, _J>::get(_a, _b);
-	_b.cell_<_I - 1, _J - 1>() = _a.cell_<(_I > _C ? _I : _I - 1), (_J > _R ? _J : _J - 1)>();
-}};
+	static inline void get(const _Ma & _a, _Mi & _b)
+	{
+		_matrix_minor_helper_<_Ma,_Mi, _C, _R, _I - 1, _J>::get(_a, _b);
+		_b.cell_<_I - 1, _J - 1>() = _a.cell_<(_I > _C ? _I : _I - 1), (_J > _R ? _J : _J - 1)>();
+	}
+};
 template <typename _Ma, typename _Mi, uint _C, uint _R, uint _J>
-struct _matrix_minor_helper_<_Ma, _Mi, _C, _R, 0, _J> { static inline void get(const _Ma &_a, _Mi &_b)
+struct _matrix_minor_helper_<_Ma, _Mi, _C, _R, 0, _J>
 {
-	_matrix_minor_helper_<_Ma,_Mi, _C, _R, _Ma::columns - 1, _J - 1>::get(_a, _b);
-}};
+	static inline void get(const _Ma & _a, _Mi & _b)
+	{
+		_matrix_minor_helper_<_Ma,_Mi, _C, _R, _Ma::columns - 1, _J - 1>::get(_a, _b);
+	}
+};
 template <typename _Ma, typename _Mi, uint _C, uint _R, uint _I>
-struct _matrix_minor_helper_<_Ma, _Mi, _C, _R, _I, 0> { static inline void get(const _Ma &_a, _Mi &_b)
+struct _matrix_minor_helper_<_Ma, _Mi, _C, _R, _I, 0>
+{
+	static inline void get(const _Ma & _a, _Mi & _b)
 {}};
 template <uint _C, uint _R, typename _T, uint _S, uint _E>
 inline matrix_<_T, _S - 1, _S - 1> minor_(const matrix_<_T, _S, _S, _E> &_m)
@@ -390,31 +428,46 @@ inline matrix_<_T, _S - 1, _S - 1> minor_(const matrix_<_T, _S, _S, _E> &_m)
 }
 
 template <typename _T, uint _I>
-struct _matrix_product_sign_helper_ { static inline _T get(_T _a, _T _b)
+struct _matrix_product_sign_helper_
 {
-	return _a * -_b;
-}};
+	static inline _T get(_T _a, _T _b)
+	{
+		return _a * -_b;
+	}
+};
 template <typename _T>
-struct _matrix_product_sign_helper_<_T, 0> { static inline _T get(_T _a, _T _b)
+struct _matrix_product_sign_helper_<_T, 0>
 {
-	return _a * _b;
-}};
+	static inline _T get(_T _a, _T _b)
+	{
+		return _a * _b;
+	}
+};
 
 template <typename _T, uint _S, uint _E, uint _I = _S, uint _J = _S>
-struct _matrix_determinant_helper_ { static inline _T get(const matrix_<_T, _S, _S, _E> &_m)
+struct _matrix_determinant_helper_
 {
-	return _matrix_determinant_helper_<_T, _S, _E, _I - 1, _J>::get(_m) + _matrix_product_sign_helper_<_T, (_I - 1 + _J - 1) % 2>::get(determinant(minor_<_I - 1, _J - 1>(_m)), _m.cell_<_I - 1, _J - 1>());
-}};
+	static inline _T get(const matrix_<_T, _S, _S, _E> &_m)
+	{
+		return _matrix_determinant_helper_<_T, _S, _E, _I - 1, _J>::get(_m) + _matrix_product_sign_helper_<_T, (_I - 1 + _J - 1) % 2>::get(determinant(minor_<_I - 1, _J - 1>(_m)), _m.cell_<_I - 1, _J - 1>());
+	}
+};
 template <typename _T, uint _S, uint _E, uint _J>
-struct _matrix_determinant_helper_<_T, _S, _E, 1, _J> { static inline _T get(const matrix_<_T, _S, _S, _E> &_m)
+struct _matrix_determinant_helper_<_T, _S, _E, 1, _J>
 {
-	return _matrix_product_sign_helper_<_T, (_J - 1) % 2>::get(determinant(minor_<0, _J - 1>(_m)), _m.cell_<0, _J - 1>());
-}};
+	static inline _T get(const matrix_<_T, _S, _S, _E> &_m)
+	{
+		return _matrix_product_sign_helper_<_T, (_J - 1) % 2>::get(determinant(minor_<0, _J - 1>(_m)), _m.cell_<0, _J - 1>());
+	}
+};
 template <typename _T, uint _S, uint _E>
-struct _matrix_determinant_helper_<_T, _S, _E, 1, 1> { static inline _T get(const matrix_<_T, _S, _S, _E> &_m)
+struct _matrix_determinant_helper_<_T, _S, _E, 1, 1>
 {
-	return _m.cell_<0, 0>();
-}};
+	static inline _T get(const matrix_<_T, _S, _S, _E> &_m)
+	{
+		return _m.cell_<0, 0>();
+	}
+};
 template <typename _T, uint _S, uint _E>
 inline const _T determinant(const matrix_<_T, _S, _S, _E> &_m)
 {
@@ -422,18 +475,26 @@ inline const _T determinant(const matrix_<_T, _S, _S, _E> &_m)
 }
 
 template <typename _T, uint _S, uint _E, uint _I = _S, uint _J = _S>
-struct _matrix_inverse_helper_ { static inline void get(const matrix_<_T, _S, _S, _E> &_m, matrix_<_T, _S, _S, _E> &_im, _T _d)
+struct _matrix_inverse_helper_
 {
-	_matrix_inverse_helper_<_T, _S, _E, _I - 1, _J>::get(_m, _im, _d);
-	_im.cell_<_J - 1, _I - 1>() = _matrix_product_sign_helper_<_T, (_I - 1 + _J - 1) % 2>::get(determinant(minor_<_I - 1, _J - 1>(_m)), _d);
-}};
+	static inline void get(const matrix_<_T, _S, _S, _E> &_m, matrix_<_T, _S, _S, _E> &_im, _T _d)
+	{
+		_matrix_inverse_helper_<_T, _S, _E, _I - 1, _J>::get(_m, _im, _d);
+		_im.cell_<_J - 1, _I - 1>() = _matrix_product_sign_helper_<_T, (_I - 1 + _J - 1) % 2>::get(determinant(minor_<_I - 1, _J - 1>(_m)), _d);
+	}
+};
 template <typename _T, uint _S, uint _E, uint _J>
-struct _matrix_inverse_helper_<_T, _S, _E, 0, _J> { static inline void get(const matrix_<_T, _S, _S, _E> &_m, matrix_<_T, _S, _S, _E> &_im, _T _d)
+struct _matrix_inverse_helper_<_T, _S, _E, 0, _J>
 {
-	_matrix_inverse_helper_<_T, _S, _E, _S, _J - 1>::get(_m, _im, _d);
-}};
+	static inline void get(const matrix_<_T, _S, _S, _E> &_m, matrix_<_T, _S, _S, _E> &_im, _T _d)
+	{
+		_matrix_inverse_helper_<_T, _S, _E, _S, _J - 1>::get(_m, _im, _d);
+	}
+};
 template <typename _T, uint _S, uint _E>
-struct _matrix_inverse_helper_<_T, _S, _E, _S, 0> { static inline void get(const matrix_<_T, _S, _S, _E> &_m, matrix_<_T, _S, _S, _E> &_im, _T _d)
+struct _matrix_inverse_helper_<_T, _S, _E, _S, 0>
+{
+	static inline void get(const matrix_<_T, _S, _S, _E> &_m, matrix_<_T, _S, _S, _E> &_im, _T _d)
 {}};
 template <typename _T, uint _S, uint _E>
 inline bool inverse(const matrix_<_T, _S, _S, _E> &_m, matrix_<_T, _S, _S, _E> &_im)

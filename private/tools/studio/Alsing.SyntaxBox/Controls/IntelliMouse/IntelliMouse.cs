@@ -13,7 +13,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Studio.Alsing.Resouces;
+using Studio.Alsing.SyntaxBox;
 //using Properties;
 using ScrollEventArgs=Studio.Alsing.Windows.Forms.IntelliMouse.ScrollEventArgs;
 using ScrollEventHandler=Studio.Alsing.Windows.Forms.IntelliMouse.ScrollEventHandler;

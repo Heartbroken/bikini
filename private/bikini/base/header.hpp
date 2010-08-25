@@ -9,3 +9,5 @@
 #pragma once
 
 #include <bikini/base.hpp>
+
+#pragma comment(lib, "gtest ("_PLATFORM_"!"_CONFIGURATION_")")

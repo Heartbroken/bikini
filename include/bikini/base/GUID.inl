@@ -9,7 +9,8 @@
 #pragma once
 
 // create random GUID
-inline GUID random_GUID(random &_random) {
+inline GUID random_GUID(random & _random)
+{
 	GUID l_guid;
 	l_guid.Data1 = (unsigned long)((_random.get() << 16) | _random.get());
 	l_guid.Data2 = (unsigned short)_random.get();

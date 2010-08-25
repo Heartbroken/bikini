@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="machine">
+      <UniqueIdentifier>{91306e78-4ea6-42ed-93a7-b429456c56e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header">
+      <UniqueIdentifier>{e8dde7d5-81c4-4b76-b832-0410e4de7cf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="object">
+      <UniqueIdentifier>{47c1ee68-fc3f-4f2a-955c-c3b3bbca85a5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="machine.cpp">
+      <Filter>machine</Filter>
+    </ClCompile>
+    <ClCompile Include="script.cpp">
+      <Filter>header</Filter>
+    </ClCompile>
+    <ClCompile Include="object.cpp">
+      <Filter>object</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\bikini\script\machine.hpp">
+      <Filter>machine</Filter>
+    </ClInclude>
+    <ClInclude Include="header.hpp">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\script.hpp">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\script\object.hpp">
+      <Filter>object</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

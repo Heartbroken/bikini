@@ -10,10 +10,10 @@
 
 template<typename _T>
 inline ring_<_T>::ring_(uint _size)
-:
+	:
 	m_size(_size), m_write(0), m_read(0)
 {
-	m_buffer = (type*)malloc(m_size * sizeof(type));
+	m_buffer = (type *)malloc(m_size * sizeof(type));
 }
 template<typename _T>
 inline ring_<_T>::~ring_()
@@ -47,7 +47,7 @@ inline bool ring_<_T>::full() const
 	return (m_write + 1) % m_size == m_read;
 }
 template<typename _T>
-inline bool ring_<_T>::push(const type &_v)
+inline bool ring_<_T>::push(const type & _v)
 {
 	if (full()) return false;
 
@@ -57,7 +57,7 @@ inline bool ring_<_T>::push(const type &_v)
 	return true;
 }
 template<typename _T>
-inline bool ring_<_T>::write(const type* _data, uint _size)
+inline bool ring_<_T>::write(const type * _data, uint _size)
 {
 	if (_size > free_space()) return false;
 
@@ -74,11 +74,11 @@ inline bool ring_<_T>::write(const type* _data, uint _size)
 	return true;
 }
 template<>
-inline bool ring_<byte>::write(const byte* _data, uint _size)
+inline bool ring_<byte>::write(const byte * _data, uint _size)
 {
 	if (_size > free_space()) return false;
 
-	const byte* l_data = _data;
+	const byte * l_data = _data;
 	uint l_size = _size;
 	uint l_write = m_write;
 
@@ -98,12 +98,12 @@ inline bool ring_<byte>::write(const byte* _data, uint _size)
 	return true;
 }
 template<typename _T>
-inline typename ring_<_T>::type& ring_<_T>::front()
+inline typename ring_<_T>::type & ring_<_T>::front()
 {
 	return *(m_buffer + m_read);
 }
 template<typename _T>
-inline const typename ring_<_T>::type& ring_<_T>::front() const
+inline const typename ring_<_T>::type & ring_<_T>::front() const
 {
 	return *(m_buffer + m_read);
 }
@@ -114,7 +114,7 @@ inline void ring_<_T>::pop()
 	m_read = (m_read + 1) % m_size;
 }
 template<typename _T>
-inline bool ring_<_T>::read(type* _data, uint _size)
+inline bool ring_<_T>::read(type * _data, uint _size)
 {
 	if (_size > used_space()) return false;
 
@@ -132,11 +132,11 @@ inline bool ring_<_T>::read(type* _data, uint _size)
 	return true;
 }
 template<>
-inline bool ring_<byte>::read(byte* _data, uint _size)
+inline bool ring_<byte>::read(byte * _data, uint _size)
 {
 	if (_size > used_space()) return false;
 
-	byte* l_data = _data;
+	byte * l_data = _data;
 	uint l_size = _size;
 	uint l_read = m_read;
 

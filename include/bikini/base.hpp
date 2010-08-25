@@ -37,11 +37,15 @@
 #include <fstream>
 #include <sstream>
 
+#include <gtest/gtest.h>
+
 /// bikini-iii main namespace
-namespace bk { /*--------------------------------------------------------------------------------*/
+namespace bk   /*--------------------------------------------------------------------------------*/
+{
 
 #include "base/defines.hpp"
 #include "base/types.hpp"
+#include "base/utest.hpp"
 #include "base/string.hpp"
 #include "base/constants.hpp"
 #include "base/assert.hpp"

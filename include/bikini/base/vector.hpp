@@ -9,27 +9,15 @@
 #pragma once
 
 ///
-template
-<
-	typename _Vector,
-	typename _Element,
-	uint _Size,
-	uint _Extra = 0
->
+template <typename _Vector, typename _Element, uint _Size, uint _Extra = 0>
 struct _vector_
 :
 	_matrix_<_Vector, _Element, _Size, 1, sizeof(_Element) * (_Size + _Extra)>
 {
-	typedef _Vector vector;
+    typedef _Vector vector;
 
-	const _Element& operator [] (uint _i) const;
-	_Element& operator [] (uint _i);
-
-	//template <typename _V1, typename _E1, uint _S1, uint _Ex1>
-	//inline operator typename _vector_<_V1, _E1, _S1, _Ex1>::vector () const
-	//{
-	//	return *(_vector_<_V1, _E1, _S1, _Ex1>::vector*)this;
-	//}
+    const _Element & operator [] (uint _i) const;
+    _Element & operator [] (uint _i);
 };
 
 template <typename _Type, uint _Size, uint _Extra = 0>
@@ -135,5 +123,7 @@ const real3 real3_0(r_0, r_0, r_0);
 const real3 real3_x(r_1, r_0, r_0);
 const real3 real3_y(r_0, r_1, r_0);
 const real3 real3_z(r_0, r_0, r_1);
+
+DECLARE_UTEST(vector);
 
 #include "vector.inl"

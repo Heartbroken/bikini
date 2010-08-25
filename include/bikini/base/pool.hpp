@@ -14,9 +14,9 @@ template<typename _Type> struct pool_
 	typedef _Type type;
 
 	inline pool_();
-	inline uint add(const type &_value);
-	inline type& get(uint _ID);
-	inline const type& get(uint _ID) const;
+	inline uint add(const type & _value);
+	inline type & get(uint _ID);
+	inline const type & get(uint _ID) const;
 	inline void remove(uint _ID);
 	inline bool exists(uint _ID) const;
 	inline uint first_ID() const;

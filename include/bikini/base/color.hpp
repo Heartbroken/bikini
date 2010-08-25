@@ -12,8 +12,8 @@
 
 template<typename _Type>
 struct color_
-:
-	_vector_<color_<_Type>, _Type, 4>
+		:
+		_vector_<color_<_Type>, _Type, 4>
 {
 	_Type r, g, b, a;
 
@@ -41,8 +41,8 @@ template<typename _Type> struct cxform_
 {
 	typedef color_<_Type> color;
 	inline cxform_();
-	inline cxform_(const color &_mul, const color &_add);
-	inline const color transform(const color &_c) const;
+	inline cxform_(const color & _mul, const color & _add);
+	inline const color transform(const color & _c) const;
 
 private:
 	color m_mul, m_add;

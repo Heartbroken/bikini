@@ -13,7 +13,8 @@
 	sequence of random numbers. The user can reproduce a sequence
 	by saving and restoring the seed member
  */
-struct random {
+struct random
+{
 	/// Maximum random value
 	static const uint max = 32767;
 	/// Random numbers sequence seed

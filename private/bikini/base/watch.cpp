@@ -8,7 +8,8 @@
 
 #include "header.hpp"
 
-namespace bk { /*--------------------------------------------------------------------------------*/
+namespace bk   /*--------------------------------------------------------------------------------*/
+{
 
 // watch::type
 
@@ -18,14 +19,14 @@ uint watch::type::member_count() const
 
 	for (uint i = 0, s = base_count(); i < s; ++i)
 	{
-		const base &l_base = get_base(i);
-		const type &l_type = m_watch.get_type(l_base.type);
+		const base & l_base = get_base(i);
+		const type & l_type = m_watch.get_type(l_base.type);
 		l_count += l_type.member_count();
 	}
 
 	return l_count;
 }
-const watch::type::member& watch::type::get_member(uint _i) const
+const watch::type::member & watch::type::get_member(uint _i) const
 {
 	if (_i < m_members.size())
 	{
@@ -36,8 +37,8 @@ const watch::type::member& watch::type::get_member(uint _i) const
 
 	for (uint i = 0, s = base_count(); i < s; ++i)
 	{
-		const base &l_base = get_base(i);
-		const type &l_type = m_watch.get_type(l_base.type);
+		const base & l_base = get_base(i);
+		const type & l_type = m_watch.get_type(l_base.type);
 
 		uint l_count = l_type.member_count();
 
@@ -49,7 +50,7 @@ const watch::type::member& watch::type::get_member(uint _i) const
 	std::cerr << "ERROR: (Watch) Bad member index\n";
 	assert(0);
 
-	return *(member*)0;
+	return *(member *)0;
 }
 handle watch::type::member_base_cast(uint _i, handle _p) const
 {
@@ -62,8 +63,8 @@ handle watch::type::member_base_cast(uint _i, handle _p) const
 
 	for (uint i = 0, s = base_count(); i < s; ++i)
 	{
-		const base &l_base = get_base(i);
-		const type &l_type = m_watch.get_type(l_base.type);
+		const base & l_base = get_base(i);
+		const type & l_type = m_watch.get_type(l_base.type);
 
 		uint l_count = l_type.member_count();
 
@@ -77,11 +78,11 @@ handle watch::type::member_base_cast(uint _i, handle _p) const
 
 	return _p;
 }
-uint watch::type::find_member(const achar *_name) const
+uint watch::type::find_member(const achar * _name) const
 {
 	for (uint i = 0, s = member_count(); i < s; ++i)
 	{
-		const member &l_member = get_member(i);
+		const member & l_member = get_member(i);
 		if (l_member.name == _name) return i;
 	}
 
@@ -90,12 +91,12 @@ uint watch::type::find_member(const achar *_name) const
 
 // watch::varaible
 
-const watch::type::member& _varaible_resolve_member(const watch::varaible &_v)
+const watch::type::member & _varaible_resolve_member(const watch::varaible & _v)
 {
 	uint l_type = 0;
 	for (uint i = 0, s = _v.path.size(); i < s; ++i)
 	{
-		const watch::type::member &l_member = _v.get_watch().get_type(l_type).get_member(_v.path[i]);
+		const watch::type::member & l_member = _v.get_watch().get_type(l_type).get_member(_v.path[i]);
 		l_type = l_member.type;
 
 		if (i + 1 == s) return l_member;
@@ -103,10 +104,10 @@ const watch::type::member& _varaible_resolve_member(const watch::varaible &_v)
 
 	assert(0);
 
-	return *(watch::type::member*)0;
+	return *(watch::type::member *)0;
 }
 struct _varaible_tmp_object { uint type; handle object; };
-void _varaible_resolve_get(const watch::varaible &_v, handle _value)
+void _varaible_resolve_get(const watch::varaible & _v, handle _value)
 {
 	array_<_varaible_tmp_object> l_tmp_objects;
 	uint l_type = 0;
@@ -114,8 +115,8 @@ void _varaible_resolve_get(const watch::varaible &_v, handle _value)
 	for (uint i = 0, s = _v.path.size(); i < s; ++i)
 	{
 		uint l_step = _v.path[i];
-		const watch::type &l_object_type = _v.get_watch().get_type(l_type);
-		const watch::type::member &l_member = l_object_type.get_member(l_step);
+		const watch::type & l_object_type = _v.get_watch().get_type(l_type);
+		const watch::type::member & l_member = l_object_type.get_member(l_step);
 
 		handle l_value = i + 1 < s ? _malloca(l_member.get->value_size) : _value;
 		(*l_member.get)(l_value, l_object_type.member_base_cast(l_step, l_object));
@@ -130,7 +131,7 @@ void _varaible_resolve_get(const watch::varaible &_v, handle _value)
 		}
 		else
 		{
-			l_object = *(void**)l_value;
+			l_object = *(void **)l_value;
 		}
 
 		l_type = l_member.type;
@@ -138,13 +139,13 @@ void _varaible_resolve_get(const watch::varaible &_v, handle _value)
 
 	while (!l_tmp_objects.empty())
 	{
-		const _varaible_tmp_object &l_tmp = l_tmp_objects.back();
+		const _varaible_tmp_object & l_tmp = l_tmp_objects.back();
 		_v.get_watch().get_type(l_tmp.type).destroy_value(l_tmp.object);
 
 		l_tmp_objects.pop_back();
 	}
 }
-void _varaible_resolve_set(const watch::varaible &_v, pointer _value)
+void _varaible_resolve_set(const watch::varaible & _v, pointer _value)
 {
 	array_<_varaible_tmp_object> l_tmp_objects;
 	uint l_type = 0;
@@ -152,8 +153,8 @@ void _varaible_resolve_set(const watch::varaible &_v, pointer _value)
 	for (uint i = 0, s = _v.path.size(); i < s; ++i)
 	{
 		uint l_step = _v.path[i];
-		const watch::type &l_object_type = _v.get_watch().get_type(l_type);
-		const watch::type::member &l_member = l_object_type.get_member(l_step);
+		const watch::type & l_object_type = _v.get_watch().get_type(l_type);
+		const watch::type::member & l_member = l_object_type.get_member(l_step);
 
 		handle l_value = 0;
 
@@ -177,7 +178,7 @@ void _varaible_resolve_set(const watch::varaible &_v, pointer _value)
 		}
 		else
 		{
-			l_object = *(void**)l_value;
+			l_object = *(void **)l_value;
 		}
 
 		l_type = l_member.type;
@@ -185,7 +186,7 @@ void _varaible_resolve_set(const watch::varaible &_v, pointer _value)
 
 	while (!l_tmp_objects.empty())
 	{
-		const _varaible_tmp_object &l_tmp = l_tmp_objects.back();
+		const _varaible_tmp_object & l_tmp = l_tmp_objects.back();
 		_v.get_watch().get_type(l_tmp.type).destroy_value(l_tmp.object);
 
 		l_tmp_objects.pop_back();
@@ -210,7 +211,7 @@ uint watch::type_count() const
 {
 	return m_types.size();
 }
-const watch::type& watch::get_type(uint _i) const
+const watch::type & watch::get_type(uint _i) const
 {
 	return *m_types[_i];
 }
@@ -218,7 +219,7 @@ uint watch::global_count() const
 {
 	assert(!m_types.empty());
 
-	const type &l_root = get_type(0);
+	const type & l_root = get_type(0);
 
 	return l_root.member_count();
 }
@@ -231,14 +232,14 @@ watch::varaible watch::get_global(uint _i) const
 
 	return l_v;
 }
-watch::varaible watch::find_varaible(const achar *_path) const
+watch::varaible watch::find_varaible(const achar * _path) const
 {
 	assert(!m_types.empty());
 
 	astring l_path = _path;
 	astring l_name = l_path.substr(0, l_path.find("::"));
 	l_path.erase(0, l_name.length() + 2);
-	type &l_root = *m_types[0];
+	type & l_root = *m_types[0];
 	uint l_i = l_root.find_member(l_name.c_str());
 
 	if (l_i == bad_ID) return varaible(*this);
@@ -266,7 +267,7 @@ void watch::clear()
 
 	m_types.push_back(new type(*this));
 
-	type &l_type = *m_types.back();
+	type & l_type = *m_types.back();
 	l_type.name = "root";
 	l_type.ID = _get_ID_of_<watch>();
 }
