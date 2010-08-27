@@ -1,21 +1,20 @@
-#summary Bikini Studio - Resources Editor
+#summary Bikini Studio - Resources Editor. A tool for bikini applications resources creation.
 
-=Bikini Studio - Game Resource Editor=
-
+=Bikini Studio - Resource Editor=
 Bikini Studio application consists of two modules: Bikini.dll - C++ dynamic link library implementing all editor’s functionality and Studio.exe - C# application implementing editor’s user interface. Bikini.dll exposes a set of interface functions to be used from Studio.exe, and Studio.exe uses these functions via P/Invoke.
-==Metaphor==
 
+==Metaphor==
 The main entity in the editor’s object model is Workspace. Workspace is created on start-up and exists all the time the editor is running. Workspace allows user to create, save and load Project. Project contain one or several Stages. Stages may have hierarchical dependencies, means each Stage may have one or several sub-Stages. Each Stage has a set of Resources associated. All Stage’s resources are loaded when the Stage gets active. Additionally to its own resources Stage can use resources of its parent Stages which are also loaded.
 Each Stage is associated with Package where all its Resources are stored when game resources is been built. Project can have one or several Packages.
+
 ==User Interface==
-
 The goal of user interface is providing the user with a complete and convenient set of tools for creating and editing video game resources.
+
 ===Views===
-
 The main element of editor’s user interface is View. There is a number of View types. Each of these views serves for viewing/editing particular object or even particular object’s aspect.
+
 ====Stages View====
-
 Serves for editing the stages hierarchy.
-====Packages View====
 
+====Packages View====
 Serves for editing the stages distribution over the packages.
