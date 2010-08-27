@@ -1,4 +1,4 @@
-#summary Bikini Studio - Resources Editor. A tool for bikini applications resources creation.
+#summary Bikini Studio - Resources Editor. A tool for bikini application resources creation.
 
 =Bikini Studio - Resource Editor=
 Bikini Studio application consists of two modules: Bikini.dll - C++ dynamic link library implementing all editor’s functionality and Studio.exe - C# application implementing editor’s user interface. Bikini.dll exposes a set of interface functions to be used from Studio.exe, and Studio.exe uses these functions via P/Invoke.
