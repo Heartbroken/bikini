@@ -9,7 +9,7 @@ Each Stage is associated with Package where all its Resources are stored when ga
 
 ===Stages===
 Stage is an analog of state in FSM. Stage contains a set of resources and defines current Menu, Scene and Script. One of the root Stages must be a start-up Stage of the project, it gets active on the application start-up.<br>
-Stage’s Script handles Events from Menu and Scene. Script controls behaviour of stage’s Menu and Scene. Stage’s Script can activate one of its sub-Stages. When sub-Stage is activated its parent-Stage’s Script is suspended and resumes its execution only when sub-Stage’s Script finishes execution. When the Script of the root Stage finishes execution the application exits.
+Stage’s Script handles Events from Menu and Scene. Script controls behaviour of stage’s Menu and Scene. Stage’s Script can activate one of its sub-Stages. When sub-Stage is activated its super-Stage’s Script is suspended and resumes its execution only when sub-Stage’s Script finishes execution. When the Script of the root Stage finishes execution the application exits.
 
 ===Resources===
 _todo_
