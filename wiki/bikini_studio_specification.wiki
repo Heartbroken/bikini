@@ -4,12 +4,21 @@
 Bikini Studio application consists of two modules: Bikini.dll - C++ dynamic link library implementing all editor’s functionality and Studio.exe - C# application implementing editor’s user interface. Bikini.dll exposes a set of interface functions to be used from Studio.exe, and Studio.exe uses these functions via P/Invoke.
 
 ==Metaphor==
-The main entity in the editor’s object model is Workspace. Workspace is created on start-up and exists all the time the editor is running. Workspace allows user to create, save and load Project. Project contain one or several Stages. Stages may have hierarchical dependencies, means each Stage may have one or several sub-Stages. Each Stage has a set of Resources associated. All Stage’s resources are loaded when the Stage gets active. Additionally to its own resources Stage can use resources of its parent Stages which are also loaded.
-Each Stage is associated with Package where all its Resources are stored when game resources is been built. Project can have one or several Packages.
+The root entity in the editor’s object model is Workspace. Workspace is created on start-up and exists all the time the editor is running. Workspace allows user to create, save and load Project. Project contain one or several Stages. Stages may have hierarchical dependencies, means each Stage may have one or several sub-Stages. Each Stage has a set of Resources associated. All Stage’s resources are loaded when the Stage gets active. Stage can use its own resources and resources of all its super-Stages. Each Stage is associated with Package where all its Resources are stored when game project is been built. Project can consist of one or several Packages.
 
 ===Stages===
-Stage is an analog of state in FSM. Stage contains a set of resources and defines current Menu, Scene and Script. One of the root Stages must be a start-up Stage of the project, it gets active on the application start-up.<br>
-Stage’s Script handles Events from Menu and Scene. Script controls behaviour of stage’s Menu and Scene. Stage’s Script can activate one of its sub-Stages. When sub-Stage is activated its super-Stage’s Script is suspended and resumes its execution only when sub-Stage’s Script finishes execution. When the Script of the root Stage finishes execution the application exits.
+Stage is an analog of state in FSM. Stage defines current Menu, Scene and Script. One of the Stages should be set as a start-up Stage of the project, it gets active on the application start-up.
+
+====Script====
+Stage’s Script handles Events from Menu and Scene. Script controls behaviour of Stage’s Menu and Scene. In addition to event handling script can have a special co-routine controlling the Stage execution. When co-routine finishes execution the Stage also ends its super-Stage gets active.
+
+====Scene====
+Scene represents 3D world populated with Actors. Scene and Actors can generate Events handled by Stage’s Script.
+<br>_todo_
+
+====Menu====
+Menu is used to allow user control the application and to output information on the screen.
+<br>_todo_
 
 ===Resources===
 _todo_
@@ -25,8 +34,8 @@ The main element of editor’s user interface is View. There is a number of View
 
 ====Stages View====
 Serves for editing the stages hierarchy.
-_todo_
+<br>_todo_
 
 ====Packages View====
 Serves for editing the stages distribution over the packages.
-_todo_
+<br>_todo_
