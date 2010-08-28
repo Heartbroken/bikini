@@ -17,7 +17,7 @@ Scene represents 3D world populated with Actors. Scene and Actors can generate E
 <br>_todo_
 
 ====Menu====
-Menu is used to allow user control the application and to output information on the screen.
+Menu is used to allow user control the application and to output information on the screen. Menu generates Events for Stage’s Script.
 <br>_todo_
 
 ===Resources===
