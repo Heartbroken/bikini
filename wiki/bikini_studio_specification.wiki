@@ -8,7 +8,7 @@ The main entity in the editor’s object model is Workspace. Workspace is create
 Each Stage is associated with Package where all its Resources are stored when game resources is been built. Project can have one or several Packages.
 
 ===Stages===
-_todo_
+Stage is an analog of state in FSM. Stage contains a set of resources and defines current Menu, Scene and Script. One of the root Stages must be a start-up Stage of the project, it gets active on the application start-up. Stage’s Script handles Events from Menu and Scene. Script can control the behaviour of stage’s Menu and Scene. Script can also change current Stage. Next Stage must be a child or a sibling (???) of the current Stage. If the next Stage is a child of the current Stage, current Stage stays loaded and its Script stays suspended. If the next Stage is a sibling of the current Stage, current Stage is unloaded and its Script is terminated. Script can terminate current Stage. If the current Stage has parent Stage it gets active. If the current Stage is a root Stage the application exits.
 
 ===Resources===
 _todo_
