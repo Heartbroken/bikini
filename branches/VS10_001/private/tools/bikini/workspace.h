@@ -166,10 +166,17 @@ struct folder : workspace::folder
 		{}
 	};
 
+	static bk::wchar const* extension;
+
 	folder(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring &_name, bool _create);
 
 	virtual bool add_child(bk::uint _child);
+	virtual bk::astring structure() const;
 	virtual bool save() const;
+	virtual bool load();
+
+private:
+	void write_structure(pugi::xml_node &_root) const;
 };
 
 struct stage : workspace::folder
