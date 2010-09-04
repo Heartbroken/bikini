@@ -747,6 +747,8 @@ void package::write_structure(pugi::xml_node &_root) const
 
 // folder
 
+bk::wchar const* folder::extension = L".folder";
+
 folder::folder(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring &_name, bool _create)
 :
 	workspace::folder(_info, _workspace, _parent_ID, _name, _create)
@@ -760,11 +762,107 @@ bool folder::add_child(bk::uint _child)
 
 	return super::add_child(_child);
 }
+bk::astring folder::structure() const
+{
+	std::ostringstream l_stream;
+	pugi::xml_writer_stream l_writer(l_stream);
+	pugi::xml_document l_document; write_structure(l_document);
+	l_document.save(l_writer, "    ", pugi::format_default|pugi::format_no_declaration);
+
+	return l_stream.str();
+}
 bool folder::save() const
 {
-	assert(get_workspace().exists(parent_ID()));
+	bk::folder l_folder(path());
 
-	return get_workspace().get_<object>(parent_ID()).save();
+	if (!l_folder.exists())
+	{
+		std::wcerr << "ERROR: Can't save folder. Folder '" << l_folder.path() << "' doesn't exist\n";
+		return false;
+	}
+
+	bk::wstring l_path = l_folder.path() + L"/" + extension;
+
+	std::fstream l_stream(l_path.c_str(), std::ios_base::out);
+
+	if (!l_stream.good())
+	{
+		std::wcerr << "ERROR: Can't save folder. Can't open file '" << l_path << "'\n";
+		return false;
+	}
+
+	pugi::xml_writer_stream l_writer(l_stream);
+
+	pugi::xml_document l_document; write_structure(l_document);
+	l_document.save(l_writer, "    ", pugi::format_default|pugi::format_write_bom_utf8);
+
+	return true;
+}
+bool folder::load()
+{
+	bk::wstring l_path = path() + L"/" + extension;
+
+	std::fstream l_stream(l_path.c_str(), std::ios_base::in);
+
+	if (!l_stream.good())
+	{
+		std::wcerr << "ERROR: Can't load folder. Can't open file '" << l_path << "'\n";
+		return false;
+	}
+
+	pugi::xml_document l_document;
+	l_document.load(l_stream);
+
+	pugi::xml_node l_package = l_document.child("package");
+	if (bk::astring("package") != l_package.name()) return false;
+
+	set_GUID(bk::scan_GUID(l_package.attribute("GUID").value()));
+
+	struct _l { static void load_childs(pugi::xml_node _parent, bk::uint _ID, workspace &_w)
+	{
+		for (pugi::xml_node l_child = _parent.first_child(); l_child; l_child = l_child.next_sibling())
+		{
+			if (bk::astring("stage") == l_child.name())
+			{
+				bk::wstring l_name = bk::utf8(l_child.attribute("name").value());
+				bk::uint l_ID = _w.spawn(stage_info(), _ID, l_name, false);
+				load_childs(l_child, l_ID, _w);
+			}
+		}
+	}};
+
+	set_loading(true);
+	_l::load_childs(l_package, ID(), get_workspace());
+	set_loading(false);
+
+	return true;
+}
+
+void folder::write_structure(pugi::xml_node &_root) const
+{
+	pugi::xml_node l_package = _root.append_child();
+	l_package.set_name("folder");
+	l_package.append_attribute("name") = bk::utf8(name()).c_str();
+	l_package.append_attribute("GUID") = bk::print_GUID(GUID());
+	{
+		for (bk::uint l_ID = first_relation(); l_ID != bk::bad_ID; l_ID = next_relation(l_ID))
+		{
+			if (!get_workspace().exists(get_relation(l_ID))) continue;
+
+			object &l_object = get_workspace().get_<object>(get_relation(l_ID));
+			switch (l_object.type())
+			{
+				case workspace::ot::stage :
+				{
+					pugi::xml_node l_stage = l_package.append_child();
+					l_stage.set_name("stage");
+					l_stage.append_attribute("name") = bk::utf8(l_object.name()).c_str();
+					l_stage.append_attribute("GUID") = bk::print_GUID(l_object.GUID());
+				}
+				break;
+			}
+		}
+	}
 }
 
 // stage

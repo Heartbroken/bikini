@@ -344,7 +344,11 @@ namespace Studio
 			public TreeNode treeNode;
             public ComboBox comboBox;
 
-            public WorkspaceObject(Guid _guid) { m_guid = _guid; m_path = ObjectPath(_guid); }
+            public WorkspaceObject(Guid _guid)
+            {
+                m_guid = _guid;
+                UpdatePath();
+            }
 
             // GUID
             private Guid m_guid;
@@ -359,6 +363,12 @@ namespace Studio
             protected String m_path;
             [CategoryAttribute("Object ID"), DescriptionAttribute("Object's path")]
             public String Path { get { return m_path; } }
+            protected void UpdatePath()
+            {
+                m_path = ObjectPath(m_guid);
+                m_path = m_path.Replace("/", "\\");
+                m_path = m_path.Replace("\\\\", "\\");
+            }
 
 			public override string ToString() { return Type; }
 			public virtual String FullName() { return Type; }
@@ -391,8 +401,8 @@ namespace Studio
                     if (RenameObject(GUID, value))
                     {
                         m_name = value;
-                        m_path = ObjectPath(GUID);
-					    if (treeNode != null) treeNode.Text = this.FullName();
+                        UpdatePath();
+                        if (treeNode != null) treeNode.Text = this.FullName();
 					    Debug.Assert(comboBox == null || comboBox.SelectedItem == this);
 					    if (comboBox != null && comboBox.SelectedItem == this) comboBox.Items[comboBox.SelectedIndex] = this;
                     }
