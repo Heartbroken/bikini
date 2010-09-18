@@ -114,7 +114,7 @@ inline const _T cross(const vector_<_T, 2, _E> &_a, const vector_<_T, 2, _E> &_b
 template <typename _T, uint _E>
 inline const vector_<_T, 3, _E> cross(const vector_<_T, 3, _E> &_a, const vector_<_T, 3, _E> &_b)
 {
-	return vector_<_T, 3, _E>(_a.y * _b.z - _a.z * _b.y, _a.z * _b.x - _a.x * _b.z, _a.x * _b.y - _a.y * _b.z);
+	return vector_<_T, 3, _E>(_a.y * _b.z - _a.z * _b.y, _a.z * _b.x - _a.x * _b.z, _a.x * _b.y - _a.y * _b.x);
 }
 template <typename _T, uint _E>
 inline const _T cross(const vector_<_T, 3, _E> &_a, const vector_<_T, 3, _E> &_b, const vector_<_T, 3, _E> &_c)
