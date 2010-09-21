@@ -60,8 +60,9 @@ namespace Studio
             {
                 if (_xml.IsStartElement())
                 {
-                    if (_xml.Name == "package") OpenPackageFile(_xml, l_projectNode);
-                    else if (_xml.Name == "folder") ParseFolderStructure(_xml, l_projectNode);
+                    if (_xml.Name == "stage") OpenStageFile(_xml, l_projectNode);
+                    //if (_xml.Name == "package") OpenPackageFile(_xml, l_projectNode);
+                    //else if (_xml.Name == "folder") ParseFolderStructure(_xml, l_projectNode);
                 }
                 else
                 {
@@ -383,7 +384,7 @@ namespace Studio
 
 		private void newStageToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (m_treeView.SelectedNode.Tag is Bikini.Package ||
+			if (m_treeView.SelectedNode.Tag is Bikini.Project ||
 				m_treeView.SelectedNode.Tag is Bikini.Stage)
 			{
 				TreeNode l_parentNode = m_treeView.SelectedNode;
