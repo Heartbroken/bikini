@@ -487,8 +487,7 @@ project::project(const info &_info, workspace &_workspace, const bk::wstring &_n
 
 bool project::add_child(bk::uint _child)
 {
-	if (get_workspace().get(_child).type() != workspace::ot::package &&
-		get_workspace().get(_child).type() != workspace::ot::folder)
+	if (get_workspace().get(_child).type() != workspace::ot::stage)
 		return false;
 
 	return super::add_child(_child);
@@ -553,16 +552,21 @@ bool project::load()
 	{
 		for (pugi::xml_node l_child = _parent.first_child(); l_child; l_child = l_child.next_sibling())
 		{
-			if (bk::astring("folder") == l_child.name())
+			//if (bk::astring("folder") == l_child.name())
+			//{
+			//	bk::wstring l_name = bk::utf8(l_child.attribute("name").value());
+			//	bk::uint l_ID = _w.spawn(folder_info(), _ID, l_name, false);
+			//	load_childs(l_child, l_ID, _w);
+			//}
+			//else if (bk::astring("package") == l_child.name())
+			//{
+			//	bk::wstring l_name = bk::utf8(l_child.attribute("name").value());
+			//	_w.spawn(package_info(), _ID, l_name, false);
+			//}
+			if (bk::astring("stage") == l_child.name())
 			{
 				bk::wstring l_name = bk::utf8(l_child.attribute("name").value());
-				bk::uint l_ID = _w.spawn(folder_info(), _ID, l_name, false);
-				load_childs(l_child, l_ID, _w);
-			}
-			else if (bk::astring("package") == l_child.name())
-			{
-				bk::wstring l_name = bk::utf8(l_child.attribute("name").value());
-				_w.spawn(package_info(), _ID, l_name, false);
+				_w.spawn(stage_info(), _ID, l_name, false);
 			}
 		}
 	}};
@@ -585,23 +589,23 @@ void project::write_structure(pugi::xml_node &_root) const
 			const object &l_child = _object.get_workspace().get_<object>(_object.get_relation(l_ID));
 			switch (l_child.type())
 			{
-				case workspace::ot::package :
+				case workspace::ot::stage :
 				{
 					pugi::xml_node l_package = _parent.append_child();
-					l_package.set_name("package");
+					l_package.set_name("stage");
 					l_package.append_attribute("name") = bk::utf8(l_child.name()).c_str();
 					l_package.append_attribute("GUID") = bk::print_GUID(l_child.GUID());
 				}
 				break;
-				case workspace::ot::folder :
-				{
-					pugi::xml_node l_folder = _parent.append_child();
-					l_folder.set_name("folder");
-					l_folder.append_attribute("name") = bk::utf8(l_child.name()).c_str();
-					l_folder.append_attribute("GUID") = bk::print_GUID(l_child.GUID());
-					write_childs(l_folder, l_child);
-				}
-				break;
+				//case workspace::ot::folder :
+				//{
+				//	pugi::xml_node l_folder = _parent.append_child();
+				//	l_folder.set_name("folder");
+				//	l_folder.append_attribute("name") = bk::utf8(l_child.name()).c_str();
+				//	l_folder.append_attribute("GUID") = bk::print_GUID(l_child.GUID());
+				//	write_childs(l_folder, l_child);
+				//}
+				//break;
 			}
 		}
 	}};
