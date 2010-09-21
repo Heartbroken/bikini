@@ -419,7 +419,7 @@ namespace Studio
 			public Project(Guid _guid) : base(_guid) { }
 			public override String Type { get { return "Project"; } }
 			public override String FullName() { return ToString(); }
-			public override String SubItems() { return "PFolder|Package"; }
+            public override String SubItems() { return "Stage"; }
 		}
         // Folder
 		public class Folder : NamedWorkspaceObject
