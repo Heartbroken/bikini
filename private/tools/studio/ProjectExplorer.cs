@@ -502,7 +502,7 @@ namespace Studio
             if (l_node != null && l_node.Tag is Bikini.Stage)
             {
                 Bikini.Stage l_stage = (Bikini.Stage)l_node.Tag;
-                Program.MainWindow.OpenStageCode(l_stage.GUID);
+                Program.MainWindow.OpenStageScript(l_stage.GUID);
             }
         }
 
