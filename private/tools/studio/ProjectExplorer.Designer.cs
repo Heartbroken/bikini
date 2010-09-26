@@ -39,8 +39,8 @@ namespace Studio
             this.newResourceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newMenuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.m_treeViewImageList = new System.Windows.Forms.ImageList(this.components);
             this.viewCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.m_treeViewImageList = new System.Windows.Forms.ImageList(this.components);
             this.m_projectContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -78,9 +78,9 @@ namespace Studio
             // 
             this.m_projectContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.buildToolStripMenuItem,
+            this.viewCodeToolStripMenuItem,
             this.addToolStripMenuItem,
-            this.removeToolStripMenuItem,
-            this.viewCodeToolStripMenuItem});
+            this.removeToolStripMenuItem});
             this.m_projectContextMenu.Name = "treeViewContextMenu";
             this.m_projectContextMenu.Size = new System.Drawing.Size(153, 114);
             this.m_projectContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.m_projectContextMenu_Opening);
@@ -157,6 +157,14 @@ namespace Studio
             this.removeToolStripMenuItem.Text = "Remove";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
+            // viewCodeToolStripMenuItem
+            // 
+            this.viewCodeToolStripMenuItem.Name = "viewCodeToolStripMenuItem";
+            this.viewCodeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.viewCodeToolStripMenuItem.Tag = "Stage";
+            this.viewCodeToolStripMenuItem.Text = "Edit Script";
+            this.viewCodeToolStripMenuItem.Click += new System.EventHandler(this.viewCodeToolStripMenuItem_Click);
+            // 
             // m_treeViewImageList
             // 
             this.m_treeViewImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("m_treeViewImageList.ImageStream")));
@@ -182,14 +190,6 @@ namespace Studio
             this.m_treeViewImageList.Images.SetKeyName(18, "");
             this.m_treeViewImageList.Images.SetKeyName(19, "");
             this.m_treeViewImageList.Images.SetKeyName(20, "Project.bmp");
-            // 
-            // viewCodeToolStripMenuItem
-            // 
-            this.viewCodeToolStripMenuItem.Name = "viewCodeToolStripMenuItem";
-            this.viewCodeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.viewCodeToolStripMenuItem.Tag = "Stage";
-            this.viewCodeToolStripMenuItem.Text = "View Code";
-            this.viewCodeToolStripMenuItem.Click += new System.EventHandler(this.viewCodeToolStripMenuItem_Click);
             // 
             // ProjectExplorer
             // 

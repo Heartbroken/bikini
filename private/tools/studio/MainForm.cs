@@ -404,7 +404,7 @@ namespace Studio
         public void OpenStageCode(Guid _GUID)
         {
             ScriptDoc l_doc = CreateNewLuaDoc();
-            l_doc.Text = "Stage '" + Bikini.ObjectName(_GUID) + "'";
+            l_doc.Text = "Stage '" + Bikini.ObjectName(_GUID) + "' Script";
             l_doc.Show(dockPanel, DockState.Document);
         }
 
