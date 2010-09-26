@@ -28,12 +28,8 @@ namespace Studio
             InitializeComponent();
             showRightToLeft.Checked = (RightToLeft == RightToLeft.Yes);
             RightToLeftLayout = showRightToLeft.Checked;
-            //m_projectExplorer = new ProjectExplorer();
             m_projectExplorer.RightToLeftLayout = RightToLeftLayout;
-            //m_resourceExplorer.m_treeView.Nodes[0].Expand();
 			m_deserializeDockContent = new DeserializeDockContent(GetContentFromPersistString);
-
-            //Bikini.Test(-125, "Test call");
         }
 
 		private void menuItemExit_Click(object sender, System.EventArgs e)
@@ -161,7 +157,7 @@ namespace Studio
             return l_guiView;
         }
 
-		private DummyDoc CreateNewDocument()
+		public DummyDoc CreateNewDocument()
 		{
 			DummyDoc dummyDoc = new DummyDoc();
 
@@ -404,6 +400,13 @@ namespace Studio
 
 			dockPanel.ResumeLayout(true, true);
 		}
+
+        public void OpenStageView(Guid _GUID)
+        {
+            ScriptDoc l_doc = CreateNewLuaDoc();
+            l_doc.Text = "Stage '" + Bikini.ObjectName(_GUID) + "'";
+            l_doc.Show(dockPanel, DockState.Document);
+        }
 
 		private void menuItemLayoutByXml_Click(object sender, System.EventArgs e)
 		{

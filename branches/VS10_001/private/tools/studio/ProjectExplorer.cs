@@ -284,8 +284,14 @@ namespace Studio
 
 		private void m_treeView_DoubleClick(object sender, EventArgs e)
 		{
+			TreeNode l_node = m_treeView.GetNodeAt(m_treeView.PointToClient(Control.MousePosition));
 
-		}
+            if (l_node != null && l_node.Tag is Bikini.Stage)
+            {
+                Bikini.Stage l_stage = (Bikini.Stage)l_node.Tag;
+                Program.MainWindow.OpenStageView(l_stage.GUID);
+            }
+        }
 
 		[DllImport("User32.dll", CharSet = CharSet.Auto)]
 		private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
