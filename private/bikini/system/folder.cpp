@@ -153,6 +153,38 @@ bool folder::remove()
 {
 	if (!exists()) return false;
 
+	wstring l_pattern = path() + L"/*.*";
+
+	WIN32_FIND_DATAW l_finddata;
+	HANDLE l_find = FindFirstFileW(l_pattern.c_str(), &l_finddata);
+
+	if (l_find != INVALID_HANDLE_VALUE)
+	{
+		do
+		{
+			wstring l_filename(l_finddata.cFileName);
+
+			if (l_filename == L"." || l_filename == L"..")
+			{
+				continue;
+			}
+
+			wstring l_filepath(path() + L"/" + l_filename);
+
+			if (l_finddata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+			{
+				folder subfolder(l_filepath);
+				subfolder.remove();
+			}
+			else
+			{
+				DeleteFileW(l_filepath.c_str());
+			}
+		}
+		while (FindNextFileW(l_find, &l_finddata));
+		FindClose(l_find);
+	}
+
 	wstring l_path = path();
 
 	if (_wrmdir(l_path.c_str()) != 0) return false;
