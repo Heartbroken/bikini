@@ -284,13 +284,6 @@ namespace Studio
 
 		private void m_treeView_DoubleClick(object sender, EventArgs e)
 		{
-			TreeNode l_node = m_treeView.GetNodeAt(m_treeView.PointToClient(Control.MousePosition));
-
-            if (l_node != null && l_node.Tag is Bikini.Stage)
-            {
-                Bikini.Stage l_stage = (Bikini.Stage)l_node.Tag;
-                Program.MainWindow.OpenStageView(l_stage.GUID);
-            }
         }
 
 		[DllImport("User32.dll", CharSet = CharSet.Auto)]
@@ -494,5 +487,17 @@ namespace Studio
 
 			return _menu.Items.Count - l_hiddenCount;
 		}
+
+        private void viewCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TreeNode l_node = m_treeView.SelectedNode;
+            //TreeNode l_node = m_treeView.GetNodeAt(m_treeView.PointToClient(Control.MousePosition));
+
+            if (l_node != null && l_node.Tag is Bikini.Stage)
+            {
+                Bikini.Stage l_stage = (Bikini.Stage)l_node.Tag;
+                Program.MainWindow.OpenStageCode(l_stage.GUID);
+            }
+        }
 	}
 }

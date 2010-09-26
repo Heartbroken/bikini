@@ -40,6 +40,7 @@ namespace Studio
             this.newMenuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_treeViewImageList = new System.Windows.Forms.ImageList(this.components);
+            this.viewCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_projectContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -78,9 +79,10 @@ namespace Studio
             this.m_projectContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.buildToolStripMenuItem,
             this.addToolStripMenuItem,
-            this.removeToolStripMenuItem});
+            this.removeToolStripMenuItem,
+            this.viewCodeToolStripMenuItem});
             this.m_projectContextMenu.Name = "treeViewContextMenu";
-            this.m_projectContextMenu.Size = new System.Drawing.Size(153, 92);
+            this.m_projectContextMenu.Size = new System.Drawing.Size(153, 114);
             this.m_projectContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.m_projectContextMenu_Opening);
             // 
             // buildToolStripMenuItem
@@ -106,7 +108,7 @@ namespace Studio
             // 
             this.newPackageToolStripMenuItem.Image = global::Studio.Properties.Resources.Package2;
             this.newPackageToolStripMenuItem.Name = "newPackageToolStripMenuItem";
-            this.newPackageToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newPackageToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.newPackageToolStripMenuItem.Tag = "";
             this.newPackageToolStripMenuItem.Text = "New Package";
             this.newPackageToolStripMenuItem.Click += new System.EventHandler(this.newPackageToolStripMenuItem_Click);
@@ -115,7 +117,7 @@ namespace Studio
             // 
             this.newFolderToolStripMenuItem.Image = global::Studio.Properties.Resources.FolderOpen;
             this.newFolderToolStripMenuItem.Name = "newFolderToolStripMenuItem";
-            this.newFolderToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newFolderToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.newFolderToolStripMenuItem.Tag = "";
             this.newFolderToolStripMenuItem.Text = "New Folder";
             this.newFolderToolStripMenuItem.Click += new System.EventHandler(this.newFolderToolStripMenuItem_Click);
@@ -124,7 +126,7 @@ namespace Studio
             // 
             this.newStageToolStripMenuItem.Image = global::Studio.Properties.Resources.Substage;
             this.newStageToolStripMenuItem.Name = "newStageToolStripMenuItem";
-            this.newStageToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newStageToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.newStageToolStripMenuItem.Tag = "Project|Stage";
             this.newStageToolStripMenuItem.Text = "New Stage";
             this.newStageToolStripMenuItem.Click += new System.EventHandler(this.newStageToolStripMenuItem_Click);
@@ -135,7 +137,7 @@ namespace Studio
             this.newMenuToolStripMenuItem});
             this.newResourceToolStripMenuItem.Image = global::Studio.Properties.Resources.Resources2;
             this.newResourceToolStripMenuItem.Name = "newResourceToolStripMenuItem";
-            this.newResourceToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newResourceToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.newResourceToolStripMenuItem.Tag = "Stage";
             this.newResourceToolStripMenuItem.Text = "New Resource";
             // 
@@ -143,7 +145,7 @@ namespace Studio
             // 
             this.newMenuToolStripMenuItem.Image = global::Studio.Properties.Resources.Interface;
             this.newMenuToolStripMenuItem.Name = "newMenuToolStripMenuItem";
-            this.newMenuToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newMenuToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.newMenuToolStripMenuItem.Text = "New Menu";
             this.newMenuToolStripMenuItem.Click += new System.EventHandler(this.newMenuToolStripMenuItem_Click);
             // 
@@ -181,6 +183,14 @@ namespace Studio
             this.m_treeViewImageList.Images.SetKeyName(19, "");
             this.m_treeViewImageList.Images.SetKeyName(20, "Project.bmp");
             // 
+            // viewCodeToolStripMenuItem
+            // 
+            this.viewCodeToolStripMenuItem.Name = "viewCodeToolStripMenuItem";
+            this.viewCodeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.viewCodeToolStripMenuItem.Tag = "Stage";
+            this.viewCodeToolStripMenuItem.Text = "View Code";
+            this.viewCodeToolStripMenuItem.Click += new System.EventHandler(this.viewCodeToolStripMenuItem_Click);
+            // 
             // ProjectExplorer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -211,5 +221,6 @@ namespace Studio
 		private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem newResourceToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem newMenuToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewCodeToolStripMenuItem;
     }
 }

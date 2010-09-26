@@ -401,7 +401,7 @@ namespace Studio
 			dockPanel.ResumeLayout(true, true);
 		}
 
-        public void OpenStageView(Guid _GUID)
+        public void OpenStageCode(Guid _GUID)
         {
             ScriptDoc l_doc = CreateNewLuaDoc();
             l_doc.Text = "Stage '" + Bikini.ObjectName(_GUID) + "'";
