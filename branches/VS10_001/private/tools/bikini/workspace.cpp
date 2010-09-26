@@ -94,7 +94,7 @@ const bk::GUID& workspace::new_package(const bk::GUID &_parent, const bk::wstrin
 {
 	bk::uint l_parent_ID = find_object(_parent);
 
-	if (l_parent_ID == bk::bad_ID)
+	if (!exists(l_parent_ID))
 	{
 		std::wcerr << "ERROR: Can't add new package. Parent object not found\n";
 		return bk::bad_GUID;
@@ -108,13 +108,15 @@ const bk::GUID& workspace::new_package(const bk::GUID &_parent, const bk::wstrin
 		return bk::bad_GUID;
 	}
 
+	get_<object>(l_parent_ID).save();
+
 	return get_<object>(l_ID).GUID();
 }
 const bk::GUID& workspace::new_folder(const bk::GUID &_parent, const bk::wstring &_name)
 {
 	bk::uint l_parent_ID = find_object(_parent);
 
-	if (l_parent_ID == bk::bad_ID)
+	if (!exists(l_parent_ID))
 	{
 		std::wcerr << "ERROR: Can't add new folder. Parent object not found\n";
 		return bk::bad_GUID;
@@ -128,13 +130,15 @@ const bk::GUID& workspace::new_folder(const bk::GUID &_parent, const bk::wstring
 		return bk::bad_GUID;
 	}
 
+	get_<object>(l_parent_ID).save();
+
 	return get_<object>(l_ID).GUID();
 }
 const bk::GUID& workspace::new_stage(const bk::GUID &_parent, const bk::wstring &_name)
 {
 	bk::uint l_parent_ID = find_object(_parent);
 
-	if (l_parent_ID == bk::bad_ID)
+	if (!exists(l_parent_ID))
 	{
 		std::wcerr << "ERROR: Can't add new stage. Parent object not found\n";
 		return bk::bad_GUID;
@@ -148,13 +152,15 @@ const bk::GUID& workspace::new_stage(const bk::GUID &_parent, const bk::wstring 
 		return bk::bad_GUID;
 	}
 
+	get_<object>(l_parent_ID).save();
+
 	return get_<object>(l_ID).GUID();
 }
 bk::astring workspace::object_structure(const bk::GUID &_object)
 {
 	bk::uint l_ID = find_object(_object);
 
-	if (l_ID == bk::bad_ID)
+	if (!exists(l_ID))
 	{
 		std::wcerr << "ERROR: Can't get object's structure. Object not found";
 		return false;
@@ -166,7 +172,7 @@ bk::astring workspace::object_path(const bk::GUID &_object)
 {
 	bk::uint l_ID = find_object(_object);
 
-	if (l_ID == bk::bad_ID)
+	if (!exists(l_ID))
 	{
 		std::wcerr << "ERROR: Can't get object's path. Object not found";
 		return false;
@@ -178,7 +184,7 @@ bk::astring workspace::object_name(const bk::GUID &_object)
 {
 	bk::uint l_ID = find_object(_object);
 
-	if (l_ID == bk::bad_ID)
+	if (!exists(l_ID))
 	{
 		std::wcerr << "ERROR: Can't get object's name. Object not found";
 		return false;
@@ -190,7 +196,7 @@ bool workspace::rename_object(const bk::GUID &_object, const bk::wstring &_name)
 {
 	bk::uint l_ID = find_object(_object);
 
-	if (l_ID == bk::bad_ID)
+	if (!exists(l_ID))
 	{
 		std::wcerr << "ERROR: Can't rename object. Object not found";
 		return false;
@@ -202,35 +208,52 @@ bool workspace::move_object(const bk::GUID &_object, const bk::GUID &_new_parent
 {
 	bk::uint l_ID = find_object(_object);
 
-	if (l_ID == bk::bad_ID)
+	if (!exists(l_ID))
 	{
 		std::wcerr << "ERROR: Can't move object. Object not found";
 		return false;
 	}
 
+	bk::uint l_old_parent_ID = get_<object>(l_ID).parent_ID();
+
+	if (!exists(l_old_parent_ID))
+	{
+		std::wcerr << "ERROR: Can't move object. Old parent object not found";
+		return false;
+	}
+
 	bk::uint l_new_parent_ID = find_object(_new_parent);
 
-	if (l_new_parent_ID == bk::bad_ID)
+	if (!exists(l_new_parent_ID))
 	{
 		std::wcerr << "ERROR: Can't move object. New parent object not found";
 		return false;
 	}
 
-	return get_<object>(l_ID).move(l_new_parent_ID);
+	if (!get_<object>(l_ID).move(l_new_parent_ID)) return false;
+
+	get_<object>(l_old_parent_ID).save();
+	get_<object>(l_new_parent_ID).save();
+
+	return true;
 }
 bool workspace::remove_object(const bk::GUID &_object)
 {
 	bk::uint l_ID = find_object(_object);
 
-	if (l_ID == bk::bad_ID)
+	if (!exists(l_ID))
 	{
 		std::wcerr << "ERROR: Can't remove object. Object not found";
 		return false;
 	}
 
+	bk::uint l_parent_ID = get_<object>(l_ID).parent_ID();
+
 	if (!get_<object>(l_ID).remove()) return false;
 
 	kill(l_ID);
+
+	if (exists(l_parent_ID)) get_<object>(l_parent_ID).save();
 
 	return true;
 }
@@ -284,11 +307,11 @@ bool workspace::object::add_child(bk::uint _child)
 {
 	bk::uint l_child = add_relation(_child);
 
-	if (!loading() && !save())
-	{
-		remove_relation(l_child);
-		return false;
-	}
+	//if (!loading() && !save())
+	//{
+	//	remove_relation(l_child);
+	//	return false;
+	//}
 
 	return true;
 }
@@ -300,11 +323,11 @@ bool workspace::object::remove_child(bk::uint _child)
 		{
 			remove_relation(l_ID);
 
-			if (!save())
-			{
-				add_relation(_child);
-				return false;
-			}
+			//if (!save())
+			//{
+			//	add_relation(_child);
+			//	return false;
+			//}
 
 			return true;
 		}
@@ -376,7 +399,9 @@ bool workspace::object::load()
 bk::wstring workspace::object::path() const
 {
 	if (get_workspace().exists(parent_ID()))
+	{
 		return get_workspace().get_<object>(parent_ID()).path() + L"/" + name();
+	}
 
 	return get_workspace().location() + L"/" + name();
 }
@@ -448,12 +473,6 @@ bool workspace::folder::remove()
 	{
 		get_workspace().get_<object>(get_relation(l_ID)).remove();
 		remove_relation(l_ID);
-	}
-
-	if (get_workspace().exists(parent_ID()))
-	{
-		get_workspace().get_<object>(parent_ID()).remove_child(ID());
-		get_workspace().get_<object>(parent_ID()).save();
 	}
 
 	if (!l_folder.remove())
