@@ -186,6 +186,7 @@ namespace Studio
 			if (openProjectDialog.ShowDialog() == DialogResult.OK)
 			{
 				Guid l_project = Bikini.OpenProject(openProjectDialog.FileName);
+                Text = "Project '" + Bikini.ObjectName(l_project) + "' - Studio";
                 m_projectExplorer.UpdateTreeView(l_project);
                 m_resourceExplorer.UpdateTreeView(l_project);
             }
