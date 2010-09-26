@@ -408,6 +408,13 @@ namespace Studio
             l_doc.Show(dockPanel, DockState.Document);
         }
 
+        public void OpenStageView(Guid _GUID)
+        {
+            BikiniView l_doc = CreateNewGuiView();
+            l_doc.Text = "Stage '" + Bikini.ObjectName(_GUID) + "'";
+            l_doc.Show(dockPanel, DockState.Document);
+        }
+
 		private void menuItemLayoutByXml_Click(object sender, System.EventArgs e)
 		{
 			dockPanel.SuspendLayout(true);
