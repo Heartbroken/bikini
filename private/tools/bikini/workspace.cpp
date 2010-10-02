@@ -715,6 +715,14 @@ bool stage::save() const
 	pugi::xml_document l_document; write_structure(l_document);
 	l_document.save(l_writer, "    ", pugi::format_default|pugi::format_write_bom_utf8);
 
+	// save stage script
+	if (!m_script.empty())
+	{
+		bk::wstring l_path = l_folder.path() + L"/" + L".script";
+		std::fstream l_stream(l_path.c_str(), std::ios_base::out);
+		l_stream << "\xEF\xBB\xBF" << bk::utf8(m_script);
+	}
+
 	return true;
 }
 bool stage::load()
@@ -754,10 +762,21 @@ bool stage::load()
 	_l::load_childs(l_stage, ID(), get_workspace());
 	set_loading(false);
 
-	pugi::xml_node l_script = l_stage.child("script");
-	if (l_script.name() == bk::astring("script"))
+	// load stage script
 	{
-		m_script = bk::utf8(l_script.child_value());
+		bk::wstring l_path = path() + L"/" + L".script";
+		std::fstream l_stream(l_path, std::ios_base::in);
+		if (l_stream.good())
+		{
+			l_stream.seekg(0, std::ios_base::end);
+			bk::uint l_size = (bk::uint)l_stream.tellg();
+			if (l_size > 0)
+			{
+				l_stream.seekg(0, std::ios_base::beg);
+				bk::achar_array l_script(l_size); l_stream.read(&l_script[0], l_size);
+				m_script = bk::utf8(&l_script[0]);
+			}
+		}
 	}
 
 	return true;
@@ -787,12 +806,12 @@ void stage::write_structure(pugi::xml_node &_root) const
 				break;
 			}
 		}
-		if (!m_script.empty())
-		{
-			pugi::xml_node l_script = l_stage.append_child();
-			l_script.set_name("script");
-			l_script.append_child(pugi::node_pcdata).set_value(bk::utf8(m_script).c_str());
-		}
+		//if (!m_script.empty())
+		//{
+		//	pugi::xml_node l_script = l_stage.append_child();
+		//	l_script.set_name("script");
+		//	l_script.append_child(pugi::node_pcdata).set_value(bk::utf8(m_script).c_str());
+		//}
 	}
 }
 
