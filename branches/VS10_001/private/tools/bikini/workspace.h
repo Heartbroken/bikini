@@ -72,7 +72,7 @@ struct workspace : bk::manager
 
 	struct ot { enum object_type
 	{
-		project, package, folder, stage, resources
+		project, stage, package, folder, resources
 	};};
 
 	inline const bk::wstring& location() const { return m_location; }
@@ -129,6 +129,32 @@ private:
 	void write_structure(pugi::xml_node &_root) const;
 };
 
+struct stage : workspace::folder
+{
+	struct info : workspace::folder::info
+	{
+		typedef stage object;
+
+		inline info()
+		:
+			workspace::folder::info(workspace::ot::stage)
+		{}
+	};
+
+	static bk::wchar const* extension;
+
+	stage(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring &_name, bool _create);
+
+	virtual bool add_child(bk::uint _child);
+	virtual bk::astring structure() const;
+	virtual bool save() const;
+	virtual bool load();
+
+private:
+	void write_structure(pugi::xml_node &_root) const;
+	bk::wstring m_script;
+};
+
 struct package : workspace::folder
 {
 	struct info : workspace::folder::info
@@ -169,31 +195,6 @@ struct folder : workspace::folder
 	static bk::wchar const* extension;
 
 	folder(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring &_name, bool _create);
-
-	virtual bool add_child(bk::uint _child);
-	virtual bk::astring structure() const;
-	virtual bool save() const;
-	virtual bool load();
-
-private:
-	void write_structure(pugi::xml_node &_root) const;
-};
-
-struct stage : workspace::folder
-{
-	struct info : workspace::folder::info
-	{
-		typedef stage object;
-
-		inline info()
-		:
-			workspace::folder::info(workspace::ot::stage)
-		{}
-	};
-
-	static bk::wchar const* extension;
-
-	stage(const info &_info, workspace &_workspace, bk::uint _parent_ID, const bk::wstring &_name, bool _create);
 
 	virtual bool add_child(bk::uint _child);
 	virtual bk::astring structure() const;
