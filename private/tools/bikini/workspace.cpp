@@ -20,7 +20,7 @@ bool workspace::create()
 	commands::add("NewStage", bk::functor_<const bk::GUID&, const bk::GUID&, const bk::wstring&>(*this, &workspace::new_stage));
 	commands::add("ObjectStructure", bk::functor_<bk::astring, const bk::GUID&>(*this, &workspace::object_structure));
 	commands::add("ObjectPath", bk::functor_<bk::wstring, const bk::GUID&>(*this, &workspace::object_path));
-	commands::add("ObjectName", bk::functor_<bk::astring, const bk::GUID&>(*this, &workspace::object_name));
+	commands::add("ObjectName", bk::functor_<bk::wstring, const bk::GUID&>(*this, &workspace::object_name));
 	commands::add("RenameObject", bk::functor_<bool, const bk::GUID&, const bk::wstring&>(*this, &workspace::rename_object));
 	commands::add("ObjectScript", bk::functor_<bk::wstring, const bk::GUID&>(*this, &workspace::object_script));
 	commands::add("ChangeObjectScript", bk::functor_<bool, const bk::GUID&, const bk::wstring&>(*this, &workspace::change_object_script));
@@ -184,17 +184,17 @@ bk::wstring workspace::object_path(const bk::GUID &_object)
 
 	return get_<object>(l_ID).path();
 }
-bk::astring workspace::object_name(const bk::GUID &_object)
+bk::wstring workspace::object_name(const bk::GUID &_object)
 {
 	bk::uint l_ID = find_object(_object);
 
 	if (!exists(l_ID))
 	{
 		std::wcerr << "ERROR: Can't get object's name. Object not found";
-		return "";
+		return L"";
 	}
 
-	return bk::utf8(get_<object>(l_ID).name());
+	return get_<object>(l_ID).name();
 }
 bool workspace::rename_object(const bk::GUID &_object, const bk::wstring &_name)
 {
