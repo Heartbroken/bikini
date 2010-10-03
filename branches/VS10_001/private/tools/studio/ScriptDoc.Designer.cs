@@ -75,15 +75,16 @@
             this.syntaxDocument1.MaxUndoBufferSize = 1000;
             this.syntaxDocument1.Modified = false;
             this.syntaxDocument1.UndoStep = 0;
+            this.syntaxDocument1.Change += new System.EventHandler(this.syntaxDocument1_Change);
             // 
-            // LuaDoc
+            // ScriptDoc
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(761, 452);
             this.Controls.Add(this.syntaxBoxControl1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Name = "LuaDoc";
+            this.Name = "ScriptDoc";
             this.Text = "Form1";
             this.ResumeLayout(false);
 

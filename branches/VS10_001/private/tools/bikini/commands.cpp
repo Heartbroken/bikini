@@ -37,7 +37,6 @@ extern "C" __declspec(dllexport)
 const char* __stdcall request(const char* _command)
 {
 	bk::astring l_xml(_command);
-	//std::istringstream l_stream(l_xml);
 	pugi::xml_document l_document;
 	l_document.load(std::istringstream(l_xml), pugi::format_default);
 	pugi::xml_node l_command = l_document.child("command");
