@@ -91,7 +91,7 @@ struct workspace : bk::manager
 	const bk::GUID& new_stage(const bk::GUID &_parent, const bk::wstring &_name);
 	bk::astring object_structure(const bk::GUID &_object);
 	bk::wstring object_path(const bk::GUID &_object);
-	bk::astring object_name(const bk::GUID &_object);
+	bk::wstring object_name(const bk::GUID &_object);
 	bool rename_object(const bk::GUID &_object, const bk::wstring &_name);
 	bk::wstring object_script(const bk::GUID &_object);
 	bool change_object_script(const bk::GUID &_object, const bk::wstring &_script);
