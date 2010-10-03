@@ -138,6 +138,29 @@ namespace Studio
 			if (l_result is bool && Convert.ToBoolean(l_result)) return true;
 			return false;
 		}
+        public static String ObjectScript(Guid _object)
+        {
+            XmlTextWriter l_xml = StartWriteRequest("ObjectScript");
+            WriteRequestArgument(l_xml, _object);
+            String l_request = EndWriteRequest(l_xml);
+
+            Object l_result = ReadResult(request(l_request));
+
+            if (l_result is String) return Convert.ToString(l_result);
+            return "";
+        }
+        public static Boolean ChangeObjectScript(Guid _object, String _script)
+        {
+            XmlTextWriter l_xml = StartWriteRequest("ChangeObjectScript");
+            WriteRequestArgument(l_xml, _object);
+            WriteRequestArgument(l_xml, _script);
+            String l_request = EndWriteRequest(l_xml);
+
+            Object l_result = ReadResult(request(l_request));
+
+            if (l_result is bool && Convert.ToBoolean(l_result)) return true;
+            return false;
+        }
         public static Boolean MoveObject(Guid _object, Guid _newParent)
         {
             XmlTextWriter l_xml = StartWriteRequest("MoveObject");
@@ -280,7 +303,7 @@ namespace Studio
 
             if (_response == null) return l_result;
 
-            byte[] l_byteArray = Encoding.ASCII.GetBytes(_response);
+            byte[] l_byteArray = Encoding.UTF8.GetBytes(_response);
             MemoryStream l_streamIn = new MemoryStream(l_byteArray);
             XmlTextReader l_xmlIn = new XmlTextReader(l_streamIn);
             l_xmlIn.WhitespaceHandling = WhitespaceHandling.None;
@@ -334,7 +357,7 @@ namespace Studio
 #           endif
 #       endif
 
-        [DllImport(DllName, CharSet = CharSet.Ansi)]
+        [DllImport(DllName)]
         public static extern IntPtr request(IntPtr _command);
 
         // PropertyGrid objects

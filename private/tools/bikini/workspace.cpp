@@ -19,9 +19,11 @@ bool workspace::create()
 	commands::add("NewFolder", bk::functor_<const bk::GUID&, const bk::GUID&, const bk::wstring&>(*this, &workspace::new_folder));
 	commands::add("NewStage", bk::functor_<const bk::GUID&, const bk::GUID&, const bk::wstring&>(*this, &workspace::new_stage));
 	commands::add("ObjectStructure", bk::functor_<bk::astring, const bk::GUID&>(*this, &workspace::object_structure));
-	commands::add("ObjectPath", bk::functor_<bk::astring, const bk::GUID&>(*this, &workspace::object_path));
+	commands::add("ObjectPath", bk::functor_<bk::wstring, const bk::GUID&>(*this, &workspace::object_path));
 	commands::add("ObjectName", bk::functor_<bk::astring, const bk::GUID&>(*this, &workspace::object_name));
 	commands::add("RenameObject", bk::functor_<bool, const bk::GUID&, const bk::wstring&>(*this, &workspace::rename_object));
+	commands::add("ObjectScript", bk::functor_<bk::wstring, const bk::GUID&>(*this, &workspace::object_script));
+	commands::add("ChangeObjectScript", bk::functor_<bool, const bk::GUID&, const bk::wstring&>(*this, &workspace::change_object_script));
 	commands::add("MoveObject", bk::functor_<bool, const bk::GUID&, const bk::GUID&>(*this, &workspace::move_object));
 	commands::add("RemoveObject", bk::functor_<bool, const bk::GUID&>(*this, &workspace::remove_object));
 	commands::add("SaveAll", bk::functor_<bool>(*this, &workspace::save_all));
@@ -33,6 +35,8 @@ void workspace::destroy()
 	commands::remove("SaveAll");
 	commands::remove("RemoveObject");
 	commands::remove("MoveObject");
+	commands::remove("ChangeObjectScript");
+	commands::remove("ObjectScript");
 	commands::remove("RenameObject");
 	commands::remove("ObjectName");
 	commands::remove("ObjectPath");
@@ -163,22 +167,22 @@ bk::astring workspace::object_structure(const bk::GUID &_object)
 	if (!exists(l_ID))
 	{
 		std::wcerr << "ERROR: Can't get object's structure. Object not found";
-		return false;
+		return "";
 	}
 
 	return get_<object>(l_ID).structure();
 }
-bk::astring workspace::object_path(const bk::GUID &_object)
+bk::wstring workspace::object_path(const bk::GUID &_object)
 {
 	bk::uint l_ID = find_object(_object);
 
 	if (!exists(l_ID))
 	{
 		std::wcerr << "ERROR: Can't get object's path. Object not found";
-		return false;
+		return L"";
 	}
 
-	return bk::utf8(get_<object>(l_ID).path());
+	return get_<object>(l_ID).path();
 }
 bk::astring workspace::object_name(const bk::GUID &_object)
 {
@@ -187,7 +191,7 @@ bk::astring workspace::object_name(const bk::GUID &_object)
 	if (!exists(l_ID))
 	{
 		std::wcerr << "ERROR: Can't get object's name. Object not found";
-		return false;
+		return "";
 	}
 
 	return bk::utf8(get_<object>(l_ID).name());
@@ -203,6 +207,31 @@ bool workspace::rename_object(const bk::GUID &_object, const bk::wstring &_name)
 	}
 
 	return get_<object>(l_ID).rename(_name);
+}
+bk::wstring workspace::object_script(const bk::GUID &_object)
+{
+	bk::uint l_ID = find_object(_object);
+
+	if (!exists(l_ID))
+	{
+		std::wcerr << "ERROR: Can't get object's script. Object not found";
+		return L"";
+	}
+
+	return get_<object>(l_ID).script();
+}
+bool workspace::change_object_script(const bk::GUID &_object, const bk::wstring &_script)
+{
+	bk::uint l_ID = find_object(_object);
+
+	if (!exists(l_ID))
+	{
+		std::wcerr << "ERROR: Can't change object's script. Object not found";
+		return false;
+	}
+
+	get_<object>(l_ID).set_script(_script);
+	return true;
 }
 bool workspace::move_object(const bk::GUID &_object, const bk::GUID &_new_parent)
 {
@@ -396,6 +425,13 @@ bool workspace::object::load()
 {
 	return true;
 }
+bk::wstring workspace::object::script() const
+{
+	return L"";
+}
+void workspace::object::set_script(const bk::wstring &_script)
+{}
+
 bk::wstring workspace::object::path() const
 {
 	if (get_workspace().exists(parent_ID()))
@@ -719,8 +755,8 @@ bool stage::save() const
 	if (!m_script.empty())
 	{
 		bk::wstring l_path = l_folder.path() + L"/" + L".script";
-		std::fstream l_stream(l_path.c_str(), std::ios_base::out);
-		l_stream << "\xEF\xBB\xBF" << bk::utf8(m_script);
+		std::fstream l_stream(l_path.c_str(), std::ios_base::out|std::ios_base::binary);
+		l_stream << bk::utf8(m_script); //"\xEF\xBB\xBF" << 
 	}
 
 	return true;
@@ -765,7 +801,15 @@ bool stage::load()
 	// load stage script
 	{
 		bk::wstring l_path = path() + L"/" + L".script";
-		std::fstream l_stream(l_path, std::ios_base::in);
+		std::fstream l_stream(l_path, std::ios_base::in|std::ios_base::binary);
+		//bk::astring l_script;
+		//while (l_stream.good())
+		//{
+		//	bk::astring l_line;
+		//	l_stream >> l_line;
+		//	l_script += l_line + "\n";
+		//}
+		//m_script = bk::utf8(l_script);
 		if (l_stream.good())
 		{
 			l_stream.seekg(0, std::ios_base::end);
@@ -773,13 +817,24 @@ bool stage::load()
 			if (l_size > 0)
 			{
 				l_stream.seekg(0, std::ios_base::beg);
-				bk::achar_array l_script(l_size); l_stream.read(&l_script[0], l_size);
+				bk::achar_array l_script(l_size + 1); l_stream.read(&l_script[0], l_size);
+				l_script[l_size] = 0;
+				//bk::uint l_start = 0;
+				//if (l_script[0] == '\xEF' && l_script[1] == '\xBB' && l_script[2] == '\xBF') l_start = 3;
 				m_script = bk::utf8(&l_script[0]);
 			}
 		}
 	}
 
 	return true;
+}
+bk::wstring stage::script() const
+{
+	return m_script;
+}
+void stage::set_script(const bk::wstring &_script)
+{
+	m_script = _script;
 }
 
 void stage::write_structure(pugi::xml_node &_root) const

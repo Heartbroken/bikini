@@ -127,9 +127,9 @@ namespace Studio
 			//    dummyDoc.Show(dockPanel);
 		}
 
-        private ScriptDoc CreateNewLuaDoc()
+        private ScriptDoc CreateNewLuaDoc(Guid _GUID)
         {
-            ScriptDoc l_luaDoc = new ScriptDoc();
+            ScriptDoc l_luaDoc = new ScriptDoc(_GUID);
 
             int l_count = 1;
             string l_text = "Document" + l_count.ToString();
@@ -408,7 +408,7 @@ namespace Studio
 
         public void OpenStageScript(Guid _GUID)
         {
-            ScriptDoc l_doc = CreateNewLuaDoc();
+            ScriptDoc l_doc = CreateNewLuaDoc(_GUID);
             l_doc.Text = "Stage '" + Bikini.ObjectName(_GUID) + "' Script";
             l_doc.Show(dockPanel, DockState.Document);
         }
