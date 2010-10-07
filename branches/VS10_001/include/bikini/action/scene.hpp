@@ -14,7 +14,13 @@ struct scene : manager
 	{
 		struct info : manager::object::info
 		{
+			typedef scene manager;
 			info(uint _type);
 		};
 	};
+
+	struct ot { enum
+	{
+		sector
+	};};
 };
