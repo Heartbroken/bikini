@@ -8,5 +8,23 @@
 
 #pragma once
 
-#include <bikini/action.hpp>
+struct scene : manager
+{
+	struct object : manager::object
+	{
+		struct info : manager::object::info
+		{
+			typedef scene manager;
+			info(uint _type);
+		};
 
+		struct type { enum
+		{
+			sector, portal, camera
+		};};
+
+		object(const info &_info, scene &_scene);
+	};
+};
+
+DECLARE_UTEST(movie_scene);

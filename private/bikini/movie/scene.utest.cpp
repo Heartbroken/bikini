@@ -10,21 +10,21 @@
 
 namespace bk
 {
-namespace action
+namespace movie
 {
 
-UTEST_FILE(action_scene);
+UTEST_FILE(movie_scene);
 
 namespace utest
 {
 
-TEST(action_scene, spawn_fn_creates_objects)
+TEST(movie_scene, spawn_fn_creates_objects)
 {
 	// given
-	bk::action::scene l_scene;
-	bk::action::sector::info l_sector_info;
-	bk::action::portal::info l_portal_info;
-	bk::action::camera::info l_camera_info;
+	bk::movie::scene l_scene;
+	bk::movie::sector::info l_sector_info;
+	bk::movie::portal::info l_portal_info;
+	bk::movie::camera::info l_camera_info;
 
 	// when
 	bk::uint l_sector_ID = l_scene.spawn(l_sector_info);

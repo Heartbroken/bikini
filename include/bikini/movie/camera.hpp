@@ -8,23 +8,15 @@
 
 #pragma once
 
-struct scene : manager
+struct camera : sector::content
 {
-	struct object : manager::object
+	struct info : sector::content::info
 	{
-		struct info : manager::object::info
-		{
-			typedef scene manager;
-			info(uint _type);
-		};
-
-		struct type { enum
-		{
-			sector, portal, camera
-		};};
-
-		object(const info &_info, scene &_scene);
+		typedef camera object;
+		info();
 	};
+
+	camera(const info &_info, scene &_scene, uint _parent_ID, const r4x4 &_xform);
 };
 
-DECLARE_UTEST(action_scene);
+DECLARE_UTEST(movie_camera);

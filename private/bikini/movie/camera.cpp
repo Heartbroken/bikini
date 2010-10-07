@@ -10,23 +10,22 @@
 
 namespace bk /*----------------------------------------------------------------------------------*/
 {
-namespace action /*------------------------------------------------------------------------------*/
+namespace movie /*------------------------------------------------------------------------------*/
 {
 
-// scene::object
+// camera
 
-scene::object::object(const info &_info, scene &_scene)
+camera::camera(const info &_info, scene &_scene, uint _parent_ID, const r4x4 &_xform)
 :
-	bk::manager::object(_info, _scene)
+	sector::content(_info, _scene, _parent_ID, _xform)
 {}
 
-// scene::object::info
+// camera::info
 
-scene::object::info::info(uint _type)
+camera::info::info()
 :
-	bk::manager::object::info(_type)
+	sector::content::info(type::camera)
 {}
-
 
 } /* namespace action ---------------------------------------------------------------------------*/
 

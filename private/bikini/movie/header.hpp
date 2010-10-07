@@ -8,15 +8,5 @@
 
 #pragma once
 
-struct portal : sector::content
-{
-	struct info : sector::content::info
-	{
-		typedef portal object;
-		info();
-	};
+#include <bikini/movie.hpp>
 
-	portal(const info &_info, scene &_scene, uint _parent_ID, const r4x4 &_xform);
-};
-
-DECLARE_UTEST(action_portal);

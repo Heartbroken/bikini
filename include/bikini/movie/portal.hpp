@@ -8,15 +8,15 @@
 
 #pragma once
 
-struct camera : sector::content
+struct portal : sector::content
 {
 	struct info : sector::content::info
 	{
-		typedef camera object;
+		typedef portal object;
 		info();
 	};
 
-	camera(const info &_info, scene &_scene, uint _parent_ID, const r4x4 &_xform);
+	portal(const info &_info, scene &_scene, uint _parent_ID, const r4x4 &_xform);
 };
 
-DECLARE_UTEST(action_camera);
+DECLARE_UTEST(movie_portal);

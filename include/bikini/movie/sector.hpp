@@ -38,4 +38,4 @@ struct sector : scene::object
 	sector(const info &_info, scene &_scene);
 };
 
-DECLARE_UTEST(action_sector);
+DECLARE_UTEST(movie_sector);
