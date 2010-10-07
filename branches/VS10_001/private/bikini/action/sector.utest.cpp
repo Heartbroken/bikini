@@ -18,7 +18,7 @@ UTEST_FILE(action_sector);
 namespace utest
 {
 
-TEST(action_sector, minus_op_negates_elements)
+TEST(action_sector, can_be_spawned)
 {
 	// given
 	bk::action::scene l_scene;
