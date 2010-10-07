@@ -24,7 +24,7 @@ sector::sector(const info &_info, scene &_scene)
 
 sector::info::info()
 :
-	scene::object::info(scene::ot::sector)
+	scene::object::info(type::sector)
 {}
 
 } /* namespace action ---------------------------------------------------------------------------*/
