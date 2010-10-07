@@ -8,19 +8,11 @@
 
 #pragma once
 
-struct scene : manager
+struct portal : scene::object
 {
-	struct object : manager::object
+	struct info : scene::object::info
 	{
-		struct info : manager::object::info
-		{
-			typedef scene manager;
-			info(uint _type);
-		};
+		typedef portal object;
+		info();
 	};
-
-	struct ot { enum
-	{
-		sector, portal
-	};};
 };
