@@ -10,22 +10,23 @@
 
 namespace bk /*----------------------------------------------------------------------------------*/
 {
-namespace action /*------------------------------------------------------------------------------*/
+namespace movie /*-------------------------------------------------------------------------------*/
 {
 
-// portal
+// scene::object
 
-portal::portal(const info &_info, scene &_scene, uint _parent_ID, const r4x4 &_xform)
+scene::object::object(const info &_info, scene &_scene)
 :
-	sector::content(_info, _scene, _parent_ID, _xform)
+	bk::manager::object(_info, _scene)
 {}
 
-// portal::info
+// scene::object::info
 
-portal::info::info()
+scene::object::info::info(uint _type)
 :
-	sector::content::info(type::portal)
+	bk::manager::object::info(_type)
 {}
+
 
 } /* namespace action ---------------------------------------------------------------------------*/
 

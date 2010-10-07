@@ -11,15 +11,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\bikini\action.hpp" />
-    <ClInclude Include="..\..\..\include\bikini\action\camera.hpp" />
-    <ClInclude Include="..\..\..\include\bikini\action\portal.hpp" />
-    <ClInclude Include="..\..\..\include\bikini\action\scene.hpp" />
-    <ClInclude Include="..\..\..\include\bikini\action\sector.hpp" />
+    <ClInclude Include="..\..\..\include\bikini\movie.hpp" />
+    <ClInclude Include="..\..\..\include\bikini\movie\camera.hpp" />
+    <ClInclude Include="..\..\..\include\bikini\movie\portal.hpp" />
+    <ClInclude Include="..\..\..\include\bikini\movie\scene.hpp" />
+    <ClInclude Include="..\..\..\include\bikini\movie\sector.hpp" />
     <ClInclude Include="header.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="action.cpp">
+    <ClCompile Include="movie.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
@@ -36,6 +36,7 @@
     <ProjectGuid>{504001EA-D22C-4457-AB6E-F446D754BE8E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>action</RootNamespace>
+    <ProjectName>movie</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

@@ -10,16 +10,17 @@
 
 #include "system.hpp"
 
-#pragma comment(lib, "action ("_PLATFORM_"!"_CONFIGURATION_")")
+#pragma comment(lib, "movie ("_PLATFORM_"!"_CONFIGURATION_")")
 
-namespace bk { /*--------------------------------------------------------------------------------*/
+namespace bk /*----------------------------------------------------------------------------------*/
+{
+namespace movie /*-------------------------------------------------------------------------------*/
+{
 
-namespace action { /*----------------------------------------------------------------------------*/
-
-#include "action/scene.hpp"
-#include "action/sector.hpp"
-#include "action/portal.hpp"
-#include "action/camera.hpp"
+#include "movie/scene.hpp"
+#include "movie/sector.hpp"
+#include "movie/portal.hpp"
+#include "movie/camera.hpp"
 
 } /* namespace action ---------------------------------------------------------------------------*/
 

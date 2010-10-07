@@ -57,7 +57,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_script", "..\tests\tes
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gtest", "..\external\gtest\gtest.vcxproj", "{008AF052-839E-4E60-A10C-E355C6BD57F4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "action", "action\action.vcxproj", "{504001EA-D22C-4457-AB6E-F446D754BE8E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "movie", "movie\action.vcxproj", "{504001EA-D22C-4457-AB6E-F446D754BE8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
