@@ -11,6 +11,9 @@
     <Filter Include="sector">
       <UniqueIdentifier>{d5674beb-a5a0-485e-92e0-8b1751e9a782}</UniqueIdentifier>
     </Filter>
+    <Filter Include="portal">
+      <UniqueIdentifier>{a64b5656-826b-4ac5-9f3a-ec92df936ced}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header.hpp">
@@ -25,6 +28,9 @@
     <ClInclude Include="..\..\..\include\bikini\action\sector.hpp">
       <Filter>sector</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\action\portal.hpp">
+      <Filter>portal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="action.cpp">
@@ -35,6 +41,9 @@
     </ClCompile>
     <ClCompile Include="sector.cpp">
       <Filter>sector</Filter>
+    </ClCompile>
+    <ClCompile Include="portal.cpp">
+      <Filter>portal</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

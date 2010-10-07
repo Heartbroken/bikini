@@ -6,19 +6,18 @@
 
 *//*---------------------------------------------------------------------------------------------*/
 
-#pragma once
-
-#include "system.hpp"
-
-#pragma comment(lib, "action ("_PLATFORM_"!"_CONFIGURATION_")")
+#include "header.hpp"
 
 namespace bk { /*--------------------------------------------------------------------------------*/
 
 namespace action { /*----------------------------------------------------------------------------*/
 
-#include "action/scene.hpp"
-#include "action/sector.hpp"
-#include "action/portal.hpp"
+// portal::object::info
+
+portal::info::info()
+:
+	scene::object::info(scene::ot::portal)
+{}
 
 } /* namespace action ---------------------------------------------------------------------------*/
 

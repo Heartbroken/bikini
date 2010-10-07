@@ -14,7 +14,7 @@ namespace action { /*-----------------------------------------------------------
 
 // sector::object::info
 
-sector::object::info::info()
+sector::info::info()
 :
 	scene::object::info(scene::ot::sector)
 {}

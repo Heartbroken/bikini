@@ -12,11 +12,12 @@ namespace bk { /*---------------------------------------------------------------
 
 namespace action { /*----------------------------------------------------------------------------*/
 
-
-
 // scene::object::info
 
-scene::object::info::info(uint _type) : manager::object::info(_type) {}
+scene::object::info::info(uint _type)
+:
+	bk::manager::object::info(_type)
+{}
 
 
 } /* namespace action ---------------------------------------------------------------------------*/
