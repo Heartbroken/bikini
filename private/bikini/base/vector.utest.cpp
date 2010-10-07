@@ -8,6 +8,9 @@
 
 #include "header.hpp"
 
+namespace bk
+{
+
 UTEST_FILE(vector);
 
 namespace utest
@@ -101,34 +104,34 @@ TEST(vector, cross_fn_calcs_cross_scalar_of_two_vector2)
 TEST(vector, cross_fn_calcs_cross_vector_of_two_vector3)
 {
 	// given
-	bk::real3 l_v1(1, 2, 3), l_v2(3, 2, 1);
+	bk::real3 l_v1(1, 0, 0), l_v2(0, 1, 0);
 
 	// when
 	bk::real3 l_v3 = bk::cross(l_v1, l_v2);
 
 	// then
-	EXPECT_EQ(-4, l_v3.x);
-	EXPECT_EQ( 8, l_v3.y);
-	EXPECT_EQ( 0, l_v3.z);
+	EXPECT_EQ(0, l_v3.x);
+	EXPECT_EQ(0, l_v3.y);
+	EXPECT_EQ(1, l_v3.z);
 }
 TEST(vector, cross_fn_calcs_cross_scalar_of_three_vector3)
 {
 	// given
-	bk::real3 l_v1(1, 2, 3), l_v2(3, 2, 1), l_v3(1, 3, 2);
+	bk::real3 l_v1(1, 0, 0), l_v2(0, 1, 0), l_v3(0, 0, 1);
 
 	// when
 	bk::real l_cross = bk::cross(l_v1, l_v2, l_v3);
 
 	// then
-	EXPECT_EQ(20, l_cross);
+	EXPECT_EQ(1, l_cross);
 }
 
 TEST(vector, mul_fn_multiplies_vector_and_matrix)
 {
 	// given
 	bk::real3 l_v1(1, 0, 0); bk::real3x3 l_m( 0, 1, 0,
-											 1, 0, 0,
-											 0, 0, 1 );
+											  1, 0, 0,
+											  0, 0, 1 );
 
 	// when
 	bk::real3 l_v2 = bk::mul(l_v1, l_m);
@@ -137,6 +140,8 @@ TEST(vector, mul_fn_multiplies_vector_and_matrix)
 	EXPECT_EQ(0, l_v2.x);
 	EXPECT_EQ(1, l_v2.y);
 	EXPECT_EQ(0, l_v2.z);
+}
+
 }
 
 }

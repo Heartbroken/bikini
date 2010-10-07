@@ -15,4 +15,8 @@ struct portal : scene::object
 		typedef portal object;
 		info();
 	};
+
+	portal(const info &_info, scene &_scene);
 };
+
+DECLARE_UTEST(action_portal);

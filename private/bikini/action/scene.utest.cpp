@@ -10,22 +10,30 @@
 
 namespace bk
 {
+namespace action
+{
 
-UTEST_FILE(quat);
+UTEST_FILE(action_scene);
 
 namespace utest
 {
 
-TEST(quat, constructor_sets_elements)
+TEST(action_scene, spawn_creates_objects)
 {
+	// given
+	bk::action::scene l_scene;
+	bk::action::sector::info l_sector_info;
+	bk::action::portal::info l_portal_info;
+
 	// when
-	bk::quat l_q(0, 0, 0, 1);
+	bk::uint l_sector_ID = l_scene.spawn(l_sector_info);
+	bk::uint l_portal_ID = l_scene.spawn(l_portal_info);
 
 	// then
-	EXPECT_EQ(0, l_q.i);
-	EXPECT_EQ(0, l_q.j);
-	EXPECT_EQ(0, l_q.k);
-	EXPECT_EQ(1, l_q.r);
+	EXPECT_TRUE(l_scene.exists(l_sector_ID));
+	EXPECT_TRUE(l_scene.exists(l_portal_ID));
+}
+
 }
 
 }

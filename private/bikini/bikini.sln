@@ -20,6 +20,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_math", "..\tests\test_math\test_math.vcxproj", "{97AE86F4-3052-4F52-9943-ABACB217D983}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_application", "..\tests\test_application\test_application.vcxproj", "{11828C6D-3E62-45F8-9268-93EB0DD141E9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{504001EA-D22C-4457-AB6E-F446D754BE8E} = {504001EA-D22C-4457-AB6E-F446D754BE8E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "system", "system\system.vcxproj", "{4B6FF094-9074-4BDF-BD0A-32D6AD5C0AC6}"
 EndProject

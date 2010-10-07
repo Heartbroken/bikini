@@ -13,6 +13,13 @@ namespace bk /*-----------------------------------------------------------------
 namespace action /*------------------------------------------------------------------------------*/
 {
 
+// scene::object
+
+scene::object::object(const info &_info, scene &_scene)
+:
+	bk::manager::object(_info, _scene)
+{}
+
 // scene::object::info
 
 scene::object::info::info(uint _type)

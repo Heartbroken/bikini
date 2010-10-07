@@ -45,5 +45,14 @@
     <ClCompile Include="portal.cpp">
       <Filter>portal</Filter>
     </ClCompile>
+    <ClCompile Include="scene.utest.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="sector.utest.cpp">
+      <Filter>sector</Filter>
+    </ClCompile>
+    <ClCompile Include="portal.utest.cpp">
+      <Filter>portal</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
