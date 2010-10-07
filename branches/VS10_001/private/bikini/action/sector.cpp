@@ -13,7 +13,14 @@ namespace bk /*-----------------------------------------------------------------
 namespace action /*------------------------------------------------------------------------------*/
 {
 
-// sector::object::info
+// sector
+
+sector::sector(const info &_info, scene &_scene)
+:
+	scene::object(_info, _scene)
+{}
+
+// sector::info
 
 sector::info::info()
 :

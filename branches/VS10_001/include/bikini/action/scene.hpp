@@ -17,6 +17,8 @@ struct scene : manager
 			typedef scene manager;
 			info(uint _type);
 		};
+
+		object(const info &_info, scene &_scene);
 	};
 
 	struct ot { enum
@@ -24,3 +26,5 @@ struct scene : manager
 		sector, portal
 	};};
 };
+
+DECLARE_UTEST(action_scene);

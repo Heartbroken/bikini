@@ -15,4 +15,5 @@ bool run_unittests();
 	static int s_##NAME##_utest = NAME##_utest;
 
 #define UTEST_FILE(NAME)						\
-	namespace bk { int NAME##_utest = 0; }
+	int NAME##_utest = 0;
+	//namespace bk { int NAME##_utest = 0; }

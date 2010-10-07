@@ -15,4 +15,8 @@ struct sector : scene::object
 		typedef sector object;
 		info();
 	};
+
+	sector(const info &_info, scene &_scene);
 };
+
+DECLARE_UTEST(action_sector);

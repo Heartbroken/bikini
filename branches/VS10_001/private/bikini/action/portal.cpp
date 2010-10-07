@@ -13,7 +13,14 @@ namespace bk /*-----------------------------------------------------------------
 namespace action /*------------------------------------------------------------------------------*/
 {
 
-// portal::object::info
+// portal
+
+portal::portal(const info &_info, scene &_scene)
+:
+	scene::object(_info, _scene)
+{}
+
+// portal::info
 
 portal::info::info()
 :
