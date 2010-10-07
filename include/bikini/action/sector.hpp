@@ -10,4 +10,9 @@
 
 struct sector : scene::object
 {
+	struct info : scene::object::info
+	{
+		typedef sector object;
+		info();
+	};
 };
