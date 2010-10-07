@@ -15,16 +15,16 @@ namespace action /*-------------------------------------------------------------
 
 // portal
 
-portal::portal(const info &_info, scene &_scene)
+portal::portal(const info &_info, scene &_scene, uint _parent_ID, const r4x4 &_xform)
 :
-	scene::object(_info, _scene)
+	sector::content(_info, _scene, _parent_ID, _xform)
 {}
 
 // portal::info
 
 portal::info::info()
 :
-	scene::object::info(type::portal)
+	sector::content::info(type::portal)
 {}
 
 } /* namespace action ---------------------------------------------------------------------------*/

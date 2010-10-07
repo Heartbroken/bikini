@@ -6,20 +6,26 @@
 
 *//*---------------------------------------------------------------------------------------------*/
 
-#pragma once
+#include "header.hpp"
 
-#include "system.hpp"
+namespace bk /*----------------------------------------------------------------------------------*/
+{
+namespace action /*------------------------------------------------------------------------------*/
+{
 
-#pragma comment(lib, "action ("_PLATFORM_"!"_CONFIGURATION_")")
+// camera
 
-namespace bk { /*--------------------------------------------------------------------------------*/
+camera::camera(const info &_info, scene &_scene, uint _parent_ID, const r4x4 &_xform)
+:
+	sector::content(_info, _scene, _parent_ID, _xform)
+{}
 
-namespace action { /*----------------------------------------------------------------------------*/
+// camera::info
 
-#include "action/scene.hpp"
-#include "action/sector.hpp"
-#include "action/portal.hpp"
-#include "action/camera.hpp"
+camera::info::info()
+:
+	sector::content::info(type::camera)
+{}
 
 } /* namespace action ---------------------------------------------------------------------------*/
 

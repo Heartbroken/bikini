@@ -13,22 +13,22 @@ namespace bk
 namespace action
 {
 
-UTEST_FILE(action_portal);
+UTEST_FILE(action_camera);
 
 namespace utest
 {
 
-TEST(action_portal, can_be_spawned)
+TEST(action_camera, can_be_spawned)
 {
 	// given
 	bk::action::scene l_scene;
-	bk::action::portal::info l_portal_info;
+	bk::action::camera::info l_camera_info;
 
 	// when
-	bk::uint l_portal_ID = l_scene.spawn(l_portal_info, bad_ID, r4x4_1);
+	bk::uint l_camera_ID = l_scene.spawn(l_camera_info, bad_ID, r4x4_1);
 
 	// then
-	EXPECT_TRUE(l_scene.exists(l_portal_ID));
+	EXPECT_TRUE(l_scene.exists(l_camera_ID));
 }
 
 }

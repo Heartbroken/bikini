@@ -14,6 +14,9 @@
     <Filter Include="portal">
       <UniqueIdentifier>{a64b5656-826b-4ac5-9f3a-ec92df936ced}</UniqueIdentifier>
     </Filter>
+    <Filter Include="camera">
+      <UniqueIdentifier>{0a98242f-ddcd-42ee-ab0a-ae1a0c6703cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header.hpp">
@@ -30,6 +33,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\bikini\action\portal.hpp">
       <Filter>portal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\action\camera.hpp">
+      <Filter>camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -53,6 +59,12 @@
     </ClCompile>
     <ClCompile Include="portal.utest.cpp">
       <Filter>portal</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.utest.cpp">
+      <Filter>camera</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
