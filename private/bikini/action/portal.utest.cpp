@@ -18,7 +18,7 @@ UTEST_FILE(action_portal);
 namespace utest
 {
 
-TEST(action_portal, minus_op_negates_elements)
+TEST(action_portal, can_be_spawned)
 {
 	// given
 	bk::action::scene l_scene;
