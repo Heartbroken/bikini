@@ -8,15 +8,15 @@
 
 #pragma once
 
-struct portal : scene::object
+struct portal : sector::content
 {
-	struct info : scene::object::info
+	struct info : sector::content::info
 	{
 		typedef portal object;
 		info();
 	};
 
-	portal(const info &_info, scene &_scene);
+	portal(const info &_info, scene &_scene, uint _parent_ID, const r4x4 &_xform);
 };
 
 DECLARE_UTEST(action_portal);
