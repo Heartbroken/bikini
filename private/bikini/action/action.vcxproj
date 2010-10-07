@@ -12,6 +12,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\bikini\action.hpp" />
+    <ClInclude Include="..\..\..\include\bikini\action\scene.hpp" />
+    <ClInclude Include="..\..\..\include\bikini\action\sector.hpp" />
     <ClInclude Include="header.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -19,6 +21,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="scene.cpp" />
+    <ClCompile Include="sector.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{504001EA-D22C-4457-AB6E-F446D754BE8E}</ProjectGuid>
