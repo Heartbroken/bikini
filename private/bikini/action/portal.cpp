@@ -24,7 +24,7 @@ portal::portal(const info &_info, scene &_scene)
 
 portal::info::info()
 :
-	scene::object::info(scene::ot::portal)
+	scene::object::info(type::portal)
 {}
 
 } /* namespace action ---------------------------------------------------------------------------*/

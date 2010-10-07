@@ -18,13 +18,13 @@ struct scene : manager
 			info(uint _type);
 		};
 
+		struct type { enum
+		{
+			sector, portal
+		};};
+
 		object(const info &_info, scene &_scene);
 	};
-
-	struct ot { enum
-	{
-		sector, portal
-	};};
 };
 
 DECLARE_UTEST(action_scene);
