@@ -25,6 +25,8 @@ struct scene : manager
 
 		object(const info &_info, scene &_scene);
 	};
+
+	bool render() const;
 };
 
 DECLARE_UTEST(movie_scene);
