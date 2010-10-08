@@ -26,7 +26,11 @@ struct scene : manager
 		object(const info &_info, scene &_scene);
 	};
 
+	bool create();
+	bool update(real _dt);
 	bool render() const;
+
+	virtual void destroy();
 };
 
 DECLARE_UTEST(movie_scene);
