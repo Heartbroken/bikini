@@ -8,14 +8,14 @@
 
 #include "header.hpp"
 
-namespace bk
+namespace bk /*----------------------------------------------------------------------------------*/
 {
-namespace movie
+namespace movie /*-------------------------------------------------------------------------------*/
 {
 
 UTEST_FILE(movie_scene);
 
-namespace utest
+namespace utest /*-------------------------------------------------------------------------------*/
 {
 
 TEST(movie_scene, spawn_fn_creates_objects)
@@ -37,8 +37,6 @@ TEST(movie_scene, spawn_fn_creates_objects)
 	EXPECT_TRUE(l_scene.exists(l_camera_ID));
 }
 
-}
-
-}
-
-}
+} /* namespace utest ----------------------------------------------------------------------------*/
+} /* namespace movie ----------------------------------------------------------------------------*/
+} /* namespace bk -------------------------------------------------------------------------------*/
