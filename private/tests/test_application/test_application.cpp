@@ -28,6 +28,8 @@ struct task0 : bk::application::task
 		bk::vo::window::info l_vo_window_info;
 		bk::uint l_vo_window_ID = l_video.spawn(l_vo_window_info, l_window.get_handle());
 
+		bk::movie::scene l_scene;
+
 		bk::flash::renderer l_renderer(l_video);
 		l_renderer.create();
 
@@ -36,11 +38,6 @@ struct task0 : bk::application::task
 
 		bk::uint l_vo_viewport_ID = l_video.get_<bk::vo::window>(l_vo_window_ID).viewport_ID(0);
 		l_renderer.set_viewport_ID(l_vo_viewport_ID);
-
-		////
-		//l_video.get_<bk::vo::viewport>(l_vo_viewport_ID).set_clear_flags(bk::cf::color);
-		//l_video.get_<bk::vo::viewport>(l_vo_viewport_ID).set_clear_color(bk::green);
-		////
 
 		bk::flash::player l_player;
 		l_player.create(l_renderer, l_sensor);
@@ -61,10 +58,10 @@ struct task0 : bk::application::task
 
 			if (!l_window.update(l_dt)) break;
 
+			l_scene.update(l_dt);
+			l_scene.render();
+
 			l_player.update(l_dt);
-			////
-			//l_video.get_<bk::vo::viewport>(l_vo_viewport_ID).clear();
-			////
 			l_player.render();
 
 			l_video.update(l_dt);
