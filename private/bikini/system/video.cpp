@@ -9,7 +9,7 @@
 #include "header.hpp"
 
 
-#define GWL_WNDPROC			(-4)
+#define GWL_WNDPROC				(-4)
 #define USE_RENDERING_THREAD	1
 
 namespace bk { /*--------------------------------------------------------------------------------*/
@@ -30,15 +30,35 @@ bool video::rendering::create()
 {
 #if USE_RENDERING_THREAD
 	m_run = true;
+
 	if (!m_task.run())
+	{
+		m_run = false;
+		return false;
+	}
+
+	issue l_issue;
+
+	do
+	{
+		l_issue = get_issue();
+	}
+	while (l_issue.is_nothing());
+
+	if (l_issue.type() != issue_types::type_<initialize_succeeded>::index)
 	{
 		m_run = false;
 		return false;
 	}
 #else
 	m_task.run();
-	initialize();
+
+	if (!initialize())
+	{
+		return false;
+	}
 #endif
+
 	return true;
 }
 void video::rendering::destroy()
@@ -86,17 +106,6 @@ bool video::rendering::add_data(pointer _data, uint _size)
 	}
 
 	return true;
-
-////////
-//	if (_size > m_dbuffer.free_space())
-//	{
-//		std::cerr << "ERROR: Renderer data buffer has no free space.\n";
-//		return false;
-//	}
-//
-//	m_dbuffer.write((byte*)_data, _size);
-//
-//	return true;
 }
 bool video::rendering::get_data(handle _data, uint _size)
 {
@@ -125,15 +134,6 @@ bool video::rendering::get_data(handle _data, uint _size)
 	}
 
 	return true;
-
-///////
-//	if (_size > m_dbuffer.used_space())
-//	{
-//		std::cerr << "ERROR: Renderer data buffer has no data.\n";
-//		return false;
-//	}
-//
-//	return m_dbuffer.read((byte*)_data, _size);
 }
 void video::rendering::throw_data(uint _size)
 {
@@ -203,6 +203,8 @@ void video::rendering::m_proc()
 #if USE_RENDERING_THREAD
 	if (initialize())
 	{
+		add_issue(initialize_succeeded());
+
 		while (m_run)
 		{
 			if (!m_cbuffer.empty())
@@ -224,6 +226,8 @@ void video::rendering::m_proc()
 
 		finalize();
 	}
+
+	add_issue(initialize_failed());
 #endif
 }
 
@@ -302,7 +306,7 @@ bool video::update(real _dt)
 #else
 			if (!m_rendering.execute(i->second))
 			{
-				m_rendering.throw_data(i->second.get_<_command>().extra);
+				m_rendering.throw_data(i->second.get_<rendering::_command>().extra);
 			}
 #endif
 		}
@@ -487,10 +491,9 @@ bool texture::update(real _dt)
 
 						video::rendering::write_texture l_write_texture;
 						l_write_texture.ID = m_resource_ID;
+						add_data(l_reader.data(), l_reader.size());
 						l_write_texture.extra = l_reader.size();
 						add_command(l_write_texture);
-
-						add_data(l_reader.data(), l_reader.size());
 
 						break;
 					}
@@ -835,10 +838,9 @@ bool vbuffer::update(real _dt)
 
 						if (m_size > 0)
 						{
-							add_data(l_reader.data(), l_reader.size());
-
 							video::rendering::write_vbuffer l_write_vbuffer;
 							l_write_vbuffer.ID = m_resource_ID;
+							add_data(l_reader.data(), l_reader.size());
 							l_write_vbuffer.extra = l_reader.size();
 							l_write_vbuffer.reset = true;
 							add_command(l_write_vbuffer);

@@ -60,11 +60,13 @@ struct video : device
 
 		/* rendering issues ---------------------------------------------------------------------*/
 
+		struct initialize_succeeded {};
+		struct initialize_failed {};
 		struct validate_resource { uint ID; };
 		struct invalidate_resource { uint ID; };
 
 		typedef make_typelist_<
-			validate_resource, invalidate_resource
+			initialize_succeeded, initialize_failed, validate_resource, invalidate_resource
 		>::type issue_types;
 
 		typedef variant_<issue_types> issue;

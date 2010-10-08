@@ -15,9 +15,22 @@ namespace movie /*--------------------------------------------------------------
 
 // scene
 
+bool scene::create()
+{
+	return true;
+}
+bool scene::update(real _dt)
+{
+	return super::update(_dt);
+}
 bool scene::render() const
 {
 	return true;
+}
+
+void scene::destroy()
+{
+	super::destroy();
 }
 
 // scene::object
