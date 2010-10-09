@@ -25,15 +25,13 @@ struct sector : scene::object
 			info(uint _type);
 		};
 
-		inline uint parent_ID() const { return m_parent_ID; }
+		inline uint sector_ID() const { return m_sector_ID; }
 		inline const r4x4& xform() const { return m_xform; }
 
-		content(const info &_info, scene &_scene, uint _parent_ID, const r4x4 &_xform);
-
-		uint sector_ID() const;
+		content(const info &_info, scene &_scene, uint _sector_ID, const r4x4 &_xform);
 
 	private:
-		uint m_parent_ID;
+		uint m_sector_ID;
 		r4x4 m_xform;
 	};
 

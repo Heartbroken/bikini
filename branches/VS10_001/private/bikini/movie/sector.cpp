@@ -29,26 +29,14 @@ sector::info::info()
 
 // sector::content
 
-sector::content::content(const info &_info, scene &_scene, uint _parent_ID, const r4x4 &_xform)
+sector::content::content(const info &_info, scene &_scene, uint _sector_ID, const r4x4 &_xform)
 :
 	scene::object(_info, _scene),
-	m_parent_ID(_parent_ID),
+	m_sector_ID(_sector_ID),
 	m_xform(_xform)
-{}
-
-uint sector::content::sector_ID() const
 {
-	if (!get_scene().exists(parent_ID()))
-	{
-		return bad_ID;
-	}
-
-	if (get_scene().get(parent_ID()).type() != type::sector)
-	{
-		return get_scene().get_<content>(parent_ID()).sector_ID();
-	}
-
-	return parent_ID();
+	assert(get_scene().exists(sector_ID()));
+	assert(get_scene().get(sector_ID()).type() == type::sector);
 }
 
 // sector::content::info
