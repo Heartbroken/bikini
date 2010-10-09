@@ -30,6 +30,8 @@ struct sector : scene::object
 
 		content(const info &_info, scene &_scene, uint _parent_ID, const r4x4 &_xform);
 
+		uint sector_ID() const;
+
 	private:
 		uint m_parent_ID;
 		r4x4 m_xform;

@@ -36,6 +36,21 @@ sector::content::content(const info &_info, scene &_scene, uint _parent_ID, cons
 	m_xform(_xform)
 {}
 
+uint sector::content::sector_ID() const
+{
+	if (!get_scene().exists(parent_ID()))
+	{
+		return bad_ID;
+	}
+
+	if (get_scene().get(parent_ID()).type() != type::sector)
+	{
+		return get_scene().get_<content>(parent_ID()).sector_ID();
+	}
+
+	return parent_ID();
+}
+
 // sector::content::info
 
 sector::content::info::info(uint _type)
@@ -43,5 +58,5 @@ sector::content::info::info(uint _type)
 	scene::object::info(_type)
 {}
 
-} /* namespace movie ---------------------------------------------------------------------------*/
+} /* namespace movie ----------------------------------------------------------------------------*/
 } /* namespace bk -------------------------------------------------------------------------------*/

@@ -20,6 +20,20 @@ camera::camera(const info &_info, scene &_scene, uint _parent_ID, const r4x4 &_x
 	sector::content(_info, _scene, _parent_ID, _xform)
 {}
 
+bool camera::render() const
+{
+	scene &l_scene = get_scene();
+
+	uint l_sector_ID = sector_ID();
+
+	if (l_scene.exists(l_sector_ID))
+	{
+		sector &l_sector = l_scene.get_<sector>(l_sector_ID);
+	}
+
+	return true;
+}
+
 // camera::info
 
 camera::info::info()
@@ -27,5 +41,5 @@ camera::info::info()
 	sector::content::info(type::camera)
 {}
 
-} /* namespace movie ---------------------------------------------------------------------------*/
+} /* namespace movie ----------------------------------------------------------------------------*/
 } /* namespace bk -------------------------------------------------------------------------------*/
