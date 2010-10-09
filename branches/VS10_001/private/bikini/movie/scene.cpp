@@ -15,8 +15,34 @@ namespace movie /*--------------------------------------------------------------
 
 // scene
 
+static
+const sector::info& scene_default_sector()
+{
+	static sector::info sl_sector_info;
+	return sl_sector_info;
+}
+
+static
+const camera::info& scene_default_camera()
+{
+	static camera::info sl_camera_info;
+	return sl_camera_info;
+}
+
+scene::scene()
+:
+	m_default_sector_ID(bad_ID),
+	m_default_camera_ID(bad_ID),
+	m_active_camera_ID(bad_ID)
+{}
+
 bool scene::create()
 {
+	m_default_sector_ID = spawn(scene_default_sector());
+	m_default_camera_ID = spawn(scene_default_camera(), m_default_sector_ID, r4x4_1);
+
+	set_active_camera_ID(m_default_camera_ID);
+
 	return true;
 }
 bool scene::update(real _dt)
@@ -25,11 +51,20 @@ bool scene::update(real _dt)
 }
 bool scene::render() const
 {
+	if (exists(active_camera_ID()))
+	{
+		camera &l_camera = get_<camera>(active_camera_ID());
+	}
+
 	return true;
 }
-
 void scene::destroy()
 {
+	kill(m_default_sector_ID);
+	kill(m_default_camera_ID);
+
+	m_default_sector_ID = m_default_camera_ID = m_active_camera_ID = bad_ID;
+
 	super::destroy();
 }
 
@@ -47,5 +82,5 @@ scene::object::info::info(uint _type)
 	bk::manager::object::info(_type)
 {}
 
-} /* namespace movie ---------------------------------------------------------------------------*/
+} /* namespace movie ----------------------------------------------------------------------------*/
 } /* namespace bk -------------------------------------------------------------------------------*/
