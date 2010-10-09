@@ -35,6 +35,10 @@ TEST(movie_scene, spawn_fn_creates_objects)
 	EXPECT_TRUE(l_scene.exists(l_sector_ID));
 	EXPECT_TRUE(l_scene.exists(l_portal_ID));
 	EXPECT_TRUE(l_scene.exists(l_camera_ID));
+
+	l_scene.kill(l_camera_ID);
+	l_scene.kill(l_portal_ID);
+	l_scene.kill(l_sector_ID);
 }
 
 } /* namespace utest ----------------------------------------------------------------------------*/

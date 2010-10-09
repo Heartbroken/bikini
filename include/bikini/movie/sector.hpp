@@ -29,6 +29,9 @@ struct sector : scene::object
 		inline const r4x4& xform() const { return m_xform; }
 
 		content(const info &_info, scene &_scene, uint _sector_ID, const r4x4 &_xform);
+		virtual ~content();
+
+		sector& get_sector() const;
 
 	private:
 		uint m_sector_ID;
@@ -36,6 +39,13 @@ struct sector : scene::object
 	};
 
 	sector(const info &_info, scene &_scene);
+	virtual ~sector();
+
+private:
+	uint_array m_content;
+	void add_content(const content &_content);
+	void remove_content(const content &_content);
+	void kill_all_content();
 };
 
 DECLARE_UTEST(movie_sector);
