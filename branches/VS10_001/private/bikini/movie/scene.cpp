@@ -60,12 +60,9 @@ bool scene::render() const
 }
 void scene::destroy()
 {
-	kill(m_default_sector_ID);
-	kill(m_default_camera_ID);
+	super::destroy();
 
 	m_default_sector_ID = m_default_camera_ID = m_active_camera_ID = bad_ID;
-
-	super::destroy();
 }
 
 // scene::object
