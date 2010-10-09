@@ -16,7 +16,7 @@ struct portal : sector::content
 		info();
 	};
 
-	portal(const info &_info, scene &_scene, uint _parent_ID, const r4x4 &_xform);
+	portal(const info &_info, scene &_scene, uint _sector_ID, const r4x4 &_xform);
 };
 
 DECLARE_UTEST(movie_portal);

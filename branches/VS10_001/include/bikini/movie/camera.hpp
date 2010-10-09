@@ -16,7 +16,7 @@ struct camera : sector::content
 		info();
 	};
 
-	camera(const info &_info, scene &_scene, uint _parent_ID, const r4x4 &_xform);
+	camera(const info &_info, scene &_scene, uint _sector_ID, const r4x4 &_xform);
 
 	bool render() const;
 };

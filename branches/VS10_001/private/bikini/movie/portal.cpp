@@ -15,9 +15,9 @@ namespace movie /*--------------------------------------------------------------
 
 // portal
 
-portal::portal(const info &_info, scene &_scene, uint _parent_ID, const r4x4 &_xform)
+portal::portal(const info &_info, scene &_scene, uint _sector_ID, const r4x4 &_xform)
 :
-	sector::content(_info, _scene, _parent_ID, _xform)
+	sector::content(_info, _scene, _sector_ID, _xform)
 {}
 
 // portal::info
