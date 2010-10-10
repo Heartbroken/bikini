@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="scene">
+      <UniqueIdentifier>{8a4671a2-0679-4f37-a0e1-b99386c845d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene\portal">
+      <UniqueIdentifier>{a64b5656-826b-4ac5-9f3a-ec92df936ced}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene\sector">
+      <UniqueIdentifier>{d5674beb-a5a0-485e-92e0-8b1751e9a782}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene\camera">
+      <UniqueIdentifier>{0a98242f-ddcd-42ee-ab0a-ae1a0c6703cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene\decor">
+      <UniqueIdentifier>{a9c44bac-8708-4b9f-9122-447ad60bce25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene\actor">
+      <UniqueIdentifier>{83749b12-3215-4d2a-8ddd-c77e03398cc7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="header.hpp">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\movie.hpp">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\movie\scene.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\movie\sector.hpp">
+      <Filter>scene\sector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\movie\portal.hpp">
+      <Filter>scene\portal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\movie\camera.hpp">
+      <Filter>scene\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\movie\decor.hpp">
+      <Filter>scene\decor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\movie\actor.hpp">
+      <Filter>scene\actor</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="scene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="sector.cpp">
+      <Filter>scene\sector</Filter>
+    </ClCompile>
+    <ClCompile Include="portal.cpp">
+      <Filter>scene\portal</Filter>
+    </ClCompile>
+    <ClCompile Include="scene.utest.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="sector.utest.cpp">
+      <Filter>scene\sector</Filter>
+    </ClCompile>
+    <ClCompile Include="portal.utest.cpp">
+      <Filter>scene\portal</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>scene\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.utest.cpp">
+      <Filter>scene\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="movie.cpp">
+      <Filter>header</Filter>
+    </ClCompile>
+    <ClCompile Include="decor.cpp">
+      <Filter>scene\decor</Filter>
+    </ClCompile>
+    <ClCompile Include="decor.utest.cpp">
+      <Filter>scene\decor</Filter>
+    </ClCompile>
+    <ClCompile Include="actor.cpp">
+      <Filter>scene\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="actor.utest.cpp">
+      <Filter>scene\actor</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

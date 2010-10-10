@@ -6,23 +6,26 @@
 
 *//*---------------------------------------------------------------------------------------------*/
 
-#pragma once
-
-#include "system.hpp"
-
-#pragma comment(lib, "movie ("_PLATFORM_"!"_CONFIGURATION_")")
+#include "header.hpp"
 
 namespace bk /*----------------------------------------------------------------------------------*/
 {
 namespace movie /*-------------------------------------------------------------------------------*/
 {
 
-#include "movie/scene.hpp"
-#include "movie/sector.hpp"
-#include "movie/portal.hpp"
-#include "movie/camera.hpp"
-#include "movie/decor.hpp"
-#include "movie/actor.hpp"
+// actor
+
+actor::actor(const info &_info, scene &_scene, uint _sector_ID, const r4x4 &_xform)
+:
+	sector::content(_info, _scene, _sector_ID, _xform)
+{}
+
+// actor::info
+
+actor::info::info()
+:
+	sector::content::info(types::actor)
+{}
 
 } /* namespace movie ----------------------------------------------------------------------------*/
 } /* namespace bk -------------------------------------------------------------------------------*/

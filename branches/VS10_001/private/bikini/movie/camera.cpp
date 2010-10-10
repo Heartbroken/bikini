@@ -38,6 +38,10 @@ bool camera::render() const
 			{
 				break;
 			}
+			case types::actor :
+			{
+				break;
+			}
 		}
 	}
 
