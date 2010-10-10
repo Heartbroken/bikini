@@ -20,7 +20,7 @@ struct scene : manager
 
 		struct types { enum
 		{
-			sector, portal, camera, decor
+			sector, portal, camera, decor, actor
 		};};
 
 		inline scene& get_scene() const { return get_manager_<scene>(); }
