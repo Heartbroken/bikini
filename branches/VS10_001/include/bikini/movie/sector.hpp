@@ -38,6 +38,9 @@ struct sector : scene::object
 		r4x4 m_xform;
 	};
 
+	inline uint object_count() const { return m_content.size(); }
+	inline uint get_object_ID(uint _index) const { return m_content[_index]; }
+
 	sector(const info &_info, scene &_scene);
 	virtual ~sector();
 

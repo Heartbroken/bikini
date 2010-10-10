@@ -18,9 +18,9 @@ struct scene : manager
 			info(uint _type);
 		};
 
-		struct type { enum
+		struct types { enum
 		{
-			sector, portal, camera
+			sector, portal, camera, decor
 		};};
 
 		inline scene& get_scene() const { return get_manager_<scene>(); }

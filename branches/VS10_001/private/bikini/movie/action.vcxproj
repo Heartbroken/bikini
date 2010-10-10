@@ -13,12 +13,15 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\include\bikini\movie.hpp" />
     <ClInclude Include="..\..\..\include\bikini\movie\camera.hpp" />
+    <ClInclude Include="..\..\..\include\bikini\movie\decor.hpp" />
     <ClInclude Include="..\..\..\include\bikini\movie\portal.hpp" />
     <ClInclude Include="..\..\..\include\bikini\movie\scene.hpp" />
     <ClInclude Include="..\..\..\include\bikini\movie\sector.hpp" />
     <ClInclude Include="header.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="decor.cpp" />
+    <ClCompile Include="decor.utest.cpp" />
     <ClCompile Include="movie.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
