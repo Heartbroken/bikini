@@ -53,7 +53,7 @@ void sector::kill_all_content()
 
 sector::info::info()
 :
-	scene::object::info(type::sector)
+	scene::object::info(types::sector)
 {}
 
 // sector::content
@@ -74,7 +74,7 @@ sector::content::~content()
 sector& sector::content::get_sector() const
 {
 	assert(get_scene().exists(sector_ID()));
-	assert(get_scene().get(sector_ID()).type() == type::sector);
+	assert(get_scene().get(sector_ID()).type() == types::sector);
 
 	return get_scene().get_<sector>(sector_ID());
 }

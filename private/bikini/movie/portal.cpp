@@ -24,7 +24,7 @@ portal::portal(const info &_info, scene &_scene, uint _sector_ID, const r4x4 &_x
 
 portal::info::info()
 :
-	sector::content::info(type::portal)
+	sector::content::info(types::portal)
 {}
 
 } /* namespace movie ----------------------------------------------------------------------------*/

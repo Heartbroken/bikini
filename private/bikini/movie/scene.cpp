@@ -54,9 +54,10 @@ bool scene::render() const
 	if (exists(active_camera_ID()))
 	{
 		camera &l_camera = get_<camera>(active_camera_ID());
+		return l_camera.render();
 	}
 
-	return true;
+	return false;
 }
 void scene::destroy()
 {

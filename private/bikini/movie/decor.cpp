@@ -13,42 +13,18 @@ namespace bk /*-----------------------------------------------------------------
 namespace movie /*-------------------------------------------------------------------------------*/
 {
 
-// camera
+// decor
 
-camera::camera(const info &_info, scene &_scene, uint _sector_ID, const r4x4 &_xform)
+decor::decor(const info &_info, scene &_scene, uint _sector_ID, const r4x4 &_xform)
 :
 	sector::content(_info, _scene, _sector_ID, _xform)
 {}
 
-bool camera::render() const
-{
-	scene &l_scene = get_scene();
-	sector &l_sector = get_sector();
+// decor::info
 
-	for (uint i = 0, s = l_sector.object_count(); i < s; ++i)
-	{
-		uint l_object_ID = l_sector.get_object_ID(i);
-		assert(l_scene.exists(l_object_ID));
-
-		content &l_object = l_scene.get_<content>(l_object_ID);
-
-		switch (l_object.type())
-		{
-			case types::decor :
-			{
-				break;
-			}
-		}
-	}
-
-	return true;
-}
-
-// camera::info
-
-camera::info::info()
+decor::info::info()
 :
-	sector::content::info(types::camera)
+	sector::content::info(types::decor)
 {}
 
 } /* namespace movie ----------------------------------------------------------------------------*/
