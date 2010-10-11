@@ -18,7 +18,7 @@ struct camera : sector::content
 
 	camera(const info &_info, scene &_scene, uint _sector_ID, const r4x4 &_xform);
 
-	bool render() const;
+	bool render(const rendering::context &_c) const;
 };
 
 DECLARE_UTEST(movie_camera);
