@@ -20,32 +20,12 @@ camera::camera(const info &_info, scene &_scene, uint _sector_ID, const r4x4 &_x
 	sector::content(_info, _scene, _sector_ID, _xform)
 {}
 
-bool camera::render() const
+bool camera::render(const rendering::context &_c) const
 {
-	scene &l_scene = get_scene();
-	sector &l_sector = get_sector();
+	rendering::context l_c = _c;
+	l_c.camera_ID = ID();
 
-	for (uint i = 0, s = l_sector.object_count(); i < s; ++i)
-	{
-		uint l_object_ID = l_sector.get_object_ID(i);
-		assert(l_scene.exists(l_object_ID));
-
-		content &l_object = l_scene.get_<content>(l_object_ID);
-
-		switch (l_object.type())
-		{
-			case types::decor :
-			{
-				break;
-			}
-			case types::actor :
-			{
-				break;
-			}
-		}
-	}
-
-	return true;
+	return get_sector().render(l_c);
 }
 
 // camera::info

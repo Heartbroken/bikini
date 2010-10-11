@@ -53,8 +53,9 @@ bool scene::render() const
 {
 	if (exists(active_camera_ID()))
 	{
+		rendering::context l_c;
 		camera &l_camera = get_<camera>(active_camera_ID());
-		return l_camera.render();
+		return l_camera.render(l_c);
 	}
 
 	return false;

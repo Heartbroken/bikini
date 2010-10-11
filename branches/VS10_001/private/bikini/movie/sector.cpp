@@ -24,6 +24,33 @@ sector::~sector()
 	kill_all_content();
 }
 
+bool sector::render(const rendering::context &_c) const
+{
+	scene &l_scene = get_scene();
+
+	for (uint i = 0, s = m_content.size(); i < s; ++i)
+	{
+		uint l_object_ID = m_content[i];
+		assert(l_scene.exists(l_object_ID));
+
+		content &l_object = l_scene.get_<content>(l_object_ID);
+
+		switch (l_object.type())
+		{
+			case types::decor :
+			{
+				break;
+			}
+			case types::actor :
+			{
+				break;
+			}
+		}
+	}
+
+	return true;
+}
+
 void sector::add_content(const content &_content)
 {
 	uint_array::iterator l_it = std::find(m_content.begin(), m_content.end(), _content.ID());
