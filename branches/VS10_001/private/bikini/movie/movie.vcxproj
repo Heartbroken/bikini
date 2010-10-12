@@ -16,6 +16,7 @@
     <ClInclude Include="..\..\..\include\bikini\movie\camera.hpp" />
     <ClInclude Include="..\..\..\include\bikini\movie\decor.hpp" />
     <ClInclude Include="..\..\..\include\bikini\movie\portal.hpp" />
+    <ClInclude Include="..\..\..\include\bikini\movie\renderer.hpp" />
     <ClInclude Include="..\..\..\include\bikini\movie\scene.hpp" />
     <ClInclude Include="..\..\..\include\bikini\movie\sector.hpp" />
     <ClInclude Include="header.hpp" />
@@ -33,6 +34,8 @@
     <ClCompile Include="camera.utest.cpp" />
     <ClCompile Include="portal.cpp" />
     <ClCompile Include="portal.utest.cpp" />
+    <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="renderer.utest.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="scene.utest.cpp" />
     <ClCompile Include="sector.cpp" />

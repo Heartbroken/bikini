@@ -44,7 +44,7 @@ struct sector : scene::object
 	sector(const info &_info, scene &_scene);
 	virtual ~sector();
 
-	bool render(const rendering::context &_c) const;
+	bool render(const context &_c) const;
 
 private:
 	uint_array m_content;

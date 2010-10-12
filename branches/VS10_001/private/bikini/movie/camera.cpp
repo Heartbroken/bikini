@@ -20,9 +20,9 @@ camera::camera(const info &_info, scene &_scene, uint _sector_ID, const r4x4 &_x
 	sector::content(_info, _scene, _sector_ID, _xform)
 {}
 
-bool camera::render(const rendering::context &_c) const
+bool camera::render(const context &_c) const
 {
-	rendering::context l_c = _c;
+	context l_c = _c;
 	l_c.camera_ID = ID();
 
 	return get_sector().render(l_c);

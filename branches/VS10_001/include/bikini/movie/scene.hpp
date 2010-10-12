@@ -10,15 +10,6 @@
 
 struct scene : manager
 {
-	struct rendering
-	{
-		struct context
-		{
-			uint viewport_ID;
-			uint camera_ID;
-		};
-	};
-
 	struct object : manager::object
 	{
 		struct info : manager::object::info
@@ -32,11 +23,19 @@ struct scene : manager
 			sector, portal, camera, decor, actor
 		};};
 
-		typedef rendering rendering;
+		struct context
+		{
+			uint viewport_ID;
+			uint camera_ID;
+		};
 
 		inline scene& get_scene() const { return get_manager_<scene>(); }
 
 		object(const info &_info, scene &_scene);
+	};
+
+	struct renderer
+	{
 	};
 
 	scene();
