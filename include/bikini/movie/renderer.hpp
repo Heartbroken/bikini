@@ -8,17 +8,9 @@
 
 #pragma once
 
-struct camera : sector::content
+struct renderer : scene::renderer
 {
-	struct info : sector::content::info
-	{
-		typedef camera object;
-		info();
-	};
-
-	camera(const info &_info, scene &_scene, uint _sector_ID, const r4x4 &_xform);
-
-	bool render(const context &_c) const;
+	renderer();
 };
 
-DECLARE_UTEST(movie_camera);
+DECLARE_UTEST(movie_renderer);

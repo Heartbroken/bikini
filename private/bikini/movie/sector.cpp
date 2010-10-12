@@ -24,7 +24,7 @@ sector::~sector()
 	kill_all_content();
 }
 
-bool sector::render(const rendering::context &_c) const
+bool sector::render(const context &_c) const
 {
 	scene &l_scene = get_scene();
 

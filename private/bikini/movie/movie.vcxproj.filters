@@ -23,6 +23,9 @@
     <Filter Include="scene\actor">
       <UniqueIdentifier>{83749b12-3215-4d2a-8ddd-c77e03398cc7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="scene\renderer">
+      <UniqueIdentifier>{fcef70f0-1268-4ec0-a3ed-b791211e43e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header.hpp">
@@ -48,6 +51,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\bikini\movie\actor.hpp">
       <Filter>scene\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\movie\renderer.hpp">
+      <Filter>scene\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +95,12 @@
     </ClCompile>
     <ClCompile Include="actor.utest.cpp">
       <Filter>scene\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>scene\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.utest.cpp">
+      <Filter>scene\renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
