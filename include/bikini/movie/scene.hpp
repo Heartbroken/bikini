@@ -40,7 +40,7 @@ struct scene : manager
 
 	scene();
 
-	bool create();
+	bool create(renderer &_renderer);
 	bool update(real _dt);
 	bool render() const;
 	void destroy();
@@ -50,7 +50,10 @@ struct scene : manager
 	inline uint active_camera_ID() const { return m_active_camera_ID; }
 	inline void set_active_camera_ID(uint _camera_ID) { m_active_camera_ID = _camera_ID; }
 
+	inline renderer& get_renderer() const { return *m_renderer_p; }
+
 private:
+	renderer *m_renderer_p;
 	uint m_default_sector_ID;
 	uint m_default_camera_ID, m_active_camera_ID;
 };

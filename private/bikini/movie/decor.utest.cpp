@@ -22,7 +22,7 @@ struct movie_decor : testing::Test /*-------------------------------------------
 {
 	void SetUp()
 	{
-		m_scene.create();
+		m_scene.create(m_renderer);
 		m_sector_ID = m_scene.spawn(m_sector_info);
 	}
 	void TearDown()
@@ -31,6 +31,7 @@ struct movie_decor : testing::Test /*-------------------------------------------
 	}
 
 protected:
+	renderer m_renderer;
 	scene m_scene;
 	sector::info m_sector_info;
 	uint m_sector_ID;
