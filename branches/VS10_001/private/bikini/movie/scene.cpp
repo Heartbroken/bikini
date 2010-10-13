@@ -31,13 +31,16 @@ const camera::info& scene_default_camera()
 
 scene::scene()
 :
+	m_renderer_p(0),
 	m_default_sector_ID(bad_ID),
 	m_default_camera_ID(bad_ID),
 	m_active_camera_ID(bad_ID)
 {}
 
-bool scene::create()
+bool scene::create(renderer &_renderer)
 {
+	m_renderer_p = &_renderer;
+
 	m_default_sector_ID = spawn(scene_default_sector());
 	m_default_camera_ID = spawn(scene_default_camera(), m_default_sector_ID, r4x4_1);
 
@@ -65,6 +68,7 @@ void scene::destroy()
 	super::destroy();
 
 	m_default_sector_ID = m_default_camera_ID = m_active_camera_ID = bad_ID;
+	m_renderer_p = 0;
 }
 
 // scene::object

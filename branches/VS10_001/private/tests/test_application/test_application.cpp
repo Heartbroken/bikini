@@ -3,7 +3,8 @@
 
 #include "stdafx.h"
 
-namespace at { enum application_tasks {
+namespace at { enum application_tasks
+{
 	task0
 };}
 
@@ -28,8 +29,9 @@ struct task0 : bk::application::task
 		bk::vo::window::info l_vo_window_info;
 		bk::uint l_vo_window_ID = l_video.spawn(l_vo_window_info, l_window.get_handle());
 
+		bk::movie::renderer l_movie_renderer;
 		bk::movie::scene l_scene;
-		l_scene.create();
+		l_scene.create(l_movie_renderer);
 
 		bk::flash::renderer l_renderer(l_video);
 		l_renderer.create();
