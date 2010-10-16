@@ -38,16 +38,15 @@ struct sector : scene::object
 		r4x4 m_xform;
 	};
 
-	inline uint object_count() const { return m_content.size(); }
-	inline uint get_object_ID(uint _index) const { return m_content[_index]; }
-
 	sector(const info &_info, scene &_scene);
 	virtual ~sector();
 
 	bool render(const context &_c) const;
 
 private:
-	uint_array m_content;
+	uint_array m_cameras, m_portals, m_decors, m_actors;
+	uint_array& get_content_array(uint _type);
+	const uint_array& get_content_array(uint _type) const;
 	void add_content(const content &_content);
 	void remove_content(const content &_content);
 	void kill_all_content();

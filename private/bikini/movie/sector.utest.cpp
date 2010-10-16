@@ -21,14 +21,16 @@ namespace utest /*--------------------------------------------------------------
 TEST(movie_sector, can_be_spawned)
 {
 	// given
-	bk::movie::scene l_scene;
-	bk::movie::sector::info l_sector_info;
+	scene l_scene;
+	sector::info l_sector_info;
 
 	// when
-	bk::uint l_sector_ID = l_scene.spawn(l_sector_info);
+	uint l_sector_ID = l_scene.spawn(l_sector_info);
 
 	// then
 	EXPECT_TRUE(l_scene.exists(l_sector_ID));
+
+	l_scene.kill(l_sector_ID);
 }
 
 } /* namespace utest ----------------------------------------------------------------------------*/

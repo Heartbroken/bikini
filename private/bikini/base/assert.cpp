@@ -24,8 +24,10 @@ bool ARI(wchar const * _expression, wchar const * _file, int _line, wchar const 
 	l_cerr << L"    Function: " << wstring(_function) << L"\n";
 	if(_message) l_cerr << L"    " << wstring(_message) << L"\n";
 
+	std::wstring l_tmp = l_cerr.str().c_str();
+	
 	char l_oem[1024];
-	CharToOemBuffW(l_cerr.str().c_str(), l_oem, 1024);
+	CharToOemBuffW(l_tmp.c_str(), l_oem, 1024);
 
 	std::cerr << l_oem;
 

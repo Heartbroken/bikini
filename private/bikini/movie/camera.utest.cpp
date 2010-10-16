@@ -35,16 +35,14 @@ protected:
 	scene m_scene;
 	sector::info m_sector_info;
 	uint m_sector_ID;
+	camera::info m_camera_info;
 
 }; /*--------------------------------------------------------------------------------------------*/
 
 TEST_F(movie_camera, can_be_spawned)
 {
-	// given
-	bk::movie::camera::info l_camera_info;
-
 	// when
-	bk::uint l_camera_ID = m_scene.spawn(l_camera_info, m_sector_ID, r4x4_1);
+	bk::uint l_camera_ID = m_scene.spawn(m_camera_info, m_sector_ID, r4x4_1);
 
 	// then
 	EXPECT_TRUE(m_scene.exists(l_camera_ID));
