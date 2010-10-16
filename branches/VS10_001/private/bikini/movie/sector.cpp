@@ -28,11 +28,13 @@ bool sector::render(const context &_c) const
 {
 	scene &l_scene = get_scene();
 
+	assert(l_scene.exists(_c.camera_ID));
+	camera &l_camera = l_scene.get_<camera>(_c.camera_ID);
+
 	for (uint i = 0, s = m_content.size(); i < s; ++i)
 	{
 		uint l_object_ID = m_content[i];
 		assert(l_scene.exists(l_object_ID));
-
 		content &l_object = l_scene.get_<content>(l_object_ID);
 
 		switch (l_object.type())
