@@ -31,51 +31,69 @@ bool sector::render(const context &_c) const
 	assert(l_scene.exists(_c.camera_ID));
 	camera &l_camera = l_scene.get_<camera>(_c.camera_ID);
 
-	for (uint i = 0, s = m_content.size(); i < s; ++i)
+	for (uint i = 0, s = m_decors.size(); i < s; ++i)
 	{
-		uint l_object_ID = m_content[i];
-		assert(l_scene.exists(l_object_ID));
-		content &l_object = l_scene.get_<content>(l_object_ID);
+		uint l_decor_ID = m_decors[i];
+		assert(l_scene.exists(l_decor_ID));
+		decor &l_decor = l_scene.get_<decor>(l_decor_ID);
+		assert(l_decor.type() == types::decor);
+	}
 
-		switch (l_object.type())
-		{
-			case types::decor :
-			{
-				break;
-			}
-			case types::actor :
-			{
-				break;
-			}
-		}
+	for (uint i = 0, s = m_portals.size(); i < s; ++i)
+	{
+		uint l_portal_ID = m_portals[i];
+		assert(l_scene.exists(l_portal_ID));
+		portal &l_portal = l_scene.get_<portal>(l_portal_ID);
+		assert(l_portal.type() == types::portal);
 	}
 
 	return true;
 }
 
+uint_array& sector::get_content_array(uint _type)
+{
+	switch (_type)
+	{
+	case types::camera : return m_cameras;
+	case types::portal : return m_portals;
+	case types::decor : return m_decors;
+	case types::actor : return m_actors;
+	}
+
+	assert(0 && "ERROR: Bad content type");
+}
 void sector::add_content(const content &_content)
 {
-	uint_array::iterator l_it = std::find(m_content.begin(), m_content.end(), _content.ID());
-	assert(l_it == m_content.end());
+	uint_array &l_content = get_content_array(_content.type());
+	uint_array::iterator l_it = std::find(l_content.begin(), l_content.end(), _content.ID());
+	assert(l_it == l_content.end());
 
-	m_content.push_back(_content.ID());
+	l_content.push_back(_content.ID());
 }
 void sector::remove_content(const content &_content)
 {
-	uint_array::iterator l_it = std::find(m_content.begin(), m_content.end(), _content.ID());
-	assert(l_it != m_content.end());
+	uint_array &l_content = get_content_array(_content.type());
+	uint_array::iterator l_it = std::find(l_content.begin(), l_content.end(), _content.ID());
+	assert(l_it != l_content.end());
 
-	m_content.erase(l_it);
+	l_content.erase(l_it);
 }
 void sector::kill_all_content()
 {
-	for (uint i = 0, s = m_content.size(); i < s; ++i)
-	{
-		uint l_ID = m_content[i];
-		get_scene().kill(l_ID);
-	}
+	uint l_types[] = { types::camera, types::portal, types::decor, types::actor };
 
-	m_content.resize(0);
+	for (uint i = 0; i < sizeof(l_types) / sizeof(l_types[0]); ++i)
+	{
+		uint_array &l_content = get_content_array(l_types[i]);
+
+		for (uint i = 0, s = l_content.size(); i < s; ++i)
+		{
+			uint l_ID = l_content[i];
+			get_scene().kill(l_ID);
+		}
+
+		l_content.resize(0);
+	}
 }
 
 // sector::info

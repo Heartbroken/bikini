@@ -35,16 +35,14 @@ protected:
 	scene m_scene;
 	sector::info m_sector_info;
 	uint m_sector_ID;
+	portal::info l_portal_info;
 
 }; /*--------------------------------------------------------------------------------------------*/
 
 TEST_F(movie_portal, can_be_spawned)
 {
-	// given
-	bk::movie::portal::info l_portal_info;
-
 	// when
-	bk::uint l_portal_ID = m_scene.spawn(l_portal_info, m_sector_ID, r4x4_1);
+	uint l_portal_ID = m_scene.spawn(l_portal_info, m_sector_ID, r4x4_1);
 
 	// then
 	EXPECT_TRUE(m_scene.exists(l_portal_ID));
