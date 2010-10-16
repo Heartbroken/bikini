@@ -34,17 +34,28 @@ bool sector::render(const context &_c) const
 	for (uint i = 0, s = m_decors.size(); i < s; ++i)
 	{
 		uint l_decor_ID = m_decors[i];
-		assert(l_scene.exists(l_decor_ID));
-		decor &l_decor = l_scene.get_<decor>(l_decor_ID);
-		assert(l_decor.type() == types::decor);
+		assert(l_scene.exists(l_decor_ID) && l_scene.get(l_decor_ID).type() == types::decor);
+		const decor &l_decor = l_scene.get_<decor>(l_decor_ID);
+
+		l_camera.render(_c, l_decor);
+	}
+
+	for (uint i = 0, s = m_actors.size(); i < s; ++i)
+	{
+		uint l_actor_ID = m_actors[i];
+		assert(l_scene.exists(l_actor_ID) && l_scene.get(l_actor_ID).type() == types::actor);
+		const actor &l_actor = l_scene.get_<actor>(l_actor_ID);
+
+		l_camera.render(_c, l_actor);
 	}
 
 	for (uint i = 0, s = m_portals.size(); i < s; ++i)
 	{
 		uint l_portal_ID = m_portals[i];
-		assert(l_scene.exists(l_portal_ID));
-		portal &l_portal = l_scene.get_<portal>(l_portal_ID);
-		assert(l_portal.type() == types::portal);
+		assert(l_scene.exists(l_portal_ID) && l_scene.get(l_portal_ID).type() == types::portal);
+		const portal &l_portal = l_scene.get_<portal>(l_portal_ID);
+
+		l_camera.render(_c, l_portal);
 	}
 
 	return true;
@@ -61,6 +72,8 @@ uint_array& sector::get_content_array(uint _type)
 	}
 
 	assert(0 && "ERROR: Bad content type");
+
+	return *(uint_array*)0;
 }
 void sector::add_content(const content &_content)
 {

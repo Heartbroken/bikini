@@ -20,7 +20,7 @@ struct scene : manager
 
 		struct types { enum
 		{
-			sector, portal, camera, decor, actor
+			sector, portal, decor, actor, camera
 		};};
 
 		struct context

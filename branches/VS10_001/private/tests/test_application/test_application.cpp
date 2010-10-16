@@ -29,10 +29,16 @@ struct task0 : bk::application::task
 		bk::vo::window::info l_vo_window_info;
 		bk::uint l_vo_window_ID = l_video.spawn(l_vo_window_info, l_window.get_handle());
 
+		// movie scene test
 		bk::movie::renderer l_movie_renderer;
 		bk::movie::scene l_scene;
 		l_scene.create(l_movie_renderer);
 
+		bk::movie::decor::info l_decor_info;
+		bk::uint l_decor_ID = l_scene.spawn(l_decor_info, l_scene.default_sector_ID(), bk::r4x4_1);
+		//
+
+		// flash
 		bk::flash::renderer l_renderer(l_video);
 		l_renderer.create();
 
@@ -45,6 +51,7 @@ struct task0 : bk::application::task
 		bk::flash::player l_player;
 		l_player.create(l_renderer, l_sensor);
 		l_player.play("data/gui/test.swf");
+		//
 
 		l_window.show();
 

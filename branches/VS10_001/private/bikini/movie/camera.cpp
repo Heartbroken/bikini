@@ -27,6 +27,18 @@ bool camera::render(const context &_c) const
 
 	return get_sector().render(l_c);
 }
+bool camera::render(const context &_c, const decor &_decor) const
+{
+	return true;
+}
+bool camera::render(const context &_c, const actor &_actor) const
+{
+	return true;
+}
+bool camera::render(const context &_c, const portal &_portal) const
+{
+	return true;
+}
 
 // camera::info
 

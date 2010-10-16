@@ -20,9 +20,9 @@ namespace movie /*--------------------------------------------------------------
 #include "movie/scene.hpp"
 #include "movie/sector.hpp"
 #include "movie/portal.hpp"
-#include "movie/camera.hpp"
 #include "movie/decor.hpp"
 #include "movie/actor.hpp"
+#include "movie/camera.hpp"
 #include "movie/renderer.hpp"
 
 } /* namespace movie ----------------------------------------------------------------------------*/
