@@ -58,9 +58,21 @@ bool camera::render(const context &_c, const sector &_sector) const
 
 		switch (l_scene.get(l_object_ID).type())
 		{
-		case types::portal : render(_c, l_scene.get_<portal>(l_object_ID)); break;
-		case types::decor : render(_c, l_scene.get_<decor>(l_object_ID)); break;
-		case types::actor : render(_c, l_scene.get_<actor>(l_object_ID)); break;
+			case types::portal :
+			{
+				render(_c, l_scene.get_<portal>(l_object_ID));
+				break;
+			}
+			case types::decor :
+			{
+				render(_c, l_scene.get_<decor>(l_object_ID));
+				break;
+			}
+			case types::actor :
+			{
+				render(_c, l_scene.get_<actor>(l_object_ID));
+				break;
+			}
 		}
 	}
 
