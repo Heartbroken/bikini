@@ -8,15 +8,21 @@
 
 #pragma once
 
-struct portal : sector::content
+struct portal : sector::object
 {
-	struct info : sector::content::info
+	struct info : sector::object::info
 	{
 		typedef portal object;
 		info();
 	};
 
 	portal(const info &_info, scene &_scene, uint _sector_ID, const r4x4 &_xform);
+
+	inline uint target_ID() const { return m_target_ID; }
+	inline void set_target_ID(uint _portal_ID) { m_target_ID = _portal_ID; }
+
+private:
+	uint m_target_ID;
 };
 
 DECLARE_UTEST(movie_portal);
