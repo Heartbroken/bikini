@@ -17,14 +17,14 @@ namespace movie /*--------------------------------------------------------------
 
 decor::decor(const info &_info, scene &_scene, uint _sector_ID, const r4x4 &_xform)
 :
-	sector::content(_info, _scene, _sector_ID, _xform)
+	sector::object(_info, _scene, _sector_ID, _xform)
 {}
 
 // decor::info
 
 decor::info::info()
 :
-	sector::content::info(types::decor)
+	sector::object::info(types::decor)
 {}
 
 } /* namespace movie ----------------------------------------------------------------------------*/

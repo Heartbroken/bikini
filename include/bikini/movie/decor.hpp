@@ -8,9 +8,9 @@
 
 #pragma once
 
-struct decor : sector::content
+struct decor : sector::object
 {
-	struct info : sector::content::info
+	struct info : sector::object::info
 	{
 		typedef decor object;
 		info();

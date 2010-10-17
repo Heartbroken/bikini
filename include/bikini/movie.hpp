@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <hash_set>
+
 #include "system.hpp"
 
 #pragma comment(lib, "movie ("_PLATFORM_"!"_CONFIGURATION_")")

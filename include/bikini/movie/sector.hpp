@@ -16,7 +16,7 @@ struct sector : scene::object
 		info();
 	};
 
-	struct content : scene::object
+	struct object : scene::object
 	{
 		struct info : scene::object::info
 		{
@@ -28,8 +28,8 @@ struct sector : scene::object
 		inline uint sector_ID() const { return m_sector_ID; }
 		inline const r4x4& xform() const { return m_xform; }
 
-		content(const info &_info, scene &_scene, uint _sector_ID, const r4x4 &_xform);
-		virtual ~content();
+		object(const info &_info, scene &_scene, uint _sector_ID, const r4x4 &_xform);
+		virtual ~object();
 
 		sector& get_sector() const;
 
@@ -41,15 +41,13 @@ struct sector : scene::object
 	sector(const info &_info, scene &_scene);
 	virtual ~sector();
 
-	bool render(const context &_c) const;
+	inline uint object_count() const { return m_objects.size(); }
+	inline uint object_ID(uint _index) const { return m_objects[_index]; }
 
 private:
-	uint_array m_cameras, m_portals, m_decors, m_actors;
-	uint_array& get_content_array(uint _type);
-	const uint_array& get_content_array(uint _type) const;
-	void add_content(const content &_content);
-	void remove_content(const content &_content);
-	void kill_all_content();
+	uint_array m_objects;
+	void add_object(const object &_object);
+	void remove_object(const object &_object);
 };
 
 DECLARE_UTEST(movie_sector);

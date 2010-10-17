@@ -17,14 +17,14 @@ namespace movie /*--------------------------------------------------------------
 
 portal::portal(const info &_info, scene &_scene, uint _sector_ID, const r4x4 &_xform)
 :
-	sector::content(_info, _scene, _sector_ID, _xform)
+	sector::object(_info, _scene, _sector_ID, _xform)
 {}
 
 // portal::info
 
 portal::info::info()
 :
-	sector::content::info(types::portal)
+	sector::object::info(types::portal)
 {}
 
 } /* namespace movie ----------------------------------------------------------------------------*/

@@ -27,6 +27,7 @@ struct scene : manager
 		{
 			uint viewport_ID;
 			uint camera_ID;
+			r4x4 portal_xform;
 		};
 
 		inline scene& get_scene() const { return get_manager_<scene>(); }

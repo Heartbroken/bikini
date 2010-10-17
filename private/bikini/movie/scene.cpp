@@ -57,6 +57,7 @@ bool scene::render() const
 	if (exists(active_camera_ID()))
 	{
 		object::context l_c;
+		l_c.portal_xform = r4x4_1;
 		camera &l_camera = get_<camera>(active_camera_ID());
 		return l_camera.render(l_c);
 	}

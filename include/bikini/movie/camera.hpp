@@ -8,9 +8,9 @@
 
 #pragma once
 
-struct camera : sector::content
+struct camera : sector::object
 {
-	struct info : sector::content::info
+	struct info : sector::object::info
 	{
 		typedef camera object;
 		info();
@@ -22,9 +22,14 @@ private:
 	friend scene;
 	friend sector;
 	bool render(const context &_c) const;
+	bool render(const context &_c, const sector &_sector) const;
+	bool render(const context &_c, const portal &_portal) const;
 	bool render(const context &_c, const decor &_decor) const;
 	bool render(const context &_c, const actor &_actor) const;
-	bool render(const context &_c, const portal &_portal) const;
+
+	typedef stdext::hash_set<uint> uint_hashset;
+	mutable uint_hashset m_last_frame;
+	mutable uint_hashset m_next_frame;
 };
 
 DECLARE_UTEST(movie_camera);

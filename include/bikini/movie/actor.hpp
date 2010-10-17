@@ -8,9 +8,9 @@
 
 #pragma once
 
-struct actor : sector::content
+struct actor : sector::object
 {
-	struct info : sector::content::info
+	struct info : sector::object::info
 	{
 		typedef actor object;
 		info();
