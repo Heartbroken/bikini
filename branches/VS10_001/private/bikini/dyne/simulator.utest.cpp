@@ -6,18 +6,33 @@
 
 *//*---------------------------------------------------------------------------------------------*/
 
-#pragma once
-
-#include "base.hpp"
-
-#pragma comment(lib, "dyne ("_PLATFORM_"!"_CONFIGURATION_")")
+#include "header.hpp"
 
 namespace bk /*----------------------------------------------------------------------------------*/
 {
 namespace dyne /*--------------------------------------------------------------------------------*/
 {
 
-#include "dyne/simulator.hpp"
+UTEST_FILE(dyne_simulator);
 
+namespace utest /*-------------------------------------------------------------------------------*/
+{
+
+TEST(dyne_simulator, can_be_created)
+{
+	// given
+	bk::dyne::simulator l_simulator;
+
+	// when
+	bool l_created = l_simulator.create();
+
+	// then
+	EXPECT_TRUE(l_created);
+
+	// clear
+	l_simulator.destroy();
+}
+
+} /* namespace utest ----------------------------------------------------------------------------*/
 } /* namespace dyne -----------------------------------------------------------------------------*/
 } /* namespace bk -------------------------------------------------------------------------------*/
