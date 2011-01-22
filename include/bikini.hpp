@@ -15,3 +15,4 @@
 #include "bikini/script.hpp"
 #include "bikini/system.hpp"
 #include "bikini/movie.hpp"
+#include "bikini/dyne.hpp"
