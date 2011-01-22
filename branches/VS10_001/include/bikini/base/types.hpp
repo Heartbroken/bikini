@@ -31,11 +31,7 @@ typedef __int64				sbig;
 /// big real number
 typedef double				rbig;
 /// real number
-#if defined(BIKINI_REAL_IS_DOUBLE)
-typedef double				real;
-#else
-typedef float				real;
-#endif
+typedef BIKINI_REAL_TYPE	real;
 
 typedef void		*		handle;
 typedef const void		*	pointer;
