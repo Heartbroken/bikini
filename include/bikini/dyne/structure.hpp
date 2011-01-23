@@ -8,7 +8,7 @@
 
 #pragma once
 
-struct structure
+struct structure : object
 {
 	struct data
 	{
