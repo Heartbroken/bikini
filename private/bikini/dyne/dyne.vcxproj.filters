@@ -8,6 +8,9 @@
     <Filter Include="simulator">
       <UniqueIdentifier>{ef000f39-95d6-465a-a350-b9f63bc9ada7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="simulator\structure">
+      <UniqueIdentifier>{25ae9f08-0e73-4907-8bc5-812abf6c1b91}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header.hpp">
@@ -19,6 +22,9 @@
     <ClInclude Include="..\..\..\include\bikini\dyne\simulator.hpp">
       <Filter>simulator</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\bikini\dyne\structure.hpp">
+      <Filter>simulator\structure</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dyne.cpp">
@@ -29,6 +35,12 @@
     </ClCompile>
     <ClCompile Include="simulator.utest.cpp">
       <Filter>simulator</Filter>
+    </ClCompile>
+    <ClCompile Include="structure.cpp">
+      <Filter>simulator\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="structure.utest.cpp">
+      <Filter>simulator\structure</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

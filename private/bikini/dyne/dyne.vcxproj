@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\include\bikini\dyne.hpp" />
     <ClInclude Include="..\..\..\include\bikini\dyne\simulator.hpp" />
+    <ClInclude Include="..\..\..\include\bikini\dyne\structure.hpp" />
     <ClInclude Include="header.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -22,6 +23,8 @@
     </ClCompile>
     <ClCompile Include="simulator.cpp" />
     <ClCompile Include="simulator.utest.cpp" />
+    <ClCompile Include="structure.cpp" />
+    <ClCompile Include="structure.utest.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{09EC8B2F-ABFC-4971-BF21-354C752A1C35}</ProjectGuid>
