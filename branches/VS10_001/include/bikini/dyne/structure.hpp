@@ -8,18 +8,13 @@
 
 #pragma once
 
-struct simulator
+struct structure
 {
-	typedef make_typelist_<
-		structure
-	> types;
-
-	simulator();
-
-	bool create();
-	void destroy();
+	struct data
+	{
+	};
 
 private:
 };
 
-DECLARE_UTEST(dyne_simulator);
+DECLARE_UTEST(dyne_structure);
