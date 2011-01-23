@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\bikini\dyne.hpp" />
+    <ClInclude Include="..\..\..\include\bikini\dyne\object.hpp" />
     <ClInclude Include="..\..\..\include\bikini\dyne\simulator.hpp" />
     <ClInclude Include="..\..\..\include\bikini\dyne\structure.hpp" />
     <ClInclude Include="header.hpp" />
@@ -21,10 +22,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="object.cpp" />
+    <ClCompile Include="object.utest.cpp" />
     <ClCompile Include="simulator.cpp" />
     <ClCompile Include="simulator.utest.cpp" />
     <ClCompile Include="structure.cpp" />
     <ClCompile Include="structure.utest.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\include\bikini\dyne\object.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{09EC8B2F-ABFC-4971-BF21-354C752A1C35}</ProjectGuid>
